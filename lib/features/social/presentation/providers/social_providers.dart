@@ -13,6 +13,7 @@ import 'package:reem/features/social/data/datasources/social_remote_datasource.d
 import 'package:reem/features/social/data/repositories/social_repository_impl.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_analytics.dart';
+import 'package:reem/features/social/domain/entities/content_audience.dart';
 import 'package:reem/features/social/domain/repositories/social_repository.dart';
 import 'package:reem/features/social/presentation/providers/composer_notifier.dart';
 import 'package:reem/features/social/presentation/providers/content_comments_notifier.dart';
@@ -245,6 +246,18 @@ final contentAnalyticsProvider = FutureProvider.autoDispose
 final contentByIdProvider = FutureProvider.autoDispose
     .family<Content, String>((ref, contentId) async {
       final result = await ref.watch(socialRepositoryProvider).byId(contentId);
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw FailureException(failure),
+      };
+    });
+
+/// «شوهدت من قبل» — who watched one of her own pieces. Owner only.
+final contentAudienceProvider = FutureProvider.autoDispose
+    .family<ContentAudience, String>((ref, contentId) async {
+      final result = await ref
+          .watch(socialRepositoryProvider)
+          .audience(contentId);
       return switch (result) {
         Success(:final data) => data,
         Error(:final failure) => throw FailureException(failure),

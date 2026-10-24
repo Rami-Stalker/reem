@@ -176,11 +176,13 @@ export class ContentModerationService {
       throw new BadRequestException('NOT_REMOVED');
     }
 
+    const restored = await this.statusBeforeRemoval(contentId);
+
     const action = await this.prisma.$transaction(async (tx) => {
       await tx.commerceContent.update({
         where: { id: contentId },
         data: {
-          status: CommerceContentStatus.PUBLISHED,
+          status: restored,
           moderationStatus: CommerceContentModerationStatus.APPROVED,
           removedAt: null,
           removedById: null,
@@ -208,7 +210,7 @@ export class ContentModerationService {
         content_id: contentId,
         author_id: content.authorId,
         status_from: CommerceContentStatus.REMOVED,
-        status_to: CommerceContentStatus.PUBLISHED,
+        status_to: restored,
         reason: trimmed,
       },
     });
@@ -221,7 +223,60 @@ export class ContentModerationService {
       moderationActionId: action.id,
     });
 
-    return { reinstated: true };
+    return { reinstated: true, status: restored };
+  }
+
+  /**
+   * Where a reinstated piece goes back to.
+   *
+   * Not always PUBLISHED. A draft taken down while it was a draft comes back
+   * a draft, an archived piece comes back archived, and a story whose day
+   * ran out while it was down comes back expired — reinstating it as
+   * PUBLISHED would have put a removed draft on the feed she never chose to
+   * publish, or a two-day-old story back in the tray.
+   */
+  private async statusBeforeRemoval(
+    contentId: string,
+  ): Promise<CommerceContentStatus> {
+    const [lastRemoval, content] = await Promise.all([
+      this.prisma.commerceContentModerationAction.findFirst({
+        where: {
+          contentId,
+          toStatus: CommerceContentModerationStatus.REJECTED,
+        },
+        orderBy: { createdAt: 'desc' },
+        select: { metadata: true },
+      }),
+      this.prisma.commerceContent.findUnique({
+        where: { id: contentId },
+        select: { expiresAt: true, publishedAt: true },
+      }),
+    ]);
+
+    const metadata = lastRemoval?.metadata;
+    const recorded =
+      metadata && typeof metadata === 'object' && !Array.isArray(metadata)
+        ? (metadata as Record<string, unknown>).previous_status
+        : undefined;
+    const valid = Object.values(CommerceContentStatus) as string[];
+    let status =
+      typeof recorded === 'string' &&
+      valid.includes(recorded) &&
+      recorded !== CommerceContentStatus.REMOVED &&
+      recorded !== CommerceContentStatus.DELETED
+        ? (recorded as CommerceContentStatus)
+        : content?.publishedAt
+          ? CommerceContentStatus.PUBLISHED
+          : CommerceContentStatus.DRAFT;
+
+    if (
+      status === CommerceContentStatus.PUBLISHED &&
+      content?.expiresAt &&
+      content.expiresAt <= new Date()
+    ) {
+      status = CommerceContentStatus.EXPIRED;
+    }
+    return status;
   }
 
   // ── Reports ───────────────────────────────────────────────────────────────
@@ -242,9 +297,18 @@ export class ContentModerationService {
   ) {
     const content = await this.prisma.commerceContent.findUnique({
       where: { id: contentId },
-      select: { id: true, authorId: true },
+      select: { id: true, authorId: true, status: true },
     });
     if (!content) throw new NotFoundException('Content not found');
+    // Reporting her own piece is not a report — it would put her own post
+    // at the top of the moderators' queue. She deletes it instead.
+    if (content.authorId === user.id) {
+      throw new BadRequestException('CANNOT_REPORT_OWN_CONTENT');
+    }
+    // Already taken down: the report has been answered.
+    if (content.status === CommerceContentStatus.REMOVED) {
+      return { reported: true, already: true };
+    }
 
     const existing = await this.prisma.moderationCase.findFirst({
       where: {
@@ -285,9 +349,12 @@ export class ContentModerationService {
   ) {
     const comment = await this.prisma.commerceContentComment.findUnique({
       where: { id: commentId },
-      select: { id: true },
+      select: { id: true, userId: true },
     });
     if (!comment) throw new NotFoundException('Comment not found');
+    if (comment.userId === user.id) {
+      throw new BadRequestException('CANNOT_REPORT_OWN_CONTENT');
+    }
 
     const existing = await this.prisma.moderationCase.findFirst({
       where: {

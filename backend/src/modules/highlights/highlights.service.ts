@@ -22,6 +22,12 @@ import {
   UpdateHighlightDto,
 } from './dto/highlight.dto';
 
+
+/** The states in which a story may sit on, and be shown from, a highlight. */
+const KEEPABLE_STORY_STATUSES: CommerceContentStatus[] = [
+  CommerceContentStatus.PUBLISHED,
+  CommerceContentStatus.EXPIRED,
+];
 const storyInclude = {
   author: true,
   media: { orderBy: { sortOrder: 'asc' as const } },
@@ -114,7 +120,11 @@ export class HighlightsService {
       where: {
         authorId: ownerId,
         contentType: 'story',
-        status: CommerceContentStatus.PUBLISHED,
+        // EXPIRED as well as PUBLISHED: the expiry sweep moves a story to
+        // EXPIRED when its day is over, and a picker that listed PUBLISHED
+        // only lost every story the moment the sweep reached it — exactly
+        // the stories this picker exists to keep.
+        status: { in: KEEPABLE_STORY_STATUSES },
         removedAt: null,
       },
       orderBy: { createdAt: 'desc' },
@@ -303,7 +313,7 @@ export class HighlightsService {
         id: { in: unique },
         authorId: ownerId,
         contentType: 'story',
-        status: CommerceContentStatus.PUBLISHED,
+        status: { in: KEEPABLE_STORY_STATUSES },
         removedAt: null,
       },
       select: { id: true },
@@ -330,7 +340,15 @@ export class HighlightsService {
     highlight: HighlightRecord,
     options: { isOwner: boolean; withStories?: boolean },
   ) {
-    const items = highlight.items.filter((item) => item.content !== null);
+    // A story she deleted, or one a moderator took down, leaves every shelf
+    // it was on — a takedown has to reach every page, and a highlight is a
+    // page. The item row stays, so a reinstated story comes back to it.
+    const items = highlight.items.filter(
+      (item) =>
+        item.content !== null &&
+        item.content.removedAt === null &&
+        KEEPABLE_STORY_STATUSES.includes(item.content.status),
+    );
     const firstImage = items.find(
       (item) =>
         (item.content.media ?? []).some(

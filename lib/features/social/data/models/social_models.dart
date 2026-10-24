@@ -2,6 +2,7 @@ import 'package:reem/core/shared/models/user_model.dart';
 import 'package:reem/core/shared/value_objects/money.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_analytics.dart';
+import 'package:reem/features/social/domain/entities/content_audience.dart';
 import 'package:reem/features/social/domain/entities/content_comment.dart';
 import 'package:reem/features/social/domain/entities/content_draft.dart';
 
@@ -265,6 +266,43 @@ class ReshareSummaryModel extends ReshareSummary {
             ),
           )
           .toList(growable: false),
+    );
+  }
+}
+
+/// `GET /content/:id/viewers`.
+class ContentAudienceModel extends ContentAudience {
+  const ContentAudienceModel({
+    required super.contentId,
+    super.views,
+    super.viewersCount,
+    super.reactions,
+    super.reactionBreakdown,
+    super.viewers,
+  });
+
+  factory ContentAudienceModel.fromJson(Map<String, dynamic> json) {
+    final breakdown = json['reaction_breakdown'];
+    return ContentAudienceModel(
+      contentId: json['content_id'] as String? ?? '',
+      views: _int(json['views_count']),
+      viewersCount: _int(json['viewers_count']),
+      reactions: _int(json['reactions_count']),
+      reactionBreakdown: breakdown is Map
+          ? {
+              for (final entry in breakdown.entries)
+                '${entry.key}': _int(entry.value),
+            }
+          : const {},
+      viewers: [
+        for (final row in (json['viewers'] as List? ?? const []))
+          if (row is Map<String, dynamic> && row['user'] is Map<String, dynamic>)
+            ContentViewer(
+              user: UserModel.fromJson(row['user'] as Map<String, dynamic>),
+              viewedAt: _date(row['viewed_at']),
+              reaction: row['reaction'] as String?,
+            ),
+      ],
     );
   }
 }

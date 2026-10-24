@@ -47,9 +47,14 @@ enum ReportReason {
 /// [submit] is the only thing that differs between a post and a product; the
 /// sheet, the reasons and the confirmation are the same so a report reads the
 /// same wherever she makes it.
+///
+/// [submitDetailed], when given, is used for «سبب آخر»: a reason the list
+/// does not name is one a moderator can only act on if she says what it is,
+/// so the sheet asks — optionally — before sending.
 Future<void> showReportSheet(
   BuildContext context, {
   required Future<Result<void>> Function(String reason) submit,
+  Future<Result<void>> Function(String reason, String? detail)? submitDetailed,
 }) async {
   final l10n = context.l10n;
   final reason = await DsBottomSheet.choose<ReportReason>(
@@ -67,12 +72,68 @@ Future<void> showReportSheet(
   );
   if (reason == null || !context.mounted) return;
 
-  final result = await submit(reason.wire);
+  Future<Result<void>> Function() sender = () => submit(reason.wire);
+  if (reason == ReportReason.other && submitDetailed != null) {
+    final detail = await DsBottomSheet.show<String>(
+      context,
+      builder: (_) => const _ReportDetailSheet(),
+    );
+    if (detail == null || !context.mounted) return;
+    sender = () => submitDetailed(reason.wire, detail.isEmpty ? null : detail);
+  }
+
+  final result = await sender();
   if (!context.mounted) return;
   switch (result) {
     case Success():
       DsSnackbar.success(context, l10n.reportSent);
     case Error(:final failure):
       DsSnackbar.error(context, failure.message);
+  }
+}
+
+/// «أخبرينا بالمزيد» — the free-text half of «سبب آخر». Returns her words
+/// (possibly empty) on send, null if she backs out.
+class _ReportDetailSheet extends StatefulWidget {
+  const _ReportDetailSheet();
+
+  @override
+  State<_ReportDetailSheet> createState() => _ReportDetailSheetState();
+}
+
+class _ReportDetailSheetState extends State<_ReportDetailSheet> {
+  final _detail = TextEditingController();
+
+  @override
+  void dispose() {
+    _detail.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return DsSheetScaffold(
+      title: l10n.reportDetailTitle,
+      subtitle: l10n.reportSubtitle,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DsInputField(
+            controller: _detail,
+            label: l10n.reportDetailLabel,
+            hint: l10n.reportDetailHint,
+            maxLines: 4,
+          ),
+          DsGaps.vLg,
+          PrimaryButton(
+            label: l10n.reportSend,
+            icon: Icons.flag_outlined,
+            onPressed: () => Navigator.of(context).pop(_detail.text.trim()),
+          ),
+        ],
+      ),
+    );
   }
 }

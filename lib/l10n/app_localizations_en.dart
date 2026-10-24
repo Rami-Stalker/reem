@@ -12622,6 +12622,79 @@ class AppLocalizationsEn extends AppLocalizations {
       'You didn\'t record a look for this day. Add one so we can warn you before a repeat.';
 
   @override
+  String get postMenuEdit => 'Edit';
+
+  @override
+  String get contentEditTitle => 'Edit';
+
+  @override
+  String get contentEditSave => 'Save changes';
+
+  @override
+  String get contentEdited => 'Your changes are saved';
+
+  @override
+  String get contentEditedUnderReview =>
+      'Saved — it\'s back with our team for a quick look before it shows again';
+
+  @override
+  String get audienceTitle => 'Seen by';
+
+  @override
+  String get audienceViewers => 'Viewers';
+
+  @override
+  String get audienceViews => 'Views';
+
+  @override
+  String get audienceReactions => 'Reactions';
+
+  @override
+  String get audienceEmpty => 'Nobody has seen it yet';
+
+  @override
+  String get audienceEmptyBody =>
+      'When someone watches it, you\'ll find them here.';
+
+  @override
+  String get reportDetailTitle => 'Tell us a little more';
+
+  @override
+  String get reportDetailLabel => 'What\'s wrong with it?';
+
+  @override
+  String get reportDetailHint =>
+      'Optional — a few words help our team act faster';
+
+  @override
+  String get reportSend => 'Send report';
+
+  @override
+  String get storyMenuDelete => 'Delete story';
+
+  @override
+  String get storyMenuReport => 'Report story';
+
+  @override
+  String get storyDeleteTitle => 'Delete this story?';
+
+  @override
+  String get storyDeleteBody =>
+      'It disappears for everyone straight away, and from any highlight it was in.';
+
+  @override
+  String get storyDeleted => 'Story deleted';
+
+  @override
+  String get storyShopThis => 'Shop this piece';
+
+  @override
+  String get composerStoryPhoto => 'Photo';
+
+  @override
+  String get composerStoryVideo => 'Video';
+
+  @override
   String get fitRunsSmall => 'Runs small';
 
   @override

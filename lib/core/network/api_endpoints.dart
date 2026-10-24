@@ -182,6 +182,7 @@ abstract final class ApiEndpoints {
   static String contentComment(String commentId) =>
       '/content/comments/$commentId';
   static String contentReport(String id) => '/content/$id/report';
+  static String contentViewers(String id) => '/content/$id/viewers';
 
   /// The post menu's quiet options — private to her, never a report.
   static String contentHide(String id) => '/content/$id/hide';

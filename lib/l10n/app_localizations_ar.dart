@@ -12790,6 +12790,77 @@ class AppLocalizationsAr extends AppLocalizations {
       'ما سجّلتِ إطلالة لهاليوم. ضيفيها حتى ننبّهكِ قبل ما تتكرّر.';
 
   @override
+  String get postMenuEdit => 'تعديل';
+
+  @override
+  String get contentEditTitle => 'تعديل';
+
+  @override
+  String get contentEditSave => 'حفظ التعديلات';
+
+  @override
+  String get contentEdited => 'انحفظت التعديلات';
+
+  @override
+  String get contentEditedUnderReview =>
+      'انحفظت التعديلات — ورجع المنشور لفريقنا لنظرة سريعة قبل ما يظهر من جديد';
+
+  @override
+  String get audienceTitle => 'شوهدت من قبل';
+
+  @override
+  String get audienceViewers => 'مشاهِدات';
+
+  @override
+  String get audienceViews => 'مشاهدات';
+
+  @override
+  String get audienceReactions => 'تفاعلات';
+
+  @override
+  String get audienceEmpty => 'ما حدا شافها لسّا';
+
+  @override
+  String get audienceEmptyBody => 'لمّا حدا يشوفها، رح تلاقيه هون.';
+
+  @override
+  String get reportDetailTitle => 'خبّرينا أكتر';
+
+  @override
+  String get reportDetailLabel => 'شو المشكلة فيه؟';
+
+  @override
+  String get reportDetailHint => 'اختياري — كلمتين بيساعدوا فريقنا يتصرّف أسرع';
+
+  @override
+  String get reportSend => 'إرسال البلاغ';
+
+  @override
+  String get storyMenuDelete => 'حذف الستوري';
+
+  @override
+  String get storyMenuReport => 'الإبلاغ عن الستوري';
+
+  @override
+  String get storyDeleteTitle => 'بدك تحذفي هالستوري؟';
+
+  @override
+  String get storyDeleteBody =>
+      'رح تختفي عن الكل فوراً، ومن أي «أبرز» كانت فيه.';
+
+  @override
+  String get storyDeleted => 'انحذفت الستوري';
+
+  @override
+  String get storyShopThis => 'تسوّقي القطعة';
+
+  @override
+  String get composerStoryPhoto => 'صورة';
+
+  @override
+  String get composerStoryVideo => 'فيديو';
+
+  @override
   String get fitRunsSmall => 'صغير';
 
   @override

@@ -318,6 +318,8 @@ class Content extends Equatable {
     ContentViewerState? viewer,
     ContentStatus? status,
     ContentModerationState? moderationState,
+    String? body,
+    ContentVisibility? visibility,
   }) {
     return Content(
       id: id,
@@ -326,9 +328,9 @@ class Content extends Equatable {
       format: format,
       status: status ?? this.status,
       moderationState: moderationState ?? this.moderationState,
-      visibility: visibility,
+      visibility: visibility ?? this.visibility,
       title: title,
-      body: body,
+      body: body ?? this.body,
       media: media,
       productTags: productTags,
       counts: counts ?? this.counts,
@@ -341,7 +343,15 @@ class Content extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, status, moderationState, counts, viewer];
+  List<Object?> get props => [
+    id,
+    status,
+    moderationState,
+    visibility,
+    body,
+    counts,
+    viewer,
+  ];
 }
 
 /// Somebody else's post, on her page.

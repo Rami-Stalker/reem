@@ -13,7 +13,9 @@ import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/core/shared/services/share_service.dart';
 import 'package:reem/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reem/features/auth/presentation/widgets/auth_prompt_sheet.dart';
+import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/presentation/providers/social_providers.dart';
+import 'package:reem/features/social/presentation/widgets/edit_content_sheet.dart';
 import 'package:reem/features/social/presentation/widgets/report_sheet.dart';
 
 /// What the «…» on a post is about.
@@ -27,12 +29,17 @@ class PostMenuTarget {
     required this.author,
     this.productId,
     this.isReshared = false,
+    this.content,
   });
 
   final String contentId;
   final User author;
   final String? productId;
   final bool isReshared;
+
+  /// The piece itself, when the card holds the platform's `Content`. Needed
+  /// to offer «تعديل» — the edit sheet starts from her current caption.
+  final Content? content;
 }
 
 /// How the feed that owns the card should react to what she chose.
@@ -48,6 +55,7 @@ class PostMenuCallbacks {
     this.onUnmuted,
     this.onToggleReshare,
     this.onDeleted,
+    this.onEdited,
   });
 
   /// The card should leave the list now.
@@ -66,9 +74,14 @@ class PostMenuCallbacks {
   /// Her own post was deleted. Null hides «حذف المنشور» — a surface that
   /// cannot take the card away should not offer to.
   final VoidCallback? onDeleted;
+
+  /// Her own post was edited; the card should show the new caption. Null
+  /// hides «تعديل».
+  final ValueChanged<Content>? onEdited;
 }
 
 enum _PostAction {
+  edit,
   notInterested,
   mute,
   reshare,
@@ -104,6 +117,12 @@ Future<void> showPostOptions(
   final action = await DsBottomSheet.choose<_PostAction>(
     context,
     choices: [
+      if (isMine && target.content != null && callbacks.onEdited != null)
+        DsSheetChoice(
+          value: _PostAction.edit,
+          label: l10n.postMenuEdit,
+          icon: Icons.edit_outlined,
+        ),
       if (!isMine) ...[
         DsSheetChoice(
           value: _PostAction.notInterested,
@@ -171,6 +190,12 @@ Future<void> showPostOptions(
   );
 
   switch (action) {
+    case _PostAction.edit:
+      final content = target.content;
+      if (content == null) return;
+      final updated = await showEditContentSheet(context, content: content);
+      if (updated != null) callbacks.onEdited?.call(updated);
+
     case _PostAction.notInterested:
       if (!await signedIn() || !context.mounted) return;
       final result = await repository.hide(target.contentId);
@@ -263,6 +288,8 @@ Future<void> showPostOptions(
       await showReportSheet(
         context,
         submit: (reason) => repository.report(target.contentId, reason),
+        submitDetailed: (reason, detail) =>
+            repository.report(target.contentId, reason, detail: detail),
       );
   }
 }

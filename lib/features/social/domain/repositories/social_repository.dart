@@ -3,6 +3,7 @@ import 'package:reem/core/result/result.dart';
 import 'package:reem/core/shared/entities/user.dart';
 import 'package:reem/features/social/domain/entities/content.dart';
 import 'package:reem/features/social/domain/entities/content_analytics.dart';
+import 'package:reem/features/social/domain/entities/content_audience.dart';
 import 'package:reem/features/social/domain/entities/content_comment.dart';
 import 'package:reem/features/social/domain/entities/content_draft.dart';
 
@@ -96,6 +97,18 @@ abstract interface class SocialRepository {
 
   /// Her own deletion — never confused with a moderator's removal.
   Future<Result<void>> deleteOwn(String contentId);
+
+  /// Her own edit — the caption and who may see it. An edit that trips the
+  /// word screen sends the piece back to a moderator; the returned `Content`
+  /// says so in its moderation state.
+  Future<Result<Content>> edit(
+    String contentId, {
+    String? caption,
+    ContentVisibility? visibility,
+  });
+
+  /// «شوهدت من قبل» — who watched her own story or reel. Owner only.
+  Future<Result<ContentAudience>> audience(String contentId);
 
   // ── Interacting ───────────────────────────────────────────────────────────
 

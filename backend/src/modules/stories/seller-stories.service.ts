@@ -16,6 +16,7 @@ import {
 } from '../../common/serializers';
 import { CreateStoryDto } from './dto/create-story.dto';
 import { MediaService } from '../media/media.service';
+import { assertAuthorMayChange } from '../commerce-content/commerce-content.service';
 
 const STORY_TTL_HOURS = 24;
 
@@ -90,7 +91,11 @@ export class SellerStoriesService {
   }
 
   async remove(user: AuthUser, id: string) {
-    await this.ownedOrThrow(user, id);
+    const story = await this.ownedOrThrow(user, id);
+    if (story.status === CommerceContentStatus.DELETED) {
+      return { message: 'Story deleted' };
+    }
+    assertAuthorMayChange(story.status);
     await this.prisma.commerceContent.update({
       where: { id },
       data: { status: CommerceContentStatus.DELETED, archivedAt: new Date() },
@@ -168,6 +173,7 @@ export class SellerStoriesService {
       select: {
         id: true,
         authorId: true,
+        status: true,
         expiresAt: true,
         createdAt: true,
       },

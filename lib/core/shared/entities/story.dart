@@ -13,6 +13,9 @@ class Story extends Equatable {
   final List<MediaItem> media;
 
   final String? link;
+
+  /// The piece the story is about, when it tags one — «تسوّقي القطعة».
+  final String? productId;
   final bool isViewed;
 
   /// The current viewer's reaction emoji, if any.
@@ -26,6 +29,7 @@ class Story extends Equatable {
     required this.user,
     this.media = const [],
     this.link,
+    this.productId,
     this.isViewed = false,
     this.myReaction,
     required this.expiresAt,
@@ -45,6 +49,7 @@ class Story extends Equatable {
         user,
         media,
         link,
+        productId,
         isViewed,
         myReaction,
         expiresAt,

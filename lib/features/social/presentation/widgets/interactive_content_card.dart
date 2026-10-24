@@ -203,8 +203,14 @@ class _InteractiveContentCardState
             ? null
             : content.productTags.first.product.id,
         isReshared: content.viewer.isReshared,
+        content: content,
       ),
       callbacks: PostMenuCallbacks(
+        onEdited: content.author.id == me
+            ? (updated) {
+                if (mounted) setState(() => _content = updated);
+              }
+            : null,
         onHidden: _remove,
         onUnhidden: _restore,
         // On a woman's own page a mute does not remove her posts — muting

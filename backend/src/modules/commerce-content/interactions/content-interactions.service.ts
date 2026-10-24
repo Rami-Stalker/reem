@@ -17,7 +17,31 @@ import { AuthUser } from '../../../common/decorators/current-user.decorator';
 import { buildMeta, PaginationDto } from '../../../common/dto/pagination.dto';
 import { AppEvent } from '../../../common/events/app-events';
 import { assertCanManage } from '../../../common/authz';
+import { serializePublicUser } from '../../../common/serializers/user.serializer';
 import { ContentAttributionService } from '../attribution/content-attribution.service';
+import { contentVisibilityWhere } from '../feed/content-feed.service';
+
+/**
+ * Runs a write that a second, racing tap may already have made — a double
+ * tap on the heart sends two requests that both see "no row yet". The loser
+ * hits the unique index (or the row the winner deleted); that is not a
+ * failure, her state is whatever the winner left. Resolves `true` when the
+ * write lost such a race.
+ */
+async function settleRace(write: Promise<unknown>): Promise<boolean> {
+  try {
+    await write;
+    return false;
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      (error.code === 'P2002' || error.code === 'P2025')
+    ) {
+      return true;
+    }
+    throw error;
+  }
+}
 
 /**
  * Everything a woman *does* to a piece of content: likes it, saves it,
@@ -55,7 +79,7 @@ export class ContentInteractionsService {
    * reaction — the story contract's `my_reaction` is singular.
    */
   async react(user: AuthUser, contentId: string, emoji?: string) {
-    const content = await this.interactableOrThrow(contentId);
+    const content = await this.interactableOrThrow(contentId, user.id);
 
     const existing = await this.prisma.commerceContentReaction.findUnique({
       where: { contentId_userId: { contentId, userId: user.id } },
@@ -67,7 +91,7 @@ export class ContentInteractionsService {
     // a story without first clearing it.
     const isRemoval = existing !== null && (emoji ?? null) === existing.emoji;
 
-    await this.prisma.$transaction(async (tx) => {
+    const raced = await settleRace(this.prisma.$transaction(async (tx) => {
       if (isRemoval) {
         await tx.commerceContentReaction.delete({ where: { id: existing.id } });
         await tx.commerceContent.update({
@@ -103,7 +127,8 @@ export class ContentInteractionsService {
           lastEngagementAt: new Date(),
         },
       });
-    });
+    }));
+    if (raced) return this.viewerState(contentId, user.id);
 
     if (!isRemoval && content.authorId !== user.id) {
       this.events.emit(AppEvent.ContentLiked, {
@@ -119,14 +144,14 @@ export class ContentInteractionsService {
   // ── Saves ─────────────────────────────────────────────────────────────────
 
   async toggleSave(user: AuthUser, contentId: string) {
-    await this.interactableOrThrow(contentId);
+    await this.interactableOrThrow(contentId, user.id);
 
     const existing = await this.prisma.commerceContentSave.findUnique({
       where: { contentId_userId: { contentId, userId: user.id } },
       select: { id: true },
     });
 
-    await this.prisma.$transaction([
+    await settleRace(this.prisma.$transaction([
       existing
         ? this.prisma.commerceContentSave.delete({ where: { id: existing.id } })
         : this.prisma.commerceContentSave.create({
@@ -142,7 +167,7 @@ export class ContentInteractionsService {
               lastEngagementAt: new Date(),
             },
       }),
-    ]);
+    ]));
 
     return this.viewerState(contentId, user.id);
   }
@@ -155,7 +180,7 @@ export class ContentInteractionsService {
     body: string,
     parentId?: string,
   ) {
-    const content = await this.interactableOrThrow(contentId);
+    const content = await this.interactableOrThrow(contentId, user.id);
 
     // One level only. A reply to a reply is re-parented to the thread root
     // rather than refused: she was answering somebody, and telling her the
@@ -270,7 +295,8 @@ export class ContentInteractionsService {
     return { removed: true };
   }
 
-  async listComments(contentId: string, page: PaginationDto) {
+  async listComments(contentId: string, page: PaginationDto, viewerId?: string) {
+    await this.assertReadable(contentId, viewerId);
     const where: Prisma.CommerceContentCommentWhereInput = {
       contentId,
       parentId: null,
@@ -335,7 +361,7 @@ export class ContentInteractionsService {
     contentId: string,
     input: { note?: string; viaReshareId?: string } = {},
   ) {
-    const content = await this.interactableOrThrow(contentId);
+    const content = await this.interactableOrThrow(contentId, user.id);
 
     if (content.authorId === user.id) {
       throw new BadRequestException('CANNOT_RESHARE_OWN_CONTENT');
@@ -368,7 +394,8 @@ export class ContentInteractionsService {
     // second row and not a second number on the boutique's dashboard.
     if (existing) return { reshared: true, id: existing.id, already: true };
 
-    const reshare = await this.prisma.$transaction(async (tx) => {
+    let reshare: { id: string } | undefined;
+    const raced = await settleRace(this.prisma.$transaction(async (tx) => {
       const created = await tx.commerceContentReshare.create({
         data: {
           sourceContentId: contentId,
@@ -395,8 +422,17 @@ export class ContentInteractionsService {
           metadata: { channel: 'reshare', reshare_id: created.id },
         },
       });
-      return created;
-    });
+      reshare = created;
+    }));
+    if (raced || !reshare) {
+      const winner = await this.prisma.commerceContentReshare.findUnique({
+        where: {
+          sourceContentId_resharerId: { sourceContentId: contentId, resharerId: user.id },
+        },
+        select: { id: true },
+      });
+      return { reshared: true, id: winner?.id ?? null, already: true };
+    }
 
     // Outside the transaction on purpose: the projection is rebuildable, and
     // failing to write it must not undo the woman's reshare.
@@ -428,14 +464,14 @@ export class ContentInteractionsService {
     });
     if (!existing) return { reshared: false };
 
-    await this.prisma.$transaction([
+    const raced = await settleRace(this.prisma.$transaction([
       this.prisma.commerceContentReshare.delete({ where: { id: existing.id } }),
       this.prisma.commerceContent.update({
         where: { id: contentId },
         data: { sharesCount: { decrement: 1 } },
       }),
-    ]);
-    await this.attribution.rebuild(contentId);
+    ]));
+    if (!raced) await this.attribution.rebuild(contentId);
     return { reshared: false };
   }
 
@@ -444,7 +480,7 @@ export class ContentInteractionsService {
    * not a reshare: nothing was added to anybody's page.
    */
   async recordExternalShare(user: AuthUser, contentId: string) {
-    await this.interactableOrThrow(contentId);
+    await this.interactableOrThrow(contentId, user.id);
     await this.prisma.$transaction([
       this.prisma.commerceContent.update({
         where: { id: contentId },
@@ -475,7 +511,7 @@ export class ContentInteractionsService {
    * holding a stale card must not be able to like, comment on or reshare
    * something a moderator has taken down.
    */
-  private async interactableOrThrow(contentId: string) {
+  private async interactableOrThrow(contentId: string, viewerId?: string) {
     const content = await this.prisma.commerceContent.findUnique({
       where: { id: contentId },
       select: { id: true, authorId: true, status: true, expiresAt: true },
@@ -487,7 +523,100 @@ export class ContentInteractionsService {
     if (content.status !== CommerceContentStatus.PUBLISHED) {
       throw new ForbiddenException('CONTENT_NOT_PUBLISHED');
     }
+    // A story past its day is gone, whether or not the expiry sweep has
+    // reached it yet — the sweep runs on a schedule, the clock does not.
+    if (content.expiresAt && content.expiresAt <= new Date()) {
+      throw new ForbiddenException('CONTENT_EXPIRED');
+    }
+    // The feeds' own rule. A followers-only piece, or one on a page that has
+    // since closed, is not something a stranger may like or comment on just
+    // because she kept its id — 404, as `GET /content/:id` answers her.
+    await this.assertReadable(contentId, viewerId);
     return content;
+  }
+
+  /**
+   * Whether this viewer may see the piece at all — the feeds' visibility
+   * rule. Comments are read under it too: a followers-only post's
+   * conversation is not public because its id is.
+   */
+  async assertReadable(contentId: string, viewerId?: string) {
+    const visible = await this.prisma.commerceContent.count({
+      where: { AND: [{ id: contentId }, contentVisibilityWhere(viewerId)] },
+    });
+    if (visible === 0) throw new NotFoundException('Content not found');
+  }
+
+  /**
+   * Who watched it — the «شوهدت من قبل» list on her own story or reel.
+   *
+   * Role-neutral on purpose. The legacy `/seller/stories/:id/viewers` is
+   * seller-only and verified-only, and a shopper may publish stories too:
+   * she had no way at all to see who watched hers. Owner (or moderator)
+   * only — `assertCanManage` is the platform's one gate for that.
+   *
+   * The most recent viewers, capped: a story is a day long and the list is
+   * read on a phone, so two hundred faces is already more than she scrolls.
+   */
+  async audience(user: AuthUser, contentId: string) {
+    const content = await this.prisma.commerceContent.findUnique({
+      where: { id: contentId },
+      select: {
+        id: true,
+        authorId: true,
+        viewsCount: true,
+        uniqueViewersCount: true,
+        reactionsCount: true,
+      },
+    });
+    if (!content) throw new NotFoundException('Content not found');
+    assertCanManage(content.authorId, user);
+
+    const [views, reactions] = await Promise.all([
+      this.prisma.commerceContentViewer.findMany({
+        where: { contentId, userId: { not: content.authorId } },
+        orderBy: { lastViewedAt: 'desc' },
+        take: 200,
+      }),
+      this.prisma.commerceContentReaction.findMany({
+        where: { contentId },
+        select: { userId: true, emoji: true },
+      }),
+    ]);
+
+    // `CommerceContentViewer.userId` carries no relation, so the people are
+    // fetched in one query rather than joined.
+    const users = await this.prisma.user.findMany({
+      where: { id: { in: views.map((view) => view.userId) } },
+    });
+    const userById = new Map(users.map((row) => [row.id, row]));
+    const reactionByUser = new Map(
+      reactions.map((reaction) => [reaction.userId, reaction.emoji]),
+    );
+    const breakdown: Record<string, number> = {};
+    for (const reaction of reactions) {
+      const emoji = reaction.emoji ?? '♥';
+      breakdown[emoji] = (breakdown[emoji] ?? 0) + 1;
+    }
+
+    return {
+      content_id: contentId,
+      views_count: Number(content.viewsCount ?? 0),
+      viewers_count: Number(content.uniqueViewersCount ?? views.length),
+      reactions_count: reactions.length,
+      reaction_breakdown: breakdown,
+      viewers: views
+        .map((view) => {
+          const viewer = userById.get(view.userId);
+          if (!viewer) return null;
+          return {
+            user: serializePublicUser(viewer),
+            viewed_at: view.lastViewedAt.toISOString(),
+            reaction: reactionByUser.get(view.userId) ?? null,
+          };
+        })
+        .filter((row): row is NonNullable<typeof row> => row !== null),
+    };
   }
 
   /** What the card should render for this viewer, right now. */

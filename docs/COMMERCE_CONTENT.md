@@ -56,6 +56,43 @@ notifies the author with the reason in Arabic. The reason is demanded in three
 places — the DTO, the service, and a CHECK constraint — and removal is
 reversible.
 
+## The lifecycle, and the ways round it that are closed
+
+Reels and stories are published, edited, reported, taken down and
+reinstated through the same service, and each step refuses the shortcut that
+would undo the one before it:
+
+- **A takedown is final for the author.** `REMOVED` cannot be published,
+  edited, archived, rolled back or deleted by her (`CONTENT_REMOVED`); the
+  only way back is a moderator's audited `reinstate`. A rollback used to reset
+  the status to `DRAFT`, which made roll-back-then-publish a second way round.
+- **`APPROVED` means the words on it now were passed.** The word screen runs
+  at create and on every edit, not only at publish — a clean caption edited
+  into a phone number goes back to `IN_REVIEW`, as does a changed caption or
+  picture while she is still inside her first reviewed posts.
+- **An edit obeys the format.** A reel cannot be edited into having no video,
+  and a story's expiry can be shortened but never lengthened or removed.
+- **Publishing twice is one publication.** A second `publish` no longer
+  re-stamps `published_at` and lifts an old piece back to the head of every
+  feed.
+- **A story needs no special payload.** The story schema requires `frames`;
+  when the client sends media and a caption like every other format, the
+  frames are derived from the media.
+- **The write paths read the feeds' visibility rule.** Liking, saving,
+  commenting, resharing and reading comments all use
+  `contentVisibilityWhere`, so a followers-only piece cannot be acted on by a
+  stranger holding its id, and an expired story cannot be reacted to before
+  the sweep reaches it. Racing double taps resolve to the winner's state
+  instead of a 500.
+- **Reports.** She cannot report her own piece; reporting twice is one report;
+  «سبب آخر» carries her words to the moderator.
+- **Reinstate restores what was there.** A removed draft comes back a draft, a
+  story whose day ran out comes back `EXPIRED` — not everything `PUBLISHED`.
+- **Highlights follow the story.** A removed or deleted story leaves every
+  highlight it was on; an expired one stays in the picker after the sweep.
+- **Views.** Her own replays and a repeat `VIEW` inside thirty seconds are not
+  counted.
+
 ## API
 
 ```
@@ -68,6 +105,8 @@ POST   /content/:id/publish | /archive | /rollback/:v
 POST   /content/:id/like | /save | /share | /reshare   (DELETE to undo)
 GET    /content/:id/comments   POST /content/:id/comments
 POST   /content/:id/report     POST /content/:id/events
+GET    /content/:id/viewers          «شوهدت من قبل» — owner only, any role
+PATCH  /content/:id                  her edit (caption, audience, media…)
 GET    /seller/content/analytics/{overview,reshares,promoters}
 GET    /admin/content   POST /admin/content/:id/{remove,reinstate}
 PATCH  /users/me/profile-visibility

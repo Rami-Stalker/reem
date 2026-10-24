@@ -185,6 +185,10 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
     state = state.copyWith(items: items);
   }
 
+  /// Her own edit, as the server now has it. An edit that sent the piece
+  /// back to review keeps it in her list — it is hers, and the card says so.
+  void replace(Content updated) => _patch(updated.id, (_) => updated);
+
   /// Content that has just been taken down, or that she deleted, leaves the
   /// list rather than sitting there un-tappable.
   void drop(String contentId) {

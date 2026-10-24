@@ -231,8 +231,11 @@ class _FeedListState extends ConsumerState<_FeedList> {
             ? null
             : content.productTags.first.product.id,
         isReshared: content.viewer.isReshared,
+        content: content,
       ),
       callbacks: PostMenuCallbacks(
+        onEdited: authorId == me ? notifier.replace : null,
+        onDeleted: authorId == me ? () => notifier.drop(content.id) : null,
         onHidden: () =>
             removed = notifier.removeWhere((item) => item.id == content.id),
         onUnhidden: () => notifier.restore(removed),
