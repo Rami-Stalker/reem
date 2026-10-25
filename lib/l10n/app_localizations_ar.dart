@@ -13346,4 +13346,476 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get mapPickerZoomCloser => 'قرّبي لتحددي الباب بالضبط';
+
+  @override
+  String get closetActionAdd => 'أضيفي قطعة';
+
+  @override
+  String get closetActionToday => 'لبسة اليوم';
+
+  @override
+  String get closetAddExtras => 'تفاصيل إضافية';
+
+  @override
+  String get closetAddNeeds => 'اكتبي اسم القطعة واختاري نوعها لتحفظيها.';
+
+  @override
+  String get closetAddUploading => 'نرفع الصورة…';
+
+  @override
+  String get closetAlreadyWornToday => 'سجّلتِ لبسها اليوم من قبل.';
+
+  @override
+  String closetBudgetRange(String min, String max) {
+    return 'من $min إلى $max';
+  }
+
+  @override
+  String closetBudgetUpTo(String max) {
+    return 'حتى $max';
+  }
+
+  @override
+  String get closetClearFilters => 'مسح التصفية';
+
+  @override
+  String get closetDeleteConfirmTitle => 'حذف القطعة نهائياً؟';
+
+  @override
+  String get closetDeleteConfirmBody =>
+      'ستُحذف القطعة وسجلّ لبسها كله، ولن تظهر في إطلالاتكِ. إن لم تعودي تملكينها فاختاري «لم تعد لديّ» لتحتفظي بسجلّها.';
+
+  @override
+  String get closetDeleteHint => 'تُمحى القطعة وسجلّها كله';
+
+  @override
+  String get closetDeleted => 'حُذفت القطعة.';
+
+  @override
+  String get closetDeleteLookConfirmTitle => 'حذف هذه الإطلالة؟';
+
+  @override
+  String get closetDeleteLookConfirmBody =>
+      'تُحذف الإطلالة وحدها، وتبقى قطعها في خزانتكِ.';
+
+  @override
+  String get closetDetailColours => 'الألوان';
+
+  @override
+  String get closetDetailMaterial => 'الخامة';
+
+  @override
+  String get closetDetailModesty => 'الحشمة';
+
+  @override
+  String get closetDetailSeasons => 'المواسم';
+
+  @override
+  String get closetDetailSize => 'المقاس';
+
+  @override
+  String get closetDismissConfirmTitle => 'إخفاء هذا الاقتراح؟';
+
+  @override
+  String get closetDismissConfirmBody =>
+      'لن نقترح هذا النقص عليكِ مرة أخرى، حتى لو تغيّرت خزانتكِ.';
+
+  @override
+  String get closetFavouriteTag => 'مفضّلة';
+
+  @override
+  String get closetFilterEmptyTitle => 'لا قطع تطابق بحثكِ';
+
+  @override
+  String get closetFilterEmptyBody =>
+      'جرّبي كلمة أخرى أو امسحي التصفية لرؤية خزانتكِ كاملة.';
+
+  @override
+  String get closetFilterFavourites => 'المفضّلة';
+
+  @override
+  String get closetFilterShelved => 'على الرف';
+
+  @override
+  String get closetFitWithWardrobe => 'انسجامها مع خزانتكِ';
+
+  @override
+  String get closetFromStylist => 'من منسّقتكِ';
+
+  @override
+  String get closetGapKindCoverage => 'تفتح إطلالات جديدة';
+
+  @override
+  String get closetGapKindLook => 'تُكمل إطلالة';
+
+  @override
+  String get closetGapKindOccasion => 'لمناسبة';
+
+  @override
+  String get closetGapKindReplacement => 'بديل لقطعة';
+
+  @override
+  String get closetGapKindSeason => 'للموسم';
+
+  @override
+  String closetGapUnlocks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+$count إطلالة',
+      few: '+$count إطلالات',
+      two: '+إطلالتان',
+      one: '+إطلالة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetGapsEyebrow => 'ما يستحق الشراء';
+
+  @override
+  String get closetHowItWorks => 'كيف تعمل خزانتكِ';
+
+  @override
+  String get closetInsightCostFalls =>
+      'كل مرة تلبسينها تنخفض تكلفة اللبسة الواحدة.';
+
+  @override
+  String get closetInsightForgotten =>
+      'مرّت أكثر من ثلاثة أشهر — ربما حان وقت إطلالة جديدة بها.';
+
+  @override
+  String get closetInsightNeverWorn =>
+      'لم تلبسيها بعد. جرّبي تنسيقها هذا الأسبوع.';
+
+  @override
+  String closetInsightStaple(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قطعة أساسية لديكِ — لبستِها $count مرة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetLookNotWornYet => 'لم تلبسيها بعد';
+
+  @override
+  String get closetLookPalette => 'ألوانها';
+
+  @override
+  String closetLookPieceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة',
+      few: '$count قطع',
+      two: 'قطعتان',
+      one: 'قطعة واحدة',
+      zero: 'بلا قطع',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetLookPieces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قطعها الـ$count',
+      few: 'قطعها الـ$count',
+      two: 'قطعتاها',
+      one: 'قطعتها',
+      zero: 'قطعها',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetLooksFilterEmpty => 'لا إطلالات هنا بعد';
+
+  @override
+  String get closetLooksFilterReady => 'جاهزة';
+
+  @override
+  String get closetLooksFilterShort => 'تنقصها قطع';
+
+  @override
+  String closetLooksOneAway(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count إطلالة تنقص كلاً منها قطعة فقط',
+      few: '$count إطلالات تنقص كلاً منها قطعة فقط',
+      two: 'إطلالتان تنقص كلاً منهما قطعة فقط',
+      one: 'إطلالة واحدة تنقصها قطعة فقط',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String closetLooksReadyOf(int ready, int total) {
+    return '$ready من $total جاهزة للّبس الآن';
+  }
+
+  @override
+  String get closetManageTitle => 'إدارة القطعة';
+
+  @override
+  String closetMoreIdeas(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count فكرة أخرى',
+      few: '$count أفكار أخرى',
+      two: 'فكرتان أخريان',
+      one: 'فكرة أخرى',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetOptional => 'اختياري';
+
+  @override
+  String get closetOriginComposed => 'نسّقناها لكِ';
+
+  @override
+  String get closetOriginSaved => 'من إطلالاتكِ';
+
+  @override
+  String closetPriorityOutOf(String value) {
+    return '$value من 100';
+  }
+
+  @override
+  String get closetPulseAllSeason => 'كل إطلالاتكِ تناسب الطقس الآن.';
+
+  @override
+  String closetPulseEyebrow(String season) {
+    return 'خزانتكِ في $season';
+  }
+
+  @override
+  String get closetPulseHeadline => 'إطلالة يمكنكِ لبسها الآن من قطعكِ';
+
+  @override
+  String closetPulseReadiness(int percent) {
+    return '$percent٪ من إطلالاتكِ تناسب الموسم';
+  }
+
+  @override
+  String get closetPulseReadyLooks => 'إطلالة جاهزة';
+
+  @override
+  String get closetPulseSeasonReady => 'تناسب الموسم';
+
+  @override
+  String get closetRediscoverBody =>
+      'قطع لديكِ لم تلبسيها منذ مدة أو لم تلبسيها أبداً. لبسة واحدة تعيدها إلى خزانتكِ.';
+
+  @override
+  String get closetRediscoverEyebrow => 'أعيدي اكتشافها';
+
+  @override
+  String get closetRediscoverTitle => 'قطع تنتظركِ';
+
+  @override
+  String get closetReleaseConfirmTitle => 'لم تعد هذه القطعة لديكِ؟';
+
+  @override
+  String get closetReleaseConfirmBody =>
+      'ستخرج من خزانتكِ وإطلالاتكِ، ونحتفظ بسجلّ لبسها لنقترح لكِ بديلاً حين تحتاجين.';
+
+  @override
+  String get closetReleaseHint => 'بعتِها أو أهديتِها — نحتفظ بسجلّها';
+
+  @override
+  String get closetReleased => 'أخرجناها من خزانتكِ.';
+
+  @override
+  String get closetReturnHint => 'أعيديها إلى الخزانة والاقتراحات';
+
+  @override
+  String get closetReturned => 'عادت القطعة إلى خزانتكِ.';
+
+  @override
+  String get closetRotationTitle => 'حياتها في خزانتكِ';
+
+  @override
+  String get closetSearchHint => 'ابحثي باسم القطعة أو الماركة أو ملاحظتكِ';
+
+  @override
+  String closetSeasonNow(String season) {
+    return 'موسم $season';
+  }
+
+  @override
+  String get closetShelveHint => 'لا تناسب هذا الموسم — نخفيها من الاقتراحات';
+
+  @override
+  String get closetShelved => 'وضعناها على الرف لموسم آخر.';
+
+  @override
+  String get closetShelvedBanner =>
+      'هذه القطعة على الرف ولا تدخل في اقتراحات اليوم.';
+
+  @override
+  String get closetShelvedEmpty => 'لا قطع على الرف';
+
+  @override
+  String closetShortBy(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تنقصها $count قطعة',
+      few: 'تنقصها $count قطع',
+      two: 'تنقصها قطعتان',
+      one: 'تنقصها قطعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetShowAll => 'عرض الكل';
+
+  @override
+  String get closetSortLeastWorn => 'الأقل لبساً';
+
+  @override
+  String get closetSortMostWorn => 'الأكثر لبساً';
+
+  @override
+  String get closetSortRecent => 'الأحدث';
+
+  @override
+  String get closetSortTooltip => 'ترتيب القطع';
+
+  @override
+  String get closetStepAddTitle => 'أضيفي قطعكِ';
+
+  @override
+  String get closetStepAddBody =>
+      'اجلبي مشترياتكِ من أوهارا بلمسة، أو صوّري ما لديكِ.';
+
+  @override
+  String get closetStepLooksTitle => 'نكوّن لكِ إطلالات';
+
+  @override
+  String get closetStepLooksBody =>
+      'كل صباح نقترح ما يمكنكِ لبسه من قطعكِ أنتِ، حسب الطقس والمناسبة.';
+
+  @override
+  String get closetStepGapsTitle => 'نخبركِ بما ينقص';
+
+  @override
+  String get closetStepGapsBody =>
+      'قطعة واحدة قد تفتح إطلالات كثيرة — ونشرح لكِ لماذا.';
+
+  @override
+  String closetSuggestionsEyebrow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count اقتراحاً',
+      few: '$count اقتراحات',
+      two: 'اقتراحان',
+      one: 'اقتراح واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetTagForgotten => 'منسية';
+
+  @override
+  String get closetTagUnworn => 'لم تُلبس';
+
+  @override
+  String get closetTapToEnlarge => 'تكبير';
+
+  @override
+  String get closetTodayBestMatch => 'الأنسب لكِ اليوم';
+
+  @override
+  String get closetTodayEyebrow => 'اقتراح اليوم';
+
+  @override
+  String get closetTodayFromYours => 'كلها من قطعكِ أنتِ';
+
+  @override
+  String get closetTodayHello => 'صباح الأناقة';
+
+  @override
+  String closetTodayIdea(int number) {
+    return 'الفكرة $number';
+  }
+
+  @override
+  String closetTodaySeason(String season) {
+    return 'من قطعكِ أنتِ، لطقس $season';
+  }
+
+  @override
+  String get closetUndo => 'تراجع';
+
+  @override
+  String get closetUpdateFailed => 'تعذّر الحفظ الآن. حاولي مرة أخرى.';
+
+  @override
+  String get closetViewCompact => 'عرض مصغّر';
+
+  @override
+  String get closetViewLarge => 'عرض كبير';
+
+  @override
+  String closetWardrobeEyebrow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count قطعة',
+      few: '$count قطع',
+      two: 'قطعتان',
+      one: 'قطعة واحدة',
+      zero: 'لا قطع',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetWardrobeTitle => 'قطعي';
+
+  @override
+  String get closetWearFailed => 'تعذّر تسجيل اللبسة. حاولي مرة أخرى.';
+
+  @override
+  String closetWearLogged(String title) {
+    return 'سجّلنا لبسة «$title» اليوم.';
+  }
+
+  @override
+  String get closetWearUndone => 'ألغينا اللبسة.';
+
+  @override
+  String get closetWornTodayDone => 'لبستِها اليوم';
+
+  @override
+  String get closetWornNeverShort => 'لم تلبسيها بعد';
+
+  @override
+  String get closetWornLongAgoShort => 'لم تلبسيها منذ مدة';
+
+  @override
+  String closetWornTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'لبستِها $count مرة',
+      few: 'لبستِها $count مرات',
+      two: 'لبستِها مرتين',
+      one: 'لبستِها مرة',
+    );
+    return '$_temp0';
+  }
 }

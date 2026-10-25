@@ -37,14 +37,72 @@ final closetOverviewProvider = FutureProvider.autoDispose<ClosetOverview>((ref) 
   };
 });
 
-final closetItemsProvider = FutureProvider.autoDispose
-    .family<ClosetItemPage, ClosetItemQuery>((ref, query) async {
-  final result = await ref.watch(closetRepositoryProvider).items(query);
-  return switch (result) {
-    Success(:final data) => data,
-    Error(:final failure) => throw failure,
-  };
-});
+/// The wardrobe grid: the first page of a query, plus every page she has
+/// asked for since.
+///
+/// A notifier rather than a [FutureProvider] because the grid grows. Pages
+/// append in place, and a wear logged from a tile patches that one tile
+/// instead of refetching — a refetch would drop her back to the first page
+/// of a long wardrobe every time she tapped "لبستها اليوم".
+class ClosetWardrobe extends AsyncNotifier<ClosetItemPage> {
+  ClosetWardrobe(this.query);
+
+  final ClosetItemQuery query;
+
+  bool _loadingMore = false;
+
+  @override
+  Future<ClosetItemPage> build() async {
+    final result = await ref.watch(closetRepositoryProvider).items(query);
+    return switch (result) {
+      Success(:final data) => data,
+      Error(:final failure) => throw failure,
+    };
+  }
+
+  /// Appends the next page. A no-op while one is already in flight, so a
+  /// grid that reaches its end twice in one fling asks once.
+  Future<void> loadMore() async {
+    final current = state.asData?.value;
+    if (current == null || !current.hasMore || _loadingMore) return;
+    _loadingMore = true;
+    try {
+      final result = await ref
+          .read(closetRepositoryProvider)
+          .items(query.copyWith(cursor: current.nextCursor));
+      if (result case Success(:final data)) {
+        state = AsyncData(
+          ClosetItemPage(
+            items: [...current.items, ...data.items],
+            nextCursor: data.nextCursor,
+          ),
+        );
+      }
+    } finally {
+      _loadingMore = false;
+    }
+  }
+
+  /// Swaps in the server's copy of one piece, wherever it sits in the grid.
+  void replace(ClosetItem item) {
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(
+      ClosetItemPage(
+        items: [
+          for (final existing in current.items)
+            existing.id == item.id ? item : existing,
+        ],
+        nextCursor: current.nextCursor,
+      ),
+    );
+  }
+}
+
+final closetWardrobeProvider = AsyncNotifierProvider.autoDispose
+    .family<ClosetWardrobe, ClosetItemPage, ClosetItemQuery>(
+      ClosetWardrobe.new,
+    );
 
 final closetItemProvider =
     FutureProvider.autoDispose.family<ClosetItem, String>((ref, id) async {
@@ -136,7 +194,7 @@ class ClosetActions {
   void _invalidateWardrobe() {
     _ref.invalidate(closetOverviewProvider);
     _ref.invalidate(closetGapsProvider);
-    _ref.invalidate(closetItemsProvider);
+    _ref.invalidate(closetWardrobeProvider);
     _ref.invalidate(todayOutfitsProvider);
   }
 
@@ -190,13 +248,40 @@ class ClosetActions {
     return result;
   }
 
-  Future<Result<ClosetItem>> logWear(String id, {DateTime? wornOn}) async {
+  /// Logs a wear.
+  ///
+  /// [refreshWardrobe] is false when the caller is a grid tile that patches
+  /// itself from the returned piece — refetching would page her back to the
+  /// top of the grid for a change to one tile.
+  Future<Result<ClosetItem>> logWear(
+    String id, {
+    DateTime? wornOn,
+    bool refreshWardrobe = true,
+  }) async {
     final result = await _repository.logWear(id, wornOn: wornOn);
     if (result is Success<ClosetItem>) {
       _ref.invalidate(closetItemProvider(id));
+      if (refreshWardrobe) _ref.invalidate(closetWardrobeProvider);
       _ref.invalidate(closetOverviewProvider);
       // Rotation is the whole input to the daily pick, so a wear changes
       // tomorrow's answer.
+      _ref.invalidate(todayOutfitsProvider);
+    }
+    return result;
+  }
+
+  /// The undo for [logWear]. The wear log is only trustworthy if a mistaken
+  /// tap costs nothing to take back.
+  Future<Result<ClosetItem>> removeWear(
+    String id, {
+    DateTime? wornOn,
+    bool refreshWardrobe = true,
+  }) async {
+    final result = await _repository.removeWear(id, wornOn: wornOn);
+    if (result is Success<ClosetItem>) {
+      _ref.invalidate(closetItemProvider(id));
+      if (refreshWardrobe) _ref.invalidate(closetWardrobeProvider);
+      _ref.invalidate(closetOverviewProvider);
       _ref.invalidate(todayOutfitsProvider);
     }
     return result;
@@ -257,6 +342,8 @@ class ClosetActions {
       _ref.invalidate(closetLookProvider(id));
       _ref.invalidate(closetLooksProvider);
       _ref.invalidate(closetOverviewProvider);
+      // A look's wear fans out to every piece in it.
+      _ref.invalidate(closetWardrobeProvider);
       _ref.invalidate(todayOutfitsProvider);
     }
     return result;

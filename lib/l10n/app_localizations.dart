@@ -22669,6 +22669,684 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Zoom in to pin the exact door'**
   String get mapPickerZoomCloser;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add a piece'**
+  String get closetActionAdd;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s outfit'**
+  String get closetActionToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Extra details'**
+  String get closetAddExtras;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Name the piece and pick its type to save it.'**
+  String get closetAddNeeds;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading the photo…'**
+  String get closetAddUploading;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Already logged as worn today.'**
+  String get closetAlreadyWornToday;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{min} – {max}'**
+  String closetBudgetRange(String min, String max);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {max}'**
+  String closetBudgetUpTo(String max);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get closetClearFilters;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this piece for good?'**
+  String get closetDeleteConfirmTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The piece and its whole wear history will be erased and it will leave your looks. If you simply no longer own it, choose “No longer mine” to keep its history.'**
+  String get closetDeleteConfirmBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Erases the piece and all its history'**
+  String get closetDeleteHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Piece deleted.'**
+  String get closetDeleted;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this look?'**
+  String get closetDeleteLookConfirmTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Only the look is deleted — its pieces stay in your closet.'**
+  String get closetDeleteLookConfirmBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Colours'**
+  String get closetDetailColours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Material'**
+  String get closetDetailMaterial;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Coverage'**
+  String get closetDetailModesty;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Seasons'**
+  String get closetDetailSeasons;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get closetDetailSize;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Hide this suggestion?'**
+  String get closetDismissConfirmTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We won\'t suggest this gap again, even as your closet changes.'**
+  String get closetDismissConfirmBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite'**
+  String get closetFavouriteTag;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No pieces match'**
+  String get closetFilterEmptyTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Try another word, or clear the filters to see your whole closet.'**
+  String get closetFilterEmptyBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Favourites'**
+  String get closetFilterFavourites;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shelved'**
+  String get closetFilterShelved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Fit with your closet'**
+  String get closetFitWithWardrobe;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From your stylist'**
+  String get closetFromStylist;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Opens new outfits'**
+  String get closetGapKindCoverage;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Completes a look'**
+  String get closetGapKindLook;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'For an occasion'**
+  String get closetGapKindOccasion;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'A replacement'**
+  String get closetGapKindReplacement;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'For the season'**
+  String get closetGapKindSeason;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{+1 outfit} other{+{count} outfits}}'**
+  String closetGapUnlocks(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Worth buying'**
+  String get closetGapsEyebrow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'How your closet works'**
+  String get closetHowItWorks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every wear brings the cost per wear down.'**
+  String get closetInsightCostFalls;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s been over three months — maybe it\'s time for a new look with it.'**
+  String get closetInsightForgotten;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not worn yet. Try styling it this week.'**
+  String get closetInsightNeverWorn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{A staple — worn {count} times.}}'**
+  String closetInsightStaple(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not worn yet'**
+  String get closetLookNotWornYet;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Palette'**
+  String get closetLookPalette;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No pieces} =1{1 piece} other{{count} pieces}}'**
+  String closetLookPieceCount(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Its piece} other{Its {count} pieces}}'**
+  String closetLookPieces(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No looks here yet'**
+  String get closetLooksFilterEmpty;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get closetLooksFilterReady;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Missing pieces'**
+  String get closetLooksFilterShort;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 look is one piece away} other{{count} looks are one piece away}}'**
+  String closetLooksOneAway(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{ready} of {total} ready to wear now'**
+  String closetLooksReadyOf(int ready, int total);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Manage this piece'**
+  String get closetManageTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more idea} other{{count} more ideas}}'**
+  String closetMoreIdeas(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get closetOptional;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Put together for you'**
+  String get closetOriginComposed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From your looks'**
+  String get closetOriginSaved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{value} / 100'**
+  String closetPriorityOutOf(String value);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every outfit you own suits the weather right now.'**
+  String get closetPulseAllSeason;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet this {season}'**
+  String closetPulseEyebrow(String season);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'outfits you can wear now from your pieces'**
+  String get closetPulseHeadline;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of your outfits suit the season'**
+  String closetPulseReadiness(int percent);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'looks ready'**
+  String get closetPulseReadyLooks;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'season-ready'**
+  String get closetPulseSeasonReady;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces you haven\'t worn in a while, or ever. One wear brings them back.'**
+  String get closetRediscoverBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Rediscover'**
+  String get closetRediscoverEyebrow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces waiting for you'**
+  String get closetRediscoverTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No longer yours?'**
+  String get closetReleaseConfirmTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'It leaves your closet and looks; we keep its wear history so we can suggest a replacement when you need one.'**
+  String get closetReleaseConfirmBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sold or gave it away — we keep its history'**
+  String get closetReleaseHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from your closet.'**
+  String get closetReleased;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Bring it back into your closet and suggestions'**
+  String get closetReturnHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Back in your closet.'**
+  String get closetReturned;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Its life in your closet'**
+  String get closetRotationTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name, brand or note'**
+  String get closetSearchHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{season} season'**
+  String closetSeasonNow(String season);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not for this season — hidden from suggestions'**
+  String get closetShelveHint;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Shelved for another season.'**
+  String get closetShelved;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'This piece is shelved and left out of today\'s suggestions.'**
+  String get closetShelvedBanner;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the shelf'**
+  String get closetShelvedEmpty;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 piece short} other{{count} pieces short}}'**
+  String closetShortBy(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Show all'**
+  String get closetShowAll;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Least worn'**
+  String get closetSortLeastWorn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Most worn'**
+  String get closetSortMostWorn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Newest'**
+  String get closetSortRecent;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Sort pieces'**
+  String get closetSortTooltip;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Add your pieces'**
+  String get closetStepAddTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Bring in your Ohara purchases in one tap, or photograph what you own.'**
+  String get closetStepAddBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We put outfits together'**
+  String get closetStepLooksTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Every morning we suggest what to wear from your own pieces, for the weather and the occasion.'**
+  String get closetStepLooksBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'We tell you what\'s missing'**
+  String get closetStepGapsTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'One piece can open many outfits — and we show you why.'**
+  String get closetStepGapsBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 suggestion} other{{count} suggestions}}'**
+  String closetSuggestionsEyebrow(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Forgotten'**
+  String get closetTagForgotten;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Unworn'**
+  String get closetTagUnworn;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Enlarge'**
+  String get closetTapToEnlarge;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Best for today'**
+  String get closetTodayBestMatch;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s pick'**
+  String get closetTodayEyebrow;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'All from your own pieces'**
+  String get closetTodayFromYours;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning, stylish'**
+  String get closetTodayHello;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Idea {number}'**
+  String closetTodayIdea(int number);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'From your own pieces, for {season}'**
+  String closetTodaySeason(String season);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get closetUndo;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save that. Please try again.'**
+  String get closetUpdateFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Compact view'**
+  String get closetViewCompact;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Large view'**
+  String get closetViewLarge;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No pieces} =1{1 piece} other{{count} pieces}}'**
+  String closetWardrobeEyebrow(int count);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'My pieces'**
+  String get closetWardrobeTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t log the wear. Please try again.'**
+  String get closetWearFailed;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Logged “{title}” as worn today.'**
+  String closetWearLogged(String title);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Wear removed.'**
+  String get closetWearUndone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Worn today'**
+  String get closetWornTodayDone;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not worn yet'**
+  String get closetWornNeverShort;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Not worn in a while'**
+  String get closetWornLongAgoShort;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Worn once} other{Worn {count} times}}'**
+  String closetWornTimes(int count);
 }
 
 class _AppLocalizationsDelegate

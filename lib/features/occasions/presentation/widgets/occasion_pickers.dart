@@ -7,7 +7,7 @@ import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/closet/domain/entities/closet_look.dart';
 import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
-import 'package:ohara/features/closet/presentation/screens/closet_looks_screen.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_look_card.dart';
 import 'package:ohara/features/salons/presentation/providers/salons_providers.dart';
 import 'package:ohara/features/salons/presentation/widgets/appointment_card.dart';
 

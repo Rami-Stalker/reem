@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
-import 'package:ohara/core/media/authorized_media_image.dart';
 import 'package:ohara/features/closet/domain/entities/closet_item.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_visuals.dart';
 
 /// One garment in the grid.
 ///
@@ -11,6 +11,10 @@ import 'package:ohara/features/closet/domain/entities/closet_item.dart';
 /// that restraint is deliberate: a wardrobe where the things she bought here
 /// look more important than the things she already owned is a shop pretending
 /// to be a wardrobe.
+///
+/// The photo carries three quiet signals and one action: a heart when she
+/// loves it, a rotation note when the piece has gone unworn, a badge for a
+/// piece of her own, and the one-tap wear button.
 class ClosetItemTile extends StatelessWidget {
   const ClosetItemTile({
     super.key,
@@ -18,6 +22,7 @@ class ClosetItemTile extends StatelessWidget {
     this.onTap,
     this.onWear,
     this.showWear = true,
+    this.dense = false,
   });
 
   final ClosetItem item;
@@ -25,76 +30,132 @@ class ClosetItemTile extends StatelessWidget {
   final VoidCallback? onWear;
   final bool showWear;
 
+  /// The three-column grid and the rails: smaller type, no provenance badge.
+  final bool dense;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final text = context.dsText;
+    final wornToday = item.daysSinceWorn == 0;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(DsRadius.card),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(DsRadius.card),
-                  child: _Photo(item: item),
+    return Semantics(
+      button: onTap != null,
+      label: '${item.title}، ${item.slotLabel}، ${_subtitle(context)}',
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: DsRadius.borderLg,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: DsRadius.borderLg,
+                  border: Border.all(
+                    color: wornToday
+                        ? colors.primary
+                        : colors.border.withValues(alpha: 0.5),
+                    width: wornToday ? DsSpacing.xxxs : 1,
+                  ),
                 ),
-                if (item.isFavourite)
-                  Positioned(
-                    top: DsSpacing.xs,
-                    right: DsSpacing.xs,
-                    child: Icon(
-                      Icons.favorite_rounded,
-                      size: 18,
-                      color: colors.favorite,
-                    ),
+                child: ClipRRect(
+                  borderRadius: DsRadius.borderLg,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ClosetPhoto(
+                        url: item.imageUrl,
+                        slot: item.slot,
+                        blurHash: item.blurHash,
+                        iconSize: dense ? DsSizes.iconMd : DsSizes.iconLg,
+                      ),
+                      if (item.isFavourite)
+                        PositionedDirectional(
+                          top: DsSpacing.xs,
+                          start: DsSpacing.xs,
+                          child: _FrostedDot(
+                            child: Icon(
+                              Icons.favorite_rounded,
+                              size: DsSizes.iconXxs,
+                              color: colors.favorite,
+                            ),
+                          ),
+                        ),
+                      if (_rotationNote(context) case final note?)
+                        PositionedDirectional(
+                          top: DsSpacing.xs,
+                          end: DsSpacing.xs,
+                          child: ClosetPill(label: note, onMedia: true),
+                        ),
+                      if (!dense && !item.source.isFromOhara)
+                        PositionedDirectional(
+                          bottom: DsSpacing.xs,
+                          start: DsSpacing.xs,
+                          child: ClosetPill(
+                            label: context.l10n.closetMyPiece,
+                            icon: Icons.photo_camera_rounded,
+                            onMedia: true,
+                          ),
+                        ),
+                      if (showWear && onWear != null)
+                        PositionedDirectional(
+                          bottom: DsSpacing.xs,
+                          end: DsSpacing.xs,
+                          child: _WearButton(
+                            wornToday: wornToday,
+                            onWear: onWear!,
+                          ),
+                        ),
+                    ],
                   ),
-                if (!item.source.isFromOhara)
-                  Positioned(
-                    bottom: DsSpacing.xs,
-                    left: DsSpacing.xs,
-                    child: _Badge(
-                      label: context.l10n.closetMyPiece,
-                      color: colors.secondaryContainer,
-                    ),
-                  ),
-                if (showWear && onWear != null)
-                  Positioned(
-                    bottom: DsSpacing.xs,
-                    right: DsSpacing.xs,
-                    child: _WearButton(item: item, onWear: onWear!),
-                  ),
-              ],
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: DsSpacing.xs),
-          Text(
-            item.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.dsText.tileTitle,
-          ),
-          Text(
-            _subtitle(context),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.dsText.caption,
-          ),
-        ],
+            DsGaps.vXs,
+            Text(
+              item.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: dense ? text.captionStrong : text.tileTitle,
+            ),
+            Text(
+              _subtitle(context),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: text.caption,
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  /// The one thing about rotation worth printing on the photograph: that she
+  /// has never worn it, or not for a season. A wear count is not printed
+  /// there — it is in the subtitle, and a number on every tile is noise.
+  String? _rotationNote(BuildContext context) {
+    if (!item.hasBeenWorn) return context.l10n.closetTagUnworn;
+    if ((item.daysSinceWorn ?? 0) >= 90) return context.l10n.closetTagForgotten;
+    return null;
   }
 
   /// The slot, plus whichever fact about rotation is most worth knowing.
   ///
   /// Never-worn wins over worn-long-ago, and both win over a wear count,
   /// because the point of a wardrobe log is the things she is not reaching for.
+  ///
+  /// The dense grid drops the slot: at three columns it pushed the rotation
+  /// fact — the half worth reading — off the end of the line.
   String _subtitle(BuildContext context) {
     final l10n = context.l10n;
+    if (dense) {
+      if (!item.hasBeenWorn) return l10n.closetWornNeverShort;
+      final days = item.daysSinceWorn;
+      if (days != null && days >= 90) return l10n.closetWornLongAgoShort;
+      return l10n.closetWornTimes(item.wearCount);
+    }
     if (!item.hasBeenWorn) return l10n.closetTileNeverWorn(item.slotLabel);
     final days = item.daysSinceWorn;
     if (days != null && days >= 90) return l10n.closetTileLongAgo(item.slotLabel);
@@ -102,64 +163,20 @@ class ClosetItemTile extends StatelessWidget {
   }
 }
 
-class _Photo extends StatelessWidget {
-  const _Photo({required this.item});
+class _FrostedDot extends StatelessWidget {
+  const _FrostedDot({required this.child});
 
-  final ClosetItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    final url = item.imageUrl;
-
-    if (url == null || url.isEmpty) {
-      return Container(
-        color: colors.surfaceVariant,
-        alignment: Alignment.center,
-        child: Icon(
-          Icons.checkroom_rounded,
-          color: colors.onSurfaceVariant,
-          size: 32,
-        ),
-      );
-    }
-
-    // A personal photograph is a PRIVATE asset behind her session — which is
-    // exactly why this cannot be `Image.network`. That loader has its own HTTP
-    // client, carries no bearer token, and got a 401 for every wardrobe photo
-    // she had ever taken: the tile below fell through to the hanger icon every
-    // single time, and looked like a design choice rather than a broken fetch.
-    // `AuthorizedMediaImage` attaches the session, caches the result, and
-    // decodes at the size the tile actually draws.
-    return AuthorizedMediaImage(
-      url: url,
-      fallback: Container(
-        color: colors.surfaceVariant,
-        alignment: Alignment.center,
-        child: Icon(Icons.checkroom_rounded, color: colors.onSurfaceVariant),
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  const _Badge({required this.label, required this.color});
-
-  final String label;
-  final Color color;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.xs,
-        vertical: 2,
-      ),
+      padding: const EdgeInsets.all(DsSpacing.xxs),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(DsRadius.pill),
+        color: context.dsColors.surface.withValues(alpha: 0.88),
+        shape: BoxShape.circle,
       ),
-      child: Text(label, style: context.dsText.badge),
+      child: child,
     );
   }
 }
@@ -168,30 +185,44 @@ class _Badge extends StatelessWidget {
 ///
 /// The whole wear log depends on this being nearly free. A woman will not open
 /// a garment's page to record that she wore it, so the button is on the tile
-/// and the server makes a second tap idempotent.
+/// and the server makes a second tap idempotent. Once she has worn it today
+/// the button fills and the frame around the photo turns rose, so the grid
+/// shows today's outfit at a glance.
 class _WearButton extends StatelessWidget {
-  const _WearButton({required this.item, required this.onWear});
+  const _WearButton({required this.wornToday, required this.onWear});
 
-  final ClosetItem item;
+  final bool wornToday;
   final VoidCallback onWear;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    final wornToday = item.daysSinceWorn == 0;
+    final label = wornToday
+        ? context.l10n.closetWornTodayDone
+        : context.l10n.closetWoreToday;
 
-    return Material(
-      color: wornToday ? colors.primary : colors.surface.withValues(alpha: 0.9),
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onWear,
-        child: Padding(
-          padding: const EdgeInsets.all(6),
-          child: Icon(
-            wornToday ? Icons.check_rounded : Icons.add_rounded,
-            size: 16,
-            color: wornToday ? colors.onPrimary : colors.onSurface,
+    return Tooltip(
+      message: label,
+      child: Semantics(
+        button: true,
+        label: label,
+        child: Material(
+          color: wornToday
+              ? colors.primary
+              : colors.surface.withValues(alpha: 0.92),
+          shape: const CircleBorder(),
+          elevation: 0,
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: onWear,
+            child: Padding(
+              padding: const EdgeInsets.all(DsSpacing.xs),
+              child: Icon(
+                wornToday ? Icons.check_rounded : Icons.add_rounded,
+                size: DsSizes.iconXs,
+                color: wornToday ? colors.onPrimary : colors.onSurface,
+              ),
+            ),
           ),
         ),
       ),
