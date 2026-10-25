@@ -379,7 +379,9 @@ class ContentReshare extends Equatable {
   final String? note;
 
   @override
-  List<Object?> get props => [id, resharer.id, content.id, resharedAt];
+  // The whole content, not only its id: a like on a reshared card changes
+  // the content, and an entry that compared equal across it would not redraw.
+  List<Object?> get props => [id, resharer.id, content, resharedAt, note];
 }
 
 /// An entry on a woman's page: something she published, or something she added.

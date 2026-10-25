@@ -12176,6 +12176,96 @@ abstract class AppLocalizations {
   /// **'Everything new from the boutiques and women you follow shows up here.'**
   String get socialFeedFollowingEmptyBody;
 
+  /// No description provided for @socialFeedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks and stories from the women of Ohara'**
+  String get socialFeedSubtitle;
+
+  /// No description provided for @socialFeedStoriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s stories'**
+  String get socialFeedStoriesTitle;
+
+  /// No description provided for @socialFeedStoriesEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Live now'**
+  String get socialFeedStoriesEyebrow;
+
+  /// No description provided for @socialFeedDiscoverEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'From the community'**
+  String get socialFeedDiscoverEyebrow;
+
+  /// No description provided for @socialFeedDiscoverHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'The latest looks'**
+  String get socialFeedDiscoverHeading;
+
+  /// No description provided for @socialFeedFollowingEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just for you'**
+  String get socialFeedFollowingEyebrow;
+
+  /// No description provided for @socialFeedFollowingHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'From the women you follow'**
+  String get socialFeedFollowingHeading;
+
+  /// No description provided for @socialFeedShareLook.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your look'**
+  String get socialFeedShareLook;
+
+  /// No description provided for @socialFeedCaughtUp.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up'**
+  String get socialFeedCaughtUp;
+
+  /// No description provided for @socialFeedCaughtUpBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back soon — new looks arrive every day.'**
+  String get socialFeedCaughtUpBody;
+
+  /// No description provided for @socialFeedLoadMoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load more posts'**
+  String get socialFeedLoadMoreFailed;
+
+  /// No description provided for @socialFeedGuestFollowingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own little circle'**
+  String get socialFeedGuestFollowingTitle;
+
+  /// No description provided for @socialFeedGuestFollowingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in and everything new from the boutiques and women you follow gathers here.'**
+  String get socialFeedGuestFollowingBody;
+
+  /// No description provided for @socialFeedExploreAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the community'**
+  String get socialFeedExploreAction;
+
+  /// No description provided for @socialFeedBackToTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to top'**
+  String get socialFeedBackToTop;
+
   /// No description provided for @reelsTitle.
   ///
   /// In en, this message translates to:

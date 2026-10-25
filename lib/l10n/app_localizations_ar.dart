@@ -6903,6 +6903,53 @@ class AppLocalizationsAr extends AppLocalizations {
       'هنا ترين كل جديد من البوتيكات والصديقات اللواتي تتابعينهن.';
 
   @override
+  String get socialFeedSubtitle => 'إطلالات وقصص من نساء أوهارا';
+
+  @override
+  String get socialFeedStoriesTitle => 'قصص اليوم';
+
+  @override
+  String get socialFeedStoriesEyebrow => 'مباشر الآن';
+
+  @override
+  String get socialFeedDiscoverEyebrow => 'من المجتمع';
+
+  @override
+  String get socialFeedDiscoverHeading => 'أحدث الإطلالات';
+
+  @override
+  String get socialFeedFollowingEyebrow => 'لكِ وحدكِ';
+
+  @override
+  String get socialFeedFollowingHeading => 'من اللواتي تتابعينهن';
+
+  @override
+  String get socialFeedShareLook => 'شاركي إطلالتك';
+
+  @override
+  String get socialFeedCaughtUp => 'وصلتِ إلى آخر الجديد';
+
+  @override
+  String get socialFeedCaughtUpBody =>
+      'عودي قريباً — إطلالات جديدة تصل كل يوم.';
+
+  @override
+  String get socialFeedLoadMoreFailed => 'تعذّر تحميل المزيد من المنشورات';
+
+  @override
+  String get socialFeedGuestFollowingTitle => 'دائرتكِ الخاصة';
+
+  @override
+  String get socialFeedGuestFollowingBody =>
+      'سجّلي الدخول ليجتمع هنا كل جديد من البوتيكات والصديقات اللواتي تتابعينهن.';
+
+  @override
+  String get socialFeedExploreAction => 'اكتشفي المجتمع';
+
+  @override
+  String get socialFeedBackToTop => 'العودة إلى الأعلى';
+
+  @override
   String get reelsTitle => 'ريلز';
 
   @override

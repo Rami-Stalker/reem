@@ -14,22 +14,36 @@ typedef ContentFeedState = PaginatedState<Content>;
 /// asked for at once, and it is corrected from the server's answer when it
 /// arrives. A failure puts it back exactly as it was and says so, rather than
 /// leaving her looking at a like that did not happen.
-class ContentFeedNotifier extends PaginatedNotifier<Content> {
-  ContentFeedNotifier(this._repository, PageFetcher<Content> fetch, {super.pageSize})
-    : super(fetch);
+///
+/// Generic over the row type because two feeds hold different rows: most hold
+/// bare [Content], the following feed holds [TimelineEntry]s — a post, or a
+/// post somebody added to her page. Every gesture addresses the *content*, so
+/// a post and a reshare of it in the same list move together.
+abstract class InteractiveFeedNotifier<T> extends PaginatedNotifier<T> {
+  InteractiveFeedNotifier(this._repository, super.fetch, {super.pageSize});
 
   final SocialRepository _repository;
 
-  /// Replace one card in place, leaving the rest of the list identical so
-  /// Flutter rebuilds one row rather than the page.
+  /// The piece a row shows.
+  Content contentOf(T item);
+
+  /// The same row, showing [content] instead.
+  T withContent(T item, Content content);
+
+  /// A stable identity for the row, so «تراجع» never restores a duplicate.
+  String keyOf(T item);
+
+  /// Replace every row showing [contentId], leaving the rest of the list
+  /// identical so Flutter rebuilds those rows rather than the page.
   void _patch(String contentId, Content Function(Content) update) {
+    if (!mounted) return;
     var changed = false;
     final items = [
       for (final item in state.items)
-        if (item.id == contentId) ...[
+        if (contentOf(item).id == contentId) ...[
           () {
             changed = true;
-            return update(item);
+            return withContent(item, update(contentOf(item)));
           }(),
         ] else
           item,
@@ -39,10 +53,13 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
 
   Content? _find(String contentId) {
     for (final item in state.items) {
-      if (item.id == contentId) return item;
+      final content = contentOf(item);
+      if (content.id == contentId) return content;
     }
     return null;
   }
+
+  static int _bounded(int value) => value.clamp(0, 1 << 30);
 
   Future<void> toggleLike(String contentId) async {
     final before = _find(contentId);
@@ -54,7 +71,7 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
       (item) => item.copyWith(
         viewer: item.viewer.copyWith(isLiked: liked),
         counts: item.counts.copyWith(
-          likes: (item.counts.likes + (liked ? 1 : -1)).clamp(0, 1 << 30),
+          likes: _bounded(item.counts.likes + (liked ? 1 : -1)),
         ),
       ),
     );
@@ -74,9 +91,11 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
     }
   }
 
-  Future<void> toggleSave(String contentId) async {
+  /// Returns whether the piece is now saved, so the screen can offer to file
+  /// it into a collection only when the save really happened.
+  Future<bool> toggleSave(String contentId) async {
     final before = _find(contentId);
-    if (before == null) return;
+    if (before == null) return false;
 
     final saved = !before.viewer.isSaved;
     _patch(
@@ -84,7 +103,7 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
       (item) => item.copyWith(
         viewer: item.viewer.copyWith(isSaved: saved),
         counts: item.counts.copyWith(
-          saves: (item.counts.saves + (saved ? 1 : -1)).clamp(0, 1 << 30),
+          saves: _bounded(item.counts.saves + (saved ? 1 : -1)),
         ),
       ),
     );
@@ -93,18 +112,23 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
     switch (result) {
       case Success(:final data):
         _patch(contentId, (item) => item.copyWith(viewer: data));
+        return data.isSaved;
       case Error():
         _patch(
           contentId,
           (item) => item.copyWith(viewer: before.viewer, counts: before.counts),
         );
+        return before.viewer.isSaved;
     }
   }
 
   /// «أضيفي إلى صفحتي» — and taking it back off.
-  Future<bool> toggleReshare(String contentId, {String? note}) async {
+  ///
+  /// Returns null on success and the failure's message otherwise, so the
+  /// screen can say why nothing changed.
+  Future<String?> toggleReshare(String contentId, {String? note}) async {
     final before = _find(contentId);
-    if (before == null) return false;
+    if (before == null) return null;
 
     final adding = !before.viewer.isReshared;
     _patch(
@@ -123,14 +147,18 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
           (item) => item.copyWith(
             viewer: item.viewer.copyWith(isReshared: data),
             counts: item.counts.copyWith(
-              shares: (item.counts.shares + (data ? 1 : -1)).clamp(0, 1 << 30),
+              // Counted only when the state really moved, so a reshare the
+              // server already had does not add a phantom share.
+              shares: data == before.viewer.isReshared
+                  ? item.counts.shares
+                  : _bounded(item.counts.shares + (data ? 1 : -1)),
             ),
           ),
         );
-        return data;
-      case Error():
+        return null;
+      case Error(:final failure):
         _patch(contentId, (item) => item.copyWith(viewer: before.viewer));
-        return before.viewer.isReshared;
+        return failure.message;
     }
   }
 
@@ -151,21 +179,22 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
       contentId,
       (item) => item.copyWith(
         counts: item.counts.copyWith(
-          comments: (item.counts.comments + delta).clamp(0, 1 << 30),
+          comments: _bounded(item.counts.comments + delta),
         ),
       ),
     );
   }
 
-  /// Takes out every card matching [test] — one post she is not interested
-  /// in, or every post of an account she hid — and says where each stood, so
-  /// «تراجع» can put them back.
-  List<(int, Content)> removeWhere(bool Function(Content item) test) {
-    final removed = <(int, Content)>[];
-    final kept = <Content>[];
+  /// Takes out every row whose content matches [test] — one post she is not
+  /// interested in, or every post of an account she hid — and says where each
+  /// stood, so «تراجع» can put them back.
+  List<(int, T)> removeWhere(bool Function(Content content) test) {
+    if (!mounted) return const [];
+    final removed = <(int, T)>[];
+    final kept = <T>[];
     for (var i = 0; i < state.items.length; i++) {
       final item = state.items[i];
-      if (test(item)) {
+      if (test(contentOf(item))) {
         removed.add((i, item));
       } else {
         kept.add(item);
@@ -175,11 +204,12 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
     return removed;
   }
 
-  void restore(List<(int, Content)> removed) {
-    if (removed.isEmpty) return;
+  void restore(List<(int, T)> removed) {
+    if (removed.isEmpty || !mounted) return;
     final items = [...state.items];
+    final present = {for (final item in items) keyOf(item)};
     for (final (index, item) in removed) {
-      if (items.any((existing) => existing.id == item.id)) continue;
+      if (!present.add(keyOf(item))) continue;
       items.insert(index.clamp(0, items.length), item);
     }
     state = state.copyWith(items: items);
@@ -190,13 +220,48 @@ class ContentFeedNotifier extends PaginatedNotifier<Content> {
   void replace(Content updated) => _patch(updated.id, (_) => updated);
 
   /// Content that has just been taken down, or that she deleted, leaves the
-  /// list rather than sitting there un-tappable.
-  void drop(String contentId) {
-    state = state.copyWith(
-      items: [
-        for (final item in state.items)
-          if (item.id != contentId) item,
-      ],
-    );
-  }
+  /// list rather than sitting there un-tappable — every row showing it.
+  void drop(String contentId) => removeWhere((item) => item.id == contentId);
+}
+
+/// The feeds whose rows are the content itself: discover, reels, saved, a
+/// product's rail, one woman's reels.
+class ContentFeedNotifier extends InteractiveFeedNotifier<Content> {
+  ContentFeedNotifier(super.repository, super.fetch, {super.pageSize});
+
+  @override
+  Content contentOf(Content item) => item;
+
+  @override
+  Content withContent(Content item, Content content) => content;
+
+  @override
+  String keyOf(Content item) => item.id;
+}
+
+/// A feed of timeline entries — the following feed, where a post can arrive
+/// because its author posted it or because a woman she follows added it.
+class TimelineFeedNotifier extends InteractiveFeedNotifier<TimelineEntry> {
+  TimelineFeedNotifier(super.repository, super.fetch, {super.pageSize});
+
+  @override
+  Content contentOf(TimelineEntry item) => item.content;
+
+  @override
+  TimelineEntry withContent(TimelineEntry item, Content content) =>
+      switch (item) {
+        OwnContentEntry() => OwnContentEntry(content),
+        ResharedContentEntry(:final reshare) => ResharedContentEntry(
+          ContentReshare(
+            id: reshare.id,
+            resharer: reshare.resharer,
+            content: content,
+            resharedAt: reshare.resharedAt,
+            note: reshare.note,
+          ),
+        ),
+      };
+
+  @override
+  String keyOf(TimelineEntry item) => item.entryId;
 }

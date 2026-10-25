@@ -6834,6 +6834,53 @@ class AppLocalizationsEn extends AppLocalizations {
       'Everything new from the boutiques and women you follow shows up here.';
 
   @override
+  String get socialFeedSubtitle => 'Looks and stories from the women of Ohara';
+
+  @override
+  String get socialFeedStoriesTitle => 'Today\'s stories';
+
+  @override
+  String get socialFeedStoriesEyebrow => 'Live now';
+
+  @override
+  String get socialFeedDiscoverEyebrow => 'From the community';
+
+  @override
+  String get socialFeedDiscoverHeading => 'The latest looks';
+
+  @override
+  String get socialFeedFollowingEyebrow => 'Just for you';
+
+  @override
+  String get socialFeedFollowingHeading => 'From the women you follow';
+
+  @override
+  String get socialFeedShareLook => 'Share your look';
+
+  @override
+  String get socialFeedCaughtUp => 'You\'re all caught up';
+
+  @override
+  String get socialFeedCaughtUpBody =>
+      'Come back soon — new looks arrive every day.';
+
+  @override
+  String get socialFeedLoadMoreFailed => 'Couldn\'t load more posts';
+
+  @override
+  String get socialFeedGuestFollowingTitle => 'Your own little circle';
+
+  @override
+  String get socialFeedGuestFollowingBody =>
+      'Sign in and everything new from the boutiques and women you follow gathers here.';
+
+  @override
+  String get socialFeedExploreAction => 'Explore the community';
+
+  @override
+  String get socialFeedBackToTop => 'Back to top';
+
+  @override
   String get reelsTitle => 'Reels';
 
   @override

@@ -17,7 +17,7 @@ abstract interface class SocialRemoteDataSource {
     int limit,
   });
   Future<PaginatedData<Content>> reels({String? cursor, int limit});
-  Future<PaginatedData<Content>> following({String? cursor, int limit});
+  Future<PaginatedData<TimelineEntry>> following({String? cursor, int limit});
   Future<PaginatedData<Content>> saved({String? cursor, int limit});
   /// One piece, by id — what a shared link opens.
   Future<Content> byId(String contentId);
