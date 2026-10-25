@@ -54,6 +54,35 @@ class ClosetItemQuery {
         cursor: clearCursor ? null : (cursor ?? this.cursor),
       );
 
+  // Value equality, because this is a provider family key. Without it every
+  // rebuild of the grid built a new query, which Riverpod read as a new
+  // provider: the grid refetched on every keystroke and every setState.
+  @override
+  bool operator ==(Object other) =>
+      other is ClosetItemQuery &&
+      other.slot == slot &&
+      other.status == status &&
+      other.season == season &&
+      other.occasion == occasion &&
+      other.colour == colour &&
+      other.favouritesOnly == favouritesOnly &&
+      other.search == search &&
+      other.limit == limit &&
+      other.cursor == cursor;
+
+  @override
+  int get hashCode => Object.hash(
+    slot,
+    status,
+    season,
+    occasion,
+    colour,
+    favouritesOnly,
+    search,
+    limit,
+    cursor,
+  );
+
   Map<String, dynamic> toQuery() => {
         if (slot != null) 'slot': slot,
         if (status != null) 'status': status!.wire,
