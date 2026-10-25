@@ -85,6 +85,16 @@ export class SendMessageDto {
   @IsOptional()
   metadata?: unknown;
 
+  /**
+   * «اسألي عن هذه القطعة» — the piece this message is about. The server
+   * resolves it into a product card on the message (title, photo, this
+   * boutique's price), so the boutique sees what is being asked about — the
+   * client's word for it is never what is shown.
+   */
+  @IsOptional()
+  @IsUUID()
+  product_id?: string;
+
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })

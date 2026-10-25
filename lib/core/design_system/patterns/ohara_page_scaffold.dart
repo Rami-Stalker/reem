@@ -44,7 +44,16 @@ class OharaScrollPage extends StatelessWidget {
     // page whose content fits.
     Widget scrollView = CustomScrollView(
       controller: controller,
-      slivers: slivers,
+      slivers: [
+        ...slivers,
+        // The page ends where the bar begins. With `extendBody` the bar floats
+        // over the content, and pages used to guess its height with a fixed
+        // gap — a guess the checkout ticket outgrew, so the policy links under
+        // the summary sat behind «تأكيد الطلب» and could not be scrolled to.
+        // The scaffold already reports the bar's measured height (system
+        // inset included) as the body's bottom padding; this pays exactly it.
+        if (bottom != null && extendBody) const _BottomBarClearance(),
+      ],
     );
 
     if (onRefresh != null) {
@@ -68,6 +77,21 @@ class OharaScrollPage extends StatelessWidget {
       body: Stack(
         children: [background ?? const CustomerBackdrop(), scrollView],
       ),
+    );
+  }
+}
+
+/// Room at the foot of a [OharaScrollPage] for its floating bottom bar.
+///
+/// Read inside the scaffold's body, where `MediaQuery.padding.bottom` is the
+/// larger of the system inset and the bar's laid-out height.
+class _BottomBarClearance extends StatelessWidget {
+  const _BottomBarClearance();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: SizedBox(height: MediaQuery.paddingOf(context).bottom),
     );
   }
 }

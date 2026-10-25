@@ -8,11 +8,15 @@ import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/platform/app_haptics.dart';
 import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 import 'package:ohara/core/shared/entities/product_variant.dart';
 import 'package:ohara/core/shared/entities/seller_offer.dart';
 import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:ohara/features/rooms/presentation/widgets/propose_to_room_sheet.dart';
 
 /// The frosted bar pinned to the foot of the product page.
@@ -24,11 +28,13 @@ import 'package:ohara/features/rooms/presentation/widgets/propose_to_room_sheet.
 class ProductBuyBar extends ConsumerStatefulWidget {
   const ProductBuyBar({
     super.key,
+    required this.product,
     required this.offer,
     required this.variant,
     required this.quantity,
   });
 
+  final Product product;
   final SellerOffer? offer;
   final OfferVariant? variant;
   final int quantity;
@@ -39,6 +45,30 @@ class ProductBuyBar extends ConsumerStatefulWidget {
 
 class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
   bool _adding = false;
+  bool _opening = false;
+
+  /// «اسألي المتجر» — the boutique behind the selected offer, with this piece
+  /// pinned in the conversation so her question arrives carrying its card.
+  /// In the bar rather than only in the seller card far down the page,
+  /// because the question usually comes before the scroll does.
+  Future<void> _ask() async {
+    final seller = widget.offer?.seller;
+    if (seller == null || _opening) return;
+    setState(() => _opening = true);
+    try {
+      await openConversation(
+        context,
+        ref,
+        ChatStartRequest.product(
+          productId: widget.product.id,
+          sellerId: seller.id,
+        ),
+        about: ChatProductRef.of(widget.product, offer: widget.offer),
+      );
+    } finally {
+      if (mounted) setState(() => _opening = false);
+    }
+  }
 
   Money? get _unitPrice => widget.variant?.price ?? widget.offer?.price;
 
@@ -166,7 +196,17 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
                   ],
                 ),
               ),
-              DsGaps.hMd,
+              DsGaps.hXs,
+              IconButton(
+                tooltip: l10n.productAskBoutique,
+                icon: _opening
+                    ? const SizedBox.square(
+                        dimension: DsSizes.iconSm,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.chat_bubble_outline_rounded),
+                onPressed: offer?.seller == null || _opening ? null : _ask,
+              ),
               // Ohara Rooms, beside the cart rather than instead of it. The two
               // are different gestures: the cart is "I am taking this", a room
               // is "I am thinking about this" — and a shop that only offers the

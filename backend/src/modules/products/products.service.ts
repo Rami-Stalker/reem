@@ -1,6 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  AnalyticsEventType,
+  CommerceContentCommentStatus,
+  OrderStatus,
+  Prisma,
+  ReviewStatus,
+} from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CacheService } from '../../common/cache/cache.service';
 import { ValueVisibilityService } from '../value/value-visibility.service';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import {
@@ -15,6 +22,27 @@ import { ProductQueryDto } from './dto/product-query.dto';
 type Query = ProductQueryDto;
 type OrderBy = Prisma.ProductOrderByWithRelationInput[];
 
+/** One view per person per product per day. */
+const VIEW_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/** Orders that never became a sale are not "sold". */
+const UNSOLD_ORDER_STATUSES = [
+  OrderStatus.DRAFT,
+  OrderStatus.PENDING_PAYMENT,
+  OrderStatus.CANCELLED,
+];
+
+/** The figures the product page prints under the title, counted live. */
+interface LiveCounters {
+  rating: number;
+  reviewsCount: number;
+  favoritesCount: number;
+  likesCount: number;
+  picksCount: number;
+  commentsCount: number;
+  ordersCount: number;
+}
+
 /**
  * Public catalog browsing.
  *
@@ -24,10 +52,13 @@ type OrderBy = Prisma.ProductOrderByWithRelationInput[];
  */
 @Injectable()
 export class ProductsService {
+  private readonly logger = new Logger(ProductsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly signals: TrendSignalService,
     private readonly visibility: ValueVisibilityService,
+    private readonly cache: CacheService,
   ) {}
 
   async home(viewerId?: string) {
@@ -171,22 +202,24 @@ export class ProductsService {
     });
     if (!visible) throw new NotFoundException('Product not found');
 
-    const product = await this.prisma.product
-      .update({
-        where: { id },
-        data: { viewsCount: { increment: 1 } },
-        include: PRODUCT_INCLUDE,
-      })
-      .catch(() => null);
-    if (!product) throw new NotFoundException('Product not found');
-
-    // `viewsCount` above is a lifetime counter and cannot answer "was this
-    // product climbing last week". The dated signal can, so both are kept.
-    this.signals.recordProductView({
-      productId: product.id,
-      userId: viewerId ?? null,
-      source: 'product.detail',
+    const stored = await this.prisma.product.findUnique({
+      where: { id },
+      include: PRODUCT_INCLUDE,
     });
+    if (!stored) throw new NotFoundException('Product not found');
+
+    const [counted, live] = await Promise.all([
+      this.registerView(stored, viewerId, 'product.detail'),
+      this.liveCounters(stored.id),
+    ]);
+    this.healCounters(stored, live);
+    // The figures under the title are the ones the tables hold right now —
+    // see `liveCounters` — and the view she just made is among them.
+    const product = {
+      ...stored,
+      ...live,
+      viewsCount: stored.viewsCount + (counted ? 1 : 0),
+    };
 
     // The detail screen is where price comparison happens, so every live offer
     // travels with it (Q23 P2).
@@ -201,17 +234,136 @@ export class ProductsService {
   }
 
   async recordView(id: string, viewerId?: string) {
-    await this.requireProduct(id);
+    const product = await this.requireProduct(id);
+    await this.registerView(product, viewerId, 'product.view');
+    return { message: 'View recorded' };
+  }
+
+  // ── The numbers under the title ───────────────────────────────────────
+  //
+  // The product page prints a rating, a save count, a view count and how many
+  // were sold, and the client read every one of them as invented. Some were:
+  // a view was added on *every* load of the page — a refresh, a return from
+  // the bag, the boutique checking her own listing — and the stored counters
+  // are incremented in a dozen places, so any missed path left them drifting
+  // with nothing to bring them back. Now a view is a person, once a day, and
+  // never the boutique; and every other figure is counted from its own table
+  // when the page is served.
+
+  /**
+   * Counts this open as a view when it is one: once per viewer per day, and
+   * never the boutique looking at her own listing. A guest has no identity to
+   * de-duplicate on, so each of her opens counts — they are real opens by
+   * somebody who is not the seller.
+   *
+   * The dated analytics row is written for the same opens and no others, so
+   * the trend engine and the seller's funnel read the same views the page
+   * shows.
+   */
+  private async registerView(
+    product: { id: string; createdBySellerId: string | null },
+    viewerId: string | undefined,
+    source: string,
+  ): Promise<boolean> {
+    if (viewerId) {
+      if (product.createdBySellerId === viewerId) return false;
+      // Fast path for the page being re-fetched within the same minute; the
+      // database check below covers a restart and a second instance.
+      const key = `pv:${product.id}:${viewerId}`;
+      if (this.cache.get<boolean>(key)) return false;
+      this.cache.set(key, true, VIEW_WINDOW_MS);
+
+      const since = new Date(Date.now() - VIEW_WINDOW_MS);
+      const [ownOffers, recent] = await Promise.all([
+        this.prisma.sellerOffer.count({
+          where: { productId: product.id, sellerId: viewerId },
+        }),
+        this.prisma.analyticsEvent.count({
+          where: {
+            productId: product.id,
+            userId: viewerId,
+            type: AnalyticsEventType.PRODUCT_VIEW,
+            occurredAt: { gte: since },
+          },
+        }),
+      ]);
+      if (ownOffers > 0 || recent > 0) return false;
+    }
+
     await this.prisma.product.update({
-      where: { id },
+      where: { id: product.id },
       data: { viewsCount: { increment: 1 } },
     });
+    // `viewsCount` is a lifetime counter and cannot answer "was this product
+    // climbing last week". The dated signal can, so both are kept.
     this.signals.recordProductView({
-      productId: id,
+      productId: product.id,
       userId: viewerId ?? null,
-      source: 'product.view',
+      source,
     });
-    return { message: 'View recorded' };
+    return true;
+  }
+
+  /**
+   * Every figure the page shows, counted from the rows behind it — the same
+   * definitions `prisma/demo/reconcile.ts` rebuilds the columns with. Six
+   * indexed aggregates over one product's rows.
+   */
+  private async liveCounters(productId: string): Promise<LiveCounters> {
+    const [reviews, favorites, likes, picks, comments, sold] =
+      await Promise.all([
+        this.prisma.productReview.aggregate({
+          where: { productId, status: ReviewStatus.APPROVED },
+          _avg: { rating: true },
+          _count: { _all: true },
+        }),
+        this.prisma.favorite.count({ where: { productId } }),
+        this.prisma.productLike.count({ where: { productId } }),
+        this.prisma.productPick.count({ where: { productId } }),
+        this.prisma.productComment.count({
+          where: { productId, status: CommerceContentCommentStatus.VISIBLE },
+        }),
+        this.prisma.orderItem.aggregate({
+          where: {
+            productId,
+            sellerOrder: {
+              order: { status: { notIn: UNSOLD_ORDER_STATUSES } },
+            },
+          },
+          _sum: { quantity: true },
+        }),
+      ]);
+    return {
+      rating: Math.round((reviews._avg.rating ?? 0) * 100) / 100,
+      reviewsCount: reviews._count._all,
+      favoritesCount: favorites,
+      likesCount: likes,
+      picksCount: picks,
+      commentsCount: comments,
+      ordersCount: sold._sum.quantity ?? 0,
+    };
+  }
+
+  /**
+   * Writes the live figures back when the stored columns have drifted, so
+   * the cards, rails and rankings that read the columns agree with the page.
+   * Off the request path: the page already has its numbers.
+   */
+  private healCounters(
+    stored: LiveCounters & { id: string },
+    live: LiveCounters,
+  ): void {
+    const drift = (Object.keys(live) as (keyof LiveCounters)[]).filter(
+      (key) => stored[key] !== live[key],
+    );
+    if (drift.length === 0) return;
+    void this.prisma.product
+      .update({ where: { id: stored.id }, data: live })
+      .catch((error: unknown) =>
+        this.logger.warn(
+          `Counters not healed for ${stored.id}: ${String(error)}`,
+        ),
+      );
   }
 
   async incrementOrders(id: string, amount = 1) {

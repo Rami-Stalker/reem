@@ -41,6 +41,7 @@ import 'package:ohara/features/auth/presentation/screens/security_settings_scree
 import 'package:ohara/features/auth/presentation/screens/seller_verification_screen.dart';
 import 'package:ohara/features/auth/presentation/screens/sign_in_code_screen.dart';
 import 'package:ohara/features/cart/presentation/screens/cart_screen.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/presentation/screens/chat_details_screen.dart';
 import 'package:ohara/features/chat/presentation/screens/chat_media_gallery_screen.dart';
 import 'package:ohara/features/chat/presentation/screens/chats_screen.dart';
@@ -394,6 +395,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return CollectionScreen(
             provider: collectionProductsProvider(collection),
             title: collection.titleOf(context.l10n),
+            forYou: collection == ProductCollection.recommended,
           );
         },
       ),
@@ -1112,7 +1114,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.chatDetails,
         builder: (context, state) {
           final chatId = state.uri.queryParameters['id'] ?? '';
-          return ChatDetailsScreen(chatId: chatId);
+          final about = state.extra;
+          return ChatDetailsScreen(
+            chatId: chatId,
+            about: about is ChatProductRef ? about : null,
+          );
         },
       ),
       GoRoute(

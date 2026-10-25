@@ -70,6 +70,7 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
     List<Map<String, dynamic>> attachments = const [],
     String? clientId,
     String? currentUserId,
+    String? productId,
   }) async {
     final json = await postJson(
       ApiEndpoints.chatMessages(chatId),
@@ -77,6 +78,7 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
         'content': content,
         'kind': kind,
         'client_id': ?clientId,
+        'product_id': ?productId,
         if (attachments.isNotEmpty) 'attachments': attachments,
       },
     );

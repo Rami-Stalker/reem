@@ -399,19 +399,15 @@ class _FeedPageState extends ConsumerState<_FeedPage>
   }
 
   Widget _card(TimelineEntry entry, {required int index, String? me}) {
+    // A reshare is drawn as the boutique's own post, with no «أضافته …»
+    // band above it — the client asked for that band to go everywhere.
     final content = entry.content;
-    final reshare = switch (entry) {
-      ResharedContentEntry(:final reshare) => reshare,
-      OwnContentEntry() => null,
-    };
     final mine = content.author.id == me;
 
     return ContentCard(
       key: ValueKey(entry.entryId),
       content: content,
       featured: index == 0,
-      resharedBy: reshare?.resharer,
-      reshareNote: reshare?.note,
       onOpenAuthor: (userId) =>
           unawaited(context.push(RoutePaths.userProfileOf(userId))),
       onOpenProduct: (productId) =>

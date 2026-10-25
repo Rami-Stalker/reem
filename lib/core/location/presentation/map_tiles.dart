@@ -48,7 +48,9 @@ abstract final class MapTiles {
 
   /// What the credit line must say for the layers above.
   static String attribution({required bool satellite}) => satellite
+      // l10n-ignore: the tile providers' licences require this credit verbatim
       ? '© Esri · © OpenStreetMap contributors'
+      // l10n-ignore: OpenStreetMap's licence requires this credit verbatim
       : '© OpenStreetMap contributors';
 
   static TileLayer _layer(

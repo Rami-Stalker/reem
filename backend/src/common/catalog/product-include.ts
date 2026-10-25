@@ -96,6 +96,25 @@ export const PRODUCT_CARD_INCLUDE = {
   },
 } satisfies Prisma.ProductInclude;
 
+/**
+ * A card as it appears on one boutique's page: the same shape as
+ * [PRODUCT_CARD_INCLUDE], but the offer it carries is *hers*.
+ *
+ * A catalogue entry can be sold by several boutiques. With the plain card
+ * include, a piece she lists beside a cheaper rival was drawn on her own page
+ * under the rival's name and price — her storefront read as other sellers'
+ * posts, and «أضيفي للسلة» put the rival's offer in the bag.
+ */
+export function sellerCardInclude(sellerId: string) {
+  return {
+    ...PRODUCT_CARD_INCLUDE,
+    offers: {
+      ...PRODUCT_CARD_INCLUDE.offers,
+      where: { ...LIVE_OFFER_WHERE, sellerId },
+    },
+  } satisfies Prisma.ProductInclude;
+}
+
 /** A seller's own offers, including drafts and paused ones. */
 export function sellerOfferInclude(sellerId: string) {
   return {

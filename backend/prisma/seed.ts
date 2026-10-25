@@ -1081,11 +1081,10 @@ async function main() {
         createdBySellerId: seller.id,
         status: ProductStatus.ACTIVE,
         isFeatured: d.featured,
-        rating: 4.2 + (index % 5) * 0.15,
-        reviewsCount: 12 + index * 7,
-        viewsCount: 1200 + index * 340,
-        ordersCount: 30 + index * 11,
-        favoritesCount: 40 + index * 9,
+        // No rating, views, orders or saves are written here: each is a count
+        // of rows (reviews, views, order lines, favourites), and a figure
+        // with no rows behind it is exactly what the product page must never
+        // print. The demo dataset writes the rows and reconciles the columns.
         media: { create: [{ url: d.image, type: MediaType.image, sortOrder: 0 }] },
         variants:
           index < 2

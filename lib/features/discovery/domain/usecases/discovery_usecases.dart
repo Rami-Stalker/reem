@@ -52,6 +52,16 @@ class GetRecommendedUseCase {
       _repo.getRecommended(page: page, limit: limit);
 }
 
+/// «إزالة من المختارة لكِ», and its «تراجع».
+class DismissRecommendationUseCase {
+  const DismissRecommendationUseCase(this._repo);
+  final DiscoveryRepository _repo;
+  Future<Result<void>> call(String productId) =>
+      _repo.dismissRecommendation(productId);
+  Future<Result<void>> undo(String productId) =>
+      _repo.restoreRecommendation(productId);
+}
+
 class GetDiscoveryHomeUseCase {
   const GetDiscoveryHomeUseCase(this._repo);
   final DiscoveryRepository _repo;

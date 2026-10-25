@@ -97,8 +97,9 @@ class CartScreen extends ConsumerWidget {
               DsSpacing.lg,
               DsSpacing.md,
               DsSpacing.lg,
-              // Clears the ticket floating over the foot of the page.
-              DsSizes.bottomSafeGap + DsSpacing.huge,
+              // The ticket floating over the foot of the page is cleared by
+              // `OharaScrollPage` itself, measured rather than guessed.
+              DsSpacing.lg,
             ),
             sliver: SliverList.separated(
               itemCount: bags.length,

@@ -16,11 +16,11 @@ import 'package:ohara/features/social/domain/entities/content.dart';
 ///
 /// Two things it must always get right:
 ///
-/// **The boutique keeps its credit.** When this is a reshare, [resharedBy] is
-/// the woman who added it and [content.author] is still the boutique — the
-/// attribution line says both, in that order, and tapping the author goes to
-/// the boutique. A card that let the resharer read as the source would defeat
-/// the entire feature.
+/// **The boutique keeps its credit.** A reshare on a woman's page is drawn
+/// as the boutique's own post — [content.author] heads it and tapping the
+/// author goes to the boutique. There is no «أضافته … إلى صفحتها» band above
+/// it: the page it sits on already says whose picks these are, and the band
+/// repeated it over every card.
 ///
 /// **The way to buy is always one tap.** The shop plate sits over the foot of
 /// the image, not below the fold, because the whole premise is that discovery
@@ -37,16 +37,10 @@ class ContentCard extends StatefulWidget {
     required this.onShare,
     this.onReshare,
     this.onMore,
-    this.resharedBy,
-    this.reshareNote,
     this.featured = false,
   });
 
   final Content content;
-
-  /// Set when this is somebody else's post on a woman's page.
-  final User? resharedBy;
-  final String? reshareNote;
 
   final void Function(String userId) onOpenAuthor;
   final void Function(String productId) onOpenProduct;
@@ -97,13 +91,6 @@ class _ContentCardState extends State<ContentCard>
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.gutter),
       child: DsImmersivePost(
         featured: widget.featured,
-        banner: widget.resharedBy == null
-            ? null
-            : _ReshareBanner(
-                resharer: widget.resharedBy!,
-                note: widget.reshareNote,
-                onTap: () => widget.onOpenAuthor(widget.resharedBy!.id),
-              ),
         authorName: author.name,
         authorImageUrl: author.imageUrl,
         authorVerified: author.isVerified,
@@ -152,99 +139,27 @@ class _ContentCardState extends State<ContentCard>
   }
 }
 
-/// «أضافتها إلى صفحتها» — who put this here, above whose post it is.
-///
-/// Her face and her name on a soft rose capsule, and what she said about it
-/// as a quote beneath — set apart from the card so it can never be read as
-/// the boutique's own words.
-class _ReshareBanner extends StatelessWidget {
-  const _ReshareBanner({
-    required this.resharer,
+/// A story bubble in the tray.
+class StoryBubble extends StatelessWidget {
+  const StoryBubble({
+    super.key,
+    required this.author,
+    required this.allSeen,
     required this.onTap,
-    this.note,
   });
 
-  final User resharer;
-  final String? note;
+  final User author;
+  final bool allSeen;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final p = context.boutique;
-    final text = context.dsText;
-    final note = this.note?.trim();
-
-    return DsScaleAnimations.tapScale(
+    return DsStoryCard(
+      label: author.name,
+      imageUrl: author.imageUrl,
+      seen: allSeen,
+      isVerified: author.isVerified,
       onTap: onTap,
-      pressedScale: 0.98,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsetsDirectional.fromSTEB(
-              DsSpacing.xxs,
-              DsSpacing.xxs,
-              DsSpacing.sm,
-              DsSpacing.xxs,
-            ),
-            decoration: BoxDecoration(
-              color: p.primarySoft.withValues(alpha: 0.7),
-              borderRadius: DsRadius.borderPill,
-              border: Border.all(color: p.primary.withValues(alpha: 0.18)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DsAvatar(
-                  imageUrl: resharer.imageUrl,
-                  name: resharer.name,
-                  size: DsSizes.avatarXs,
-                ),
-                DsGaps.hXs,
-                Flexible(
-                  child: Text(
-                    context.l10n.contentResharedBy(resharer.name),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: text.captionStrong.tint(p.ink),
-                  ),
-                ),
-                DsGaps.hXs,
-                Icon(
-                  Icons.autorenew_rounded,
-                  size: DsSizes.iconXs,
-                  color: p.primary,
-                ),
-              ],
-            ),
-          ),
-          if (note != null && note.isNotEmpty)
-            Padding(
-              padding: const EdgeInsetsDirectional.only(
-                start: DsSpacing.md,
-                top: DsSpacing.xs,
-              ),
-              child: Container(
-                padding: const EdgeInsetsDirectional.only(start: DsSpacing.sm),
-                decoration: BoxDecoration(
-                  border: BorderDirectional(
-                    start: BorderSide(
-                      color: p.gold,
-                      width: DsSpacing.xxxs,
-                    ),
-                  ),
-                ),
-                child: Text(
-                  '«$note»',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: text.body.displayFamily.tint(p.ink),
-                ),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }

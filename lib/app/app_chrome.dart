@@ -59,7 +59,11 @@ class AppChrome extends ConsumerWidget {
       _ => const <PolicySummary>[],
     };
 
-    final media = MediaQuery.of(context);
+    // On a three-button Android phone the app ends above the buttons; see
+    // [AppSystemChrome.buttonNavigationReserve].
+    final systemMedia = MediaQuery.of(context);
+    final navReserve = AppSystemChrome.buttonNavigationReserve(systemMedia);
+    final media = AppSystemChrome.withoutReserve(systemMedia, navReserve);
     final scaled = media.copyWith(
       textScaler: media.textScaler.clamp(
         minScaleFactor: _minTextScale,
@@ -111,6 +115,16 @@ class AppChrome extends ConsumerWidget {
             children: [
               const OfflineBanner(),
               Expanded(child: body),
+              if (navReserve > 0)
+                // Painted like the opaque navigation bar Android drew before
+                // edge-to-edge, so the buttons sit on the app's own surface.
+                ColoredBox(
+                  color: Theme.of(context).colorScheme.surface,
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: navReserve,
+                  ),
+                ),
             ],
           ),
         ),

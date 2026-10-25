@@ -81,6 +81,16 @@ final class DiscoveryRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<void> dismissRecommendation(String productId) async {
+    await postJson(ApiEndpoints.discoveryRecommendedDismiss(productId));
+  }
+
+  @override
+  Future<void> restoreRecommendation(String productId) async {
+    await deleteJson(ApiEndpoints.discoveryRecommendedDismiss(productId));
+  }
+
+  @override
   Future<Map<String, List<ProductModel>>> getHome() async {
     final json = await getJson(ApiEndpoints.discoveryHome);
     return json.map(

@@ -13015,6 +13015,79 @@ class AppLocalizationsEn extends AppLocalizations {
       'Reviews with photos of the piece on will appear here.';
 
   @override
+  String get forYouRemove => 'Remove from For You';
+
+  @override
+  String get forYouRemoved =>
+      'Removed from For You — you won\'t see it there again.';
+
+  @override
+  String get chatProductInquiry => 'Asking about this piece';
+
+  @override
+  String get chatAskingAbout => 'You\'re asking about';
+
+  @override
+  String get chatAskingAboutClear => 'Remove the piece from the message';
+
+  @override
+  String get productAskBoutique => 'Ask the boutique';
+
+  @override
+  String productStatViews(int count, String label) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$label views',
+      one: '1 view',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String productStatSaves(int count, String label) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'In $label favourites lists',
+      one: 'In 1 favourites list',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String productStatSold(int count, String label) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$label sold',
+      one: '1 sold',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewsRatePrompt => 'Tap the stars to rate this piece';
+
+  @override
+  String reviewsRatingMeaning(String stars) {
+    String _temp0 = intl.Intl.selectLogic(stars, {
+      '1': 'Poor',
+      '2': 'Fair',
+      '3': 'Good',
+      '4': 'Very good',
+      '5': 'Excellent',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String reviewsRatedOutOfFive(int stars) {
+    return 'Rated $stars out of 5';
+  }
+
+  @override
   String get mapPickerTitle => 'Pin your location';
 
   @override

@@ -134,7 +134,7 @@ void main() {
     await render(tester, name: 'community_discover_dark', mode: ThemeMode.dark);
   });
 
-  testWidgets('«أتابع» reads timeline entries and credits the resharer', (
+  testWidgets('«أتابع» reads timeline entries and credits the boutique', (
     tester,
   ) async {
     await render(
@@ -143,8 +143,8 @@ void main() {
       interact: () => openFollowing(tester),
     );
     expect(find.text('من اللواتي تتابعينهن'), findsOneWidget);
-    // The reshare banner names who put it there.
-    expect(find.textContaining(_lina.name), findsWidgets);
+    // A reshare is drawn as the boutique's post: its name heads the card.
+    expect(find.text(_atelier.name), findsWidgets);
   });
 
   testWidgets('«أتابع» signed out invites her in instead of failing', (

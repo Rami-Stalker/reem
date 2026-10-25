@@ -22448,6 +22448,78 @@ abstract class AppLocalizations {
   /// **'Reviews with photos of the piece on will appear here.'**
   String get reviewsPhotosNoneBody;
 
+  /// No description provided for @forYouRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from For You'**
+  String get forYouRemove;
+
+  /// No description provided for @forYouRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from For You — you won\'t see it there again.'**
+  String get forYouRemoved;
+
+  /// No description provided for @chatProductInquiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Asking about this piece'**
+  String get chatProductInquiry;
+
+  /// No description provided for @chatAskingAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re asking about'**
+  String get chatAskingAbout;
+
+  /// No description provided for @chatAskingAboutClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the piece from the message'**
+  String get chatAskingAboutClear;
+
+  /// No description provided for @productAskBoutique.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the boutique'**
+  String get productAskBoutique;
+
+  /// Unique views of a product page: one per person per day.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 view} other{{label} views}}'**
+  String productStatViews(int count, String label);
+
+  /// How many shoppers keep this product in their favourites.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{In 1 favourites list} other{In {label} favourites lists}}'**
+  String productStatSaves(int count, String label);
+
+  /// Units of this product sold in orders that were not cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 sold} other{{label} sold}}'**
+  String productStatSold(int count, String label);
+
+  /// No description provided for @reviewsRatePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the stars to rate this piece'**
+  String get reviewsRatePrompt;
+
+  /// What the chosen number of stars means, shown under the stars in the review composer.
+  ///
+  /// In en, this message translates to:
+  /// **'{stars, select, 1{Poor} 2{Fair} 3{Good} 4{Very good} 5{Excellent} other{}}'**
+  String reviewsRatingMeaning(String stars);
+
+  /// Screen-reader label for a review's stars.
+  ///
+  /// In en, this message translates to:
+  /// **'Rated {stars} out of 5'**
+  String reviewsRatedOutOfFive(int stars);
+
   /// No description provided for @mapPickerTitle.
   ///
   /// In en, this message translates to:
