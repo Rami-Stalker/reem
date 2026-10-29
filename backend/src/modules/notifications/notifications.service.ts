@@ -43,6 +43,7 @@ import {
   CouponIssuedPayload,
   OrderStatusChangedPayload,
   PostPublishedPayload,
+  PromotionLaunchedPayload,
   StoryPublishedPayload,
   UserFollowedPayload,
 } from '../../common/events/app-events';
@@ -608,6 +609,27 @@ export class NotificationsService {
       'New post',
       `${name} shared a new post`,
       { postId: payload.postId },
+    );
+  }
+
+  /**
+   * A Gold or Diamond boutique's campaign went live, and the women who follow
+   * her hear about the piece.
+   *
+   * Under her «منشورات المتاجر» preference — it is a shop she follows showing
+   * something new, the same thing a post is — and marketing-capped like one.
+   * The once-a-week limit per boutique is enforced where the event is raised.
+   */
+  @OnEvent(AppEvent.PromotionLaunched)
+  async onPromotionLaunched(payload: PromotionLaunchedPayload): Promise<void> {
+    const name = await this.repo.userName(payload.sellerId);
+    await this.fanout(
+      payload.sellerId,
+      'inAppPosts',
+      NotificationType.promo,
+      `جديد من ${name} ✨`,
+      `${payload.productTitle} — اكتشفيه الآن`,
+      { productId: payload.productId, promotionId: payload.promotionId, kind: 'store_promotion' },
     );
   }
 

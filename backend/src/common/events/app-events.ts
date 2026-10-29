@@ -22,6 +22,8 @@ export const AppEvent = {
   PostPublished: 'post.published',
   StoryPublished: 'story.published',
   CouponIssued: 'coupon.issued',
+  /** A Gold or Diamond boutique started a campaign; her followers hear of it. */
+  PromotionLaunched: 'promotion.launched',
 } as const;
 
 export interface OrderStatusChangedPayload {
@@ -98,4 +100,11 @@ export interface CouponIssuedPayload {
   userId: string;
   couponCode: string;
   title: string;
+}
+
+export interface PromotionLaunchedPayload {
+  sellerId: string;
+  promotionId: string;
+  productId: string;
+  productTitle: string;
 }

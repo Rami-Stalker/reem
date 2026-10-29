@@ -6,6 +6,7 @@ import 'package:ohara/core/media/media_decode.dart';
 import 'package:ohara/core/media/media_variants.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 
 /// One piece of content in a feed.
 ///
@@ -105,6 +106,19 @@ class _ContentCardState extends State<ContentCard>
         badges: [
           if (content.isUnderReview)
             DsBadge(label: l10n.contentUnderReview, tone: DsBadgeTone.warning),
+          // A paid post says so, plainly, before anything else about it.
+          if (content.sponsorship case final sponsored?) ...[
+            DsBadge(
+              label: l10n.searchSponsored,
+              tone: DsBadgeTone.neutral,
+              icon: Icons.campaign_outlined,
+            ),
+            if (storeTierJewel(sponsored.storeTier) case final jewel?)
+              DsTierBadge(
+                tier: jewel,
+                label: storeTierLabel(l10n, sponsored.storeTier),
+              ),
+          ],
         ],
         // A reel plays in the feed, muted, and only while it is on screen.
         mediaOverride: video == null

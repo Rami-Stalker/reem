@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserRole } from '@prisma/client';
+import { PromotionPlacement, UserRole } from '@prisma/client';
 import { Authorize } from '../../common/decorators/authorize.decorator';
 import {
   AuthUser,
@@ -27,6 +27,7 @@ import {
   ViewerState,
 } from '../../common/serializers';
 import { ContentFeedService } from './feed/content-feed.service';
+import { MAX_FEED_SLOTS, PromotionsService } from '../promotions/promotions.service';
 import { ContentFeedControlsService } from './feed/content-feed-controls.service';
 import { ContentInteractionsService } from './interactions/content-interactions.service';
 import { ContentModerationService } from './moderation/content-moderation.service';
@@ -68,6 +69,7 @@ export class ContentSocialController {
     private readonly moderation: ContentModerationService,
     private readonly tagPolicy: ProductTagPolicyService,
     private readonly prisma: PrismaService,
+    private readonly promotions: PromotionsService,
   ) {}
 
   // ── Feeds ─────────────────────────────────────────────────────────────────
@@ -94,7 +96,81 @@ export class ContentSocialController {
           authorKind: query.author_kind,
         })
       : this.feed.publicFeed(query, query.channel));
-    return this.renderFeed(page, user?.id);
+
+    // The head of the plain home feed carries one sponsored post, labelled.
+    // Never on a later page, a channel or a filtered view: an advert on her
+    // own boutique's page, or twice in one scroll, is noise.
+    const head = !query.cursor && !filtered && !query.channel;
+    const sponsored = head ? await this.sponsoredHead(user?.id) : [];
+    if (sponsored.length === 0) return this.renderFeed(page, user?.id);
+
+    const pinned = new Set(sponsored.map((s) => s.row.id));
+    const rendered = await this.renderFeed(
+      {
+        items: [
+          ...sponsored.map((s) => s.row),
+          ...page.items.filter((item) => !pinned.has(item.id)),
+        ],
+        meta: page.meta,
+      },
+      user?.id,
+    );
+    const bySlot = new Map(sponsored.map((s) => [s.row.id, s.slot]));
+    return {
+      ...rendered,
+      data: rendered.data.map((item, index) => {
+        const slot = index < sponsored.length ? bySlot.get((item as { id: string }).id) : undefined;
+        return slot
+          ? {
+              ...item,
+              sponsored: {
+                promotion_id: slot.promotionId,
+                offer_id: slot.offerId,
+                placement: 'feed_top',
+                store_tier: slot.tier.toLowerCase(),
+              },
+            }
+          : item;
+      }),
+    };
+  }
+
+  /**
+   * The paid FEED_TOP slot for this viewer, with its post. A failure here
+   * serves the feed without it — a broken ad system must never take the feed
+   * down with it.
+   */
+  private async sponsoredHead(viewerId?: string) {
+    try {
+      // A few in serving order, so a shop she muted gives way to the next
+      // rather than leaving the slot empty.
+      const slots = await this.promotions.serve(PromotionPlacement.FEED_TOP, {
+        viewerId,
+        limit: MAX_FEED_SLOTS + 2,
+      });
+      const withPost = slots.filter((slot) => slot.contentId);
+      if (withPost.length === 0) return [];
+      const rows = await this.feed.sponsoredRows(
+        withPost.map((slot) => slot.contentId!),
+        viewerId,
+      );
+      const slotOf = new Map(withPost.map((slot) => [slot.contentId!, slot]));
+      const served = rows
+        .slice(0, MAX_FEED_SLOTS)
+        .map((row) => ({ row, slot: slotOf.get(row.id)! }));
+      if (served.length > 0) {
+        void this.promotions
+          .recordImpressions(
+            served.map((s) => s.slot.offerId),
+            PromotionPlacement.FEED_TOP,
+            viewerId,
+          )
+          .catch(() => undefined);
+      }
+      return served;
+    } catch {
+      return [];
+    }
   }
 
   @Get('reels')

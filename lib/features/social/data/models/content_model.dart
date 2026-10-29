@@ -32,6 +32,7 @@ class ContentModel extends Content {
     super.publishedAt,
     super.expiresAt,
     super.removalReason,
+    super.sponsorship,
   });
 
   factory ContentModel.fromJson(Map<String, dynamic> json) {
@@ -70,6 +71,18 @@ class ContentModel extends Content {
       publishedAt: _date(json['published_at']),
       expiresAt: _date(json['expires_at']),
       removalReason: json['removal_reason'] as String?,
+      sponsorship: _sponsorship(json['sponsored']),
+    );
+  }
+
+  static ContentSponsorship? _sponsorship(dynamic raw) {
+    if (raw is! Map) return null;
+    final offerId = raw['offer_id'];
+    if (offerId is! String || offerId.isEmpty) return null;
+    return ContentSponsorship(
+      offerId: offerId,
+      placement: raw['placement'] as String? ?? 'feed_top',
+      storeTier: raw['store_tier'] as String?,
     );
   }
 

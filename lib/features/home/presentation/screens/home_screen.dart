@@ -23,6 +23,7 @@ import 'package:ohara/features/home/presentation/widgets/home_nearby_stores.dart
 import 'package:ohara/features/home/presentation/widgets/home_notifications_summary.dart';
 import 'package:ohara/features/home/presentation/widgets/home_recently_viewed.dart';
 import 'package:ohara/features/home/presentation/widgets/home_showcase_section.dart';
+import 'package:ohara/features/home/presentation/widgets/home_sponsored_spotlight.dart';
 import 'package:ohara/features/home/presentation/widgets/home_stories_rail.dart';
 import 'package:ohara/features/home/presentation/widgets/home_wishlist_highlights.dart';
 import 'package:ohara/features/home/presentation/widgets/living/home_aura.dart';
@@ -142,6 +143,10 @@ class _BuyerHomeScreenState extends ConsumerState<_BuyerHomeScreen> {
         SliverToBoxAdapter(child: SizedBox(key: _storiesAnchor)),
         const HomeStoriesRail(),
         const _Gap(DsSpacing.xl),
+
+        // Boutiques' paid spotlight, labelled as such — near the top because
+        // that is what the slot is sold as. Draws nothing when none is live.
+        const SliverToBoxAdapter(child: HomeSponsoredSpotlight()),
 
         // ── Three things she does rather than scrolls ─────────────────────
         _reveal(const HomeMoodDial()),

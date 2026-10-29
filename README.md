@@ -164,6 +164,22 @@ open the app instead needs a signing fingerprint and an Apple team id, and
 until those exist the links still work as web pages:
 [docs/SHARE_LINKS.md](docs/SHARE_LINKS.md).
 
+## Store advertising
+
+«إعلانات المتاجر»: a boutique pays to be seen, and what she pays decides how
+far she reaches. Four plans — عادي، فضي، ذهبي، ماسي — unlock more placements
+(top of search, the category shelf, her post pinned above the community feed,
+the home spotlight), audience targeting (by governorate, then followers, past
+buyers, interested shoppers, new shoppers), more campaigns at once, a
+discount, ad credit worth more than the plan costs, a badge, and a bigger
+share of every contested slot.
+
+Before paying she sees the price line by line, how many women the audience
+holds and her share of the slot; afterwards, the women reached and the orders
+that came from the advert. Every advert is labelled as one, a shopper sees
+the same one at most three times a day, and plans never renew by themselves:
+[docs/STORE_ADS.md](docs/STORE_ADS.md).
+
 ## Salons and beauty
 
 «الصالونات والجمال»: a woman finds a salon near her, picks a service, a day and
@@ -274,6 +290,7 @@ flutter test tools/icons/generate_app_icons.dart
 | [identity-authorization-architecture.md](docs/identity-authorization-architecture.md) | Identity, OTP, devices, roles |
 | [PRODUCT_INTERACTIONS.md](docs/PRODUCT_INTERACTIONS.md) | Like/Share/Save/Repost/Comments on every product surface, and the one store behind them |
 | [SHARE_LINKS.md](docs/SHARE_LINKS.md) | Share links, App Links / Universal Links, the landing pages, and the two well-known files |
+| [STORE_ADS.md](docs/STORE_ADS.md) | «إعلانات المتاجر»: the plans, the four placements, targeting, how a slot is won, attribution, and the `/ads` endpoints |
 | [SALONS.md](docs/SALONS.md) | «الصالونات والجمال»: the booking invariant, availability, statuses, the two jobs, and why an appointment carries no money |
 | [FIT_REVIEWS.md](docs/FIT_REVIEWS.md) | «تقييمات من بمقاسي»: fit facts and photos on reviews, the privacy rules for height and size, and who counts as "my size" |
 | [OCCASIONS.md](docs/OCCASIONS.md) | «مناسباتي»: the derived checklist, the countdown and why it rings once per mark, and the repeat warning |

@@ -48,6 +48,9 @@ abstract final class RouteNames {
   static const sellerProductIntelligence = 'seller-product-intelligence';
   static const sellerHealth = 'seller-health';
   static const sellerReviews = 'seller-reviews';
+  static const sellerAds = 'seller-ads';
+  static const sellerAdsPlans = 'seller-ads-plans';
+  static const sellerAdsNew = 'seller-ads-new';
   static const sellerReturns = 'seller-returns';
   static const sellerReturnDetail = 'seller-return-detail';
   static const sellerStore = 'seller-store';

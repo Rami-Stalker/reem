@@ -153,6 +153,12 @@ abstract final class DsColors {
   /// that rides the pill-shaped "new in" ribbons.
   static const Color onGold = Color(0xFF221A1F);
 
+  /// Ink on the silver tier gradient. Mode-independent, like [onGold].
+  static const Color onTierSilver = Color(0xFF3D3848);
+
+  /// Ink on the diamond tier gradient.
+  static const Color onTierDiamond = Color(0xFFFFFFFF);
+
   /// Material [ColorScheme] seed for light mode.
   static ColorScheme get lightScheme => ColorScheme.fromSeed(
         seedColor: primary500,

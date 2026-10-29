@@ -13,6 +13,26 @@ class PaginatedNotifier<T> extends StateNotifier<PaginatedState<T>> {
   final PageFetcher<T> _fetch;
   final int pageSize;
 
+  /// A stable identity for a row, or null to keep every row as it comes.
+  ///
+  /// When given, a later page never repeats a row an earlier one already
+  /// showed. A feed whose first page leads with a pinned (sponsored) post can
+  /// meet that same post again organically further down, and two rows with
+  /// one id are one card drawn twice — and one key used twice in a list.
+  String? identityOf(T item) => null;
+
+  List<T> _appendUnique(List<T> existing, List<T> incoming) {
+    if (incoming.isEmpty || identityOf(incoming.first) == null) {
+      return [...existing, ...incoming];
+    }
+    final seen = {for (final item in existing) identityOf(item)};
+    return [
+      ...existing,
+      for (final item in incoming)
+        if (seen.add(identityOf(item))) item,
+    ];
+  }
+
   /// Bumped by every load and refresh. A next page that was requested before
   /// the list was replaced belongs to the old list: appending it would put
   /// stale or duplicated rows under fresh ones, so it is dropped.
@@ -84,7 +104,7 @@ class PaginatedNotifier<T> extends StateNotifier<PaginatedState<T>> {
     state = switch (result) {
       Success(:final data) => state.copyWith(
         isLoadingMore: false,
-        items: [...state.items, ...data.items],
+        items: _appendUnique(state.items, data.items),
         pageInfo: data.pageInfo,
       ),
       Error(:final failure) => state.copyWith(

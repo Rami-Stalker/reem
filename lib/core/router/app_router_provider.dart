@@ -138,6 +138,10 @@ import 'package:ohara/features/social/presentation/screens/content_studio_screen
 import 'package:ohara/features/social/presentation/screens/reels_screen.dart';
 import 'package:ohara/features/social/presentation/screens/social_feed_screen.dart';
 import 'package:ohara/features/splash/presentation/screens/splash_screen.dart';
+import 'package:ohara/features/store_ads/domain/entities/store_ads.dart';
+import 'package:ohara/features/store_ads/presentation/screens/ad_plans_screen.dart';
+import 'package:ohara/features/store_ads/presentation/screens/ads_center_screen.dart';
+import 'package:ohara/features/store_ads/presentation/screens/new_campaign_screen.dart';
 import 'package:ohara/features/stories/presentation/screens/story_viewer_screen.dart';
 import 'package:ohara/features/trends/presentation/screens/admin_trends_screen.dart';
 import 'package:ohara/features/trends/presentation/screens/seller_trends_screen.dart';
@@ -843,6 +847,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: RoutePaths.sellerReviews,
         name: RouteNames.sellerReviews,
         builder: (context, state) => const SellerReviewsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerAds,
+        name: RouteNames.sellerAds,
+        builder: (context, state) => const AdsCenterScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerAdsPlans,
+        name: RouteNames.sellerAdsPlans,
+        builder: (context, state) => const AdPlansScreen(),
+      ),
+      GoRoute(
+        // A smart pick she tapped rides along as `extra` to pre-fill it.
+        path: RoutePaths.sellerAdsNew,
+        name: RouteNames.sellerAdsNew,
+        builder: (context, state) => NewCampaignScreen(
+          suggestion: state.extra is AdSuggestion
+              ? state.extra! as AdSuggestion
+              : null,
+        ),
       ),
       GoRoute(
         path: RoutePaths.sellerReturns,

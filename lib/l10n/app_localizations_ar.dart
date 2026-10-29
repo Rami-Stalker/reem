@@ -13865,4 +13865,531 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get adTierFree => 'عادي';
+
+  @override
+  String get adTierSilver => 'فضي';
+
+  @override
+  String get adTierGold => 'ذهبي';
+
+  @override
+  String get adTierDiamond => 'ماسي';
+
+  @override
+  String storeTierBadge(String tier) {
+    return 'متجر $tier';
+  }
+
+  @override
+  String get adPlacementSearch => 'أعلى نتائج البحث';
+
+  @override
+  String get adPlacementCategory => 'صدارة صفحة الفئة';
+
+  @override
+  String get adPlacementFeedTop => 'أعلى المنشورات';
+
+  @override
+  String get adPlacementHomeSpotlight => 'واجهة الصفحة الرئيسية';
+
+  @override
+  String get adPlacementSearchHint =>
+      'فوق النتائج حين تبحث الزبونات عن قطع مثل قطعتكِ';
+
+  @override
+  String get adPlacementCategoryHint =>
+      'في صدارة رفّ الفئة التي تنتمي إليها قطعتكِ';
+
+  @override
+  String get adPlacementFeedTopHint =>
+      'منشوركِ مثبّت فوق كل المنشورات في المجتمع';
+
+  @override
+  String get adPlacementHomeSpotlightHint =>
+      'أول ما تراه الزبونات حين يفتحن التطبيق';
+
+  @override
+  String get adsCenterTitle => 'مركز الإعلانات';
+
+  @override
+  String get adsCenterSubtitle => 'وسّعي وصولكِ، وادفعي فقط لما تختارينه';
+
+  @override
+  String get adsEntryBody => 'ضعي أجمل قطعكِ أمام زبونات أكثر';
+
+  @override
+  String get adsYourPlan => 'باقتكِ';
+
+  @override
+  String adsActiveOf(int active, int max) {
+    return '$active من $max حملات تعمل الآن';
+  }
+
+  @override
+  String adsPlanEndsIn(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'تنتهي بعد $days يوماً',
+      few: 'تنتهي بعد $days أيام',
+      two: 'تنتهي بعد يومين',
+      one: 'تنتهي غداً',
+      zero: 'تنتهي اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsCreditLeft(String amount) {
+    return 'الرصيد الإعلاني المتبقي: $amount';
+  }
+
+  @override
+  String adsRecommendSaving(String tier, String amount) {
+    return 'كانت باقة $tier ستوفّر عليكِ $amount الشهر الماضي';
+  }
+
+  @override
+  String get adsUpgrade => 'رقّي باقتكِ';
+
+  @override
+  String get adsSeePlans => 'استعرضي الباقات';
+
+  @override
+  String get adsNewCampaign => 'حملة جديدة';
+
+  @override
+  String get adsPerformance => 'الأداء';
+
+  @override
+  String get adsPerformanceCaption => 'لكل حملاتكِ';
+
+  @override
+  String get adsMetricSpend => 'الإنفاق';
+
+  @override
+  String get adsMetricReach => 'زبونات وصلن';
+
+  @override
+  String get adsMetricClicks => 'نقرات';
+
+  @override
+  String get adsMetricOrders => 'طلبات من الإعلانات';
+
+  @override
+  String get adsMetricRevenue => 'مبيعات من الإعلانات';
+
+  @override
+  String get adsMetricRoas => 'العائد لكل ليرة';
+
+  @override
+  String adsRoasValue(String value) {
+    return '$value ضعف';
+  }
+
+  @override
+  String get adsNotYet => 'ليس بعد';
+
+  @override
+  String get adsInsightAbove => 'إعلاناتكِ تُنقر أكثر من المتوسط — استمري';
+
+  @override
+  String get adsInsightAverage => 'أداء إعلاناتكِ قريب من المتوسط';
+
+  @override
+  String get adsInsightBelow =>
+      'نقرات أقل من المتوسط — جرّبي صورة أقوى أو جمهوراً محدداً';
+
+  @override
+  String get adsInsightNoData => 'تظهر النتائج بعد أن تُشاهَد إعلاناتكِ';
+
+  @override
+  String get adsSuggestionsTitle => 'اقتراحات ذكية للترويج';
+
+  @override
+  String get adsSuggestionsCaption =>
+      'مختارة من مشاهدات قطعكِ وإعجاباتها ومبيعاتها';
+
+  @override
+  String get adsReasonLoved => 'تُعجبهن ولم تُشترَ بعد';
+
+  @override
+  String get adsReasonBest => 'الأكثر مبيعاً';
+
+  @override
+  String get adsReasonHidden => 'جديدة ولم تُرَ بعد';
+
+  @override
+  String get adsReasonFresh => 'اختيار جديد';
+
+  @override
+  String get adsCampaignsTitle => 'حملاتكِ';
+
+  @override
+  String get adsNoCampaigns => 'لا حملات بعد';
+
+  @override
+  String get adsNoCampaignsBody =>
+      'ابدئي بأحد الاقتراحات أعلاه — لن يستغرق أكثر من دقيقة.';
+
+  @override
+  String get adsStatusLive => 'تعمل';
+
+  @override
+  String get adsStatusPaused => 'متوقفة';
+
+  @override
+  String get adsStatusEnded => 'انتهت';
+
+  @override
+  String get adsStatusScheduled => 'مجدولة';
+
+  @override
+  String get adsStatusUnpaid => 'غير مدفوعة';
+
+  @override
+  String get adsPause => 'إيقاف مؤقت';
+
+  @override
+  String get adsResume => 'استئناف';
+
+  @override
+  String adsCampaignWhere(String placement, String audience) {
+    return '$placement · الجمهور: $audience';
+  }
+
+  @override
+  String adsCampaignStats(String impressions, String clicks) {
+    return '$impressions مشاهدة · $clicks نقرة';
+  }
+
+  @override
+  String adsCampaignReachOrders(String reach, String orders) {
+    return '$reach زبونة · $orders طلب';
+  }
+
+  @override
+  String adsCampaignRevenue(String amount) {
+    return 'مبيعات من هذا الإعلان: $amount';
+  }
+
+  @override
+  String get adsAudienceEveryone => 'كل الزبونات';
+
+  @override
+  String get adsAudienceTargeted => 'جمهور محدد';
+
+  @override
+  String get adsAudienceEveryoneHint => 'كل الزبونات، مسجّلات أو زائرات';
+
+  @override
+  String get adsAudienceTargetedHint => 'فقط من تختارينهن — بسعر أقل بـ 20%';
+
+  @override
+  String get adsFailed => 'تعذّر تحميل إعلاناتكِ';
+
+  @override
+  String get adsPlansTitle => 'باقات الإعلان';
+
+  @override
+  String get adsPlansSubtitle => 'كلما استثمرتِ أكثر، وصلتِ أبعد';
+
+  @override
+  String adsPlanPerMonth(String price) {
+    return '$price شهرياً';
+  }
+
+  @override
+  String get adsPlanFreeLabel => 'مجاناً';
+
+  @override
+  String adsPlanCredit(String amount) {
+    return 'رصيد إعلاني بقيمة $amount مشمول';
+  }
+
+  @override
+  String adsPlanBonus(String amount) {
+    return 'رصيد يزيد على ما تدفعين بـ $amount';
+  }
+
+  @override
+  String adsPlanDiscount(int percent) {
+    return 'خصم $percent% على كل حملة';
+  }
+
+  @override
+  String adsPlanCampaigns(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count حملة في الوقت نفسه',
+      few: '$count حملات في الوقت نفسه',
+      two: 'حملتان في الوقت نفسه',
+      one: 'حملة واحدة في الوقت نفسه',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsPlanWeight(int weight) {
+    return 'ظهور أكثر بـ $weight أضعاف من المتاجر العادية';
+  }
+
+  @override
+  String get adsPlanTargetingNone => 'الإعلان يظهر للجميع';
+
+  @override
+  String get adsPlanTargetingLocation => 'استهداف حسب المحافظة';
+
+  @override
+  String get adsPlanTargetingFull =>
+      'استهداف المتابِعات والمشتريات السابقات والمهتمات والجديدات';
+
+  @override
+  String get adsPlanFollowers => 'تنبيه متابِعاتكِ عند إطلاق كل حملة';
+
+  @override
+  String get adsPlanFeatured => 'الصدارة في «متاجر مميزة» مع شارتكِ';
+
+  @override
+  String adsPlanPlacements(String list) {
+    return 'أماكن الظهور: $list';
+  }
+
+  @override
+  String get adsListSeparator => '، ';
+
+  @override
+  String get adsPlanCurrent => 'باقتكِ الحالية';
+
+  @override
+  String get adsPlanRecommendedChip => 'الأنسب لكِ';
+
+  @override
+  String adsPlanSaving(String amount) {
+    return 'كانت ستوفّر عليكِ $amount الشهر الماضي';
+  }
+
+  @override
+  String get adsPlanStartHint => 'ابدئي بالفضية: رصيدها الإعلاني أكبر من سعرها';
+
+  @override
+  String adsPlanChoose(String tier) {
+    return 'اختاري $tier';
+  }
+
+  @override
+  String get adsPlanRenew => 'جدّدي';
+
+  @override
+  String adsPlanQueued(String tier, String date) {
+    return 'تبدأ باقة $tier في $date';
+  }
+
+  @override
+  String adsPlanConfirmTitle(String tier) {
+    return 'الاشتراك في باقة $tier؟';
+  }
+
+  @override
+  String adsPlanConfirmBody(String price) {
+    return 'سيُخصم $price من رصيد أرباحكِ. تستمر الباقة 30 يوماً ولا تتجدد تلقائياً.';
+  }
+
+  @override
+  String get adsPlanConfirmUpgradeNote =>
+      'رصيدكِ غير المستخدم في باقتكِ الحالية ينتقل معكِ.';
+
+  @override
+  String adsPlanSubscribed(String tier) {
+    return 'أهلاً بكِ في باقة $tier!';
+  }
+
+  @override
+  String get adsConfirm => 'تأكيد';
+
+  @override
+  String get adsErrorBalance => 'رصيد أرباحكِ لا يغطي هذا بعد.';
+
+  @override
+  String get adsErrorLimit =>
+      'بلغتِ حدّ الحملات في باقتكِ — أوقفي حملة أو رقّي الباقة.';
+
+  @override
+  String get adsErrorFeedPost => 'انشري منشوراً عاماً لهذه القطعة أولاً.';
+
+  @override
+  String get adsErrorLocked => 'هذا يحتاج باقة أعلى.';
+
+  @override
+  String get adsComposerTitle => 'حملة جديدة';
+
+  @override
+  String get adsStepProduct => 'القطعة';
+
+  @override
+  String get adsChooseProduct => 'اختاري قطعة للترويج';
+
+  @override
+  String get adsChangeProduct => 'تغيير';
+
+  @override
+  String get adsPickProductTitle => 'أي قطعة؟';
+
+  @override
+  String get adsNoProducts => 'لا قطع متاحة للترويج';
+
+  @override
+  String get adsStepPlacement => 'مكان الظهور';
+
+  @override
+  String get adsStepAudience => 'من يراه';
+
+  @override
+  String get adsStepDuration => 'المدة';
+
+  @override
+  String adsDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count يوماً',
+      few: '$count أيام',
+      two: 'يومان',
+      one: 'يوم واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsLockedNeeds(String tier) {
+    return 'تحتاج $tier';
+  }
+
+  @override
+  String get adsTargetGroups => 'الفئات';
+
+  @override
+  String get adsTargetGovernorates => 'المحافظات';
+
+  @override
+  String get adsTargetFollowers => 'متابِعاتي';
+
+  @override
+  String get adsTargetPastBuyers => 'اشترين مني';
+
+  @override
+  String get adsTargetInterested => 'مهتمات بهذا النوع';
+
+  @override
+  String get adsTargetNewShoppers => 'زبونات جديدات';
+
+  @override
+  String get adsReachTitle => 'الوصول المتوقع';
+
+  @override
+  String adsReachValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count زبونة',
+      few: '$count زبونات',
+      two: 'زبونتان',
+      one: 'زبونة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsReachShare(int percent) {
+    return '$percent% من كل الزبونات';
+  }
+
+  @override
+  String get adsShareOfVoice => 'حصتكِ من الظهور';
+
+  @override
+  String adsShareOfVoiceHint(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'مقابل $count حملة منافسة',
+      few: 'مقابل $count حملات منافسة',
+      two: 'مقابل حملتين منافستين',
+      one: 'مقابل حملة منافسة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adsShareAlone => 'لا منافسة الآن';
+
+  @override
+  String adsPercent(int value) {
+    return '$value٪';
+  }
+
+  @override
+  String adsPriceLine(String duration) {
+    return 'الظهور لمدة $duration';
+  }
+
+  @override
+  String adsPriceDiscount(String tier) {
+    return 'خصم باقة $tier';
+  }
+
+  @override
+  String get adsPriceCredit => 'من الرصيد الإعلاني';
+
+  @override
+  String get adsPriceToPay => 'من أرباحكِ';
+
+  @override
+  String adsMinus(String amount) {
+    return '؜−$amount';
+  }
+
+  @override
+  String get adsFeedPostPinned => 'سيُثبَّت هذا المنشور:';
+
+  @override
+  String get adsFeedPostMissing =>
+      'هذا المكان يثبّت أحد منشوراتكِ. انشري منشوراً لهذه القطعة أولاً.';
+
+  @override
+  String get adsCreatePost => 'إنشاء منشور';
+
+  @override
+  String adsUnlockWith(String tier) {
+    return 'افتحيها بباقة $tier';
+  }
+
+  @override
+  String adsLaunch(String amount) {
+    return 'أطلقي الحملة · $amount';
+  }
+
+  @override
+  String get adsLaunchFree => 'أطلقيها برصيدكِ الإعلاني';
+
+  @override
+  String get adsLaunched => 'حملتكِ تعمل الآن ✨';
+
+  @override
+  String get adsQuoteFailed => 'تعذّر تسعير الحملة';
+
+  @override
+  String get homeSpotlightTitle => 'مختارات مميزة';
+
+  @override
+  String get homeSpotlightShop => 'تسوّقي';
+
+  @override
+  String homeSpotlightCardLabel(String product, String store) {
+    return 'إعلان: $product من $store';
+  }
 }

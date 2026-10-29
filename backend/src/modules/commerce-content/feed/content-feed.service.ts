@@ -229,6 +229,28 @@ export class ContentFeedService {
     return this.cache.wrap(key, 15_000, () => this.feed(page, { channel }));
   }
 
+  /**
+   * Full rows for sponsored posts, under the same rules a feed row obeys: the
+   * visibility rule, and her own «غير مهتمة» and mutes. Paying for the top of
+   * the feed does not buy a place in the feed of a woman who muted the shop.
+   * Returned in the order asked for.
+   */
+  async sponsoredRows(ids: readonly string[], viewerId?: string) {
+    if (ids.length === 0) return [];
+    const rows = await this.prisma.commerceContent.findMany({
+      where: {
+        AND: [
+          { id: { in: [...ids] } },
+          this.visibilityWhere(viewerId),
+          ...this.controlsWhere(viewerId),
+        ],
+      },
+      include: commerceContentInclude,
+    });
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    return ids.map((id) => byId.get(id)).filter((row) => row !== undefined);
+  }
+
   /** Live stories, grouped by the woman who posted them. */
   async storiesTray(viewerId?: string, authorId?: string) {
     const rows = await this.prisma.commerceContent.findMany({

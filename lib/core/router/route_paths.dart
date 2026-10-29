@@ -105,6 +105,11 @@ abstract final class RoutePaths {
   /// answer to it.
   static const sellerReviews = '/seller/reviews';
 
+  /// «مركز الإعلانات» — her plan, her campaigns, and a new one.
+  static const sellerAds = '/seller/ads';
+  static const sellerAdsPlans = '/seller/ads/plans';
+  static const sellerAdsNew = '/seller/ads/new';
+
   /// Her return and exchange desk. `/seller/orders` shows a returning parcel;
   /// this is where the request on it is actually decided.
   static const sellerReturns = '/seller/returns';
