@@ -255,9 +255,9 @@ void main() {
     test('a duration reads as a woman would say it', () {
       expect(SalonLabels.duration(_ar, 45), '45 دقيقة');
       expect(SalonLabels.duration(_ar, 60), 'ساعة');
-      expect(SalonLabels.duration(_ar, 90), 'ساعة ونصف');
-      expect(SalonLabels.duration(_ar, 120), 'ساعتان');
-      expect(SalonLabels.duration(_ar, 135), 'ساعتان و15 دقيقة');
+      expect(SalonLabels.duration(_ar, 90), 'ساعة ونص');
+      expect(SalonLabels.duration(_ar, 120), 'ساعتين');
+      expect(SalonLabels.duration(_ar, 135), 'ساعتين و15 دقيقة');
     });
 
     test('weekday 0 is Sunday, matching the server column', () {
@@ -280,7 +280,7 @@ void main() {
       expect(SalonLabels.relativeDay(_ar, today), 'اليوم');
       expect(
         SalonLabels.relativeDay(_ar, today.add(const Duration(days: 1))),
-        'غداً',
+        'بكرا',
       );
       // Far enough away and it becomes a date, because "after 40 days" is not
       // something anybody reads off a card.

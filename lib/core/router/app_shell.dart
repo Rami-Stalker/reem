@@ -606,13 +606,10 @@ class _SellerBrand extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.appTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.dsText.tileTitle.displayFamily.bold.tint(
-                  palette.ink,
-                ),
+              OharaWordmark(
+                semanticLabel: l10n.appTitle,
+                size: OharaWordmarkSize.footer,
+                color: palette.ink,
               ),
               DsGaps.vXxxs,
               Text(

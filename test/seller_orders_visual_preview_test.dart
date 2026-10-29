@@ -99,7 +99,7 @@ void main() {
       // The queue is the screen she works from: if the counts or the first
       // action are missing, the screenshot is pretty and useless.
       expect(find.text('طلباتي'), findsOneWidget);
-      expect(find.text('قبول الطلب'), findsWidgets);
+      expect(find.text('اقبلي الطلب'), findsWidgets);
 
       await _capture(tester, 'seller_orders_${mode.name}');
     });

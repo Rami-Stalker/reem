@@ -177,7 +177,7 @@ class _AuraBar extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
       child: Row(
         children: [
-          Text(l10n.appTitle, style: context.dsText.pageTitle.bold.tint(ink)),
+          OharaWordmark(semanticLabel: l10n.appTitle, color: ink),
           const Spacer(),
           _GlassIcon(
             icon: Icons.shopping_bag_outlined,

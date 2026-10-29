@@ -89,19 +89,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                     .scale(duration: 900.ms, curve: Curves.easeOutExpo)
                     .fadeIn(),
                 DsGaps.vXxxl,
-                DsGradientText(
-                  'REEM',
-                  // ds-ignore: no-hand-rolled-text-styles -- the wordmark is
-                  // a logo, drawn once at a size and tracking that belong to
-                  // the mark rather than to the type scale.
-                  // ds-ignore: no-literal-font-sizes -- same
-                  style: TextStyle(
-                    fontFamily: DsTypography.fontFamily,
-                    fontSize: 48,
-                    fontWeight: DsTypography.bold,
-                    letterSpacing: 12,
-                  ),
-                ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
+                OharaWordmark(
+                      semanticLabel: l10n.appTitle,
+                      size: OharaWordmarkSize.hero,
+                    )
+                    .animate()
+                    .fadeIn(delay: 300.ms, duration: 700.ms)
+                    .slideY(begin: 0.2, curve: Curves.easeOutCubic)
+                    .then(delay: 200.ms)
+                    .shimmer(
+                      duration: 1400.ms,
+                      color: colors.onPrimary.withValues(alpha: 0.55),
+                    ),
                 DsGaps.vSm,
                 Text(
                   l10n.splashTagline,

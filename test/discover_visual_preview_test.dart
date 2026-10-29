@@ -152,7 +152,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('اسألي أوهارا'), findsOneWidget);
-      expect(find.text('ما ينتظركِ'), findsOneWidget);
+      expect(find.text('شو ناطركِ'), findsOneWidget);
       expect(find.text('عرس سلمى'), findsOneWidget);
       expect(find.text('بعد يومين'), findsOneWidget);
       expect(find.text('بنطال بيج واسع'), findsOneWidget);

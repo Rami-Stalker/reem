@@ -231,10 +231,10 @@ void main() {
     await _settle(tester);
 
     // The product page never named the seller at all before this card.
-    expect(find.text('تبيعه'), findsOneWidget);
+    expect(find.text('بتبيعها'), findsOneWidget);
     expect(find.text('أتيليه لجين'), findsOneWidget);
     expect(find.text('زوري المتجر'), findsOneWidget);
-    expect(find.text('اسألي عن هذه القطعة'), findsOneWidget);
+    expect(find.text('اسألي عن هالقطعة'), findsOneWidget);
 
     await _capture(tester, 'product_seller_card');
   });

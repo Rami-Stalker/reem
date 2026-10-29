@@ -203,7 +203,7 @@ void main() {
       expect(find.text('بخصوص منتج'), findsOneWidget);
 
       // An empty conversation says it is empty rather than rendering nothing.
-      expect(find.text('لا رسائل بعد'), findsOneWidget);
+      expect(find.text('ما في رسايل لسّا'), findsOneWidget);
 
       await _capture(tester, 'chat_inbox_${mode.name}');
     });
@@ -246,7 +246,7 @@ void main() {
     );
     await _settle(tester);
 
-    expect(find.text('هل القطعة متوفرة؟'), findsOneWidget);
+    expect(find.text('القطعة متوفرة؟'), findsOneWidget);
 
     await _capture(tester, 'chat_conversation_empty');
   });
@@ -263,10 +263,10 @@ void main() {
     );
     await _settle(tester);
 
-    expect(find.text('لا توجد محادثات بعد'), findsOneWidget);
+    expect(find.text('ما في محادثات لسّا'), findsOneWidget);
     // A dead end here is how the old build felt: the empty state has to point
     // at the boutiques, because that is where a conversation actually starts.
-    expect(find.text('تصفّحي المتاجر'), findsOneWidget);
+    expect(find.text('اتفرّجي عالمتاجر'), findsOneWidget);
 
     await _capture(tester, 'chat_inbox_empty');
   });
@@ -286,8 +286,8 @@ void main() {
     );
     await _settle(tester);
 
-    expect(find.text('تعذّر تحميل المحادثات'), findsOneWidget);
-    expect(find.text('حاولي مرة أخرى'), findsWidgets);
+    expect(find.text('ما قدرنا نحمّل المحادثات'), findsOneWidget);
+    expect(find.text('جرّبي مرة تانية'), findsWidgets);
 
     await _capture(tester, 'chat_inbox_error');
   });

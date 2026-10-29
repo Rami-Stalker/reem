@@ -218,6 +218,13 @@ flutter:
     - family: PlayfairDisplay
       fonts:
         - asset: assets/fonts/PlayfairDisplay-VariableFont.ttf
+    # Brand — the OHARA wordmark and nothing else. Roman inscriptional capitals
+    # with a swashed A: a logo, not a text face, so only the bold cut ships.
+    # The wordmark is always written in Latin, in both languages.
+    - family: CinzelDecorative
+      fonts:
+        - asset: assets/fonts/CinzelDecorative-Bold.ttf
+          weight: 700
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
