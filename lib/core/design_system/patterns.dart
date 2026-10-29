@@ -32,3 +32,5 @@ export 'package:ohara/core/design_system/patterns/profile_stage.dart';
 export 'package:ohara/core/design_system/patterns/seller_atelier.dart';
 // Publishing: the studio's mode dial and viewfinder.
 export 'package:ohara/core/design_system/patterns/studio_stage.dart';
+// Her private pages: the vanity — mirror, trays, pearls.
+export 'package:ohara/core/design_system/patterns/vanity_stage.dart';

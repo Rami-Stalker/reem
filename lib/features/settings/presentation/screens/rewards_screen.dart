@@ -54,7 +54,11 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
       onRefresh: () =>
           ref.read(rewardsHubNotifierProvider.notifier).load(refresh: true),
       slivers: [
-        PremiumAppBar(title: context.l10n.rewardsTitle, showBack: true),
+        VanityAppBar(
+          title: context.l10n.rewardsTitle,
+          showBack: true,
+          icon: Icons.stars_rounded,
+        ),
         if (state.isLoading && hub == null)
           const _LoadingSliver()
         else if (hub == null)

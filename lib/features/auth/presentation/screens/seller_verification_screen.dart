@@ -31,11 +31,15 @@ class SellerVerificationScreen extends ConsumerWidget {
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.sellerVerification, showBack: true),
+        VanityAppBar(
+          title: context.l10n.sellerVerification,
+          showBack: true,
+          icon: Icons.storefront_outlined,
+        ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
-            DsSpacing.huge,
+            DsSpacing.xl,
             DsSpacing.lg,
             140,
           ),

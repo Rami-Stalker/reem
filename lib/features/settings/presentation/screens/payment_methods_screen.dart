@@ -32,9 +32,10 @@ class PaymentMethodsScreen extends ConsumerWidget {
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(
+        VanityAppBar(
           title: context.l10n.settingsPaymentMethods,
           showBack: true,
+          icon: Icons.credit_card_outlined,
         ),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),

@@ -28,7 +28,7 @@ class NotificationInboxScreen extends ConsumerWidget {
     return OharaScrollPage(
       onRefresh: notifier.load,
       slivers: [
-        PremiumAppBar(
+        VanityAppBar(
           title: l10n.notificationInboxTitle,
           subtitle: state.unreadCount == 0
               ? null
@@ -41,6 +41,7 @@ class NotificationInboxScreen extends ConsumerWidget {
               onPressed: () => context.push(RoutePaths.notificationPreferences),
             ),
           ],
+          icon: Icons.mark_email_unread_outlined,
         ),
         if (state.isLoading && state.items.isEmpty)
           const SliverFillRemaining(

@@ -67,18 +67,25 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final account = ref.watch(authAccountProvider);
-    final colors = context.dsColors;
+    final palette = context.boutique;
+    final gutter = vanityGutter(context);
+    const fields = EdgeInsets.fromLTRB(
+      DsSpacing.md,
+      DsSpacing.lg,
+      DsSpacing.md,
+      DsSpacing.xs,
+    );
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.account, showBack: true),
+        VanityAppBar(
+          title: context.l10n.account,
+          subtitle: context.l10n.profileIdentity,
+          icon: Icons.person_outline_rounded,
+          showBack: true,
+        ),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(
-            DsSpacing.lg,
-            DsSpacing.huge,
-            DsSpacing.lg,
-            120,
-          ),
+          padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 120),
           sliver: account.when(
             loading: () => const SliverFillRemaining(
               child: Center(child: DsLoadingIndicator()),
@@ -95,29 +102,37 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
               }
               return SliverList(
                 delegate: SliverChildListDelegate([
-                  Text(
-                    context.l10n.profileIdentity,
-                    style: context.dsText.screenTitle.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  VanityTray(
+                    padding: fields,
+                    children: [
+                      DsInputField(
+                        controller: _nameController,
+                        label: context.l10n.fullName,
+                        prefixIcon: Icon(
+                          Icons.person_outline,
+                          color: palette.primary,
+                        ),
+                      ),
+                      DsInputField(
+                        controller: _emailController,
+                        label: context.l10n.email,
+                        keyboardType: TextInputType.emailAddress,
+                        prefixIcon: Icon(
+                          Icons.mail_outline,
+                          color: palette.primary,
+                        ),
+                      ),
+                      DsInputField(
+                        controller: _locationController,
+                        label: context.l10n.addresses,
+                        prefixIcon: Icon(
+                          Icons.location_on_outlined,
+                          color: palette.primary,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: DsSpacing.md),
-                  DsInputField(
-                    controller: _nameController,
-                    label: context.l10n.fullName,
-                    prefixIcon: Icon(
-                      Icons.person_outline,
-                      color: colors.primary,
-                    ),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  DsInputField(
-                    controller: _emailController,
-                    label: context.l10n.email,
-                    keyboardType: TextInputType.emailAddress,
-                    prefixIcon: Icon(Icons.mail_outline, color: colors.primary),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
+                  DsGaps.vXl,
                   // Read-only, and it leads somewhere else.
                   //
                   // The number IS the account: it is the login, the recovery
@@ -127,33 +142,20 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
                   // single code on the incoming number, which is precisely the
                   // proof a SIM swapper has. It now runs through its own
                   // two-sided flow.
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(
-                      Icons.phone_iphone_rounded,
-                      color: colors.primary,
-                    ),
-                    title: Text(context.l10n.phone),
-                    subtitle: Text(
-                      data.user.phone,
-                      textDirection: TextDirection.ltr,
-                      style: context.dsText.bodyLarge,
-                    ),
-                    trailing: TextButton(
-                      onPressed: () => context.push(RoutePaths.phoneChange),
-                      child: Text(context.l10n.changeAccountNumber),
-                    ),
+                  VanityTray(
+                    children: [
+                      VanityRow(
+                        icon: Icons.phone_iphone_rounded,
+                        title: context.l10n.phone,
+                        subtitle: '\u2066${data.user.phone}\u2069',
+                        trailing: TextButton(
+                          onPressed: () => context.push(RoutePaths.phoneChange),
+                          child: Text(context.l10n.changeAccountNumber),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: DsSpacing.md),
-                  DsInputField(
-                    controller: _locationController,
-                    label: context.l10n.addresses,
-                    prefixIcon: Icon(
-                      Icons.location_on_outlined,
-                      color: colors.primary,
-                    ),
-                  ),
-                  const SizedBox(height: DsSpacing.lg),
+                  DsGaps.vXxl,
                   PrimaryButton(
                     label: context.l10n.saveChanges,
                     icon: Icons.save_outlined,

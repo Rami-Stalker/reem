@@ -11,7 +11,8 @@ import 'package:ohara/core/utils/relative_time.dart';
 import 'package:ohara/features/reputation/domain/entities/reputation_entities.dart';
 import 'package:ohara/features/reputation/presentation/providers/reputation_provider.dart';
 
-/// Everything she has written about a piece or a boutique.
+/// Everything she has written about a piece or a boutique — kept like notes
+/// tucked into the frame of her mirror.
 ///
 /// Her profile already showed the count and the average; the row that offered
 /// to open them led to a "coming soon" sheet, because nothing could list them.
@@ -26,7 +27,12 @@ class MyReviewsScreen extends ConsumerWidget {
     return OharaScrollPage(
       onRefresh: () async => ref.refresh(myReviewsProvider.future),
       slivers: [
-        PremiumAppBar(title: l10n.myReviews, showBack: true),
+        VanityAppBar(
+          title: l10n.myReviews,
+          subtitle: l10n.myReviewsSubtitle,
+          icon: Icons.rate_review_outlined,
+          showBack: true,
+        ),
         reviews.when(
           loading: () => const SliverFillRemaining(
             hasScrollBody: false,
@@ -66,16 +72,12 @@ class _Reviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gutter = vanityGutter(context);
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(
-        DsSpacing.lg,
-        DsSpacing.sm,
-        DsSpacing.lg,
-        140,
-      ),
+      padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 140),
       sliver: SliverList.separated(
         itemCount: data.reviews.length + 1,
-        separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.md),
+        separatorBuilder: (_, _) => DsGaps.vLg,
         itemBuilder: (context, index) {
           if (index == 0) return _Summary(data: data);
           return _ReviewCard(review: data.reviews[index - 1]);
@@ -85,6 +87,8 @@ class _Reviews extends StatelessWidget {
   }
 }
 
+/// How many she has written and the stars she gives on average, as a strand
+/// of five pearls lit up to her average.
 class _Summary extends StatelessWidget {
   const _Summary({required this.data});
 
@@ -92,11 +96,19 @@ class _Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: DsSpacing.sm),
+    final palette = context.boutique;
+    return Container(
+      padding: DsSpacing.paddingLg,
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXxl,
+        gradient: LinearGradient(
+          begin: AlignmentDirectional.topStart,
+          end: AlignmentDirectional.bottomEnd,
+          colors: [palette.primarySoft, palette.goldSoft],
+        ),
+        border: Border.all(color: palette.gold.withValues(alpha: 0.45)),
+      ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
@@ -105,38 +117,31 @@ class _Summary extends StatelessWidget {
               children: [
                 Text(
                   context.l10n.reviewsWritten(data.count),
-                  style: context.dsText.cardTitle
-                      .copyWith(fontWeight: DsTypography.bold),
+                  style: context.dsText.sectionTitle.displayFamily.bold.tint(
+                    palette.ink,
+                  ),
                 ),
-                DsGaps.vXxxs,
-                Text(
-                  context.l10n.myReviewsSubtitle,
-                  style: context.dsText.cardSubtitle
-                      .copyWith(color: c.onSurfaceVariant, height: 1.4),
-                ),
+                if (data.count > 0) ...[
+                  DsGaps.vSm,
+                  _PearlStrand(rating: data.average),
+                ],
               ],
             ),
           ),
           if (data.count > 0) ...[
-            const SizedBox(width: DsSpacing.md),
+            DsGaps.hMd,
             Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.star_rounded, size: 18, color: c.warning),
-                    DsGaps.hXxs,
-                    Text(
-                      data.average.toStringAsFixed(1),
-                      style: context.dsText.cardTitle
-                          .copyWith(fontWeight: DsTypography.bold),
-                    ),
-                  ],
+                Text(
+                  data.average.toStringAsFixed(1),
+                  style: context.dsText.hero.displayFamily.bold.tint(
+                    palette.ink,
+                  ),
                 ),
                 Text(
                   context.l10n.averageYouGive,
-                  style: context.dsText.caption
-                      .copyWith(color: c.onSurfaceVariant),
+                  style: context.dsText.caption.tint(palette.muted),
                 ),
               ],
             ),
@@ -147,6 +152,96 @@ class _Summary extends StatelessWidget {
   }
 }
 
+/// Five pearls on a thread, lit gold up to [rating] (a half-lit pearl for a
+/// half star).
+class _PearlStrand extends StatelessWidget {
+  const _PearlStrand({required this.rating, this.size = 16});
+
+  final double rating;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.boutique;
+    return Semantics(
+      label: rating.toStringAsFixed(1),
+      excludeSemantics: true,
+      child: Stack(
+        alignment: AlignmentDirectional.centerStart,
+        children: [
+          // The thread.
+          Positioned.fill(
+            child: Center(child: Container(height: 1, color: palette.gold)),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var i = 0; i < 5; i++) ...[
+                if (i > 0) SizedBox(width: size * 0.35),
+                _Pearl(fill: (rating - i).clamp(0.0, 1.0), size: size),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Pearl extends StatelessWidget {
+  const _Pearl({required this.fill, required this.size});
+
+  final double fill;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.boutique;
+    final lit = fill >= 0.75;
+    final half = !lit && fill >= 0.25;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          center: const Alignment(-0.35, -0.4),
+          colors: lit
+              ? const [DsColors.gold100, DsColors.gold400]
+              : [
+                  Color.lerp(palette.surface, DsColors.onMedia, 0.5)!,
+                  Color.lerp(palette.surface, palette.primary, 0.15)!,
+                ],
+        ),
+        border: Border.all(
+          color: lit || half
+              ? DsColors.gold500
+              : palette.primary.withValues(alpha: 0.25),
+        ),
+      ),
+      child: half
+          ? ClipRect(
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                widthFactor: 0.5,
+                child: Container(
+                  width: size,
+                  height: size,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: DsColors.gold300,
+                  ),
+                ),
+              ),
+            )
+          : null,
+    );
+  }
+}
+
+/// One review, as a note tucked into the mirror's frame: pinned with a gold
+/// pearl, the piece or boutique in a small arched window, her words, and —
+/// when there is one — the seller's answer folded in under it.
 class _ReviewCard extends StatelessWidget {
   const _ReviewCard({required this.review});
 
@@ -154,117 +249,214 @@ class _ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
+    final palette = context.boutique;
     final l10n = context.l10n;
     final body = review.body?.trim() ?? '';
+    final title = review.title?.trim() ?? '';
+    final open = review.isAboutProduct
+        ? () => context.push(RoutePaths.productDetailsOf(review.subject.id))
+        : () => context.push(RoutePaths.userProfileOf(review.subject.id));
 
-    return SurfaceCard(
-      onTap: review.isAboutProduct
-          ? () => context.push(
-              RoutePaths.productDetailsOf(review.subject.id),
-            )
-          : () => context.push(RoutePaths.userProfileOf(review.subject.id)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Thumb(review: review),
-              const SizedBox(width: DsSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      review.subject.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.dsText.tileTitle
-                          .copyWith(fontWeight: DsTypography.semiBold),
-                    ),
-                    if (!review.isAboutProduct) ...[
-                      DsGaps.vXxxs,
-                      Text(
-                        l10n.reviewAboutShop,
-                        style: context.dsText.caption
-                            .copyWith(color: c.onSurfaceVariant),
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Material(
+          color: palette.surface,
+          borderRadius: DsRadius.borderXxl,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: open,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpacing.md,
+                DsSpacing.lg,
+                DsSpacing.md,
+                DsSpacing.md,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: DsRadius.borderXxl,
+                border: Border.all(color: palette.line),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _Thumb(review: review),
+                      DsGaps.hMd,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              review.subject.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.dsText.bodyStrong.tint(
+                                palette.ink,
+                              ),
+                            ),
+                            if (!review.isAboutProduct) ...[
+                              DsGaps.vXxxs,
+                              Text(
+                                l10n.reviewAboutShop,
+                                style: context.dsText.caption.tint(
+                                  palette.muted,
+                                ),
+                              ),
+                            ],
+                            DsGaps.vXs,
+                            Row(
+                              children: [
+                                _PearlStrand(
+                                  rating: review.rating.toDouble(),
+                                  size: 12,
+                                ),
+                                DsGaps.hSm,
+                                Expanded(
+                                  child: Text(
+                                    formatRelativeTime(l10n, review.createdAt),
+                                    style: context.dsText.caption.tint(
+                                      palette.muted,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
-                    const SizedBox(height: DsSpacing.xs),
+                  ),
+                  if (title.isNotEmpty || body.isNotEmpty) ...[
+                    DsGaps.vMd,
+                    // Her words, opened with a large gold quotation mark.
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _Stars(rating: review.rating),
-                        const SizedBox(width: DsSpacing.sm),
+                        Text(
+                          // l10n-ignore: a quotation mark, not a word.
+                          '“',
+                          style: context.dsText.hero.displayFamily.tint(
+                            palette.gold,
+                          ),
+                        ),
+                        DsGaps.hXs,
                         Expanded(
-                          child: Text(
-                            formatRelativeTime(l10n, review.createdAt),
-                            style: context.dsText.caption
-                                .copyWith(color: c.onSurfaceVariant),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: DsSpacing.sm),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (title.isNotEmpty)
+                                  Text(
+                                    title,
+                                    style: context.dsText.bodyStrong.tint(
+                                      palette.ink,
+                                    ),
+                                  ),
+                                if (body.isNotEmpty) ...[
+                                  if (title.isNotEmpty) DsGaps.vXxs,
+                                  Text(
+                                    body,
+                                    style: context.dsText.body
+                                        .tint(palette.ink)
+                                        .copyWith(height: 1.55),
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ],
-                ),
-              ),
-            ],
-          ),
-          if (review.title != null && review.title!.trim().isNotEmpty) ...[
-            const SizedBox(height: DsSpacing.sm),
-            Text(
-              review.title!.trim(),
-              style: context.dsText.body
-                  .copyWith(fontWeight: DsTypography.semiBold),
-            ),
-          ],
-          if (body.isNotEmpty) ...[
-            const SizedBox(height: DsSpacing.xs),
-            Text(
-              body,
-              style: context.dsText.body
-                  .copyWith(color: c.onSurfaceVariant, height: 1.5),
-            ),
-          ],
-          // A review still in moderation is hers to see. Hiding it would look
-          // like the app had lost it, and she would write it again.
-          if (review.isPending || review.isRejected) ...[
-            const SizedBox(height: DsSpacing.sm),
-            _StatusChip(
-              label: review.isPending ? l10n.reviewPending : l10n.reviewRejected,
-              tone: review.isPending ? c.warning : c.error,
-            ),
-          ],
-          if (review.hasReply) ...[
-            const SizedBox(height: DsSpacing.md),
-            Container(
-              padding: const EdgeInsets.all(DsSpacing.md),
-              decoration: BoxDecoration(
-                color: c.surfaceVariant.withValues(alpha: 0.6),
-                borderRadius: DsRadius.borderMd,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.sellerReplied,
-                    style: context.dsText.caption.copyWith(
-                      color: c.primary,
-                      fontWeight: DsTypography.semiBold,
+                  // A review still in moderation is hers to see. Hiding it
+                  // would look like the app had lost it, and she would write
+                  // it again.
+                  if (review.isPending || review.isRejected) ...[
+                    DsGaps.vSm,
+                    _StatusChip(
+                      label: review.isPending
+                          ? l10n.reviewPending
+                          : l10n.reviewRejected,
+                      tone: review.isPending
+                          ? palette.caution
+                          : palette.critical,
                     ),
-                  ),
-                  DsGaps.vXxs,
-                  Text(
-                    review.sellerReply!.trim(),
-                    style: context.dsText.cardSubtitle.copyWith(height: 1.5),
-                  ),
+                  ],
+                  if (review.hasReply) ...[
+                    DsGaps.vMd,
+                    Container(
+                      padding: DsSpacing.paddingMd,
+                      decoration: BoxDecoration(
+                        color: palette.primarySoft.withValues(alpha: 0.6),
+                        borderRadius: DsRadius.borderLg,
+                        border: BorderDirectional(
+                          start: BorderSide(color: palette.gold, width: 3),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.reply_rounded,
+                                size: DsSizes.iconXs,
+                                color: palette.primary,
+                              ),
+                              DsGaps.hXxs,
+                              Text(
+                                l10n.sellerReplied,
+                                style: context.dsText.caption.semibold.tint(
+                                  palette.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          DsGaps.vXxs,
+                          Text(
+                            review.sellerReply!.trim(),
+                            style: context.dsText.bodySmall
+                                .tint(palette.ink)
+                                .copyWith(height: 1.5),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
-          ],
-        ],
-      ),
+          ),
+        ),
+        // The pin.
+        PositionedDirectional(
+          top: -6,
+          end: DsSpacing.xl,
+          child: Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const RadialGradient(
+                center: Alignment(-0.35, -0.4),
+                colors: [DsColors.gold100, DsColors.gold400],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: palette.gold.withValues(alpha: 0.45),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -277,7 +469,7 @@ class _Thumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // A boutique is a person, so it gets the round avatar treatment; a piece
-    // gets a square crop, the way it looks everywhere else in the app.
+    // sits in a small arched window.
     if (!review.isAboutProduct) {
       return DsAvatar(
         imageUrl: review.subject.imageUrl,
@@ -286,38 +478,29 @@ class _Thumb extends StatelessWidget {
       );
     }
 
-    final c = context.dsColors;
+    final palette = context.boutique;
     final url = review.subject.imageUrl;
-    return ClipRRect(
-      borderRadius: DsRadius.borderMd,
+    return ClipPath(
+      clipper: const DsArchClipper(),
       child: SizedBox(
-        width: 56,
-        height: 56,
+        width: 52,
+        height: 62,
         child: url == null || url.isEmpty
-            ? ColoredBox(color: c.secondaryContainer)
+            ? DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [palette.primarySoft, palette.goldSoft],
+                  ),
+                ),
+                child: Icon(
+                  Icons.redeem_rounded,
+                  color: palette.primary,
+                  size: DsSizes.iconMd,
+                ),
+              )
             : AuthorizedMediaImage(url: url, fit: BoxFit.cover),
-      ),
-    );
-  }
-}
-
-class _Stars extends StatelessWidget {
-  const _Stars({required this.rating});
-
-  final int rating;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(
-        5,
-        (index) => Icon(
-          index < rating ? Icons.star_rounded : Icons.star_outline_rounded,
-          size: 15,
-          color: index < rating ? c.warning : c.onSurfaceVariant,
-        ),
       ),
     );
   }
@@ -332,18 +515,16 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xxs),
+      padding: const EdgeInsets.symmetric(
+        horizontal: DsSpacing.sm,
+        vertical: DsSpacing.xxs,
+      ),
       decoration: BoxDecoration(
         color: tone.withValues(alpha: 0.12),
-        borderRadius: DsRadius.borderSm,
+        borderRadius: DsRadius.borderPill,
+        border: Border.all(color: tone.withValues(alpha: 0.35)),
       ),
-      child: Text(
-        label,
-        style: context.dsText.caption.copyWith(
-              color: tone,
-              fontWeight: DsTypography.semiBold,
-            ),
-      ),
+      child: Text(label, style: context.dsText.caption.semibold.tint(tone)),
     );
   }
 }

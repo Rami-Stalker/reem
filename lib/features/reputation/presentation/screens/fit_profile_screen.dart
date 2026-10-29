@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,17 +21,34 @@ class FitProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(fitProfileProvider);
-    return Scaffold(
-      backgroundColor: context.dsColors.background,
-      appBar: OharaAppBar(title: context.l10n.fitProfileTitle),
-      body: async.when(
-        loading: () => const Center(child: DsLoadingIndicator()),
-        error: (_, _) => DsErrorState(
-          message: context.l10n.fitProfileLoadError,
-          onRetry: () => ref.invalidate(fitProfileProvider),
+    return OharaScrollPage(
+      slivers: [
+        VanityAppBar(
+          title: context.l10n.fitProfileTitle,
+          icon: Icons.straighten_rounded,
+          showBack: true,
         ),
-        data: (profile) => _FitProfileForm(initial: profile),
-      ),
+        ...async.when(
+          loading: () => const [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: DsLoadingIndicator()),
+            ),
+          ],
+          error: (_, _) => [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: DsErrorState(
+                message: context.l10n.fitProfileLoadError,
+                onRetry: () => ref.invalidate(fitProfileProvider),
+              ),
+            ),
+          ],
+          data: (profile) => [
+            SliverToBoxAdapter(child: _FitProfileForm(initial: profile)),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -47,122 +63,116 @@ class _FitProfileForm extends ConsumerStatefulWidget {
 }
 
 class _FitProfileFormState extends ConsumerState<_FitProfileForm> {
-  late final _height = TextEditingController(
-    text: widget.initial.heightCm?.toString() ?? '',
-  );
+  late int? _heightValue = widget.initial.heightCm;
   late String? _size = widget.initial.usualSize;
   late bool _share = widget.initial.shareOnReviews;
   bool _saving = false;
 
-  static const _minHeight = 130;
-  static const _maxHeight = 200;
-
-  @override
-  void dispose() {
-    _height.dispose();
-    super.dispose();
-  }
-
-  int? get _heightValue => int.tryParse(_height.text.trim());
-
-  /// Empty is fine — it clears the height. Anything typed must be a height.
-  String? get _heightError {
-    if (_height.text.trim().isEmpty) return null;
-    final value = _heightValue;
-    if (value == null || value < _minHeight || value > _maxHeight) {
-      return context.l10n.fitHeightInvalid(_minHeight, _maxHeight);
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final colors = context.dsColors;
+    final palette = context.boutique;
+    final gutter = vanityGutter(context);
 
-    return ListView(
-      padding: const EdgeInsets.all(DsSpacing.md),
-      children: [
-        SurfaceCard(
-          color: colors.infoContainer,
-          showBorder: false,
-          padding: const EdgeInsets.all(DsSpacing.md),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 120),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // A sealed note, before she gives anything: where it goes.
+          Container(
+            padding: DsSpacing.paddingMd,
+            decoration: BoxDecoration(
+              color: palette.goldSoft.withValues(alpha: 0.55),
+              borderRadius: DsRadius.borderXxl,
+              border: Border.all(color: palette.gold.withValues(alpha: 0.45)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                VanityPearl(
+                  icon: Icons.lock_outline_rounded,
+                  color: palette.gold,
+                ),
+                DsGaps.hMd,
+                Expanded(
+                  child: Text(
+                    l10n.fitProfilePrivacy,
+                    style: context.dsText.caption
+                        .tint(palette.ink)
+                        .copyWith(height: 1.55),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          DsGaps.vXxl,
+          VanityTray(
+            title: l10n.fitHeightLabel,
+            padding: const EdgeInsets.symmetric(vertical: DsSpacing.md),
             children: [
-              Icon(
-                Icons.lock_outline_rounded,
-                size: DsSizes.iconMd,
-                color: colors.info,
+              VanityTape(
+                value: _heightValue,
+                min: _minHeight,
+                max: _maxHeight,
+                unit: l10n.fitCentimetres,
+                hint: l10n.fitHeightHint,
+                clearLabel: l10n.clear,
+                onChanged: (value) => setState(() => _heightValue = value),
               ),
-              DsGaps.hSm,
-              Expanded(
-                child: Text(
-                  l10n.fitProfilePrivacy,
-                  style: context.dsText.caption.tint(colors.onSurface),
+            ],
+          ),
+          DsGaps.vXl,
+          VanityTray(
+            title: l10n.fitUsualSizeLabel,
+            padding: const EdgeInsets.all(DsSpacing.md),
+            children: [
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: DsSpacing.xs,
+                runSpacing: DsSpacing.sm,
+                children: [
+                  for (final size in widget.initial.sizes)
+                    _SizePearl(
+                      label: size,
+                      selected: _size == size,
+                      // Tapping the chosen size clears it.
+                      onTap: () =>
+                          setState(() => _size = _size == size ? null : size),
+                    ),
+                ],
+              ),
+            ],
+          ),
+          DsGaps.vXl,
+          VanityTray(
+            children: [
+              VanityRow(
+                icon: Icons.rate_review_outlined,
+                title: l10n.fitShareDefault,
+                subtitle: l10n.fitShareDefaultHint,
+                onTap: () => setState(() => _share = !_share),
+                trailing: PearlSwitch(
+                  value: _share,
+                  onChanged: (value) => setState(() => _share = value),
+                  semanticLabel: l10n.fitShareDefault,
                 ),
               ),
             ],
           ),
-        ),
-        DsGaps.vLg,
-        DsInputField(
-          controller: _height,
-          label: l10n.fitHeightLabel,
-          hint: l10n.fitHeightHint,
-          errorText: _heightError,
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(3),
-          ],
-          suffixIcon: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm),
-            child: Center(
-              widthFactor: 1,
-              child: Text(l10n.fitCentimetres, style: context.dsText.caption),
-            ),
+          DsGaps.vXxl,
+          DsButton(
+            label: l10n.fitProfileSave,
+            isLoading: _saving,
+            onPressed: _saving ? null : _save,
           ),
-          onChanged: (_) => setState(() {}),
-        ),
-        DsGaps.vLg,
-        Text(l10n.fitUsualSizeLabel, style: context.dsText.labelStrong),
-        DsGaps.vXs,
-        Wrap(
-          spacing: DsSpacing.xs,
-          runSpacing: DsSpacing.xs,
-          children: [
-            for (final size in widget.initial.sizes)
-              DsChip(
-                label: size,
-                selected: _size == size,
-                // Tapping the chosen size clears it.
-                onTap: () =>
-                    setState(() => _size = _size == size ? null : size),
-              ),
-          ],
-        ),
-        DsGaps.vLg,
-        SwitchListTile.adaptive(
-          contentPadding: EdgeInsets.zero,
-          value: _share,
-          onChanged: (value) => setState(() => _share = value),
-          title: Text(l10n.fitShareDefault, style: context.dsText.bodyStrong),
-          subtitle: Text(
-            l10n.fitShareDefaultHint,
-            style: context.dsText.caption.tint(colors.onSurfaceVariant),
-          ),
-        ),
-        DsGaps.vXl,
-        DsButton(
-          label: l10n.fitProfileSave,
-          isLoading: _saving,
-          onPressed: _saving || _heightError != null ? null : _save,
-        ),
-        DsGaps.bottomSafe,
-      ],
+        ],
+      ),
     );
   }
+
+  static const _minHeight = 130;
+  static const _maxHeight = 200;
 
   Future<void> _save() async {
     setState(() => _saving = true);
@@ -182,5 +192,75 @@ class _FitProfileFormState extends ConsumerState<_FitProfileForm> {
       case Error(:final failure):
         DsSnackbar.error(context, failure.message);
     }
+  }
+}
+
+/// One size, as a pearl on her string: the one she wears is gold and lit.
+class _SizePearl extends StatelessWidget {
+  const _SizePearl({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.boutique;
+    const size = 48.0;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: DsScaleAnimations.tapScale(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: DsReducedMotion.duration(DsMotion.normal),
+          curve: DsMotion.gentle,
+          width: size,
+          height: size,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              center: const Alignment(-0.35, -0.45),
+              colors: selected
+                  ? const [DsColors.gold100, DsColors.gold300, DsColors.gold500]
+                  : [
+                      Color.lerp(palette.surface, DsColors.onMedia, 0.6)!,
+                      Color.lerp(palette.surface, palette.primary, 0.1)!,
+                      Color.lerp(palette.surface, palette.primary, 0.22)!,
+                    ],
+              stops: const [0, 0.6, 1],
+            ),
+            border: Border.all(
+              color: selected
+                  ? DsColors.gold500
+                  : palette.primary.withValues(alpha: 0.2),
+              width: selected ? 1.5 : 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: (selected ? palette.gold : palette.primary).withValues(
+                  alpha: selected ? 0.45 : 0.12,
+                ),
+                blurRadius: selected ? 14 : 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Text(
+            label,
+            style: context.dsText.bodyStrong.displayFamily.bold.tint(
+              selected ? DsColors.gold700 : palette.ink,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

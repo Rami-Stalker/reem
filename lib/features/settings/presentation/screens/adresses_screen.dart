@@ -28,20 +28,20 @@ class AddressesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(addressBookProvider);
+    final gutter = vanityGutter(context);
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.settingsMyAddresses, showBack: true),
+        VanityAppBar(
+          title: context.l10n.settingsMyAddresses,
+          subtitle: context.l10n.settingsDeliveryAddressesSubtitle,
+          icon: Icons.location_on_outlined,
+          showBack: true,
+        ),
         SliverPadding(
-          padding: const EdgeInsets.all(DsSpacing.lg),
+          padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 120),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              OharaSectionHeader(
-                title: context.l10n.settingsDeliveryAddresses,
-                subtitle: context.l10n.settingsDeliveryAddressesSubtitle,
-              ),
-              const SizedBox(height: DsSpacing.lg),
-
               if (state.isLoading && state.addresses.isEmpty)
                 const _BookSkeleton()
               else if (state.failure != null && state.addresses.isEmpty)
@@ -62,16 +62,14 @@ class AddressesScreen extends ConsumerWidget {
                   const SizedBox(height: DsSpacing.md),
                 ],
 
-              const SizedBox(height: DsSpacing.md),
-              SecondaryButton(
+              const SizedBox(height: DsSpacing.xs),
+              _AddSlot(
                 label: context.l10n.settingsAddAddress,
-                onPressed: state.isSaving ? null : () => _add(context, ref),
+                onTap: state.isSaving ? null : () => _add(context, ref),
               ),
               if (state.isSaving) ...[
                 const SizedBox(height: DsSpacing.md),
-                const Center(
-                  child: DsLoadingIndicator.inline(),
-                ),
+                const Center(child: DsLoadingIndicator.inline()),
               ],
             ]),
           ),
@@ -194,6 +192,76 @@ class AddressesScreen extends ConsumerWidget {
         );
     }
   }
+}
+
+/// The empty place at the end of the book: a dashed card with a pearl
+/// holding a plus — where the next address will sit.
+class _AddSlot extends StatelessWidget {
+  const _AddSlot({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.boutique;
+    return Opacity(
+      opacity: onTap == null ? 0.5 : 1,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: DsRadius.borderXxl,
+          child: CustomPaint(
+            painter: _DashedFrame(color: palette.gold),
+            child: Padding(
+              padding: DsSpacing.paddingLg,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const VanityPearl(icon: Icons.add_rounded),
+                  DsGaps.hMd,
+                  Text(
+                    label,
+                    style: context.dsText.bodyStrong.tint(palette.primary),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DashedFrame extends CustomPainter {
+  const _DashedFrame({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          (Offset.zero & size).deflate(1),
+          const Radius.circular(DsRadius.xxl),
+        ),
+      );
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.4
+      ..color = color.withValues(alpha: 0.7);
+    for (final metric in path.computeMetrics()) {
+      for (var d = 0.0; d < metric.length; d += 10) {
+        canvas.drawPath(metric.extractPath(d, d + 5), paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashedFrame old) => old.color != color;
 }
 
 class _EmptyBook extends StatelessWidget {

@@ -56,7 +56,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.wishlist),
+        VanityAppBar(
+          title: context.l10n.wishlist,
+          icon: Icons.favorite_border_rounded,
+        ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
