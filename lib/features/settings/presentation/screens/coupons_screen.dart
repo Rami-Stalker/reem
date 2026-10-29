@@ -48,7 +48,11 @@ class CouponsScreen extends ConsumerWidget {
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.settingsCoupons, showBack: true),
+        VanityAppBar(
+          title: context.l10n.settingsCoupons,
+          showBack: true,
+          icon: Icons.local_offer_outlined,
+        ),
         SliverPadding(
           padding: const EdgeInsets.all(DsSpacing.lg),
           sliver: SliverList(

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -80,12 +82,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(editProfileNotifierProvider);
-    final colors = context.dsColors;
+    final palette = context.boutique;
+    final gutter = vanityGutter(context);
     if (state.user != null && !_seeded) _seed(state.user!);
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.profileEditTitle, showBack: true),
+        VanityAppBar(
+          title: context.l10n.profileEditTitle,
+          icon: Icons.badge_outlined,
+          showBack: true,
+        ),
         if (state.isLoading && state.user == null)
           const SliverFillRemaining(
             hasScrollBody: false,
@@ -93,81 +100,106 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.all(DsSpacing.lg),
+            padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 120),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                const SizedBox(height: DsSpacing.md),
+                // Her portrait, in a ring of small lit bulbs.
                 Center(
-                  child: DsAvatarPicker(
-                    imageUrl: _imageUrl,
-                    enabled: !state.isLoading,
-                    // Saved with the rest of the form, not on pick: the upload
-                    // has happened, but until she taps save the profile still
-                    // points at the old photograph, and going back should mean
-                    // going back.
-                    onChanged: (url) => setState(() => _imageUrl = url),
+                  child: _PortraitRing(
+                    child: DsAvatarPicker(
+                      imageUrl: _imageUrl,
+                      enabled: !state.isLoading,
+                      // Saved with the rest of the form, not on pick: the upload
+                      // has happened, but until she taps save the profile still
+                      // points at the old photograph, and going back should mean
+                      // going back.
+                      onChanged: (url) => setState(() => _imageUrl = url),
+                    ),
                   ),
                 ),
-                const SizedBox(height: DsSpacing.xxl),
+                DsGaps.vXxl,
                 Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      DsInputField(
-                        controller: _name,
-                        label: context.l10n.profileFullName,
-                        prefixIcon: Icon(
-                          Icons.person_outline,
-                          color: colors.primary,
+                      VanityTray(
+                        padding: const EdgeInsets.fromLTRB(
+                          DsSpacing.md,
+                          DsSpacing.lg,
+                          DsSpacing.md,
+                          DsSpacing.xs,
                         ),
-                        validator: (v) => (v == null || v.trim().length < 2)
-                            ? context.l10n.profileNameTooShort
-                            : null,
+                        children: [
+                          DsInputField(
+                            controller: _name,
+                            label: context.l10n.profileFullName,
+                            prefixIcon: Icon(
+                              Icons.person_outline,
+                              color: palette.primary,
+                            ),
+                            validator: (v) => (v == null || v.trim().length < 2)
+                                ? context.l10n.profileNameTooShort
+                                : null,
+                          ),
+                          DsInputField(
+                            controller: _location,
+                            label: context.l10n.profileLocation,
+                            prefixIcon: Icon(
+                              Icons.place_outlined,
+                              color: palette.primary,
+                            ),
+                          ),
+                          DsInputField(
+                            controller: _bio,
+                            label: context.l10n.profileBio,
+                            maxLines: 4,
+                            prefixIcon: Icon(
+                              Icons.edit_note_outlined,
+                              color: palette.primary,
+                            ),
+                            validator: (v) => (v != null && v.length > 500)
+                                ? context.l10n.profileBioTooLong
+                                : null,
+                          ),
+                        ],
                       ),
-                      DsInputField(
-                        controller: _location,
-                        label: context.l10n.profileLocation,
-                        prefixIcon: Icon(
-                          Icons.place_outlined,
-                          color: colors.primary,
+                      DsGaps.vXl,
+                      VanityTray(
+                        padding: const EdgeInsets.fromLTRB(
+                          DsSpacing.md,
+                          DsSpacing.lg,
+                          DsSpacing.md,
+                          DsSpacing.xs,
                         ),
+                        children: [
+                          // Q34's «بريد إلكتروني للاستعادة» — the last step on the
+                          // profile checklist, and the one that had no field
+                          // anywhere in the app, so the completion ring could
+                          // never reach 100%.
+                          DsInputField(
+                            controller: _email,
+                            label: context.l10n.profileRecoveryEmail,
+                            helperText: context.l10n.profileRecoveryEmailHint,
+                            keyboardType: TextInputType.emailAddress,
+                            prefixIcon: Icon(
+                              Icons.alternate_email_rounded,
+                              color: palette.primary,
+                            ),
+                            validator: (value) {
+                              final email = value?.trim() ?? '';
+                              if (email.isEmpty) return null;
+                              final valid = RegExp(
+                                r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                              ).hasMatch(email);
+                              return valid
+                                  ? null
+                                  : context.l10n.profileEmailInvalid;
+                            },
+                          ),
+                        ],
                       ),
-                      // Q34's «بريد إلكتروني للاستعادة» — the last step on the
-                      // profile checklist, and the one that had no field
-                      // anywhere in the app, so the completion ring could
-                      // never reach 100%.
-                      DsInputField(
-                        controller: _email,
-                        label: context.l10n.profileRecoveryEmail,
-                        helperText: context.l10n.profileRecoveryEmailHint,
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIcon: Icon(
-                          Icons.alternate_email_rounded,
-                          color: colors.primary,
-                        ),
-                        validator: (value) {
-                          final email = value?.trim() ?? '';
-                          if (email.isEmpty) return null;
-                          final valid = RegExp(
-                            r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-                          ).hasMatch(email);
-                          return valid ? null : context.l10n.profileEmailInvalid;
-                        },
-                      ),
-                      DsInputField(
-                        controller: _bio,
-                        label: context.l10n.profileBio,
-                        maxLines: 4,
-                        prefixIcon: Icon(
-                          Icons.edit_note_outlined,
-                          color: colors.primary,
-                        ),
-                        validator: (v) => (v != null && v.length > 500)
-                            ? context.l10n.profileBioTooLong
-                            : null,
-                      ),
-                      const SizedBox(height: DsSpacing.xl),
+                      DsGaps.vXxl,
                       PrimaryButton(
                         label: context.l10n.profileSaveChanges,
                         isLoading: state.isSaving,
@@ -182,4 +214,75 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       ],
     );
   }
+}
+
+/// A ring of small lit bulbs round her portrait — the vanity's mirror light.
+class _PortraitRing extends StatelessWidget {
+  const _PortraitRing({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.boutique;
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          colors: [
+            palette.gold.withValues(alpha: 0.18),
+            palette.primary.withValues(alpha: 0),
+          ],
+        ),
+      ),
+      child: CustomPaint(
+        foregroundPainter: _BulbRing(
+          color: palette.gold,
+          rtl: Directionality.of(context) == TextDirection.rtl,
+        ),
+        child: Padding(padding: DsSpacing.paddingSm, child: child),
+      ),
+    );
+  }
+}
+
+class _BulbRing extends CustomPainter {
+  const _BulbRing({required this.color, required this.rtl});
+
+  final Color color;
+  final bool rtl;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size.center(Offset.zero);
+    final radius = size.shortestSide / 2;
+    canvas.drawCircle(
+      center,
+      radius - 2,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..color = color.withValues(alpha: 0.5),
+    );
+    const count = 16;
+    for (var i = 0; i < count; i++) {
+      // Leave the lower end corner free for the picker's camera badge.
+      if (rtl ? (i == 5 || i == 6) : (i == 1 || i == 2)) continue;
+      final a = math.pi * 2 * i / count;
+      final p = center + Offset(math.cos(a), math.sin(a)) * (radius - 2);
+      canvas.drawCircle(p, 3.2, Paint()..color = DsColors.gold100);
+      canvas.drawCircle(
+        p,
+        3.2,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.4
+          ..color = color,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BulbRing old) => old.color != color || old.rtl != rtl;
 }

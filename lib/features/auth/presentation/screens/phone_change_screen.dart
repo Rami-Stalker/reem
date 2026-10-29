@@ -206,11 +206,15 @@ class _PhoneChangeScreenState extends ConsumerState<PhoneChangeScreen> {
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: l10n.changeAccountNumber, showBack: true),
+        VanityAppBar(
+          title: l10n.changeAccountNumber,
+          showBack: true,
+          icon: Icons.phone_iphone_rounded,
+        ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
-            DsSpacing.huge,
+            DsSpacing.xl,
             DsSpacing.lg,
             120,
           ),

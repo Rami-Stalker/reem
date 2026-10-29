@@ -4,6 +4,8 @@ import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/l10n/app_localizations.dart';
 
+/// Light, dark or her phone's choice — three mirrors, each glass showing the
+/// room in that light, and a reflection of the app as it now is below.
 class AppearanceScreen extends StatelessWidget {
   const AppearanceScreen({super.key});
 
@@ -11,51 +13,69 @@ class AppearanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = AppBootstrap.themeController;
+    final gutter = vanityGutter(context);
     return ListenableBuilder(
       listenable: theme,
       builder: (context, _) {
         return OharaScrollPage(
           slivers: [
-            PremiumAppBar(title: l10n.appearance, showBack: true),
+            VanityAppBar(
+              title: l10n.appearance,
+              subtitle: l10n.appearanceDescription,
+              icon: Icons.palette_outlined,
+              showBack: true,
+            ),
             SliverPadding(
-              padding: const EdgeInsets.all(DsSpacing.lg),
+              padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 120),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  Text(
-                    l10n.appearanceDescription,
-                    style: context.dsText.body.copyWith(
-                          color: context.dsColors.onSurfaceVariant,
-                          height: 1.5,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: VanityChoice(
+                          selected: theme.mode == DsAppThemeMode.light,
+                          title: l10n.themeLight,
+                          subtitle: l10n.themeLightSubtitle,
+                          preview: const _Glass(
+                            gradient: DsGradients.background,
+                            icon: Icons.light_mode_rounded,
+                            tint: DsColors.gold500,
+                          ),
+                          onTap: () => theme.setMode(DsAppThemeMode.light),
                         ),
+                      ),
+                      DsGaps.hSm,
+                      Expanded(
+                        child: VanityChoice(
+                          selected: theme.mode == DsAppThemeMode.dark,
+                          title: l10n.themeDark,
+                          subtitle: l10n.themeDarkSubtitle,
+                          preview: const _Glass(
+                            gradient: DsGradients.backgroundDark,
+                            icon: Icons.dark_mode_rounded,
+                            tint: DsColors.gold200,
+                          ),
+                          onTap: () => theme.setMode(DsAppThemeMode.dark),
+                        ),
+                      ),
+                      DsGaps.hSm,
+                      Expanded(
+                        child: VanityChoice(
+                          selected: theme.mode == DsAppThemeMode.system,
+                          title: l10n.themeSystem,
+                          subtitle: l10n.themeSystemSubtitle,
+                          preview: const _Glass(
+                            gradient: DsGradients.lavenderBlush,
+                            icon: Icons.phone_iphone_rounded,
+                            tint: DsColors.primary600,
+                          ),
+                          onTap: () => theme.setMode(DsAppThemeMode.system),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: DsSpacing.xxl),
-                  _ThemeOptionCard(
-                    selected: theme.mode == DsAppThemeMode.light,
-                    title: l10n.themeLight,
-                    subtitle: l10n.themeLightSubtitle,
-                    icon: Icons.light_mode_rounded,
-                    previewGradient: DsGradients.background,
-                    onTap: () => theme.setMode(DsAppThemeMode.light),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  _ThemeOptionCard(
-                    selected: theme.mode == DsAppThemeMode.dark,
-                    title: l10n.themeDark,
-                    subtitle: l10n.themeDarkSubtitle,
-                    icon: Icons.dark_mode_rounded,
-                    previewGradient: DsGradients.backgroundDark,
-                    onTap: () => theme.setMode(DsAppThemeMode.dark),
-                  ),
-                  const SizedBox(height: DsSpacing.md),
-                  _ThemeOptionCard(
-                    selected: theme.mode == DsAppThemeMode.system,
-                    title: l10n.themeSystem,
-                    subtitle: l10n.themeSystemSubtitle,
-                    icon: Icons.phone_iphone_rounded,
-                    previewGradient: DsGradients.lavenderBlush,
-                    onTap: () => theme.setMode(DsAppThemeMode.system),
-                  ),
-                  const SizedBox(height: DsSpacing.xxxl),
+                  DsGaps.vXxl,
                   _LivePreview(mode: theme.mode),
                 ]),
               ),
@@ -67,85 +87,30 @@ class AppearanceScreen extends StatelessWidget {
   }
 }
 
-class _ThemeOptionCard extends StatelessWidget {
-  const _ThemeOptionCard({
-    required this.selected,
-    required this.title,
-    required this.subtitle,
+/// The glass of a theme's mirror: that theme's ground, and its mark.
+class _Glass extends StatelessWidget {
+  const _Glass({
+    required this.gradient,
     required this.icon,
-    required this.previewGradient,
-    required this.onTap,
+    required this.tint,
   });
 
-  final bool selected;
-  final String title;
-  final String subtitle;
+  final Gradient gradient;
   final IconData icon;
-  final Gradient previewGradient;
-  final VoidCallback onTap;
+  final Color tint;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: DsMotion.normal,
-        padding: const EdgeInsets.all(DsSpacing.lg),
-        decoration: BoxDecoration(
-          borderRadius: DsRadius.borderXxl,
-          gradient: selected ? context.primaryGradient : null,
-          color: selected ? null : colors.card,
-          border: Border.all(
-            color: selected ? colors.primary : colors.border,
-            width: selected ? 2 : 1,
-          ),
-          boxShadow: selected ? context.luxuryShadow : context.softShadow,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                borderRadius: DsRadius.borderLg,
-                gradient: previewGradient,
-              ),
-              child: Icon(
-                icon,
-                color: selected ? colors.onPrimary : colors.primary,
-              ),
-            ),
-            const SizedBox(width: DsSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: context.dsText.cardTitle.bold.tint(selected ? colors.onPrimary : colors.onSurface),
-                  ),
-                  DsGaps.vXxs,
-                  Text(
-                    subtitle,
-                    style: context.dsText.bodySmall.tint(selected
-                          ? colors.onPrimary.withValues(alpha: 0.88)
-                          : colors.onSurfaceVariant),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              selected ? Icons.check_circle_rounded : Icons.circle_outlined,
-              color: selected ? colors.onPrimary : colors.onSurfaceVariant,
-            ),
-          ],
-        ),
+    return DecoratedBox(
+      decoration: BoxDecoration(gradient: gradient),
+      child: Center(
+        child: Icon(icon, color: tint, size: DsSizes.iconMd),
       ),
     );
   }
 }
 
+/// The app as it now looks, in a tray: what her choice has done.
 class _LivePreview extends StatelessWidget {
   const _LivePreview({required this.mode});
 
@@ -154,71 +119,36 @@ class _LivePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final colors = context.dsColors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final palette = context.boutique;
+    return VanityTray(
+      title: l10n.preview,
       children: [
-        Text(
-          l10n.preview,
-          style: context.dsText.cardTitle.copyWith(
-                fontWeight: DsTypography.bold,
-              ),
-        ),
-        const SizedBox(height: DsSpacing.md),
-        Container(
-          padding: const EdgeInsets.all(DsSpacing.lg),
-          decoration: BoxDecoration(
-            color: colors.card,
-            borderRadius: DsRadius.borderXxl,
-            border: Border.all(color: colors.border),
-            boxShadow: context.softShadow,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  gradient: context.primaryGradient,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.favorite_rounded, color: colors.onPrimary),
-              ),
-              const SizedBox(width: DsSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.appTitle,
-                      style: context.dsText.body.bold.tint(colors.onSurface),
-                    ),
-                    Text(
-                      _modeLabel(l10n, mode),
-                      style: context.dsText.bodySmall.tint(colors.onSurfaceVariant),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm, vertical: DsSpacing.xs),
-                decoration: BoxDecoration(
-                  color: colors.primary.withValues(alpha: 0.15),
-                  borderRadius: DsRadius.borderFull,
-                ),
-                child: Text(
-                  l10n.active,
-                  style: context.dsText.caption.semibold.tint(colors.primary),
-                ),
-              ),
-            ],
+        VanityRow(
+          icon: Icons.favorite_rounded,
+          title: l10n.appTitle,
+          subtitle: _modeLabel(l10n, mode),
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsSpacing.sm,
+              vertical: DsSpacing.xxs,
+            ),
+            decoration: BoxDecoration(
+              color: palette.goldSoft,
+              borderRadius: DsRadius.borderPill,
+              border: Border.all(color: palette.gold.withValues(alpha: 0.5)),
+            ),
+            child: Text(
+              l10n.active,
+              style: context.dsText.caption.semibold.tint(palette.ink),
+            ),
           ),
         ),
       ],
     );
   }
 
-  String _modeLabel(AppLocalizations l10n, DsAppThemeMode mode) => switch (mode) {
+  String _modeLabel(AppLocalizations l10n, DsAppThemeMode mode) =>
+      switch (mode) {
         DsAppThemeMode.light => l10n.themeLightActive,
         DsAppThemeMode.dark => l10n.themeDarkActive,
         DsAppThemeMode.system => l10n.themeSystemActive,

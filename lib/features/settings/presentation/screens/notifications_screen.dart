@@ -57,7 +57,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       // rebuilt value, and discarding it is what the analyzer flags.
       onRefresh: () => ref.refresh(notificationPreferencesProvider.future),
       slivers: [
-        PremiumAppBar(title: context.l10n.notifications, showBack: true),
+        VanityAppBar(
+          title: context.l10n.notifications,
+          icon: Icons.notifications_active_outlined,
+          showBack: true,
+        ),
         if (permission == PushPermission.denied) const _BlockedBanner(),
         preferences.when(
           data: (prefs) => _PreferencesSliver(
@@ -113,8 +117,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     }
     if (!mounted) return;
 
-    if (state == PushPermission.denied ||
-        state == PushPermission.unavailable) {
+    if (state == PushPermission.denied || state == PushPermission.unavailable) {
       DsSnackbar.error(context, l10n.notifPushBlocked);
       await AppSettings.openAppSettings(type: AppSettingsType.notification);
       return;
@@ -126,9 +129,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   }
 
   Future<void> _save(NotificationPreferences preferences) async {
-    final result = await ref.read(
-      updateNotificationPreferencesUseCaseProvider,
-    )(preferences);
+    final result = await ref.read(updateNotificationPreferencesUseCaseProvider)(
+      preferences,
+    );
     if (!mounted) return;
 
     switch (result) {
@@ -151,37 +154,38 @@ class _BlockedBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
+    final palette = context.boutique;
+    final gutter = vanityGutter(context);
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          DsSpacing.lg,
-          DsSpacing.sm,
-          DsSpacing.lg,
-          0,
-        ),
-        child: SurfaceCard(
+        padding: EdgeInsets.fromLTRB(gutter, DsSpacing.lg, gutter, 0),
+        child: Container(
+          padding: DsSpacing.paddingMd,
+          decoration: BoxDecoration(
+            color: palette.caution.withValues(alpha: 0.1),
+            borderRadius: DsRadius.borderXxl,
+            border: Border.all(color: palette.caution.withValues(alpha: 0.4)),
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.notifications_off_rounded, color: c.warning),
-              const SizedBox(width: DsSpacing.md),
+              VanityPearl(
+                icon: Icons.notifications_off_rounded,
+                color: palette.caution,
+              ),
+              DsGaps.hMd,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       context.l10n.notifPushBlockedTitle,
-                      style: context.dsText.tileTitle.copyWith(
-                        fontWeight: DsTypography.semiBold,
-                      ),
+                      style: context.dsText.bodyStrong.tint(palette.ink),
                     ),
-                    const SizedBox(height: DsSpacing.xxs),
+                    DsGaps.vXxs,
                     Text(
                       context.l10n.notifPushBlockedBody,
-                      style: context.dsText.cardSubtitle.copyWith(
-                        color: c.onSurfaceVariant,
-                      ),
+                      style: context.dsText.caption.tint(palette.muted),
                     ),
                     Align(
                       alignment: AlignmentDirectional.centerStart,
@@ -220,45 +224,22 @@ class _PreferencesSliver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final groups = _groups(context.l10n, preferences, onChanged);
+    final gutter = vanityGutter(context);
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(
-        DsSpacing.lg,
-        DsSpacing.sm,
-        DsSpacing.lg,
+      padding: EdgeInsets.fromLTRB(
+        gutter,
+        DsSpacing.xl,
+        gutter,
         DsSpacing.huge,
       ),
       sliver: SliverList.list(
         children: [
           for (final group in groups) ...[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                DsSpacing.xs,
-                DsSpacing.sm,
-                DsSpacing.xs,
-                DsSpacing.sm,
-              ),
-              child: Text(
-                group.title.toUpperCase(),
-                style: DsTypography.overline(context.dsColors.primary),
-              ),
+            VanityTray(
+              title: group.title,
+              children: [for (final pref in group.prefs) _PrefRow(pref: pref)],
             ),
-            SurfaceCard(
-              padding: EdgeInsets.zero,
-              child: Column(
-                children: [
-                  for (var i = 0; i < group.prefs.length; i++) ...[
-                    if (i > 0)
-                      Divider(
-                        height: 1,
-                        indent: 64,
-                        color: context.dsColors.divider,
-                      ),
-                    _PrefRow(pref: group.prefs[i]),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(height: DsSpacing.lg),
+            DsGaps.vXl,
           ],
         ],
       ),
@@ -361,55 +342,18 @@ class _PrefRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dsColors;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.md,
-        vertical: DsSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: c.primaryContainer.withValues(alpha: 0.6),
-              borderRadius: DsRadius.borderMd,
-            ),
-            child: Icon(pref.icon, size: 20, color: c.primary),
-          ),
-          const SizedBox(width: DsSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pref.title,
-                  style: context.dsText.tileTitle.copyWith(
-                    fontWeight: DsTypography.semiBold,
-                  ),
-                ),
-                const SizedBox(height: DsSpacing.xxs),
-                Text(
-                  pref.subtitle,
-                  style: context.dsText.cardSubtitle.copyWith(
-                    color: c.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: DsSpacing.sm),
-          Switch(
-            value: pref.value,
-            onChanged: pref.onChanged,
-            activeThumbColor: c.onPrimary,
-            activeTrackColor: c.primary,
-            inactiveThumbColor: c.surface,
-            inactiveTrackColor: c.surfaceVariant,
-            trackOutlineColor: WidgetStatePropertyAll(c.border),
-          ),
-        ],
+    final palette = context.boutique;
+    return VanityRow(
+      icon: pref.icon,
+      title: pref.title,
+      subtitle: pref.subtitle,
+      // A subject she has silenced keeps its place with its pearl unlit.
+      color: pref.value ? null : palette.muted,
+      onTap: () => pref.onChanged(!pref.value),
+      trailing: PearlSwitch(
+        value: pref.value,
+        onChanged: pref.onChanged,
+        semanticLabel: pref.title,
       ),
     );
   }

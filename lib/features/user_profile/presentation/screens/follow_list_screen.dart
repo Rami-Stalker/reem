@@ -42,7 +42,11 @@ class FollowListScreen extends ConsumerWidget {
       onRefresh: () async =>
           ref.invalidate(followListProvider((userId: userId, kind: kind))),
       slivers: [
-        PremiumAppBar(title: title, showBack: true),
+        VanityAppBar(
+          title: title,
+          showBack: true,
+          icon: Icons.people_outline_rounded,
+        ),
         async.when(
           loading: () => const SliverToBoxAdapter(child: _Skeleton()),
           error: (error, _) => SliverFillRemaining(

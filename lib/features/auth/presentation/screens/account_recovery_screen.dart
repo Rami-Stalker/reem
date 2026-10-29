@@ -132,11 +132,15 @@ class _AccountRecoveryScreenState
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: l10n.lostYourSim, showBack: true),
+        VanityAppBar(
+          title: l10n.lostYourSim,
+          showBack: true,
+          icon: Icons.sim_card_alert_outlined,
+        ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(
             DsSpacing.lg,
-            DsSpacing.huge,
+            DsSpacing.xl,
             DsSpacing.lg,
             120,
           ),

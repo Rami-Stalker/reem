@@ -120,13 +120,19 @@ void main() {
       expect(find.text('3 تقييمات'), findsOneWidget);
       expect(find.text('3.7'), findsOneWidget);
 
-      // A review with a moderator says so rather than looking lost.
-      expect(find.text('قيد المراجعة'), findsOneWidget);
-
       // The boutique's answer is the half she came back for.
       expect(find.text('ردّ المتجر'), findsOneWidget);
 
       await _capture(tester, 'my_reviews_${mode.name}');
+
+      // A review with a moderator says so rather than looking lost. It is
+      // the last of the three, below the mirror's fold, so scroll to it.
+      await tester.scrollUntilVisible(
+        find.text('قيد المراجعة'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('قيد المراجعة'), findsOneWidget);
     });
   }
 
