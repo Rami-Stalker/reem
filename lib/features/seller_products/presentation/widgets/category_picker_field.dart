@@ -110,7 +110,7 @@ class CategoryPickerField extends ConsumerWidget {
             ),
             child: Text(
               errorText!,
-              style: context.dsText.caption.tint(palette.critical),
+              style: context.dsText.caption.tint(palette.criticalInk),
             ),
           ),
       ],

@@ -1553,7 +1553,7 @@ class _PlaceCard extends StatelessWidget {
                             child: Text(
                               l10n.mapPickerOutsideSyria,
                               style: context.dsText.bodySmall.tint(
-                                colors.error,
+                                colors.errorInk,
                               ),
                             ),
                           ),

@@ -209,7 +209,7 @@ class _OwnerActions extends ConsumerWidget {
     if (next == null) {
       return Text(
         context.l10n.marketListingSold,
-        style: context.dsText.micro.tint(context.dsColors.success),
+        style: context.dsText.micro.tint(context.dsColors.successInk),
       );
     }
 

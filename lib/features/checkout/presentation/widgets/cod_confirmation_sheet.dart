@@ -178,7 +178,7 @@ class _CodConfirmationSheetState extends ConsumerState<_CodConfirmationSheet> {
             const SizedBox(height: DsSpacing.sm),
             Text(
               _error!,
-              style: text.bodySmall?.copyWith(color: colors.error),
+              style: text.bodySmall?.copyWith(color: colors.errorInk),
             ),
           ],
           const SizedBox(height: DsSpacing.lg),

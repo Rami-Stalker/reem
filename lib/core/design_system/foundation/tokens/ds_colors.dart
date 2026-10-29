@@ -101,6 +101,17 @@ abstract final class DsColors {
   static const Color success400 = Color(0xFF55A57E);
   static const Color success600 = Color(0xFF2C7352);
 
+  // Deep "ink" shades of each status hue. The status colors above are for
+  // icons, dots, bars and fills; these are for status *text*, which needs
+  // 4.5:1 on white, cream and on the status container.
+  static const Color successDeep = success600;
+  static const Color warningDeep = Color(0xFF8A5A12);
+  static const Color errorDeep = Color(0xFFB8303F);
+  static const Color infoDeep = Color(0xFF3D6BA8);
+
+  /// [rosewood] deepened for sale badges and sale text (5.1:1 with white).
+  static const Color rosewoodDeep = Color(0xFF9E5A65);
+
   // ---------------------------------------------------------------------------
   // Surfaces (dark) — deep plum drawn from [secondary900], never flat black.
   // ---------------------------------------------------------------------------
@@ -179,9 +190,7 @@ abstract final class DsColors {
       error: c.error,
       onError: c.onError,
       errorContainer: c.errorContainer,
-      onErrorContainer: isDark
-          ? const Color(0xFFFFDADF)
-          : const Color(0xFF7A1C28),
+      onErrorContainer: c.errorInk,
       surface: c.surface,
       onSurface: c.onSurface,
       surfaceDim: c.surfaceDim,
@@ -246,15 +255,19 @@ class DsColorScheme {
     required this.success,
     required this.onSuccess,
     required this.successContainer,
+    required this.successInk,
     required this.warning,
     required this.onWarning,
     required this.warningContainer,
+    required this.warningInk,
     required this.error,
     required this.onError,
     required this.errorContainer,
+    required this.errorInk,
     required this.info,
     required this.onInfo,
     required this.infoContainer,
+    required this.infoInk,
     // State / utility
     required this.disabled,
     required this.onDisabled,
@@ -269,6 +282,7 @@ class DsColorScheme {
     required this.rating,
     required this.price,
     required this.discount,
+    required this.onDiscount,
     required this.online,
   });
 
@@ -309,15 +323,22 @@ class DsColorScheme {
   final Color success;
   final Color onSuccess;
   final Color successContainer;
+  /// Status *text* — a deeper shade of [success] that holds 4.5:1 on the
+  /// page, on cards and on [successContainer]. Keep [success] for icons,
+  /// dots, bars and fills; use the ink for words.
+  final Color successInk;
   final Color warning;
   final Color onWarning;
   final Color warningContainer;
+  final Color warningInk;
   final Color error;
   final Color onError;
   final Color errorContainer;
+  final Color errorInk;
   final Color info;
   final Color onInfo;
   final Color infoContainer;
+  final Color infoInk;
 
   // State / utility
   final Color disabled;
@@ -334,6 +355,8 @@ class DsColorScheme {
   final Color rating;
   final Color price;
   final Color discount;
+  /// Text on a [discount] fill — a sale badge.
+  final Color onDiscount;
   final Color online;
 
   static const DsColorScheme light = DsColorScheme(
@@ -367,15 +390,19 @@ class DsColorScheme {
     success: DsColors.success,
     onSuccess: DsColors.white,
     successContainer: DsColors.success50,
+    successInk: DsColors.successDeep,
     warning: DsColors.warning,
     onWarning: DsColors.textPrimary,
     warningContainer: Color(0xFFFBF1E0),
+    warningInk: DsColors.warningDeep,
     error: DsColors.error,
     onError: DsColors.white,
     errorContainer: Color(0xFFFCE9EB),
+    errorInk: DsColors.errorDeep,
     info: DsColors.info,
     onInfo: DsColors.white,
     infoContainer: Color(0xFFEAF1F9),
+    infoInk: DsColors.infoDeep,
     disabled: DsColors.neutral300,
     onDisabled: DsColors.neutral400,
     shadow: Color(0x1F96244F),
@@ -385,9 +412,10 @@ class DsColorScheme {
     shimmerBase: DsColors.surfaceVariantLight,
     shimmerHighlight: DsColors.backgroundPink,
     favorite: DsColors.primary500,
-    rating: DsColors.champagneGold,
+    rating: DsColors.gold500,
     price: DsColors.primary700,
-    discount: DsColors.rosewood,
+    discount: DsColors.rosewoodDeep,
+    onDiscount: DsColors.white,
     online: DsColors.success,
   );
 
@@ -422,15 +450,19 @@ class DsColorScheme {
     success: Color(0xFF6BBE93),
     onSuccess: Color(0xFF0B2A1B),
     successContainer: Color(0xFF1F4031),
+    successInk: Color(0xFF8FD1AE),
     warning: Color(0xFFE8B565),
     onWarning: Color(0xFF35260B),
     warningContainer: Color(0xFF45351A),
+    warningInk: Color(0xFFF0C77E),
     error: Color(0xFFF07A86),
     onError: Color(0xFF3F0910),
     errorContainer: Color(0xFF55222A),
+    errorInk: Color(0xFFF6A0A8),
     info: Color(0xFF93B2E0),
     onInfo: Color(0xFF0D2442),
     infoContainer: Color(0xFF253A57),
+    infoInk: Color(0xFFA9C4EC),
     disabled: Color(0xFF594D5C),
     onDisabled: Color(0xFF8B7E8D),
     shadow: Color(0x80000000),
@@ -443,6 +475,7 @@ class DsColorScheme {
     rating: DsColors.softGold,
     price: DsColors.primary200,
     discount: Color(0xFFD9A0A8),
+    onDiscount: Color(0xFF3A1A20),
     online: Color(0xFF6BBE93),
   );
 
@@ -477,15 +510,19 @@ class DsColorScheme {
     Color? success,
     Color? onSuccess,
     Color? successContainer,
+    Color? successInk,
     Color? warning,
     Color? onWarning,
     Color? warningContainer,
+    Color? warningInk,
     Color? error,
     Color? onError,
     Color? errorContainer,
+    Color? errorInk,
     Color? info,
     Color? onInfo,
     Color? infoContainer,
+    Color? infoInk,
     Color? disabled,
     Color? onDisabled,
     Color? shadow,
@@ -498,6 +535,7 @@ class DsColorScheme {
     Color? rating,
     Color? price,
     Color? discount,
+    Color? onDiscount,
     Color? online,
   }) {
     return DsColorScheme(
@@ -531,15 +569,19 @@ class DsColorScheme {
       success: success ?? this.success,
       onSuccess: onSuccess ?? this.onSuccess,
       successContainer: successContainer ?? this.successContainer,
+      successInk: successInk ?? this.successInk,
       warning: warning ?? this.warning,
       onWarning: onWarning ?? this.onWarning,
       warningContainer: warningContainer ?? this.warningContainer,
+      warningInk: warningInk ?? this.warningInk,
       error: error ?? this.error,
       onError: onError ?? this.onError,
       errorContainer: errorContainer ?? this.errorContainer,
+      errorInk: errorInk ?? this.errorInk,
       info: info ?? this.info,
       onInfo: onInfo ?? this.onInfo,
       infoContainer: infoContainer ?? this.infoContainer,
+      infoInk: infoInk ?? this.infoInk,
       disabled: disabled ?? this.disabled,
       onDisabled: onDisabled ?? this.onDisabled,
       shadow: shadow ?? this.shadow,
@@ -552,6 +594,7 @@ class DsColorScheme {
       rating: rating ?? this.rating,
       price: price ?? this.price,
       discount: discount ?? this.discount,
+      onDiscount: onDiscount ?? this.onDiscount,
       online: online ?? this.online,
     );
   }
@@ -603,15 +646,19 @@ class DsColorScheme {
     success: Color.lerp(success, other.success, t)!,
     onSuccess: Color.lerp(onSuccess, other.onSuccess, t)!,
     successContainer: Color.lerp(successContainer, other.successContainer, t)!,
+    successInk: Color.lerp(successInk, other.successInk, t)!,
     warning: Color.lerp(warning, other.warning, t)!,
     onWarning: Color.lerp(onWarning, other.onWarning, t)!,
     warningContainer: Color.lerp(warningContainer, other.warningContainer, t)!,
+    warningInk: Color.lerp(warningInk, other.warningInk, t)!,
     error: Color.lerp(error, other.error, t)!,
     onError: Color.lerp(onError, other.onError, t)!,
     errorContainer: Color.lerp(errorContainer, other.errorContainer, t)!,
+    errorInk: Color.lerp(errorInk, other.errorInk, t)!,
     info: Color.lerp(info, other.info, t)!,
     onInfo: Color.lerp(onInfo, other.onInfo, t)!,
     infoContainer: Color.lerp(infoContainer, other.infoContainer, t)!,
+    infoInk: Color.lerp(infoInk, other.infoInk, t)!,
     disabled: Color.lerp(disabled, other.disabled, t)!,
     onDisabled: Color.lerp(onDisabled, other.onDisabled, t)!,
     shadow: Color.lerp(shadow, other.shadow, t)!,
@@ -624,6 +671,7 @@ class DsColorScheme {
     rating: Color.lerp(rating, other.rating, t)!,
     price: Color.lerp(price, other.price, t)!,
     discount: Color.lerp(discount, other.discount, t)!,
+    onDiscount: Color.lerp(onDiscount, other.onDiscount, t)!,
     online: Color.lerp(online, other.online, t)!,
   );
 }

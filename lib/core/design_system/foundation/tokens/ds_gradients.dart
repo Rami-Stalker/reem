@@ -64,7 +64,7 @@ abstract final class DsGradients {
     colors: [DsColors.peachCream, DsColors.primary400, DsColors.secondary400],
   );
 
-  static const LinearGradient lavenderBlush = LinearGradient(
+  static const LinearGradient roseMauveBlush = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [DsColors.secondary100, DsColors.primary200, DsColors.primary50],

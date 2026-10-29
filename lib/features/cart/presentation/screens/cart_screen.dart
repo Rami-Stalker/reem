@@ -282,7 +282,7 @@ class _CartLineTile extends StatelessWidget {
                       DsGaps.hXxs,
                       Text(
                         l10n.outOfStock,
-                        style: text.caption.bold.tint(colors.error),
+                        style: text.caption.bold.tint(colors.errorInk),
                       ),
                     ],
                   ),

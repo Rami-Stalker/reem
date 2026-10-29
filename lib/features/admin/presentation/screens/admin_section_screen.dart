@@ -950,7 +950,7 @@ class _SectionError extends StatelessWidget {
               children: [
                 Text(
                   l10n.adminSectionUnavailable,
-                  style: context.dsText.bodyStrong.tint(palette.critical),
+                  style: context.dsText.bodyStrong.tint(palette.criticalInk),
                 ),
                 DsGaps.vXs,
                 Text(message, style: context.dsText.body.tint(palette.muted)),

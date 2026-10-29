@@ -153,7 +153,7 @@ class _ReviewComposerSheetState extends ConsumerState<_ReviewComposerSheet> {
               style: _rating == 0
                   ? context.dsText.caption
                   : context.dsText.captionStrong.tint(
-                      context.dsColors.warning,
+                      context.dsColors.warningInk,
                     ),
             ),
           ),

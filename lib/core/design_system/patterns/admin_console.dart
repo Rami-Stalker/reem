@@ -35,6 +35,10 @@ class AdminConsolePalette {
     required this.caution,
     required this.critical,
     required this.info,
+    required this.positiveInk,
+    required this.cautionInk,
+    required this.criticalInk,
+    required this.infoInk,
     required this.shadow,
     required this.series,
   });
@@ -64,6 +68,12 @@ class AdminConsolePalette {
   final Color critical;
   final Color info;
 
+  /// Text-safe shades of the status colors above — use these for words.
+  final Color positiveInk;
+  final Color cautionInk;
+  final Color criticalInk;
+  final Color infoInk;
+
   final List<BoxShadow> shadow;
 
   /// Ordered data-viz series for the analytics charts.
@@ -92,6 +102,10 @@ class AdminConsolePalette {
       caution: c.warning,
       critical: c.error,
       info: c.info,
+      positiveInk: c.successInk,
+      cautionInk: c.warningInk,
+      criticalInk: c.errorInk,
+      infoInk: c.infoInk,
       shadow: [
         BoxShadow(
           color: c.shadow,

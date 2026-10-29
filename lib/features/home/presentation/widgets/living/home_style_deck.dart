@@ -366,7 +366,7 @@ class _ProductFace extends StatelessWidget {
                     // A signed number keeps its own direction, or Arabic
                     // turns «-21%» into «21%-».
                     textDirection: TextDirection.ltr,
-                    style: context.dsText.captionStrong.tint(DsColors.onMedia),
+                    style: context.dsText.captionStrong.tint(colors.onDiscount),
                   ),
                 ),
               ),

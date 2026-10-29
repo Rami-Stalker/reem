@@ -32,6 +32,9 @@ class SellerAtelierPalette {
     required this.positive,
     required this.caution,
     required this.critical,
+    required this.positiveInk,
+    required this.cautionInk,
+    required this.criticalInk,
     required this.headerGradient,
     required this.goldGradient,
     required this.shadow,
@@ -72,6 +75,11 @@ class SellerAtelierPalette {
   final Color caution;
   final Color critical;
 
+  /// Text-safe shades of the status colors above — use these for words.
+  final Color positiveInk;
+  final Color cautionInk;
+  final Color criticalInk;
+
   /// The hero gradient — plum into aubergine, with a champagne edge.
   final LinearGradient headerGradient;
   final LinearGradient goldGradient;
@@ -106,6 +114,9 @@ class SellerAtelierPalette {
       positive: c.success,
       caution: c.warning,
       critical: c.error,
+      positiveInk: c.successInk,
+      cautionInk: c.warningInk,
+      criticalInk: c.errorInk,
       headerGradient: isDark
           ? const LinearGradient(
               begin: Alignment.topLeft,

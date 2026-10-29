@@ -1256,7 +1256,7 @@ class _AppliedCouponNote extends StatelessWidget {
         const SizedBox(width: DsSpacing.sm),
         Text(
           context.l10n.checkoutCouponApplied(discount.format()),
-          style: context.dsText.caption.semibold.tint(colors.success),
+          style: context.dsText.caption.semibold.tint(colors.successInk),
         ),
       ],
     );

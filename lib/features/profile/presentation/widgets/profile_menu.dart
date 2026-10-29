@@ -333,7 +333,7 @@ class _LogoutCard extends StatelessWidget {
                   child: Text(context.l10n.signOut,
                       style: context.dsText.tileTitle.copyWith(
                             fontWeight: DsTypography.semiBold,
-                            color: c.error,
+                            color: c.errorInk,
                           )),
                 ),
               ],

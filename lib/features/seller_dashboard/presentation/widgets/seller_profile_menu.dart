@@ -394,7 +394,7 @@ class _LogoutCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     context.l10n.signOut,
-                    style: context.dsText.tileTitle.semibold.tint(palette.critical),
+                    style: context.dsText.tileTitle.semibold.tint(palette.criticalInk),
                   ),
                 ),
               ],

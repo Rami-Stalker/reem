@@ -92,7 +92,7 @@ class SellerOrderCard extends StatelessWidget {
               Flexible(
                 child: Text(
                   l10n.sellerOrderCashOnDelivery,
-                  style: context.dsText.caption.tint(atelier.caution),
+                  style: context.dsText.caption.tint(atelier.cautionInk),
                 ),
               ),
             ],

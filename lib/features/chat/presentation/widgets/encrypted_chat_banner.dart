@@ -38,7 +38,7 @@ class EncryptedChatBanner extends StatelessWidget {
                 Text(
                   l10n.chatSafetyNote,
                   style: context.dsText.labelLarge.copyWith(
-                    color: c.info,
+                    color: c.infoInk,
                     fontWeight: DsTypography.semiBold,
                   ),
                 ),
@@ -46,7 +46,7 @@ class EncryptedChatBanner extends StatelessWidget {
                 Text(
                   l10n.chatSafetyNoteBody,
                   style: context.dsText.cardSubtitle.copyWith(
-                    color: c.info.withValues(alpha: 0.85),
+                    color: c.infoInk.withValues(alpha: 0.85),
                     height: 1.4,
                   ),
                 ),

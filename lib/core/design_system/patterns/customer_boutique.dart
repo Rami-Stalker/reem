@@ -31,6 +31,9 @@ class CustomerBoutiquePalette {
     required this.positive,
     required this.caution,
     required this.critical,
+    required this.positiveInk,
+    required this.cautionInk,
+    required this.criticalInk,
     required this.signatureGradient,
     required this.groundGradient,
     required this.shadow,
@@ -69,6 +72,11 @@ class CustomerBoutiquePalette {
   final Color caution;
   final Color critical;
 
+  /// Text-safe shades of the status colors above — use these for words.
+  final Color positiveInk;
+  final Color cautionInk;
+  final Color criticalInk;
+
   /// Rose into champagne — the brand signature, used for hero fills and the
   /// shader behind display titles. Reads on both grounds, so it is one value.
   final LinearGradient signatureGradient;
@@ -97,6 +105,9 @@ class CustomerBoutiquePalette {
       positive: c.success,
       caution: c.warning,
       critical: c.error,
+      positiveInk: c.successInk,
+      cautionInk: c.warningInk,
+      criticalInk: c.errorInk,
       signatureGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,

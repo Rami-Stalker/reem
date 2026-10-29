@@ -294,7 +294,7 @@ class _RisingRow extends StatelessWidget {
                       Text(
                         '+${row.growthPercent}%',
                         style: context.dsText.body.semibold.tint(
-                          palette.positive,
+                          palette.positiveInk,
                         ),
                       ),
                     ],

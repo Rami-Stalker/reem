@@ -140,7 +140,7 @@ class _Bubble extends StatelessWidget {
                   const SizedBox(width: DsSpacing.xxs),
                   Text(
                     context.l10n.stylistMessageFailed,
-                    style: context.dsText.caption.tint(colors.error),
+                    style: context.dsText.caption.tint(colors.errorInk),
                   ),
                   if (onRetry != null)
                     TextButton(

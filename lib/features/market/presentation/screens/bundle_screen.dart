@@ -261,7 +261,7 @@ class _AlternativeTile extends StatelessWidget {
                 child: Text(
                   context.l10n.marketSave(sypText(alternative.savingSyp)),
                   textAlign: TextAlign.end,
-                  style: context.dsText.caption.semibold.tint(colors.success),
+                  style: context.dsText.caption.semibold.tint(colors.successInk),
                 ),
               ),
             ],

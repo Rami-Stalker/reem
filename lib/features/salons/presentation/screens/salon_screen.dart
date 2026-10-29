@@ -496,7 +496,7 @@ class _ReviewCard extends StatelessWidget {
           DsGaps.vXxxs,
           Text(
             context.l10n.salonVerifiedVisit,
-            style: context.dsText.micro.tint(c.success),
+            style: context.dsText.micro.tint(c.successInk),
           ),
           if (review.body != null && review.body!.isNotEmpty) ...[
             DsGaps.vXs,

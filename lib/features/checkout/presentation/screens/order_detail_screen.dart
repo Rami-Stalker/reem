@@ -728,7 +728,7 @@ class _ParcelCard extends StatelessWidget {
             const SizedBox(height: DsSpacing.xs),
             Text(
               parcel.cancellationReason!,
-              style: context.dsText.bodySmall.tint(colors.error),
+              style: context.dsText.bodySmall.tint(colors.errorInk),
             ),
           ],
           const SizedBox(height: DsSpacing.md),

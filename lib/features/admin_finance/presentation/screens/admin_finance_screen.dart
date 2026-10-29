@@ -72,7 +72,7 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
               padding: const EdgeInsets.all(DsSpacing.xl),
               child: Text(
                 state.error ?? '',
-                style: context.dsText.body.tint(palette.critical),
+                style: context.dsText.body.tint(palette.criticalInk),
               ),
             )
           else
