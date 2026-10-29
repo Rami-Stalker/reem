@@ -577,7 +577,7 @@ class _DoneCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
-          colors: [DsColors.mauve800, DsColors.primary700, DsColors.coral400],
+          colors: [DsColors.secondary800, DsColors.primary700, DsColors.rosewood],
         ),
         boxShadow: context.shadowLuxury,
       ),

@@ -94,11 +94,11 @@ class SellerAtelierPalette {
       surface: c.surface,
       raised: c.surfaceElevated,
       line: c.border,
-      primary: isDark ? DsColors.mauve300 : DsColors.mauve600,
-      onPrimary: isDark ? DsColors.mauve900 : DsColors.onMedia,
+      primary: isDark ? DsColors.secondary300 : DsColors.secondary600,
+      onPrimary: isDark ? DsColors.secondary900 : DsColors.onMedia,
       primarySoft: isDark
-          ? DsColors.mauve300.withValues(alpha: 0.18)
-          : DsColors.mauve100,
+          ? DsColors.secondary300.withValues(alpha: 0.18)
+          : DsColors.secondary100,
       gold: isDark ? DsColors.gold300 : DsColors.gold500,
       goldSoft: isDark
           ? DsColors.gold300.withValues(alpha: 0.18)
@@ -110,17 +110,25 @@ class SellerAtelierPalette {
           ? const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF3A2440), Color(0xFF2A1B32), Color(0xFF1F1726)],
+              colors: [
+                DsColors.secondary900,
+                Color(0xFF2B2031),
+                DsColors.surfaceDark,
+              ],
             )
           : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF75487E), Color(0xFF53355C), Color(0xFF3A2440)],
+              colors: [
+                DsColors.secondary700,
+                DsColors.secondary800,
+                DsColors.secondary900,
+              ],
             ),
       goldGradient: const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [Color(0xFFE6C277), Color(0xFFC28E36)],
+        colors: [DsColors.softGold, DsColors.champagneGold],
       ),
       shadow: [
         BoxShadow(
@@ -131,10 +139,10 @@ class SellerAtelierPalette {
       ],
       series: [
         isDark ? DsColors.primary400 : DsColors.primary500,
-        isDark ? DsColors.mauve300 : DsColors.mauve500,
+        isDark ? DsColors.secondary300 : DsColors.secondary500,
         DsColors.gold400,
-        isDark ? DsColors.accent400 : DsColors.accent500,
-        DsColors.coral400,
+        isDark ? DsColors.success400 : DsColors.success,
+        DsColors.rosewood,
       ],
     );
   }

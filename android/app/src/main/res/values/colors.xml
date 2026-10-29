@@ -5,7 +5,7 @@
   are the same cream rather than two shades of nearly-white.
 -->
 <resources>
-    <color name="splash_background">#FFFFF8FB</color>
+    <color name="splash_background">#FFF8F5F2</color>
     <color name="splash_icon_background">#FFFFFFFF</color>
 
     <!--

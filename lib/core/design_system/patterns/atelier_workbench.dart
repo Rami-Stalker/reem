@@ -115,7 +115,7 @@ class AtelierHero extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: DsRadius.borderXxl,
         gradient: palette.headerGradient,
-        boxShadow: context.glowShadow(DsColors.mauve700, blur: 30, alpha: 0.28),
+        boxShadow: context.glowShadow(DsColors.secondary700, blur: 30, alpha: 0.28),
       ),
       child: ClipRRect(
         borderRadius: DsRadius.borderXxl,
@@ -1311,7 +1311,7 @@ class _Banner extends StatelessWidget {
             gradient: palette.headerGradient,
             borderRadius: BorderRadius.vertical(bottom: radius),
             boxShadow: context.glowShadow(
-              DsColors.mauve700,
+              DsColors.secondary700,
               blur: 20,
               alpha: 0.22,
             ),
@@ -1495,7 +1495,7 @@ class _Medallion extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: const RadialGradient(
-          colors: [DsColors.mauve600, DsColors.mauve800],
+          colors: [DsColors.secondary600, DsColors.secondary800],
         ),
         border: Border.all(color: DsColors.gold300, width: 2.5),
       ),

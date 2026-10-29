@@ -55,9 +55,9 @@ class AuraPalette {
     wash: const [
       DsColors.gold100,
       DsColors.primary100,
-      DsColors.backgroundLight,
+      DsColors.backgroundSecondary,
     ],
-    orbs: const [DsColors.gold300, DsColors.primary300, DsColors.lavender200],
+    orbs: const [DsColors.gold300, DsColors.primary300, DsColors.secondary200],
     ink: DsColors.neutral900,
     inkMuted: DsColors.neutral600,
     glass: DsColors.white.withValues(alpha: 0.62),
@@ -68,10 +68,10 @@ class AuraPalette {
   static final AuraPalette _midday = AuraPalette(
     wash: const [
       DsColors.primary200,
-      DsColors.lavender100,
-      DsColors.backgroundLight,
+      DsColors.secondary100,
+      DsColors.backgroundSecondary,
     ],
-    orbs: const [DsColors.primary400, DsColors.lavender400, DsColors.gold200],
+    orbs: const [DsColors.primary400, DsColors.secondary400, DsColors.gold200],
     ink: DsColors.neutral900,
     inkMuted: DsColors.neutral600,
     glass: DsColors.white.withValues(alpha: 0.6),
@@ -82,10 +82,10 @@ class AuraPalette {
   static final AuraPalette _evening = AuraPalette(
     wash: const [
       DsColors.primary300,
-      DsColors.mauve200,
-      DsColors.backgroundLight,
+      DsColors.secondary200,
+      DsColors.backgroundSecondary,
     ],
-    orbs: const [DsColors.coral400, DsColors.primary500, DsColors.mauve400],
+    orbs: const [DsColors.rosewood, DsColors.primary500, DsColors.secondary400],
     ink: DsColors.neutral950,
     inkMuted: DsColors.neutral700,
     glass: DsColors.white.withValues(alpha: 0.55),
@@ -94,8 +94,8 @@ class AuraPalette {
   );
 
   static final AuraPalette _night = AuraPalette(
-    wash: const [DsColors.mauve900, DsColors.primary950, DsColors.mediaGround],
-    orbs: const [DsColors.primary700, DsColors.lavender500, DsColors.mauve600],
+    wash: const [DsColors.secondary900, DsColors.primary900, DsColors.mediaGround],
+    orbs: const [DsColors.primary700, DsColors.secondary500, DsColors.secondary600],
     ink: DsColors.onMedia,
     inkMuted: DsColors.onMediaMuted,
     glass: DsColors.white.withValues(alpha: 0.1),

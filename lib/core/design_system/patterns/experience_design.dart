@@ -26,7 +26,7 @@ abstract final class CustomerExperience {
   static const LinearGradient signatureGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFEF6C9B), Color(0xFFC84778), Color(0xFFEACB8D)],
+    colors: [DsColors.primary500, DsColors.primary600, DsColors.softGold],
     stops: [0, .58, 1],
   );
 
@@ -35,7 +35,11 @@ abstract final class CustomerExperience {
   static const LinearGradient silkGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFFFFBFD), Color(0xFFFFEEF5), Color(0xFFFFF8EA)],
+    colors: [
+      DsColors.background,
+      DsColors.backgroundPink,
+      DsColors.backgroundSecondary,
+    ],
     stops: [0, .48, 1],
   );
 }
@@ -66,13 +70,13 @@ class CustomerBackdrop extends StatelessWidget {
         painter: _SilkBackdropPainter(
           wash: isDark
               ? colors.primary.withValues(alpha: 0.10)
-              : const Color(0x22E95C8F),
+              : DsColors.primary500.withValues(alpha: 0.13),
           ribbonWarm: isDark
               ? colors.accent.withValues(alpha: 0.10)
-              : const Color(0x33EACB8D),
+              : DsColors.softGold.withValues(alpha: 0.20),
           ribbonRose: isDark
               ? colors.primary.withValues(alpha: 0.14)
-              : const Color(0x26C6386F),
+              : DsColors.primary600.withValues(alpha: 0.15),
         ),
       ),
     );

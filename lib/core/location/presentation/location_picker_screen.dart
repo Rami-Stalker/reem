@@ -620,8 +620,8 @@ class _LocationPickerScreenState extends ConsumerState<LocationPickerScreen>
         minZoom: _minZoom,
         maxZoom: _maxZoom,
         backgroundColor: isDark
-            ? const Color(0xFF1B1B22)
-            : const Color(0xFFF2EFE9),
+            ? DsColors.surfaceDark
+            : DsColors.backgroundSecondary,
         cameraConstraint: CameraConstraint.containCenter(bounds: _syriaBounds),
         onMapReady: _onMapReady,
         onPositionChanged: _onPositionChanged,

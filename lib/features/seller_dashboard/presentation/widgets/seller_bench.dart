@@ -102,7 +102,7 @@ class BenchHero extends ConsumerWidget {
                         ? Icons.north_east_rounded
                         : Icons.south_east_rounded,
                     size: DsSizes.iconXxs,
-                    color: rising ? DsColors.gold200 : DsColors.coral300,
+                    color: rising ? DsColors.gold200 : DsColors.primary200,
                   ),
                   DsGaps.hXxs,
                   Text(

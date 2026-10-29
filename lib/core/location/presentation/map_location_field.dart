@@ -415,8 +415,8 @@ class _Preview extends StatelessWidget {
                       initialCenter: place.point,
                       initialZoom: 16.5,
                       backgroundColor: isDark
-                          ? const Color(0xFF1B1B22)
-                          : const Color(0xFFF2EFE9),
+                          ? DsColors.surfaceDark
+                          : DsColors.backgroundSecondary,
                       interactionOptions: const InteractionOptions(
                         flags: InteractiveFlag.none,
                       ),

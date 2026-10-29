@@ -308,44 +308,60 @@ class _AuroraPalette {
   final Color ribbonGold;
   final Color sparkle;
 
-  static const light = _AuroraPalette(
-    ground: [Color(0xFFFFFAFC), Color(0xFFFDEFF5), Color(0xFFF7EFFB)],
-    rose: Color(0x8CF7AAC5),
-    orchid: Color(0x66C9A0E0),
-    champagne: Color(0x80F0D9A0),
-    ribbonRose: Color(0x2EE85A8A),
-    ribbonGold: Color(0x4DE6C277),
-    sparkle: DsColors.gold400,
+  static final light = _AuroraPalette(
+    ground: const [
+      DsColors.background,
+      DsColors.backgroundPink,
+      DsColors.secondary50,
+    ],
+    rose: DsColors.primary300.withValues(alpha: 0.55),
+    orchid: DsColors.secondary300.withValues(alpha: 0.40),
+    champagne: DsColors.softGold.withValues(alpha: 0.45),
+    ribbonRose: DsColors.primary500.withValues(alpha: 0.18),
+    ribbonGold: DsColors.champagneGold.withValues(alpha: 0.25),
+    sparkle: DsColors.champagneGold,
   );
 
-  static const champagneLight = _AuroraPalette(
-    ground: [Color(0xFFFFFBF4), Color(0xFFFBF1E4), Color(0xFFF9EFF4)],
-    rose: Color(0x59F7AAC5),
-    orchid: Color(0x59E6C277),
-    champagne: Color(0x99F0D9A0),
-    ribbonRose: Color(0x24E85A8A),
-    ribbonGold: Color(0x66E6C277),
+  static final champagneLight = _AuroraPalette(
+    ground: const [
+      DsColors.background,
+      DsColors.backgroundSecondary,
+      DsColors.backgroundPink,
+    ],
+    rose: DsColors.primary300.withValues(alpha: 0.35),
+    orchid: DsColors.peachCream.withValues(alpha: 0.45),
+    champagne: DsColors.softGold.withValues(alpha: 0.60),
+    ribbonRose: DsColors.primary500.withValues(alpha: 0.14),
+    ribbonGold: DsColors.champagneGold.withValues(alpha: 0.35),
     sparkle: DsColors.gold500,
   );
 
-  static const champagneDark = _AuroraPalette(
-    ground: [Color(0xFF1D1612), Color(0xFF17111A), Color(0xFF100B12)],
-    rose: Color(0x30FF87B0),
-    orchid: Color(0x38E6C277),
-    champagne: Color(0x40E6C277),
-    ribbonRose: Color(0x1FFF87B0),
-    ribbonGold: Color(0x2EE6C277),
-    sparkle: DsColors.gold300,
+  static final champagneDark = _AuroraPalette(
+    ground: const [
+      Color(0xFF1C1614), // warm champagne-tinted night
+      DsColors.backgroundDark,
+      DsColors.surfaceDimDark,
+    ],
+    rose: DsColors.primary300.withValues(alpha: 0.19),
+    orchid: DsColors.softGold.withValues(alpha: 0.22),
+    champagne: DsColors.softGold.withValues(alpha: 0.25),
+    ribbonRose: DsColors.primary300.withValues(alpha: 0.12),
+    ribbonGold: DsColors.softGold.withValues(alpha: 0.18),
+    sparkle: DsColors.softGold,
   );
 
-  static const dark = _AuroraPalette(
-    ground: [Color(0xFF1A1220), Color(0xFF150F1A), Color(0xFF100B14)],
-    rose: Color(0x40FF87B0),
-    orchid: Color(0x38B98BE8),
-    champagne: Color(0x24E6C277),
-    ribbonRose: Color(0x24FF87B0),
-    ribbonGold: Color(0x1FE6C277),
-    sparkle: DsColors.gold300,
+  static final dark = _AuroraPalette(
+    ground: const [
+      DsColors.surfaceDark,
+      DsColors.backgroundDark,
+      DsColors.surfaceDimDark,
+    ],
+    rose: DsColors.primary300.withValues(alpha: 0.25),
+    orchid: DsColors.secondary300.withValues(alpha: 0.22),
+    champagne: DsColors.softGold.withValues(alpha: 0.14),
+    ribbonRose: DsColors.primary300.withValues(alpha: 0.14),
+    ribbonGold: DsColors.softGold.withValues(alpha: 0.12),
+    sparkle: DsColors.softGold,
   );
 }
 
@@ -632,14 +648,24 @@ class _AuthEmblemState extends State<AuthEmblem>
               fontWeight: DsTypography.bold,
               height: 1,
               color: DsColors.onMedia,
-              shadows: const [Shadow(color: Color(0x406B1C38), blurRadius: 12)],
+              shadows: [
+              Shadow(
+                color: DsColors.primary900.withValues(alpha: 0.25),
+                blurRadius: 12,
+              ),
+            ],
             ),
           )
         : Icon(
             widget.icon,
             size: archWidth * 0.38,
             color: DsColors.onMedia,
-            shadows: const [Shadow(color: Color(0x406B1C38), blurRadius: 12)],
+            shadows: [
+              Shadow(
+                color: DsColors.primary900.withValues(alpha: 0.25),
+                blurRadius: 12,
+              ),
+            ],
           );
 
     // Centred here so a stretching column cannot pull the canvas wide and
@@ -700,7 +726,7 @@ class _EmblemPainter extends CustomPainter {
 
   static const _thread = [
     DsColors.primary500,
-    DsColors.lavender400,
+    DsColors.secondary400,
     DsColors.gold300,
     DsColors.primary300,
     DsColors.primary500,
@@ -738,7 +764,7 @@ class _EmblemPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFF98FB6), DsColors.primary600, DsColors.mauve600],
+          colors: [DsColors.primary400, DsColors.primary600, DsColors.secondary600],
           stops: [0, 0.55, 1],
         ).createShader(arch),
     );

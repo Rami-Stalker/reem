@@ -1,115 +1,114 @@
 import 'package:flutter/material.dart';
 
-/// Raw color palette for Ohara — a premium, feminine social-commerce brand.
+/// Raw color palette for Ohara — a premium, feminine fashion & beauty brand.
 ///
-/// The mood: blush-rose elegance, mauve depth, champagne-gold luxury and warm,
-/// soft, rose-tinted neutrals. These are *raw* swatches; UI code should never
-/// read them directly — consume the semantic [DsColorScheme] via `context.dsColors`
-/// so light/dark and accessibility variants resolve automatically.
+/// The mood: soft rose for interaction, warm cream for grounds, mauve for
+/// variety and champagne gold used sparingly as a luxury touch. These are
+/// *raw* swatches; UI code should prefer the semantic [DsColorScheme] via
+/// `context.dsColors` so light/dark and accessibility variants resolve
+/// automatically.
 abstract final class DsColors {
   // ---------------------------------------------------------------------------
-  // Brand — Blush Rose (primary). Warm, refined, never neon.
+  // Primary — Rose. Buttons, links, selection and every interactive state.
   // ---------------------------------------------------------------------------
   static const Color primary50 = Color(0xFFFFF5F8);
-  static const Color primary100 = Color(0xFFFFE7EF);
-  static const Color primary200 = Color(0xFFFBCEDD);
-  static const Color primary300 = Color(0xFFF7AAC5);
-  static const Color primary400 = Color(0xFFF084A8);
+  static const Color primary100 = Color(0xFFFCE7EF);
+  static const Color primary200 = Color(0xFFF8C9DA);
+  static const Color primary300 = Color(0xFFF3A6C2);
+  static const Color primary400 = Color(0xFFED7FA7);
   static const Color primary500 = Color(0xFFE85A8A); // brand identity rose
   static const Color primary600 = Color(0xFFD43E73); // interactive fills
-  static const Color primary700 = Color(0xFFB62E5E);
-  static const Color primary800 = Color(0xFF8C2549);
-  static const Color primary900 = Color(0xFF6B1C38);
-  static const Color primary950 = Color(0xFF451223);
+  static const Color primary700 = Color(0xFFB82D60);
+  static const Color primary800 = Color(0xFF96244F);
+  static const Color primary900 = Color(0xFF761D40);
 
   // ---------------------------------------------------------------------------
-  // Mauve / Plum — secondary. Adds quiet luxury and depth.
+  // Secondary — Mauve. Variety, depth and the seller / admin workspaces.
   // ---------------------------------------------------------------------------
-  static const Color mauve50 = Color(0xFFF8F3F8);
-  static const Color mauve100 = Color(0xFFEFE2F0);
-  static const Color mauve200 = Color(0xFFDFC6E1);
-  static const Color mauve300 = Color(0xFFC8A1CD);
-  static const Color mauve400 = Color(0xFFAC7CB4);
-  static const Color mauve500 = Color(0xFF8F5C99);
-  static const Color mauve600 = Color(0xFF75487E);
-  static const Color mauve700 = Color(0xFF5B3864);
-  static const Color mauve800 = Color(0xFF43294A);
-  static const Color mauve900 = Color(0xFF2D1B32);
+  static const Color secondary50 = Color(0xFFF8F3FA);
+  static const Color secondary100 = Color(0xFFEDE3F1);
+  static const Color secondary200 = Color(0xFFD8C1D9);
+  static const Color secondary300 = Color(0xFFC5A4C9);
+  static const Color secondary400 = Color(0xFFAD8BB5);
+  static const Color secondary500 = Color(0xFF9B7BA5);
+  static const Color secondary600 = Color(0xFF84628E);
+  static const Color secondary700 = Color(0xFF6C4F76);
+  static const Color secondary800 = Color(0xFF543D5D);
+  static const Color secondary900 = Color(0xFF3D2D45);
 
   // ---------------------------------------------------------------------------
-  // Lavender / Orchid — tertiary feminine support (kept for legacy usage).
+  // Supporting colors.
   // ---------------------------------------------------------------------------
-  static const Color lavender50 = Color(0xFFFAF5FF);
-  static const Color lavender100 = Color(0xFFF1E5FF);
-  static const Color lavender200 = Color(0xFFE2CCFB);
-  static const Color lavender400 = Color(0xFFB98BE8);
-  static const Color lavender500 = Color(0xFF9D5FD8);
+  static const Color champagneGold = Color(0xFFC9A878);
+  static const Color softGold = Color(0xFFE5D0A8);
+  static const Color rosewood = Color(0xFFB76E79);
+  static const Color warmBeige = Color(0xFFEADBC8);
+  static const Color peachCream = Color(0xFFF1D6B8);
+  static const Color sageGreen = Color(0xFFA8B9A0);
 
   // ---------------------------------------------------------------------------
-  // Champagne Gold — accent. Premium, occasion-led (gifts, perfume, flowers).
+  // Gold scale — built around [softGold] and [champagneGold]. Use sparingly:
+  // ratings, premium badges, hairline flourishes.
   // ---------------------------------------------------------------------------
-  static const Color gold50 = Color(0xFFFCF7EC);
-  static const Color gold100 = Color(0xFFF8ECCF);
-  static const Color gold200 = Color(0xFFF0D9A0);
-  static const Color gold300 = Color(0xFFE6C277); // champagne
-  static const Color gold400 = Color(0xFFD9A94F);
-  static const Color gold500 = Color(0xFFC28E36);
-  static const Color gold600 = Color(0xFF9E7129);
-  static const Color gold700 = Color(0xFF79551F);
-
-  // Coral — warm secondary accent (sale energy / warmth).
-  static const Color coral300 = Color(0xFFFFB3A3);
-  static const Color coral400 = Color(0xFFFF8A7A);
-  static const Color coral500 = Color(0xFFF56B59);
+  static const Color gold50 = Color(0xFFFBF7F0);
+  static const Color gold100 = Color(0xFFF5EDDD);
+  static const Color gold200 = softGold;
+  static const Color gold300 = Color(0xFFD7BC90);
+  static const Color gold400 = champagneGold;
+  static const Color gold500 = Color(0xFFB08D5B);
+  static const Color gold600 = Color(0xFF8C6E44);
+  static const Color gold700 = Color(0xFF6A5232);
 
   // ---------------------------------------------------------------------------
-  // Sage — botanical success / nature touch (flowers, fresh, calm).
-  // ---------------------------------------------------------------------------
-  static const Color accent50 = Color(0xFFEAF6EF);
-  static const Color accent100 = Color(0xFFCBE8D6);
-  static const Color accent400 = Color(0xFF4FA877);
-  static const Color accent500 = Color(0xFF3E9163);
-  static const Color accent600 = Color(0xFF2F7A4F);
-
-  // ---------------------------------------------------------------------------
-  // Neutrals — warm, rosé-tinted greys (softness + warmth, never cold).
+  // Neutrals — warm, rose-tinted greys anchored on the text and line colors.
   // ---------------------------------------------------------------------------
   static const Color neutral0 = Color(0xFFFFFFFF);
-  static const Color neutral50 = Color(0xFFFBF7F9);
-  static const Color neutral100 = Color(0xFFF5EEF1);
-  static const Color neutral200 = Color(0xFFECE1E6);
-  static const Color neutral300 = Color(0xFFDACED3);
-  static const Color neutral400 = Color(0xFFB4A4AB);
-  static const Color neutral500 = Color(0xFF897680);
-  static const Color neutral600 = Color(0xFF695761);
-  static const Color neutral700 = Color(0xFF4C3E45);
-  static const Color neutral800 = Color(0xFF34292F);
-  static const Color neutral900 = Color(0xFF221A1F);
-  static const Color neutral950 = Color(0xFF140F13);
+  static const Color neutral50 = Color(0xFFFBF8F9);
+  static const Color neutral100 = Color(0xFFF0E8EC); // divider
+  static const Color neutral200 = Color(0xFFE9DFE4); // border
+  static const Color neutral300 = Color(0xFFD6C9D0);
+  static const Color neutral400 = Color(0xFFA99AA4);
+  static const Color neutral500 = Color(0xFF8A7C87);
+  static const Color neutral600 = Color(0xFF766873); // text secondary
+  static const Color neutral700 = Color(0xFF544853);
+  static const Color neutral800 = Color(0xFF2F2630); // text primary
+  static const Color neutral900 = Color(0xFF221B23);
+  static const Color neutral950 = Color(0xFF151016);
 
   // ---------------------------------------------------------------------------
-  // Semantic base — harmonized with the palette (softer than stock Material).
+  // Grounds, text and lines (light).
   // ---------------------------------------------------------------------------
-  static const Color success = Color(0xFF3FA86F);
-  static const Color warning = Color(0xFFE0A23C);
-  static const Color error = Color(0xFFE5484D);
-  static const Color info = Color(0xFF5B8DEF);
+  static const Color background = Color(0xFFFFFFFF);
+  static const Color backgroundSecondary = Color(0xFFF8F5F2); // cream
+  static const Color backgroundPink = primary50;
+  static const Color surfaceVariantLight = Color(0xFFF4E7EC);
+  static const Color textPrimary = neutral800;
+  static const Color textSecondary = neutral600;
+  static const Color border = neutral200;
+  static const Color divider = neutral100;
 
   // ---------------------------------------------------------------------------
-  // Surfaces (light) — blush whites.
+  // Status.
   // ---------------------------------------------------------------------------
-  static const Color backgroundLight = Color(0xFFFFF8FB);
-  static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color surfaceVariantLight = Color(0xFFFCF0F5);
-  static const Color cardLight = Color(0xFFFFFFFF);
+  static const Color success = Color(0xFF388E65);
+  static const Color error = Color(0xFFD94355);
+  static const Color warning = Color(0xFFD99A35);
+  static const Color info = Color(0xFF5485C5);
+
+  // Tints of [success] for fills and charts.
+  static const Color success50 = Color(0xFFEAF4EE);
+  static const Color success100 = Color(0xFFCFE5D8);
+  static const Color success400 = Color(0xFF55A57E);
+  static const Color success600 = Color(0xFF2C7352);
 
   // ---------------------------------------------------------------------------
-  // Surfaces (dark) — deep aubergine / plum, never flat black.
+  // Surfaces (dark) — deep plum drawn from [secondary900], never flat black.
   // ---------------------------------------------------------------------------
-  static const Color backgroundDark = Color(0xFF150F1A);
-  static const Color surfaceDark = Color(0xFF1F1726);
-  static const Color surfaceVariantDark = Color(0xFF2C2233);
-  static const Color cardDark = Color(0xFF261D2E);
+  static const Color backgroundDark = Color(0xFF171219);
+  static const Color surfaceDark = Color(0xFF201922);
+  static const Color surfaceVariantDark = Color(0xFF2D2430);
+  static const Color cardDark = Color(0xFF261E29);
+  static const Color surfaceDimDark = Color(0xFF120E14);
 
   static const Color transparent = Colors.transparent;
   static const Color white = Colors.white;
@@ -142,38 +141,67 @@ abstract final class DsColors {
 
   /// The ground of a full-bleed media surface — a story, a lightbox, a call.
   /// Near-black rather than pure black so it reads as depth, not a hole.
-  static const Color mediaGround = Color(0xFF0B0710);
+  static const Color mediaGround = Color(0xFF0E0A10);
 
   /// Ink on the champagne wash. Like [onMedia] this is deliberately
   /// mode-independent: the champagne gradient is a fixed brand blend, so the
   /// text on it must not follow the theme or it inverts into illegibility.
-  static const Color onChampagne = Color(0xFF79551F);
+  static const Color onChampagne = gold700;
 
-  /// Ink on the gold gradient — a shade deeper again, for the smaller type
-  /// that rides the pill-shaped "new in" ribbons.
-  static const Color onGold = Color(0xFF221A1F);
+  /// Ink on the gold gradient — the smaller type on "new in" ribbons.
+  static const Color onGold = textPrimary;
 
-  /// Material [ColorScheme] seed for light mode.
-  static ColorScheme get lightScheme => ColorScheme.fromSeed(
-        seedColor: primary500,
-        primary: primary600,
-        secondary: mauve500,
-        tertiary: gold400,
-        surface: surfaceLight,
-        error: error,
-        brightness: Brightness.light,
-      );
+  /// Material [ColorScheme] for light mode, derived from [DsColorScheme.light]
+  /// so Material widgets and Ohara components read the same values.
+  static ColorScheme get lightScheme =>
+      _materialScheme(DsColorScheme.light, Brightness.light);
 
-  /// Material [ColorScheme] seed for dark mode.
-  static ColorScheme get darkScheme => ColorScheme.fromSeed(
-        seedColor: primary400,
-        primary: const Color(0xFFFF87B0),
-        secondary: mauve300,
-        tertiary: gold300,
-        surface: surfaceDark,
-        error: const Color(0xFFFF7A85),
-        brightness: Brightness.dark,
-      );
+  /// Material [ColorScheme] for dark mode.
+  static ColorScheme get darkScheme =>
+      _materialScheme(DsColorScheme.dark, Brightness.dark);
+
+  static ColorScheme _materialScheme(DsColorScheme c, Brightness brightness) {
+    final isDark = brightness == Brightness.dark;
+    return ColorScheme(
+      brightness: brightness,
+      primary: c.primary,
+      onPrimary: c.onPrimary,
+      primaryContainer: c.primaryContainer,
+      onPrimaryContainer: c.onPrimaryContainer,
+      secondary: c.secondary,
+      onSecondary: c.onSecondary,
+      secondaryContainer: c.secondaryContainer,
+      onSecondaryContainer: c.onSecondaryContainer,
+      tertiary: c.accent,
+      onTertiary: c.onAccent,
+      tertiaryContainer: c.accentContainer,
+      onTertiaryContainer: c.onAccentContainer,
+      error: c.error,
+      onError: c.onError,
+      errorContainer: c.errorContainer,
+      onErrorContainer: isDark
+          ? const Color(0xFFFFDADF)
+          : const Color(0xFF7A1C28),
+      surface: c.surface,
+      onSurface: c.onSurface,
+      surfaceDim: c.surfaceDim,
+      surfaceBright: c.surfaceBright,
+      surfaceContainerLowest: isDark ? backgroundDark : white,
+      surfaceContainerLow: isDark ? surfaceDark : backgroundPink,
+      surfaceContainer: isDark ? cardDark : backgroundSecondary,
+      surfaceContainerHigh: isDark ? surfaceVariantDark : primary100,
+      surfaceContainerHighest: c.surfaceVariant,
+      onSurfaceVariant: c.onSurfaceVariant,
+      outline: c.outline,
+      outlineVariant: c.border,
+      shadow: c.shadow,
+      scrim: black,
+      inverseSurface: c.inverseSurface,
+      onInverseSurface: c.onInverseSurface,
+      inversePrimary: isDark ? primary600 : primary300,
+      surfaceTint: c.primary,
+    );
+  }
 }
 
 /// Semantic colors resolved per theme brightness.
@@ -313,109 +341,109 @@ class DsColorScheme {
     onPrimary: DsColors.white,
     primaryContainer: DsColors.primary100,
     onPrimaryContainer: DsColors.primary800,
-    secondary: DsColors.mauve500,
+    secondary: DsColors.secondary600,
     onSecondary: DsColors.white,
-    secondaryContainer: DsColors.mauve100,
-    onSecondaryContainer: DsColors.mauve700,
-    accent: DsColors.gold500,
-    onAccent: Color(0xFF3A2A06),
+    secondaryContainer: DsColors.secondary100,
+    onSecondaryContainer: DsColors.secondary800,
+    accent: DsColors.champagneGold,
+    onAccent: DsColors.textPrimary,
     accentContainer: DsColors.gold100,
     onAccentContainer: DsColors.gold700,
-    background: DsColors.backgroundLight,
-    onBackground: DsColors.neutral800,
-    surface: DsColors.surfaceLight,
-    onSurface: DsColors.neutral800,
+    background: DsColors.backgroundSecondary,
+    onBackground: DsColors.textPrimary,
+    surface: DsColors.background,
+    onSurface: DsColors.textPrimary,
     surfaceVariant: DsColors.surfaceVariantLight,
-    onSurfaceVariant: DsColors.neutral500,
+    onSurfaceVariant: DsColors.textSecondary,
     surfaceBright: DsColors.white,
-    surfaceDim: Color(0xFFF6E9EF),
+    surfaceDim: DsColors.warmBeige,
     surfaceElevated: DsColors.white,
-    card: DsColors.cardLight,
-    inverseSurface: DsColors.neutral900,
-    onInverseSurface: Color(0xFFFCEFF4),
-    border: DsColors.primary200,
-    outline: Color(0xFFE3CAD4),
-    divider: DsColors.neutral200,
+    card: DsColors.background,
+    inverseSurface: DsColors.textPrimary,
+    onInverseSurface: DsColors.primary50,
+    border: DsColors.border,
+    outline: DsColors.neutral300,
+    divider: DsColors.divider,
     success: DsColors.success,
     onSuccess: DsColors.white,
-    successContainer: DsColors.accent50,
+    successContainer: DsColors.success50,
     warning: DsColors.warning,
-    onWarning: DsColors.neutral900,
-    warningContainer: DsColors.gold50,
+    onWarning: DsColors.textPrimary,
+    warningContainer: Color(0xFFFBF1E0),
     error: DsColors.error,
     onError: DsColors.white,
-    errorContainer: Color(0xFFFDECEC),
+    errorContainer: Color(0xFFFCE9EB),
     info: DsColors.info,
     onInfo: DsColors.white,
-    infoContainer: Color(0xFFEAF1FE),
+    infoContainer: Color(0xFFEAF1F9),
     disabled: DsColors.neutral300,
     onDisabled: DsColors.neutral400,
-    shadow: Color(0x26C9356A),
-    overlay: Color(0x593A1024),
+    shadow: Color(0x1F96244F),
+    overlay: Color(0x592F2630),
     glass: Color(0x3DFFFFFF),
     glassBorder: Color(0x59FFFFFF),
-    shimmerBase: Color(0xFFF3E3EA),
-    shimmerHighlight: Color(0xFFFFF7FB),
-    favorite: Color(0xFFF43F6E),
-    rating: DsColors.gold400,
+    shimmerBase: DsColors.surfaceVariantLight,
+    shimmerHighlight: DsColors.backgroundPink,
+    favorite: DsColors.primary500,
+    rating: DsColors.champagneGold,
     price: DsColors.primary700,
-    discount: DsColors.coral500,
+    discount: DsColors.rosewood,
     online: DsColors.success,
   );
 
   static const DsColorScheme dark = DsColorScheme(
-    primary: Color(0xFFFF87B0),
-    onPrimary: Color(0xFF3A0E1F),
-    primaryContainer: Color(0xFF5A2540),
-    onPrimaryContainer: Color(0xFFFFD7E4),
-    secondary: DsColors.mauve300,
-    onSecondary: Color(0xFF2A1530),
-    secondaryContainer: Color(0xFF463050),
-    onSecondaryContainer: Color(0xFFEBD6F0),
-    accent: DsColors.gold300,
-    onAccent: Color(0xFF3A2A06),
-    accentContainer: Color(0xFF4A3A14),
-    onAccentContainer: Color(0xFFF6E4B8),
+    primary: DsColors.primary300,
+    onPrimary: DsColors.primary900,
+    primaryContainer: Color(0xFF5A1F38),
+    onPrimaryContainer: DsColors.primary100,
+    secondary: DsColors.secondary300,
+    onSecondary: DsColors.secondary900,
+    secondaryContainer: DsColors.secondary800,
+    onSecondaryContainer: DsColors.secondary100,
+    accent: DsColors.softGold,
+    onAccent: DsColors.textPrimary,
+    accentContainer: Color(0xFF4A3C26),
+    onAccentContainer: DsColors.gold100,
     background: DsColors.backgroundDark,
     onBackground: Color(0xFFF4ECF1),
     surface: DsColors.surfaceDark,
     onSurface: Color(0xFFF6EFF3),
     surfaceVariant: DsColors.surfaceVariantDark,
-    onSurfaceVariant: Color(0xFFB9A7B4),
-    surfaceBright: Color(0xFF2A2032),
-    surfaceDim: Color(0xFF120C17),
-    surfaceElevated: Color(0xFF2C2235),
+    onSurfaceVariant: Color(0xFFBBAAB6),
+    surfaceBright: Color(0xFF2B222E),
+    surfaceDim: DsColors.surfaceDimDark,
+    surfaceElevated: Color(0xFF2D2430),
     card: DsColors.cardDark,
     inverseSurface: Color(0xFFF4ECF1),
-    onInverseSurface: Color(0xFF2A1F30),
-    border: Color(0xFF3D3047),
-    outline: Color(0xFF4A3B54),
-    divider: Color(0xFF2E2336),
-    success: Color(0xFF52C28A),
-    onSuccess: Color(0xFF06281A),
-    successContainer: Color(0xFF1E4434),
-    warning: Color(0xFFEDBA63),
-    onWarning: Color(0xFF36280A),
-    warningContainer: Color(0xFF45350F),
-    error: Color(0xFFFF7A85),
-    onError: Color(0xFF40060B),
-    errorContainer: Color(0xFF53202A),
-    info: Color(0xFF93B7FB),
-    onInfo: Color(0xFF09244A),
-    infoContainer: Color(0xFF243B5E),
-    disabled: Color(0xFF584C5E),
-    onDisabled: Color(0xFF8A7C90),
+    onInverseSurface: DsColors.textPrimary,
+    border: Color(0xFF3E3342),
+    outline: Color(0xFF4C404F),
+    divider: Color(0xFF2F2632),
+    success: Color(0xFF6BBE93),
+    onSuccess: Color(0xFF0B2A1B),
+    successContainer: Color(0xFF1F4031),
+    warning: Color(0xFFE8B565),
+    onWarning: Color(0xFF35260B),
+    warningContainer: Color(0xFF45351A),
+    error: Color(0xFFF07A86),
+    onError: Color(0xFF3F0910),
+    errorContainer: Color(0xFF55222A),
+    info: Color(0xFF93B2E0),
+    onInfo: Color(0xFF0D2442),
+    infoContainer: Color(0xFF253A57),
+    disabled: Color(0xFF594D5C),
+    onDisabled: Color(0xFF8B7E8D),
     shadow: Color(0x80000000),
-    overlay: Color(0x8C0A060E),
+    overlay: Color(0x8C0B080D),
     glass: Color(0x24FFFFFF),
     glassBorder: Color(0x2EFFFFFF),
-    shimmerBase: Color(0xFF2A2032),
-    shimmerHighlight: Color(0xFF3A2E44),
-    favorite: Color(0xFFFF6F94),
-    rating: DsColors.gold300,
-    price: Color(0xFFFFB3CC),
-    discount: DsColors.coral400,
-    online: Color(0xFF52C28A),
+    shimmerBase: Color(0xFF2B222E),
+    shimmerHighlight: Color(0xFF3A2F3E),
+    favorite: DsColors.primary400,
+    rating: DsColors.softGold,
+    price: DsColors.primary200,
+    discount: Color(0xFFD9A0A8),
+    online: Color(0xFF6BBE93),
   );
 
   DsColorScheme copyWith({
@@ -529,67 +557,73 @@ class DsColorScheme {
   }
 
   DsColorScheme lerp(DsColorScheme other, double t) => DsColorScheme(
-        primary: Color.lerp(primary, other.primary, t)!,
-        onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
-        primaryContainer:
-            Color.lerp(primaryContainer, other.primaryContainer, t)!,
-        onPrimaryContainer:
-            Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
-        secondary: Color.lerp(secondary, other.secondary, t)!,
-        onSecondary: Color.lerp(onSecondary, other.onSecondary, t)!,
-        secondaryContainer:
-            Color.lerp(secondaryContainer, other.secondaryContainer, t)!,
-        onSecondaryContainer:
-            Color.lerp(onSecondaryContainer, other.onSecondaryContainer, t)!,
-        accent: Color.lerp(accent, other.accent, t)!,
-        onAccent: Color.lerp(onAccent, other.onAccent, t)!,
-        accentContainer: Color.lerp(accentContainer, other.accentContainer, t)!,
-        onAccentContainer:
-            Color.lerp(onAccentContainer, other.onAccentContainer, t)!,
-        background: Color.lerp(background, other.background, t)!,
-        onBackground: Color.lerp(onBackground, other.onBackground, t)!,
-        surface: Color.lerp(surface, other.surface, t)!,
-        onSurface: Color.lerp(onSurface, other.onSurface, t)!,
-        surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
-        onSurfaceVariant:
-            Color.lerp(onSurfaceVariant, other.onSurfaceVariant, t)!,
-        surfaceBright: Color.lerp(surfaceBright, other.surfaceBright, t)!,
-        surfaceDim: Color.lerp(surfaceDim, other.surfaceDim, t)!,
-        surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t)!,
-        card: Color.lerp(card, other.card, t)!,
-        inverseSurface: Color.lerp(inverseSurface, other.inverseSurface, t)!,
-        onInverseSurface:
-            Color.lerp(onInverseSurface, other.onInverseSurface, t)!,
-        border: Color.lerp(border, other.border, t)!,
-        outline: Color.lerp(outline, other.outline, t)!,
-        divider: Color.lerp(divider, other.divider, t)!,
-        success: Color.lerp(success, other.success, t)!,
-        onSuccess: Color.lerp(onSuccess, other.onSuccess, t)!,
-        successContainer:
-            Color.lerp(successContainer, other.successContainer, t)!,
-        warning: Color.lerp(warning, other.warning, t)!,
-        onWarning: Color.lerp(onWarning, other.onWarning, t)!,
-        warningContainer:
-            Color.lerp(warningContainer, other.warningContainer, t)!,
-        error: Color.lerp(error, other.error, t)!,
-        onError: Color.lerp(onError, other.onError, t)!,
-        errorContainer: Color.lerp(errorContainer, other.errorContainer, t)!,
-        info: Color.lerp(info, other.info, t)!,
-        onInfo: Color.lerp(onInfo, other.onInfo, t)!,
-        infoContainer: Color.lerp(infoContainer, other.infoContainer, t)!,
-        disabled: Color.lerp(disabled, other.disabled, t)!,
-        onDisabled: Color.lerp(onDisabled, other.onDisabled, t)!,
-        shadow: Color.lerp(shadow, other.shadow, t)!,
-        overlay: Color.lerp(overlay, other.overlay, t)!,
-        glass: Color.lerp(glass, other.glass, t)!,
-        glassBorder: Color.lerp(glassBorder, other.glassBorder, t)!,
-        shimmerBase: Color.lerp(shimmerBase, other.shimmerBase, t)!,
-        shimmerHighlight:
-            Color.lerp(shimmerHighlight, other.shimmerHighlight, t)!,
-        favorite: Color.lerp(favorite, other.favorite, t)!,
-        rating: Color.lerp(rating, other.rating, t)!,
-        price: Color.lerp(price, other.price, t)!,
-        discount: Color.lerp(discount, other.discount, t)!,
-        online: Color.lerp(online, other.online, t)!,
-      );
+    primary: Color.lerp(primary, other.primary, t)!,
+    onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
+    primaryContainer: Color.lerp(primaryContainer, other.primaryContainer, t)!,
+    onPrimaryContainer: Color.lerp(
+      onPrimaryContainer,
+      other.onPrimaryContainer,
+      t,
+    )!,
+    secondary: Color.lerp(secondary, other.secondary, t)!,
+    onSecondary: Color.lerp(onSecondary, other.onSecondary, t)!,
+    secondaryContainer: Color.lerp(
+      secondaryContainer,
+      other.secondaryContainer,
+      t,
+    )!,
+    onSecondaryContainer: Color.lerp(
+      onSecondaryContainer,
+      other.onSecondaryContainer,
+      t,
+    )!,
+    accent: Color.lerp(accent, other.accent, t)!,
+    onAccent: Color.lerp(onAccent, other.onAccent, t)!,
+    accentContainer: Color.lerp(accentContainer, other.accentContainer, t)!,
+    onAccentContainer: Color.lerp(
+      onAccentContainer,
+      other.onAccentContainer,
+      t,
+    )!,
+    background: Color.lerp(background, other.background, t)!,
+    onBackground: Color.lerp(onBackground, other.onBackground, t)!,
+    surface: Color.lerp(surface, other.surface, t)!,
+    onSurface: Color.lerp(onSurface, other.onSurface, t)!,
+    surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
+    onSurfaceVariant: Color.lerp(onSurfaceVariant, other.onSurfaceVariant, t)!,
+    surfaceBright: Color.lerp(surfaceBright, other.surfaceBright, t)!,
+    surfaceDim: Color.lerp(surfaceDim, other.surfaceDim, t)!,
+    surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t)!,
+    card: Color.lerp(card, other.card, t)!,
+    inverseSurface: Color.lerp(inverseSurface, other.inverseSurface, t)!,
+    onInverseSurface: Color.lerp(onInverseSurface, other.onInverseSurface, t)!,
+    border: Color.lerp(border, other.border, t)!,
+    outline: Color.lerp(outline, other.outline, t)!,
+    divider: Color.lerp(divider, other.divider, t)!,
+    success: Color.lerp(success, other.success, t)!,
+    onSuccess: Color.lerp(onSuccess, other.onSuccess, t)!,
+    successContainer: Color.lerp(successContainer, other.successContainer, t)!,
+    warning: Color.lerp(warning, other.warning, t)!,
+    onWarning: Color.lerp(onWarning, other.onWarning, t)!,
+    warningContainer: Color.lerp(warningContainer, other.warningContainer, t)!,
+    error: Color.lerp(error, other.error, t)!,
+    onError: Color.lerp(onError, other.onError, t)!,
+    errorContainer: Color.lerp(errorContainer, other.errorContainer, t)!,
+    info: Color.lerp(info, other.info, t)!,
+    onInfo: Color.lerp(onInfo, other.onInfo, t)!,
+    infoContainer: Color.lerp(infoContainer, other.infoContainer, t)!,
+    disabled: Color.lerp(disabled, other.disabled, t)!,
+    onDisabled: Color.lerp(onDisabled, other.onDisabled, t)!,
+    shadow: Color.lerp(shadow, other.shadow, t)!,
+    overlay: Color.lerp(overlay, other.overlay, t)!,
+    glass: Color.lerp(glass, other.glass, t)!,
+    glassBorder: Color.lerp(glassBorder, other.glassBorder, t)!,
+    shimmerBase: Color.lerp(shimmerBase, other.shimmerBase, t)!,
+    shimmerHighlight: Color.lerp(shimmerHighlight, other.shimmerHighlight, t)!,
+    favorite: Color.lerp(favorite, other.favorite, t)!,
+    rating: Color.lerp(rating, other.rating, t)!,
+    price: Color.lerp(price, other.price, t)!,
+    discount: Color.lerp(discount, other.discount, t)!,
+    online: Color.lerp(online, other.online, t)!,
+  );
 }
