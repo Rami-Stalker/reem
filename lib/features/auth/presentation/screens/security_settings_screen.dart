@@ -360,8 +360,9 @@ class _SecuritySettingsScreenState
       'OPEN_SALES' => l10n.deletionBlockerOpenSales(blocker.count),
       'WALLET_BALANCE' => l10n.deletionBlockerWallet,
       'PENDING_PAYOUTS' => l10n.deletionBlockerPayouts(blocker.count),
-      'UPCOMING_APPOINTMENTS' =>
-        l10n.deletionBlockerAppointments(blocker.count),
+      'UPCOMING_APPOINTMENTS' => l10n.deletionBlockerAppointments(
+        blocker.count,
+      ),
       _ => l10n.deleteAccountBlockedHint,
     };
   }
@@ -414,28 +415,21 @@ class _SecuritySettingsScreenState
     final account = ref.watch(authAccountProvider);
     final sessions = ref.watch(accountSessionsProvider);
     final devices = ref.watch(accountDevicesProvider);
-    final colors = context.dsColors;
+    final palette = context.boutique;
+    final gutter = vanityGutter(context);
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: l10n.securityCentre, showBack: true),
+        VanityAppBar(
+          title: l10n.securityCentre,
+          subtitle: l10n.securityCentreSubtitle,
+          icon: Icons.shield_outlined,
+          showBack: true,
+        ),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(
-            DsSpacing.lg,
-            DsSpacing.huge,
-            DsSpacing.lg,
-            140,
-          ),
+          padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 140),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              Text(
-                l10n.securityCentreSubtitle,
-                style: context.dsText.body.copyWith(
-                  color: colors.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: DsSpacing.lg),
-
               account.when(
                 loading: () => const DsLoadingIndicator(),
                 error: (error, _) => Text(messageOf(error)),
@@ -470,30 +464,27 @@ class _SecuritySettingsScreenState
                         ),
                       ),
 
-                    const SizedBox(height: DsSpacing.lg),
-
                     // ── Ways back in ────────────────────────────────────
-                    _SectionHeader(title: l10n.recoveryCodes),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(
-                        Icons.confirmation_number_outlined,
-                        color: data.security.hasOfflineRecovery
-                            ? colors.success
-                            : colors.warning,
-                      ),
-                      title: Text(
-                        l10n.recoveryCodesRemaining(
-                          data.security.recoveryCodesRemaining,
+                    VanityTray(
+                      title: l10n.recoveryCodes,
+                      children: [
+                        VanityRow(
+                          icon: Icons.confirmation_number_outlined,
+                          color: data.security.hasOfflineRecovery
+                              ? palette.positive
+                              : palette.caution,
+                          tintTitle: false,
+                          title: l10n.recoveryCodesRemaining(
+                            data.security.recoveryCodesRemaining,
+                          ),
+                          trailing: TextButton(
+                            onPressed: _busy ? null : _generateRecoveryCodes,
+                            child: Text(l10n.generateRecoveryCodes),
+                          ),
                         ),
-                      ),
-                      trailing: TextButton(
-                        onPressed: _busy ? null : _generateRecoveryCodes,
-                        child: Text(l10n.generateRecoveryCodes),
-                      ),
+                      ],
                     ),
-
-                    const SizedBox(height: DsSpacing.lg),
+                    DsGaps.vXl,
 
                     // ── An authenticator app ────────────────────────────
                     // The server has answered `totp_enabled` and
@@ -501,186 +492,209 @@ class _SecuritySettingsScreenState
                     // v2, and the client parsed both and drew neither — so an
                     // account *required* to hold an authenticator had no way
                     // to enrol one.
-                    _SectionHeader(title: l10n.totpTitle),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(
-                        Icons.smartphone_rounded,
-                        color: data.security.totpEnabled
-                            ? colors.success
-                            : data.security.totpRequired
-                            ? colors.warning
-                            : colors.onSurfaceVariant,
-                      ),
-                      title: Text(
-                        data.security.totpEnabled
-                            ? l10n.totpEnabled
-                            : l10n.totpDisabled,
-                      ),
-                      subtitle:
-                          data.security.totpRequired &&
-                              !data.security.totpEnabled
-                          ? Text(l10n.totpRequired)
-                          : null,
-                      trailing: data.security.totpEnabled
-                          ? null
-                          : TextButton(
-                              onPressed: _busy ? null : _enrolTotp,
-                              child: Text(l10n.totpEnrol),
-                            ),
+                    VanityTray(
+                      title: l10n.totpTitle,
+                      children: [
+                        VanityRow(
+                          icon: Icons.smartphone_rounded,
+                          color: data.security.totpEnabled
+                              ? palette.positive
+                              : data.security.totpRequired
+                              ? palette.caution
+                              : palette.muted,
+                          tintTitle: false,
+                          title: data.security.totpEnabled
+                              ? l10n.totpEnabled
+                              : l10n.totpDisabled,
+                          subtitle:
+                              data.security.totpRequired &&
+                                  !data.security.totpEnabled
+                              ? l10n.totpRequired
+                              : null,
+                          trailing: data.security.totpEnabled
+                              ? Icon(
+                                  Icons.verified_rounded,
+                                  color: palette.positive,
+                                )
+                              : TextButton(
+                                  onPressed: _busy ? null : _enrolTotp,
+                                  child: Text(l10n.totpEnrol),
+                                ),
+                        ),
+                      ],
                     ),
-
-                    const SizedBox(height: DsSpacing.lg),
+                    DsGaps.vXl,
 
                     // ── Credentials ─────────────────────────────────────
-                    _SectionHeader(title: l10n.passwordSignIn),
-                    SwitchListTile(
-                      value: data.security.passwordEnabled,
-                      onChanged: _busy ? null : _togglePassword,
-                      contentPadding: EdgeInsets.zero,
-                      activeThumbColor: colors.primary,
-                      title: Text(
-                        data.security.passwordEnabled
-                            ? l10n.passwordEnabled
-                            : l10n.passwordDisabled,
-                      ),
-                      subtitle: Text(
-                        l10n.passwordOnlyOnKnownDevice,
-                        style: context.dsText.cardSubtitle.copyWith(
-                          color: colors.onSurfaceVariant,
+                    VanityTray(
+                      title: l10n.passwordSignIn,
+                      children: [
+                        VanityRow(
+                          icon: Icons.password_rounded,
+                          title: data.security.passwordEnabled
+                              ? l10n.passwordEnabled
+                              : l10n.passwordDisabled,
+                          subtitle: l10n.passwordOnlyOnKnownDevice,
+                          trailing: PearlSwitch(
+                            value: data.security.passwordEnabled,
+                            onChanged: _busy ? null : _togglePassword,
+                            semanticLabel: l10n.passwordSignIn,
+                          ),
                         ),
-                      ),
-                    ),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(
-                        Icons.phone_iphone_rounded,
-                        color: colors.primary,
-                      ),
-                      title: Text(l10n.changeAccountNumber),
-                      subtitle: Text(
-                        l10n.changeNumberExplainer,
-                        style: context.dsText.cardSubtitle.copyWith(
-                          color: colors.onSurfaceVariant,
+                        VanityRow(
+                          icon: Icons.phone_iphone_rounded,
+                          title: l10n.changeAccountNumber,
+                          subtitle: l10n.changeNumberExplainer,
+                          onTap: () => context.push(RoutePaths.phoneChange),
                         ),
-                      ),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => context.push(RoutePaths.phoneChange),
-                    ),
-                    SwitchListTile(
-                      value: data.security.mfaEnabled,
-                      onChanged: (value) => _toggle(mfaEnabled: value),
-                      contentPadding: EdgeInsets.zero,
-                      activeThumbColor: colors.primary,
-                      title: Text(l10n.otpOnSensitive),
-                      subtitle: Text(l10n.otpOnSensitiveDescription),
-                    ),
-                    SwitchListTile(
-                      value: data.security.deviceVerificationRequired,
-                      onChanged: (value) =>
-                          _toggle(deviceVerificationRequired: value),
-                      contentPadding: EdgeInsets.zero,
-                      activeThumbColor: colors.primary,
-                      title: Text(l10n.verifyNewDevices),
-                      subtitle: Text(l10n.flagNewDevices),
+                        VanityRow(
+                          icon: Icons.sms_outlined,
+                          title: l10n.otpOnSensitive,
+                          subtitle: l10n.otpOnSensitiveDescription,
+                          trailing: PearlSwitch(
+                            value: data.security.mfaEnabled,
+                            onChanged: (value) => _toggle(mfaEnabled: value),
+                            semanticLabel: l10n.otpOnSensitive,
+                          ),
+                        ),
+                        VanityRow(
+                          icon: Icons.phonelink_lock_outlined,
+                          title: l10n.verifyNewDevices,
+                          subtitle: l10n.flagNewDevices,
+                          trailing: PearlSwitch(
+                            value: data.security.deviceVerificationRequired,
+                            onChanged: (value) =>
+                                _toggle(deviceVerificationRequired: value),
+                            semanticLabel: l10n.verifyNewDevices,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: DsSpacing.xl),
+              DsGaps.vXl,
 
               // ── Who is signed in ──────────────────────────────────────
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              VanityTray(
+                title: l10n.activeSessions,
                 children: [
-                  Expanded(child: _SectionHeader(title: l10n.activeSessions)),
-                  TextButton.icon(
-                    onPressed: _busy ? null : _logoutEverywhere,
-                    icon: const Icon(Icons.logout, size: 18),
-                    label: Text(l10n.signOutEverywhere),
+                  ...sessions.when(
+                    loading: () => const [
+                      Padding(
+                        padding: DsSpacing.paddingLg,
+                        child: DsLoadingIndicator(),
+                      ),
+                    ],
+                    error: (error, _) => [
+                      Padding(
+                        padding: DsSpacing.paddingLg,
+                        child: Text(messageOf(error)),
+                      ),
+                    ],
+                    data: (items) {
+                      final live = items.where((s) => s.isActive).toList();
+                      if (live.isEmpty) {
+                        return [
+                          Padding(
+                            padding: DsSpacing.paddingLg,
+                            child: Text(
+                              l10n.noActiveSessions,
+                              style: context.dsText.body.tint(palette.muted),
+                            ),
+                          ),
+                        ];
+                      }
+                      return [
+                        for (final session in live)
+                          _SessionTile(
+                            session: session,
+                            onRevoke: () => _revokeSession(session.id),
+                          ),
+                      ];
+                    },
+                  ),
+                  VanityRow(
+                    icon: Icons.logout,
+                    color: palette.critical,
+                    title: l10n.signOutEverywhere,
+                    showChevron: false,
+                    onTap: _busy ? null : _logoutEverywhere,
                   ),
                 ],
               ),
-              const SizedBox(height: DsSpacing.sm),
-              sessions.when(
-                loading: () => const DsLoadingIndicator(),
-                error: (error, _) => Text(messageOf(error)),
-                data: (items) {
-                  final live = items.where((s) => s.isActive).toList();
-                  if (live.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.all(DsSpacing.lg),
-                      child: Text(l10n.noActiveSessions),
-                    );
-                  }
-                  return Column(
-                    children: [
-                      for (final session in live)
-                        _SessionTile(
-                          session: session,
-                          onRevoke: () => _revokeSession(session.id),
-                        ),
-                    ],
-                  );
-                },
-              ),
 
-              const SizedBox(height: DsSpacing.xl),
+              DsGaps.vXl,
 
               // ── The handsets that hold a key ──────────────────────────
-              _SectionHeader(title: l10n.devices),
-              const SizedBox(height: DsSpacing.sm),
-              devices.when(
-                loading: () => const DsLoadingIndicator(),
-                error: (error, _) => Text(messageOf(error)),
-                data: (items) {
-                  if (items.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.all(DsSpacing.lg),
-                      child: Text(l10n.noDevicesYet),
-                    );
-                  }
-                  return Column(
-                    children: [
-                      for (final device in items) _DeviceTile(device: device),
-                      const SizedBox(height: DsSpacing.sm),
-                      SecondaryButton(
-                        label: l10n.devices,
-                        onPressed: () =>
-                            context.push(RoutePaths.deviceManagement),
+              VanityTray(
+                title: l10n.devices,
+                children: [
+                  ...devices.when(
+                    loading: () => const [
+                      Padding(
+                        padding: DsSpacing.paddingLg,
+                        child: DsLoadingIndicator(),
                       ),
                     ],
-                  );
-                },
+                    error: (error, _) => [
+                      Padding(
+                        padding: DsSpacing.paddingLg,
+                        child: Text(messageOf(error)),
+                      ),
+                    ],
+                    data: (items) => [
+                      if (items.isEmpty)
+                        Padding(
+                          padding: DsSpacing.paddingLg,
+                          child: Text(
+                            l10n.noDevicesYet,
+                            style: context.dsText.body.tint(palette.muted),
+                          ),
+                        ),
+                      for (final device in items) _DeviceTile(device: device),
+                      if (items.isNotEmpty)
+                        VanityRow(
+                          icon: Icons.tune_rounded,
+                          title: l10n.devices,
+                          onTap: () =>
+                              context.push(RoutePaths.deviceManagement),
+                        ),
+                    ],
+                  ),
+                ],
               ),
 
-              const SizedBox(height: DsSpacing.xl),
-              GhostButton(
-                label: l10n.lostYourSim,
-                onPressed: () => context.push(RoutePaths.accountRecovery),
+              DsGaps.vXl,
+              VanityTray(
+                children: [
+                  VanityRow(
+                    icon: Icons.sim_card_alert_outlined,
+                    title: l10n.lostYourSim,
+                    onTap: () => context.push(RoutePaths.accountRecovery),
+                  ),
+                ],
               ),
 
               // ── Leaving ───────────────────────────────────────────────
               // Last, and on its own: the one control on the screen that
               // cannot be undone.
-              const SizedBox(height: DsSpacing.xxl),
-              const Divider(),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(
-                  Icons.delete_forever_outlined,
-                  color: context.dsColors.error,
-                ),
-                title: Text(
-                  l10n.deleteAccount,
-                  style: context.dsText.tileTitle.copyWith(
-                    color: context.dsColors.error,
+              DsGaps.vHuge,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: DsRadius.borderXxl,
+                  border: Border.all(
+                    color: palette.critical.withValues(alpha: 0.35),
                   ),
                 ),
-                subtitle: Text(l10n.deleteAccountSubtitle),
-                enabled: !_busy,
-                onTap: _deleteAccount,
+                child: VanityRow(
+                  icon: Icons.delete_forever_outlined,
+                  color: palette.critical,
+                  title: l10n.deleteAccount,
+                  subtitle: l10n.deleteAccountSubtitle,
+                  onTap: _busy ? null : _deleteAccount,
+                ),
               ),
             ]),
           ),
@@ -710,41 +724,44 @@ class _RecoveryCaseAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final colors = context.dsColors;
+    final palette = context.boutique;
     final completes = openCase.completesAt;
 
     return Container(
-      padding: const EdgeInsets.all(DsSpacing.lg),
+      padding: DsSpacing.paddingLg,
       decoration: BoxDecoration(
-        color: colors.errorContainer,
-        borderRadius: BorderRadius.circular(DsRadius.md),
-        border: Border.all(color: colors.error),
+        color: palette.critical.withValues(alpha: 0.1),
+        borderRadius: DsRadius.borderXxl,
+        border: Border.all(color: palette.critical, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Icon(Icons.warning_amber_rounded, color: colors.error),
-              const SizedBox(width: DsSpacing.sm),
+              VanityPearl(
+                icon: Icons.warning_amber_rounded,
+                color: palette.critical,
+              ),
+              DsGaps.hMd,
               Expanded(
                 child: Text(
                   l10n.recoveryCaseOpenWarning,
-                  style: context.dsText.tileTitle,
+                  style: context.dsText.bodyStrong.tint(palette.ink),
                 ),
               ),
             ],
           ),
           if (completes != null) ...[
-            const SizedBox(height: DsSpacing.sm),
+            DsGaps.vSm,
             Text(
               l10n.recoveryCaseCoolOff(
                 _SecuritySettingsScreenState._date(completes),
               ),
-              style: context.dsText.cardSubtitle,
+              style: context.dsText.bodySmall.tint(palette.muted),
             ),
           ],
-          const SizedBox(height: DsSpacing.md),
+          DsGaps.vMd,
           PrimaryButton(
             label: l10n.stopThisRequest,
             onPressed: busy ? null : onStop,
@@ -766,42 +783,32 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    final (background, foreground) = switch (tone) {
-      _NoticeTone.info => (colors.infoContainer, colors.info),
-      _NoticeTone.warning => (colors.warningContainer, colors.warning),
+    final palette = context.boutique;
+    final tint = switch (tone) {
+      _NoticeTone.info => palette.primary,
+      _NoticeTone.warning => palette.caution,
     };
 
     return Container(
-      margin: const EdgeInsets.only(bottom: DsSpacing.sm),
-      padding: const EdgeInsets.all(DsSpacing.md),
+      margin: const EdgeInsets.only(bottom: DsSpacing.lg),
+      padding: DsSpacing.paddingMd,
       decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(DsRadius.md),
+        color: tint.withValues(alpha: 0.1),
+        borderRadius: DsRadius.borderXxl,
+        border: Border.all(color: tint.withValues(alpha: 0.35)),
       ),
       child: Row(
         children: [
-          Icon(icon, color: foreground, size: 20),
-          const SizedBox(width: DsSpacing.sm),
-          Expanded(child: Text(text, style: context.dsText.cardSubtitle)),
+          VanityPearl(icon: icon, color: tint, size: DsSizes.controlSm + 4),
+          DsGaps.hMd,
+          Expanded(
+            child: Text(
+              text,
+              style: context.dsText.bodySmall.tint(palette.ink),
+            ),
+          ),
         ],
       ),
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: Theme.of(
-        context,
-      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 }
@@ -814,29 +821,19 @@ class _SessionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: DsSpacing.sm),
-      child: Material(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(DsRadius.md),
-        child: ListTile(
-          leading: Icon(Icons.key_outlined, color: colors.primary),
-          title: Text(session.deviceName ?? context.l10n.unknownDevice),
-          subtitle: Text(
-            // The absolute clock, not the idle one: "until" is a promise, and
-            // the idle clock slides every time she opens the app.
-            context.l10n.sessionExpiresOn(
-              _SecuritySettingsScreenState._date(session.absoluteExpiresAt),
-            ),
-            style: context.dsText.cardSubtitle,
-          ),
-          trailing: IconButton(
-            tooltip: context.l10n.revokeSession,
-            icon: const Icon(Icons.close),
-            onPressed: onRevoke,
-          ),
-        ),
+    final palette = context.boutique;
+    return VanityRow(
+      icon: Icons.key_outlined,
+      title: session.deviceName ?? context.l10n.unknownDevice,
+      // The absolute clock, not the idle one: "until" is a promise, and the
+      // idle clock slides every time she opens the app.
+      subtitle: context.l10n.sessionExpiresOn(
+        _SecuritySettingsScreenState._date(session.absoluteExpiresAt),
+      ),
+      trailing: IconButton(
+        tooltip: context.l10n.revokeSession,
+        icon: Icon(Icons.close_rounded, color: palette.muted),
+        onPressed: onRevoke,
       ),
     );
   }
@@ -849,22 +846,15 @@ class _DeviceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.dsColors;
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Icon(
-        Icons.smartphone_outlined,
-        color: device.isTrusted ? colors.success : colors.onSurfaceVariant,
-      ),
-      title: Text(device.name),
-      subtitle: Text(
-        device.isTrusted
-            ? context.l10n.deviceTrusted
-            : context.l10n.deviceNotVerified,
-        style: context.dsText.cardSubtitle.copyWith(
-          color: colors.onSurfaceVariant,
-        ),
-      ),
+    final palette = context.boutique;
+    return VanityRow(
+      icon: Icons.smartphone_outlined,
+      color: device.isTrusted ? palette.positive : palette.muted,
+      tintTitle: false,
+      title: device.name,
+      subtitle: device.isTrusted
+          ? context.l10n.deviceTrusted
+          : context.l10n.deviceNotVerified,
     );
   }
 }

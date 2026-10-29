@@ -66,18 +66,18 @@ class DeviceManagementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final devices = ref.watch(accountDevicesProvider);
-    final colors = context.dsColors;
+    final palette = context.boutique;
+    final gutter = vanityGutter(context);
 
     return OharaScrollPage(
       slivers: [
-        PremiumAppBar(title: context.l10n.devices, showBack: true),
+        VanityAppBar(
+          title: context.l10n.devices,
+          icon: Icons.devices_outlined,
+          showBack: true,
+        ),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(
-            DsSpacing.lg,
-            DsSpacing.huge,
-            DsSpacing.lg,
-            120,
-          ),
+          padding: EdgeInsets.fromLTRB(gutter, DsSpacing.xl, gutter, 120),
           sliver: devices.when(
             loading: () => const SliverFillRemaining(
               child: Center(child: DsLoadingIndicator()),
@@ -89,62 +89,62 @@ class DeviceManagementScreen extends ConsumerWidget {
               if (items.isEmpty) {
                 return SliverFillRemaining(
                   child: DsEmptyState(
-                icon: Icons.devices_other_rounded,
-                title: context.l10n.noDevicesYet,
-              ),
+                    icon: Icons.devices_other_rounded,
+                    title: context.l10n.noDevicesYet,
+                  ),
                 );
               }
-              return SliverList.separated(
-                itemCount: items.length,
-                separatorBuilder: (_, _) =>
-                    const SizedBox(height: DsSpacing.sm),
-                itemBuilder: (context, index) {
-                  final device = items[index];
-                  return Semantics(
-                    button: false,
-                    label: [
-                      device.name,
-                      device.isTrusted
-                          ? context.l10n.deviceTrusted
-                          : context.l10n.deviceNotVerified,
-                    ].join('، '),
-                    child: Material(
-                      color: colors.surface,
-                      borderRadius: BorderRadius.circular(DsRadius.md),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.devices_outlined,
-                          color: colors.primary,
-                        ),
-                        title: Text(device.name),
-                        subtitle: Text(
+              return SliverToBoxAdapter(
+                child: VanityTray(
+                  children: [
+                    for (final device in items)
+                      Semantics(
+                        button: false,
+                        label: [
+                          device.name,
                           device.isTrusted
                               ? context.l10n.deviceTrusted
                               : context.l10n.deviceNotVerified,
-                        ),
-                        trailing: PopupMenuButton<String>(
-                          onSelected: (value) {
-                            if (value == 'rename') {
-                              _rename(context, ref, device.id);
-                            } else if (value == 'revoke') {
-                              _revoke(context, ref, device.id);
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 'rename',
-                              child: Text(context.l10n.rename),
+                        ].join('، '),
+                        child: VanityRow(
+                          icon: Icons.devices_outlined,
+                          // A trusted device's pearl is green; one she has not
+                          // verified wears the caution colour.
+                          color: device.isTrusted
+                              ? palette.positive
+                              : palette.caution,
+                          tintTitle: false,
+                          title: device.name,
+                          subtitle: device.isTrusted
+                              ? context.l10n.deviceTrusted
+                              : context.l10n.deviceNotVerified,
+                          trailing: PopupMenuButton<String>(
+                            icon: Icon(
+                              Icons.more_horiz_rounded,
+                              color: palette.gold,
                             ),
-                            PopupMenuItem(
-                              value: 'revoke',
-                              child: Text(context.l10n.revoke),
-                            ),
-                          ],
+                            onSelected: (value) {
+                              if (value == 'rename') {
+                                _rename(context, ref, device.id);
+                              } else if (value == 'revoke') {
+                                _revoke(context, ref, device.id);
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'rename',
+                                child: Text(context.l10n.rename),
+                              ),
+                              PopupMenuItem(
+                                value: 'revoke',
+                                child: Text(context.l10n.revoke),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                  ],
+                ),
               );
             },
           ),
