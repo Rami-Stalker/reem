@@ -90,6 +90,11 @@ String adFailureMessage(AppLocalizations l10n, Failure failure) =>
       AdFailureKind.campaignLimit => l10n.adsErrorLimit,
       AdFailureKind.feedPostRequired => l10n.adsErrorFeedPost,
       AdFailureKind.planLocked => l10n.adsErrorLocked,
+      AdFailureKind.storeNotVerified => l10n.adsErrorNotVerified,
+      AdFailureKind.paymentMethodUnavailable => l10n.adsErrorMethodUnavailable,
+      AdFailureKind.purchaseInProgress => l10n.adsErrorPurchaseInProgress,
+      AdFailureKind.purchaseClosed => l10n.adsErrorPurchaseClosed,
+      AdFailureKind.referenceRequired => l10n.adsErrorReferenceRequired,
       AdFailureKind.other => failure.displayMessage,
     };
 

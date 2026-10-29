@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Optional } from '@nestjs/common';
+import { AdPlanPaymentsService } from './ad-plan-payments.service';
 import {
   Currency,
   Prisma,
@@ -52,18 +53,23 @@ export class StoreAdsService {
     private readonly promotions: PromotionsService,
     private readonly tiers: AdTiersService,
     private readonly audiences: AdAudienceService,
+    @Optional() private readonly payments?: AdPlanPaymentsService,
   ) {}
 
   // ── Plans ────────────────────────────────────────────────────────────────
 
   async plans(sellerId: string) {
-    const [current, liveCount, history, spend, prices] = await Promise.all([
-      this.tiers.current(sellerId),
-      this.liveCampaigns(sellerId),
-      this.tiers.history(sellerId),
-      this.recentSpend(sellerId),
-      Promise.all(TIER_ORDER.map((tier) => this.tiers.priceOf(tier))),
-    ]);
+    const [current, liveCount, history, spend, prices, balance, purchase] =
+      await Promise.all([
+        this.tiers.current(sellerId),
+        this.liveCampaigns(sellerId),
+        this.tiers.history(sellerId),
+        this.recentSpend(sellerId),
+        Promise.all(TIER_ORDER.map((tier) => this.tiers.priceOf(tier))),
+        this.tiers.earningsBalance(sellerId),
+        this.payments?.openFor(sellerId) ?? Promise.resolve(null),
+      ]);
+    const verified = await this.tiers.isVerified(sellerId);
     const now = new Date();
     const queued = history.find((row) => row.startsAt > now) ?? null;
 
@@ -86,6 +92,11 @@ export class StoreAdsService {
       queued: queued ? { tier: lower(queued.tier), starts_at: queued.startsAt.toISOString() } : null,
       plans: TIER_ORDER.map((tier, index) => this.planView(tier, prices[index])),
       spend_last_30_days: spend,
+      earnings_balance: balance,
+      /** Only an approved boutique may advertise; the app says so up front. */
+      store_verified: verified,
+      /** A plan paid by transfer that is still waiting on her or on finance. */
+      pending_purchase: purchase,
       recommendation: recommendation
         ? {
             tier: lower(recommendation.tier),
@@ -219,6 +230,7 @@ export class StoreAdsService {
         authorId: sellerId,
         status: 'PUBLISHED',
         visibility: 'PUBLIC',
+        authorIsPublic: true,
         moderationStatus: { not: 'REJECTED' },
         productTags: { some: { productId } },
       },

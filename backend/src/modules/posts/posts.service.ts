@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import {
   CommerceContentCommentStatus,
   CommerceContentStatus,
   Prisma,
+  PromotionPlacement,
 } from '@prisma/client';
+import {
+  MAX_FEED_SLOTS,
+  PromotionsService,
+  ServedSlot,
+} from '../promotions/promotions.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PRODUCT_CARD_INCLUDE as PRODUCT_INCLUDE } from '../../common/catalog/product-include';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
@@ -42,6 +48,7 @@ export class PostsService {
     private readonly prisma: PrismaService,
     private readonly signals: TrendSignalService,
     private readonly interactions: ContentInteractionsService,
+    @Optional() private readonly promotions?: PromotionsService,
   ) {}
 
   /**
@@ -90,11 +97,77 @@ export class PostsService {
       }),
       this.prisma.commerceContent.count({ where }),
     ]);
-    const viewer = await this.viewerState(posts.map((p) => p.id), userId);
+    // The home page's feed leads with the boutique's paid FEED_TOP post, the
+    // same one the community feed pins, on the first page only.
+    const sponsored = page.page === 1 ? await this.sponsoredHead(where, userId) : [];
+    const pinned = new Set(sponsored.map((s) => s.post.id));
+    const rows = [
+      ...sponsored.map((s) => s.post),
+      ...posts.filter((p) => !pinned.has(p.id)),
+    ];
+    const viewer = await this.viewerState(rows.map((p) => p.id), userId);
+    const slotOf = new Map(sponsored.map((s) => [s.post.id, s.slot]));
     return {
-      data: posts.map((p) => serializeLegacyPost(p, viewer)),
+      data: rows.map((p, index) => {
+        const post = serializeLegacyPost(p, viewer);
+        const slot = index < sponsored.length ? slotOf.get(p.id) : undefined;
+        return slot
+          ? {
+              ...post,
+              sponsored: {
+                promotion_id: slot.promotionId,
+                offer_id: slot.offerId,
+                placement: 'feed_top',
+                store_tier: slot.tier.toLowerCase(),
+              },
+            }
+          : post;
+      }),
       pagination: buildMeta(page.page, page.limit, total, posts.length),
     };
+  }
+
+  /**
+   * The paid FEED_TOP post for this viewer, under the feed's own rules — her
+   * mutes and «غير مهتمة» included. Never throws: a broken ad system must
+   * not take the home feed down with it.
+   */
+  private async sponsoredHead(
+    where: Prisma.CommerceContentWhereInput,
+    userId?: string,
+  ) {
+    if (!this.promotions) return [];
+    try {
+      const slots = await this.promotions.serve(PromotionPlacement.FEED_TOP, {
+        viewerId: userId,
+        limit: MAX_FEED_SLOTS + 2,
+      });
+      const withPost = slots.filter((slot) => slot.contentId);
+      if (withPost.length === 0) return [];
+      const found = await this.prisma.commerceContent.findMany({
+        where: { AND: [where, { id: { in: withPost.map((s) => s.contentId!) } }] },
+        include: this.legacyInclude,
+      });
+      const byId = new Map(found.map((row) => [row.id, row]));
+      const served: { post: (typeof found)[number]; slot: ServedSlot }[] = [];
+      for (const slot of withPost) {
+        const post = byId.get(slot.contentId!);
+        if (post) served.push({ post, slot });
+        if (served.length >= MAX_FEED_SLOTS) break;
+      }
+      if (served.length > 0) {
+        void this.promotions
+          .recordImpressions(
+            served.map((s) => s.slot.offerId),
+            PromotionPlacement.FEED_TOP,
+            userId,
+          )
+          .catch(() => undefined);
+      }
+      return served;
+    } catch {
+      return [];
+    }
   }
 
   async bySeller(

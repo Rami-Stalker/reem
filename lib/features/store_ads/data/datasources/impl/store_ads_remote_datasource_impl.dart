@@ -68,4 +68,74 @@ final class StoreAdsRemoteDataSourceImpl extends BaseRemoteDataSource
   @override
   Future<List<AdGovernorate>> governorates() async =>
       StoreAdsMapper.governorates(await getList(ApiEndpoints.adsGovernorates));
+
+  @override
+  Future<AdPaymentOptions> paymentOptions() async =>
+      StoreAdsMapper.paymentOptions(
+        await getJson(ApiEndpoints.adsPaymentOptions),
+      );
+
+  @override
+  Future<AdPurchaseResult> purchase(
+    AdTier tier,
+    String method, {
+    required String idempotencyKey,
+  }) async => StoreAdsMapper.purchaseResult(
+    await postJson(
+      ApiEndpoints.adsPurchases,
+      body: {'tier': tier.wire, 'method': method},
+      idempotencyKey: idempotencyKey,
+    ),
+  );
+
+  @override
+  Future<AdPlanPurchase> submitReference(String id, String reference) async =>
+      StoreAdsMapper.purchase(
+        await postJson(
+          ApiEndpoints.adsPurchaseReference(id),
+          body: {'reference': reference},
+        ),
+      );
+
+  @override
+  Future<AdPlanPurchase> cancelPurchase(String id) async =>
+      StoreAdsMapper.purchase(
+        await postJson(ApiEndpoints.adsPurchaseCancel(id)),
+      );
+
+  @override
+  Future<AdAdminSummary> adminSummary() async =>
+      StoreAdsMapper.adminSummary(await getJson(ApiEndpoints.adminAdsSummary));
+
+  @override
+  Future<List<AdPendingPayment>> adminPending() async =>
+      StoreAdsMapper.pendingPayments(
+        await getList(ApiEndpoints.adminAdsPurchases),
+      );
+
+  @override
+  Future<void> adminConfirm(String id) async {
+    await postJson(ApiEndpoints.adminAdsPurchaseConfirm(id));
+  }
+
+  @override
+  Future<void> adminReject(String id, String reason) async {
+    await postJson(
+      ApiEndpoints.adminAdsPurchaseReject(id),
+      body: {'reason': reason},
+    );
+  }
+
+  @override
+  Future<Map<String, String?>> adminInstructions() async => {
+    for (final row in (await getList(
+      ApiEndpoints.adminAdsPaymentInstructions,
+    )).whereType<Map>())
+      '${row['method']}': row['instructions'] as String?,
+  };
+
+  @override
+  Future<void> adminSaveInstructions(Map<String, String> values) async {
+    await putJson(ApiEndpoints.adminAdsPaymentInstructions, body: values);
+  }
 }

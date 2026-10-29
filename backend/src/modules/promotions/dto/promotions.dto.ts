@@ -16,7 +16,12 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { PromotionPlacement, PromotionStatus, StoreAdTier } from '@prisma/client';
+import {
+  PaymentMethodType,
+  PromotionPlacement,
+  PromotionStatus,
+  StoreAdTier,
+} from '@prisma/client';
 import { AudienceSpec, EVERYONE } from '../ad-plans';
 
 const upper = ({ value }: { value: unknown }) =>
@@ -140,4 +145,36 @@ export class SubscribePlanDto {
   @Transform(upper)
   @IsEnum(StoreAdTier)
   tier!: StoreAdTier;
+}
+
+/** `earnings` pays from what the platform owes her; the rest are transfers. */
+export class PlanPurchaseDto {
+  @Transform(upper)
+  @IsEnum(StoreAdTier)
+  tier!: StoreAdTier;
+
+  @Transform(upper)
+  @IsIn(['EARNINGS', 'SHAM_CASH', 'SYRIATEL_CASH', 'MTN_CASH', 'BANK_TRANSFER', 'HAWALA'])
+  method!: 'EARNINGS' | PaymentMethodType;
+}
+
+export class PlanPaymentReferenceDto {
+  @IsString()
+  @MaxLength(120)
+  reference!: string;
+}
+
+export class RejectPlanPaymentDto {
+  @IsString()
+  @MaxLength(400)
+  reason!: string;
+}
+
+/** Where the money for a plan goes, per method. Empty clears a method. */
+export class PlanPaymentInstructionsDto {
+  @IsOptional() @IsString() @MaxLength(600) sham_cash?: string;
+  @IsOptional() @IsString() @MaxLength(600) syriatel_cash?: string;
+  @IsOptional() @IsString() @MaxLength(600) mtn_cash?: string;
+  @IsOptional() @IsString() @MaxLength(600) bank_transfer?: string;
+  @IsOptional() @IsString() @MaxLength(600) hawala?: string;
 }

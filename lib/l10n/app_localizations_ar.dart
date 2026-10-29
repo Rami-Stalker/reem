@@ -14196,7 +14196,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adsPlanConfirmBody(String price) {
-    return 'سيُخصم $price من رصيد أرباحكِ. تستمر الباقة 30 يوماً ولا تتجدد تلقائياً.';
+    return '$price لمدة 30 يوماً، ولا تتجدد تلقائياً.';
   }
 
   @override
@@ -14392,4 +14392,159 @@ class AppLocalizationsAr extends AppLocalizations {
   String homeSpotlightCardLabel(String product, String store) {
     return 'إعلان: $product من $store';
   }
+
+  @override
+  String get adsPayHow => 'كيف تدفعين؟';
+
+  @override
+  String get adsPayFromEarnings => 'من رصيد أرباحي';
+
+  @override
+  String adsPayEarningsBalance(String amount) {
+    return 'الرصيد: $amount';
+  }
+
+  @override
+  String adsPayEarningsShort(String amount) {
+    return 'الرصيد $amount — لا يكفي بعد';
+  }
+
+  @override
+  String get adsPayInstant => 'فوري';
+
+  @override
+  String get adsPayTransferHint => 'حوّلي المبلغ ثم أدخلي رقم العملية';
+
+  @override
+  String get adsPayNoMethods => 'الدفع بالتحويل غير متاح بعد — تواصلي مع الدعم';
+
+  @override
+  String adsPaymentBannerAwaiting(String tier) {
+    return 'باقتكِ $tier بانتظار دفعتكِ — اضغطي لإكمال الدفع';
+  }
+
+  @override
+  String adsPaymentBannerReview(String tier) {
+    return 'وصلنا رقم دفعة باقة $tier ونراجعه الآن';
+  }
+
+  @override
+  String adsPaymentBannerRejected(String tier) {
+    return 'لم نتمكن من مطابقة دفعة باقة $tier — اضغطي لمعرفة السبب';
+  }
+
+  @override
+  String get adsPaymentTitle => 'ادفعي باقتكِ';
+
+  @override
+  String adsPaymentPlan(String tier) {
+    return 'باقة $tier · 30 يوماً';
+  }
+
+  @override
+  String adsPaymentStepSend(String amount, String method) {
+    return 'حوّلي $amount عبر $method';
+  }
+
+  @override
+  String get adsPaymentStepReference => 'أدخلي رقم العملية الذي وصلكِ';
+
+  @override
+  String get adsPaymentStepChange => 'أرسلتِ رقماً خاطئاً؟ أعيدي إرساله';
+
+  @override
+  String get adsPaymentReferenceField => 'رقم العملية';
+
+  @override
+  String get adsPaymentSend => 'أرسلي للمراجعة';
+
+  @override
+  String get adsPaymentSent => 'وصلنا — نفعّل باقتكِ فور مطابقة الدفعة';
+
+  @override
+  String get adsPaymentReviewTitle => 'قيد المراجعة';
+
+  @override
+  String adsPaymentReviewBody(String reference) {
+    return 'العملية $reference لدى فريق المالية. سيصلكِ إشعار فور تفعيل باقتكِ.';
+  }
+
+  @override
+  String get adsPaymentRejectedTitle => 'لم نتمكن من مطابقة هذه الدفعة';
+
+  @override
+  String get adsPaymentHowLong => 'تُطابَق الدفعات عادةً خلال ساعات عمل قليلة.';
+
+  @override
+  String get adsPaymentCancel => 'إلغاء هذه الدفعة';
+
+  @override
+  String get adsPaymentCopy => 'نسخ بيانات الدفع';
+
+  @override
+  String get adsPaymentCopied => 'تم النسخ';
+
+  @override
+  String get adsPaymentNothingOpen => 'لا دفعة معلّقة';
+
+  @override
+  String get adsErrorMethodUnavailable => 'طريقة الدفع هذه غير متاحة حالياً.';
+
+  @override
+  String get adsErrorPurchaseInProgress => 'لديكِ دفعة باقة قيد الإتمام.';
+
+  @override
+  String get adsErrorPurchaseClosed => 'تمّ البتّ في هذه الدفعة.';
+
+  @override
+  String get adsErrorReferenceRequired => 'أدخلي رقم العملية الذي وصلكِ.';
+
+  @override
+  String get adminAdsTitle => 'باقات الإعلان';
+
+  @override
+  String adminAdsSummary(int plans, String revenue) {
+    return '$plans باقة فعّالة · إيرادات الإعلانات هذا الشهر $revenue';
+  }
+
+  @override
+  String get adminAdsNoPending => 'لا دفعات باقات بانتظار المطابقة.';
+
+  @override
+  String adminAdsReference(String reference) {
+    return 'رقم العملية: $reference';
+  }
+
+  @override
+  String adminAdsConfirmBody(String amount, String seller, String tier) {
+    return 'تأكيد وصول $amount من $seller؟ تُفعَّل باقة $tier فوراً.';
+  }
+
+  @override
+  String get adminAdsConfirmed => 'فُعّلت الباقة وأُبلغ المتجر';
+
+  @override
+  String get adminAdsInstructionsTitle => 'أين تُرسل المتاجر دفعات الباقات';
+
+  @override
+  String get adminAdsInstructionsHint => 'الطريقة الفارغة لا تُعرض على المتاجر';
+
+  @override
+  String get adminAdsInstructionsSave => 'حفظ بيانات الدفع';
+
+  @override
+  String get adminAdsInstructionsSaved => 'تم الحفظ';
+
+  @override
+  String get adsNotVerifiedTitle => 'يحتاج متجركِ إلى الاعتماد ليعلن';
+
+  @override
+  String get adsNotVerifiedBody =>
+      'قبل اعتماد المتجر تكون صفحته مغلقة أمام الزبونات، فلن يصلهن الإعلان. أكملي التوثيق وتُفتح لكِ كل الباقات.';
+
+  @override
+  String get adsNotVerifiedAction => 'أكملي التوثيق';
+
+  @override
+  String get adsErrorNotVerified => 'يجب اعتماد متجركِ قبل أن يعلن.';
 }

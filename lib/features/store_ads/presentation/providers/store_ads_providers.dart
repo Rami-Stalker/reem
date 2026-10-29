@@ -43,6 +43,11 @@ final adSuggestionsProvider = FutureProvider.autoDispose<List<AdSuggestion>>(
       _unwrap(await ref.watch(storeAdsRepositoryProvider).suggestions()),
 );
 
+final adPaymentOptionsProvider = FutureProvider.autoDispose<AdPaymentOptions>(
+  (ref) async =>
+      _unwrap(await ref.watch(storeAdsRepositoryProvider).paymentOptions()),
+);
+
 final adGovernoratesProvider = FutureProvider.autoDispose<List<AdGovernorate>>(
   (ref) async =>
       _unwrap(await ref.watch(storeAdsRepositoryProvider).governorates()),
@@ -57,6 +62,11 @@ AdFailureKind adFailureKind(Failure failure) => switch (failure.code) {
   'PLACEMENT_LOCKED' ||
   'TARGETING_LOCKED' ||
   'INTEREST_TARGETING_LOCKED' => AdFailureKind.planLocked,
+  'STORE_NOT_VERIFIED' => AdFailureKind.storeNotVerified,
+  'PAYMENT_METHOD_UNAVAILABLE' => AdFailureKind.paymentMethodUnavailable,
+  'PURCHASE_IN_PROGRESS' => AdFailureKind.purchaseInProgress,
+  'PURCHASE_CLOSED' => AdFailureKind.purchaseClosed,
+  'REFERENCE_REQUIRED' => AdFailureKind.referenceRequired,
   _ => AdFailureKind.other,
 };
 
@@ -76,6 +86,7 @@ class StoreAdsActions {
 
   final Ref _ref;
   final Map<AdTier, String> _planKeys = {};
+  final Map<String, String> _purchaseKeys = {};
 
   StoreAdsRepository get _repo => _ref.read(storeAdsRepositoryProvider);
 
@@ -84,7 +95,8 @@ class StoreAdsActions {
       ..invalidate(adPlansProvider)
       ..invalidate(adsOverviewProvider)
       ..invalidate(adCampaignsProvider)
-      ..invalidate(adSuggestionsProvider);
+      ..invalidate(adSuggestionsProvider)
+      ..invalidate(adPaymentOptionsProvider);
   }
 
   /// Returns null on success, the failure otherwise.
@@ -93,6 +105,40 @@ class StoreAdsActions {
     final result = await _repo.subscribe(tier, idempotencyKey: key);
     if (result case Error(:final failure)) return failure;
     _planKeys.remove(tier);
+    _refreshAll();
+    return null;
+  }
+
+  /// Pays for [tier] by [method] — from earnings at once, or a transfer to
+  /// make. The key is kept per tier and method until it succeeds, so a retry
+  /// on a slow line is the same request.
+  Future<(Failure?, AdPurchaseResult?)> purchase(
+    AdTier tier,
+    String method,
+  ) async {
+    final intent = '${tier.wire}:$method';
+    final key = _purchaseKeys[intent] ??= _intentKey();
+    final result = await _repo.purchase(tier, method, idempotencyKey: key);
+    switch (result) {
+      case Error(:final failure):
+        return (failure, null);
+      case Success(:final data):
+        _purchaseKeys.remove(intent);
+        _refreshAll();
+        return (null, data);
+    }
+  }
+
+  Future<Failure?> submitReference(String purchaseId, String reference) async {
+    final result = await _repo.submitReference(purchaseId, reference);
+    if (result case Error(:final failure)) return failure;
+    _refreshAll();
+    return null;
+  }
+
+  Future<Failure?> cancelPurchase(String purchaseId) async {
+    final result = await _repo.cancelPurchase(purchaseId);
+    if (result case Error(:final failure)) return failure;
     _refreshAll();
     return null;
   }
@@ -264,4 +310,28 @@ final campaignComposerProvider =
         ref.watch(storeAdsRepositoryProvider),
         () => ref.read(storeAdsActionsProvider).refresh(),
       ),
+    );
+
+// ---------------------------------------------------------------------------
+// Finance
+// ---------------------------------------------------------------------------
+
+final adminAdsRepositoryProvider = Provider<AdminAdsRepository>(
+  (ref) => AdminAdsRepositoryImpl(ref.watch(storeAdsRemoteDataSourceProvider)),
+);
+
+final adminAdsSummaryProvider = FutureProvider.autoDispose<AdAdminSummary>(
+  (ref) async => _unwrap(await ref.watch(adminAdsRepositoryProvider).summary()),
+);
+
+final adminAdsPendingProvider =
+    FutureProvider.autoDispose<List<AdPendingPayment>>(
+      (ref) async =>
+          _unwrap(await ref.watch(adminAdsRepositoryProvider).pending()),
+    );
+
+final adminAdsInstructionsProvider =
+    FutureProvider.autoDispose<Map<String, String?>>(
+      (ref) async =>
+          _unwrap(await ref.watch(adminAdsRepositoryProvider).instructions()),
     );

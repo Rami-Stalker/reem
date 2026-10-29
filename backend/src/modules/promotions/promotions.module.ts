@@ -7,6 +7,9 @@ import { AdTiersService } from './ad-tiers.service';
 import { AdAudienceService } from './ad-audience.service';
 import { StoreAdsService } from './store-ads.service';
 import { StoreAdsController } from './store-ads.controller';
+import { AdPlanPaymentsService } from './ad-plan-payments.service';
+import { AdminAdsController } from './admin-ads.controller';
+import { StoreAdsScheduler } from './store-ads.scheduler';
 
 /**
  * Sponsored placements.
@@ -18,8 +21,20 @@ import { StoreAdsController } from './store-ads.controller';
  */
 @Module({
   imports: [LedgerModule],
-  controllers: [PromotionsController, SponsoredController, StoreAdsController],
-  providers: [PromotionsService, AdTiersService, AdAudienceService, StoreAdsService],
+  controllers: [
+    PromotionsController,
+    SponsoredController,
+    StoreAdsController,
+    AdminAdsController,
+  ],
+  providers: [
+    PromotionsService,
+    AdTiersService,
+    AdAudienceService,
+    StoreAdsService,
+    AdPlanPaymentsService,
+    StoreAdsScheduler,
+  ],
   exports: [PromotionsService, AdTiersService],
 })
 export class PromotionsModule {}

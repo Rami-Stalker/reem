@@ -144,7 +144,20 @@ class AdPlansView {
     this.queuedStartsAt,
     this.spendLast30Days = 0,
     this.recommendation,
+    this.earningsBalance = 0,
+    this.pendingPurchase,
+    this.storeVerified = true,
   });
+
+  /// Only an approved boutique may advertise: until then her storefront is
+  /// closed, and a plan would buy perks she cannot receive.
+  final bool storeVerified;
+
+  /// What the platform owes her — what a plan can be paid from instantly.
+  final int earningsBalance;
+
+  /// A plan paid by transfer that is still waiting on her or on finance.
+  final AdPlanPurchase? pendingPurchase;
 
   final AdCurrentPlan current;
   final List<AdPlan> plans;
@@ -504,5 +517,115 @@ enum AdFailureKind {
   campaignLimit,
   feedPostRequired,
   planLocked,
+  storeNotVerified,
+  paymentMethodUnavailable,
+  purchaseInProgress,
+  purchaseClosed,
+  referenceRequired,
   other,
+}
+
+/// Where a plan paid by transfer stands.
+enum AdPurchaseStatus {
+  awaitingPayment,
+  awaitingReview,
+  confirmed,
+  rejected,
+  cancelled;
+
+  static AdPurchaseStatus fromWire(String? value) => switch (value) {
+    'awaiting_review' => AdPurchaseStatus.awaitingReview,
+    'confirmed' => AdPurchaseStatus.confirmed,
+    'rejected' => AdPurchaseStatus.rejected,
+    'cancelled' => AdPurchaseStatus.cancelled,
+    _ => AdPurchaseStatus.awaitingPayment,
+  };
+
+  bool get isOpen =>
+      this == AdPurchaseStatus.awaitingPayment ||
+      this == AdPurchaseStatus.awaitingReview ||
+      this == AdPurchaseStatus.rejected;
+}
+
+/// A plan she is paying for by Sham Cash, Syriatel Cash, MTN Cash, a bank
+/// transfer or a hawala.
+class AdPlanPurchase {
+  const AdPlanPurchase({
+    required this.id,
+    required this.tier,
+    required this.method,
+    required this.amount,
+    required this.status,
+    this.instructions,
+    this.reference,
+    this.rejectionReason,
+  });
+
+  final String id;
+  final AdTier tier;
+
+  /// The wire name — `sham_cash`, `bank_transfer` …
+  final String method;
+  final int amount;
+  final AdPurchaseStatus status;
+
+  /// Where to send the money, as finance wrote it.
+  final String? instructions;
+  final String? reference;
+  final String? rejectionReason;
+}
+
+/// One way to pay by transfer, and where the money goes.
+class AdTransferMethod {
+  const AdTransferMethod({required this.method, required this.instructions});
+
+  final String method;
+  final String instructions;
+}
+
+class AdPaymentOptions {
+  const AdPaymentOptions({
+    this.earningsBalance = 0,
+    this.transferMethods = const [],
+  });
+
+  final int earningsBalance;
+  final List<AdTransferMethod> transferMethods;
+}
+
+/// `earnings`, or a transfer method's wire name.
+const adPayFromEarnings = 'earnings';
+
+/// The outcome of choosing to pay: a plan bought outright, or a transfer to
+/// make.
+class AdPurchaseResult {
+  const AdPurchaseResult({this.plans, this.purchase});
+
+  final AdPlansView? plans;
+  final AdPlanPurchase? purchase;
+}
+
+/// Finance's view of one transfer to match.
+class AdPendingPayment {
+  const AdPendingPayment({
+    required this.purchase,
+    required this.sellerName,
+    this.sellerPhone,
+  });
+
+  final AdPlanPurchase purchase;
+  final String sellerName;
+  final String? sellerPhone;
+}
+
+class AdAdminSummary {
+  const AdAdminSummary({
+    this.activePlans = const {},
+    this.awaitingReview = 0,
+    this.revenueThisMonth = 0,
+  });
+
+  final Map<AdTier, int> activePlans;
+  final int awaitingReview;
+  final int revenueThisMonth;
 }

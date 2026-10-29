@@ -7,6 +7,7 @@ import {
   PrismaClient,
   ProductStatus,
   PromotionPlacement,
+  PaymentMethodType,
   PromotionStatus,
   StoreAdTier,
   UserRole,
@@ -19,6 +20,8 @@ import { PromotionsService, MAX_SLOTS } from './promotions.service';
 import { AdTiersService } from './ad-tiers.service';
 import { AdAudienceService } from './ad-audience.service';
 import { StoreAdsService } from './store-ads.service';
+import { AdPlanPaymentsService } from './ad-plan-payments.service';
+import { StoreAdsScheduler } from './store-ads.scheduler';
 
 /**
  * Sponsored placements, and the money behind them.
@@ -91,6 +94,9 @@ interface World {
   promotions: PromotionsService;
   tiers: AdTiersService;
   ads: StoreAdsService;
+  payments: AdPlanPaymentsService;
+  scheduler: StoreAdsScheduler;
+  emitted: { event: string; payload: unknown }[];
 }
 
 function build(tx: Tx): World {
@@ -99,12 +105,23 @@ function build(tx: Tx): World {
   const tiers = new AdTiersService(db, ledger);
   const audiences = new AdAudienceService(db);
   const promotions = new PromotionsService(db, ledger, tiers, audiences);
+  const emitted: { event: string; payload: unknown }[] = [];
+  const events = {
+    emit: (event: string, payload: unknown) => {
+      emitted.push({ event, payload });
+      return true;
+    },
+  } as never;
+  const payments = new AdPlanPaymentsService(db, tiers, undefined, events);
   return {
     tx,
     ledger,
     promotions,
     tiers,
-    ads: new StoreAdsService(db, promotions, tiers, audiences),
+    payments,
+    ads: new StoreAdsService(db, promotions, tiers, audiences, payments),
+    scheduler: new StoreAdsScheduler(db, promotions, events),
+    emitted,
   };
 }
 
@@ -122,6 +139,8 @@ async function makeSeller(tx: Tx) {
       phone: `+96392${Math.floor(1000000 + Math.random() * 8999999)}`,
       passwordHash: 'x',
       role: UserRole.SELLER,
+      // An approved boutique: only an approved one may advertise.
+      sellerVerifiedAt: new Date(),
     },
   });
 }
@@ -817,7 +836,8 @@ dbTest('a feed placement needs a post of hers that shows the product', async (wo
   assert.equal(created.content_id, post.id, 'her latest post of the piece is pinned');
   await world.promotions.activate(created.id, seller.id, UserRole.SELLER);
 
-  const [slot] = await world.promotions.serve(PromotionPlacement.FEED_TOP);
+  const slots = await world.promotions.serve(PromotionPlacement.FEED_TOP, { limit: 50 });
+  const slot = slots.find((s) => s.offerId === offer.id);
   assert.equal(slot?.contentId, post.id);
 });
 
@@ -922,4 +942,189 @@ dbTest('an order from a woman who tapped the advert is credited to it', async (w
   const overview = await world.ads.overview(seller.id);
   assert.equal(overview.attributed_orders, 1);
   assert.ok(overview.return_on_ad_spend !== null && overview.return_on_ad_spend > 0);
+});
+
+// ── Paying for a plan by transfer ────────────────────────────────────────────
+
+async function acceptShamCash(world: World) {
+  await world.tx.systemSetting.upsert({
+    where: { key: 'promotions.payment_instructions' },
+    create: {
+      key: 'promotions.payment_instructions',
+      value: { SHAM_CASH: 'حوّلي إلى الرقم 0999 000 000' },
+    },
+    update: { value: { SHAM_CASH: 'حوّلي إلى الرقم 0999 000 000' } },
+  });
+}
+
+const platformCash = (world: World) =>
+  world.ledger.balanceOf(
+    { code: LedgerAccountCode.PLATFORM_CASH },
+    Currency.SYP,
+    world.tx,
+  );
+
+dbTest('a boutique with no earnings pays a plan by Sham Cash, and finance turns it on', async (world) => {
+  const seller = await makeSeller(world.tx);
+  const finance = await makeSeller(world.tx);
+  await acceptShamCash(world);
+
+  const options = await world.payments.options(seller.id);
+  assert.equal(options.earnings_balance, 0);
+  assert.deepEqual(
+    options.transfer_methods.map((m) => m.method),
+    ['sham_cash'],
+    'only the methods finance said where to send',
+  );
+
+  const purchase = await world.payments.request(
+    seller.id,
+    StoreAdTier.GOLD,
+    PaymentMethodType.SHAM_CASH,
+  );
+  assert.equal(purchase.status, 'awaiting_payment');
+  assert.equal(purchase.amount, 60_000);
+  assert.match(purchase.instructions ?? '', /0999/);
+  assert.equal((await world.tiers.current(seller.id)).tier, StoreAdTier.FREE, 'nothing until paid');
+
+  const again = await world.payments.request(seller.id, StoreAdTier.GOLD, PaymentMethodType.SHAM_CASH);
+  assert.equal(again.id, purchase.id, 'asking twice is the same request');
+
+  const sent = await world.payments.submitReference(seller.id, purchase.id, 'TX-778812');
+  assert.equal(sent.status, 'awaiting_review');
+  assert.ok(world.emitted.some((e) => e.event === 'ad_plan_purchase.submitted'));
+
+  const cashBefore = Number((await platformCash(world)).toJSON().amount);
+  const revenueBefore = Number((await promotionRevenue(world)).toJSON().amount);
+  const confirmed = await world.payments.confirm(finance.id, purchase.id);
+  assert.equal(confirmed.status, 'confirmed');
+
+  const plan = await world.tiers.current(seller.id);
+  assert.equal(plan.tier, StoreAdTier.GOLD);
+  assert.equal(plan.creditRemaining, 80_000);
+  assert.equal(Number((await platformCash(world)).toJSON().amount), cashBefore + 60_000);
+  assert.equal(Number((await promotionRevenue(world)).toJSON().amount), revenueBefore + 60_000);
+  assert.equal(
+    Number((await payable(world, seller.id)).toJSON().amount),
+    0,
+    'her earnings were never touched',
+  );
+
+  const twice = await world.payments.confirm(finance.id, purchase.id);
+  assert.equal(twice.status, 'confirmed', 'a double tap in the console is harmless');
+  const plans = await world.tx.storeAdSubscription.count({ where: { sellerId: seller.id } });
+  assert.equal(plans, 1, 'a second confirm grants nothing');
+});
+
+dbTest('a transfer finance cannot match is sent back with the reason, and can be retried', async (world) => {
+  const seller = await makeSeller(world.tx);
+  const finance = await makeSeller(world.tx);
+  await acceptShamCash(world);
+
+  const purchase = await world.payments.request(seller.id, StoreAdTier.SILVER, PaymentMethodType.SHAM_CASH);
+  await world.payments.submitReference(seller.id, purchase.id, 'WRONG-1');
+  const rejected = await world.payments.reject(finance.id, purchase.id, 'رقم العملية غير موجود');
+  assert.equal(rejected.status, 'rejected');
+  assert.equal(rejected.rejection_reason, 'رقم العملية غير موجود');
+  const notice = world.emitted.find((e) => e.event === 'ad_plan_purchase.decided');
+  assert.equal((notice?.payload as { confirmed: boolean }).confirmed, false);
+
+  const open = await world.ads.plans(seller.id);
+  assert.equal(open.pending_purchase?.status, 'rejected', 'the reason stays in front of her');
+
+  const retried = await world.payments.submitReference(seller.id, purchase.id, 'TX-RIGHT');
+  assert.equal(retried.status, 'awaiting_review');
+  assert.equal(retried.rejection_reason, null);
+});
+
+dbTest('a method finance has not set up cannot be chosen', async (world) => {
+  const seller = await makeSeller(world.tx);
+  await world.tx.systemSetting.deleteMany({ where: { key: 'promotions.payment_instructions' } });
+  await assert.rejects(
+    world.payments.request(seller.id, StoreAdTier.GOLD, PaymentMethodType.MTN_CASH),
+    /not available/,
+  );
+});
+
+// ── Reminders and results ────────────────────────────────────────────────────
+
+dbTest('she is told once, three days before her plan ends — unless she renewed', async (world) => {
+  const seller = await makeSeller(world.tx);
+  const renewed = await makeSeller(world.tx);
+  for (const id of [seller.id, renewed.id]) {
+    await world.tx.storeAdSubscription.create({
+      data: {
+        sellerId: id,
+        tier: StoreAdTier.GOLD,
+        priceAmount: '60000',
+        startsAt: days(-28),
+        endsAt: days(2),
+        creditGranted: '80000',
+      },
+    });
+  }
+  await world.tx.storeAdSubscription.create({
+    data: {
+      sellerId: renewed.id,
+      tier: StoreAdTier.GOLD,
+      priceAmount: '60000',
+      startsAt: days(2),
+      endsAt: days(32),
+      creditGranted: '80000',
+    },
+  });
+
+  await world.scheduler.remindEndingPlans();
+  await world.scheduler.remindEndingPlans();
+  const notices = world.emitted.filter((e) => e.event === 'ad_plan.ending');
+  assert.equal(notices.length, 1, 'once, and not to the one who renewed');
+  assert.equal((notices[0].payload as { sellerId: string }).sellerId, seller.id);
+});
+
+dbTest('a finished campaign is closed and she is sent what it did', async (world) => {
+  const seller = await makeSeller(world.tx);
+  const { offer } = await makeOffer(world.tx, seller.id);
+  await fundPayable(world, seller.id, '100000');
+  const p = await world.promotions.create({
+    offerId: offer.id,
+    placement: PromotionPlacement.SEARCH,
+    startsAt: minutes(-120),
+    endsAt: minutes(60),
+    actorId: seller.id,
+    actorRole: UserRole.SELLER,
+  });
+  await world.promotions.activate(p.id, seller.id, UserRole.SELLER);
+  await world.tx.productPromotion.update({ where: { id: p.id }, data: { endsAt: minutes(-1) } });
+
+  await world.scheduler.closeEndedCampaigns();
+  await world.scheduler.closeEndedCampaigns();
+  const row = await world.tx.productPromotion.findUniqueOrThrow({ where: { id: p.id } });
+  assert.equal(row.status, PromotionStatus.ENDED);
+  assert.equal(world.emitted.filter((e) => e.event === 'ad_campaign.ended').length, 1);
+});
+
+dbTest('a boutique still awaiting approval cannot advertise', async (world) => {
+  const seller = await makeSeller(world.tx);
+  const { offer } = await makeOffer(world.tx, seller.id);
+  await world.tx.user.update({ where: { id: seller.id }, data: { sellerVerifiedAt: null } });
+  await fundPayable(world, seller.id, '200000');
+  await acceptShamCash(world);
+
+  await assert.rejects(world.tiers.subscribe(seller.id, StoreAdTier.GOLD), /approved/);
+  await assert.rejects(
+    world.payments.request(seller.id, StoreAdTier.GOLD, PaymentMethodType.SHAM_CASH),
+    /approved/,
+  );
+  await assert.rejects(
+    world.promotions.create({
+      offerId: offer.id,
+      placement: PromotionPlacement.SEARCH,
+      startsAt: minutes(-1),
+      endsAt: days(1),
+      actorId: seller.id,
+      actorRole: UserRole.SELLER,
+    }),
+    /approved/,
+  );
+  assert.equal((await world.ads.plans(seller.id)).store_verified, false);
 });

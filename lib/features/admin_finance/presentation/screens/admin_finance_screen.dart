@@ -11,6 +11,7 @@ import 'package:ohara/features/admin_finance/presentation/providers/admin_financ
 import 'package:ohara/features/admin_finance/presentation/widgets/finance_position_grid.dart';
 import 'package:ohara/features/admin_finance/presentation/widgets/ledger_health_banner.dart';
 import 'package:ohara/features/admin_finance/presentation/widgets/pending_transfers_section.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/admin_ad_payments_section.dart';
 
 /// The finance console.
 ///
@@ -101,6 +102,11 @@ class _AdminFinanceScreenState extends ConsumerState<AdminFinanceScreen> {
                   // matched yet — first, because each one is an order whose
                   // stock lapses on a clock.
                   const PendingTransfersSection(),
+                  const SizedBox(height: DsSpacing.xl),
+
+                  // Boutiques that paid for an advertising plan by transfer
+                  // and are still on the free plan until somebody matches it.
+                  const AdminAdPaymentsSection(),
                   const SizedBox(height: DsSpacing.xl),
 
                   _CourierCashSection(overview: overview),

@@ -51,6 +51,7 @@ abstract final class RouteNames {
   static const sellerAds = 'seller-ads';
   static const sellerAdsPlans = 'seller-ads-plans';
   static const sellerAdsNew = 'seller-ads-new';
+  static const sellerAdsPayment = 'seller-ads-payment';
   static const sellerReturns = 'seller-returns';
   static const sellerReturnDetail = 'seller-return-detail';
   static const sellerStore = 'seller-store';

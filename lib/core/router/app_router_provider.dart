@@ -139,6 +139,7 @@ import 'package:ohara/features/social/presentation/screens/reels_screen.dart';
 import 'package:ohara/features/social/presentation/screens/social_feed_screen.dart';
 import 'package:ohara/features/splash/presentation/screens/splash_screen.dart';
 import 'package:ohara/features/store_ads/domain/entities/store_ads.dart';
+import 'package:ohara/features/store_ads/presentation/screens/ad_plan_payment_screen.dart';
 import 'package:ohara/features/store_ads/presentation/screens/ad_plans_screen.dart';
 import 'package:ohara/features/store_ads/presentation/screens/ads_center_screen.dart';
 import 'package:ohara/features/store_ads/presentation/screens/new_campaign_screen.dart';
@@ -857,6 +858,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: RoutePaths.sellerAdsPlans,
         name: RouteNames.sellerAdsPlans,
         builder: (context, state) => const AdPlansScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerAdsPayment,
+        name: RouteNames.sellerAdsPayment,
+        builder: (context, state) => const AdPlanPaymentScreen(),
       ),
       GoRoute(
         // A smart pick she tapped rides along as `extra` to pre-fill it.

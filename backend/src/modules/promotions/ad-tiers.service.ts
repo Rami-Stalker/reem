@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import {
   Currency,
   JournalEntryType,
@@ -114,91 +114,167 @@ export class AdTiersService {
   }
 
   /**
-   * Buys a plan: charges it from her earnings and grants its credit.
+   * Buys a plan from her earnings: charges it and grants its credit.
    *
    * - No plan, or an upgrade: starts now. An upgrade ends the old plan now
    *   and carries its unused credit over.
-   * - The same plan or a lower one: queued to start when the current ends.
+   * - The same plan or a lower one: queued to start when the last one ends.
    */
   async subscribe(sellerId: string, tier: StoreAdTier) {
+    this.assertBuyable(tier);
+    await this.assertCanAdvertise(sellerId);
+    const price = await this.priceOf(tier);
+    return this.prisma.$transaction((tx) =>
+      this.grant(tx, sellerId, tier, price, { kind: 'earnings' }),
+    );
+  }
+
+  /**
+   * Only an approved boutique may advertise.
+   *
+   * Until she is approved her storefront is closed: her posts are hidden from
+   * every feed and she cannot be featured. Selling her a plan then would be
+   * selling perks she cannot receive — so the answer is no, and why.
+   */
+  async assertCanAdvertise(sellerId: string, db: Tx | PrismaService = this.prisma) {
+    const seller = await db.user.findUnique({
+      where: { id: sellerId },
+      select: { sellerVerifiedAt: true },
+    });
+    if (!seller?.sellerVerifiedAt) {
+      throw new ForbiddenException({
+        message: 'Your store must be approved before it can advertise',
+        code: 'store_not_verified',
+      });
+    }
+  }
+
+  async isVerified(sellerId: string): Promise<boolean> {
+    const seller = await this.prisma.user.findUnique({
+      where: { id: sellerId },
+      select: { sellerVerifiedAt: true },
+    });
+    return Boolean(seller?.sellerVerifiedAt);
+  }
+
+  /** Free is where a plan returns to, never something bought. */
+  assertBuyable(tier: StoreAdTier): void {
     if (tier === StoreAdTier.FREE) {
       throw new BadRequestException(
         'The free plan needs no purchase — a plan simply returns to free when it ends',
       );
     }
-    const price = await this.priceOf(tier);
+  }
+
+  /**
+   * Places a paid plan on her calendar and books the money, inside `tx`.
+   *
+   * `payer` says where the money came from: her earnings (checked first, then
+   * debited from what the platform owes her), or a transfer finance has
+   * already matched (the platform's cash received it). Either way the price
+   * is promotion revenue, under a reference that cannot be booked twice.
+   */
+  async grant(
+    tx: Tx,
+    sellerId: string,
+    tier: StoreAdTier,
+    price: number,
+    payer: { kind: 'earnings' } | { kind: 'transfer'; reference: string },
+  ) {
     const plan = AD_PLANS[tier];
-
     const fee = Money.of(String(price), Currency.SYP);
+    // Before anything is written: a refusal leaves no half-bought plan.
+    if (payer.kind === 'earnings' && price > 0) {
+      await this.assertCanPay(sellerId, fee, tx);
+    }
 
-    return this.prisma.$transaction(async (tx) => {
-      // Before anything is written: a refusal leaves no half-bought plan.
-      if (price > 0) await this.assertCanPay(sellerId, fee, tx);
-      const now = new Date();
-      const queued = await tx.storeAdSubscription.findFirst({
-        where: { sellerId, startsAt: { gt: now } },
-        select: { id: true },
+    const now = new Date();
+    const current = await this.current(sellerId, tx);
+    const queued = await tx.storeAdSubscription.findMany({
+      where: { sellerId, startsAt: { gt: now } },
+      orderBy: { endsAt: 'desc' },
+      select: { endsAt: true },
+    });
+    const isUpgrade =
+      current.subscriptionId !== null && tierRank(tier) > tierRank(current.tier);
+
+    let startsAt = now;
+    let carried = 0;
+    if (isUpgrade && queued.length === 0) {
+      carried = current.creditRemaining;
+      await tx.storeAdSubscription.update({
+        where: { id: current.subscriptionId! },
+        data: { endsAt: now },
       });
-      if (queued) {
-        throw new BadRequestException('A plan is already queued to start after this one');
-      }
+    } else if (isUpgrade && payer.kind === 'earnings') {
+      // An upgrade on top of a renewal already queued would overlap it.
+      throw new BadRequestException(
+        'A plan is already queued to start after this one',
+      );
+    } else {
+      // A renewal, a lower plan, or a matched transfer that cannot upgrade
+      // over a queued plan: it starts when the last plan on her calendar ends.
+      const last = queued[0]?.endsAt ?? current.endsAt;
+      if (last && last > now) startsAt = last;
+    }
 
-      const current = await this.current(sellerId, tx);
-      let startsAt = now;
-      let carried = 0;
+    const endsAt = new Date(startsAt.getTime() + PLAN_PERIOD_DAYS * 86_400_000);
+    const created = await tx.storeAdSubscription.create({
+      data: {
+        sellerId,
+        tier,
+        priceAmount: String(price),
+        priceCurrency: Currency.SYP,
+        startsAt,
+        endsAt,
+        creditGranted: String(plan.creditSyp + carried),
+      },
+    });
 
-      if (current.subscriptionId && tierRank(tier) > tierRank(current.tier)) {
-        carried = current.creditRemaining;
-        await tx.storeAdSubscription.update({
-          where: { id: current.subscriptionId },
-          data: { endsAt: now },
-        });
-      } else if (current.subscriptionId && current.endsAt) {
-        startsAt = current.endsAt;
-      }
-
-      const endsAt = new Date(startsAt.getTime() + PLAN_PERIOD_DAYS * 86_400_000);
-      const created = await tx.storeAdSubscription.create({
-        data: {
-          sellerId,
-          tier,
-          priceAmount: String(price),
-          priceCurrency: Currency.SYP,
-          startsAt,
-          endsAt,
-          creditGranted: String(plan.creditSyp + carried),
-        },
-      });
-
-      if (price > 0) {
-        const reference = `ad-plan:${created.id}`;
-        await this.ledger.post(
-          {
-            type: JournalEntryType.MANUAL_ADJUSTMENT,
-            reference,
-            description: `باقة إعلان — ${tier}`,
-            lines: [
-              {
+    if (price <= 0) return created;
+    const reference = `ad-plan:${created.id}`;
+    await this.ledger.post(
+      {
+        type: JournalEntryType.MANUAL_ADJUSTMENT,
+        reference,
+        description:
+          payer.kind === 'earnings'
+            ? `باقة إعلان — ${tier}`
+            : `باقة إعلان — ${tier} — ${payer.reference}`,
+        lines: [
+          payer.kind === 'earnings'
+            ? {
                 account: { code: LedgerAccountCode.SELLER_PAYABLE, ownerId: sellerId },
                 direction: LedgerDirection.DEBIT,
                 amount: fee,
-              },
-              {
-                account: { code: LedgerAccountCode.PROMOTION_REVENUE },
-                direction: LedgerDirection.CREDIT,
+              }
+            : {
+                account: { code: LedgerAccountCode.PLATFORM_CASH },
+                direction: LedgerDirection.DEBIT,
                 amount: fee,
               },
-            ],
+          {
+            account: { code: LedgerAccountCode.PROMOTION_REVENUE },
+            direction: LedgerDirection.CREDIT,
+            amount: fee,
           },
-          tx,
-        );
-        return tx.storeAdSubscription.update({
-          where: { id: created.id },
-          data: { chargeReference: reference },
-        });
-      }
-      return created;
+        ],
+      },
+      tx,
+    );
+    return tx.storeAdSubscription.update({
+      where: { id: created.id },
+      data: { chargeReference: reference },
     });
+  }
+
+  /** What the platform owes her right now — what a plan can be paid from. */
+  async earningsBalance(sellerId: string): Promise<number> {
+    const balance = await this.ledger.balanceOf(
+      { code: LedgerAccountCode.SELLER_PAYABLE, ownerId: sellerId },
+      Currency.SYP,
+    );
+    return Math.max(0, Math.floor(balance.toUnsafeNumber()));
   }
 
   /**

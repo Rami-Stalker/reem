@@ -17,6 +17,7 @@ import 'package:ohara/core/sync/outbox_providers.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
+import 'package:ohara/features/discovery/presentation/providers/sponsored_providers.dart';
 import 'package:ohara/features/home/presentation/providers/home_provider.dart';
 import 'package:ohara/features/home/presentation/widgets/post_closet_strip.dart';
 import 'package:ohara/features/profile/presentation/widgets/save_to_collection_sheet.dart';
@@ -26,6 +27,7 @@ import 'package:ohara/features/social_posts/data/outbox_handlers.dart';
 import 'package:ohara/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:ohara/features/social_posts/presentation/providers/social_posts_providers.dart';
 import 'package:ohara/features/social_posts/presentation/widgets/comment_sheet.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 
 /// A boutique's post on the home feed.
 ///
@@ -313,7 +315,17 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
   void _openProduct() {
     final product = post.product;
     if (product == null) return;
+    _creditAdvert();
     context.push(RoutePaths.productDetailsOf(product.id));
+  }
+
+  /// A tap on a paid post is credited to the offer that paid for it.
+  void _creditAdvert() {
+    final offerId = post.sponsoredOfferId;
+    if (offerId == null) return;
+    ref
+        .read(discoverySignalsProvider)
+        .sponsoredTapped(offerId: offerId, placement: 'feed_top');
   }
 
   void _openAuthor() => context.push(RoutePaths.userProfileOf(post.author.id));
@@ -337,6 +349,7 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
 
     setState(() => _addingToBag = true);
     AppHaptics.confirm();
+    _creditAdvert();
     final added = await ref
         .read(cartNotifierProvider.notifier)
         .add(offerId: offerId);
@@ -378,6 +391,21 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
       subtitle: _subtitle(context),
       onAuthor: _openAuthor,
       onMore: _openMenu,
+      badges: [
+        // A paid post says so, plainly, before anything else about it.
+        if (post.isSponsored) ...[
+          DsBadge(
+            label: context.l10n.searchSponsored,
+            tone: DsBadgeTone.neutral,
+            icon: Icons.campaign_outlined,
+          ),
+          if (storeTierJewel(post.sponsoredStoreTier) case final jewel?)
+            DsTierBadge(
+              tier: jewel,
+              label: storeTierLabel(context.l10n, post.sponsoredStoreTier),
+            ),
+        ],
+      ],
       media: media,
       product: post.product,
       onOpenProduct: post.product == null ? null : _openProduct,
@@ -398,7 +426,9 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
       onSave: _toggleSave,
       onPick: isMine ? null : _toggleReshare,
       footer: switch (post.product) {
-        final product? when me != null => PostClosetStrip(productId: product.id),
+        final product? when me != null => PostClosetStrip(
+          productId: product.id,
+        ),
         _ => null,
       },
     );

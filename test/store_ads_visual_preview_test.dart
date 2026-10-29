@@ -18,6 +18,7 @@ import 'package:ohara/core/result/result.dart';
 import 'package:ohara/features/store_ads/domain/entities/store_ads.dart';
 import 'package:ohara/features/store_ads/domain/repositories/store_ads_repository.dart';
 import 'package:ohara/features/store_ads/presentation/providers/store_ads_providers.dart';
+import 'package:ohara/features/store_ads/presentation/screens/ad_plan_payment_screen.dart';
 import 'package:ohara/features/store_ads/presentation/screens/ad_plans_screen.dart';
 import 'package:ohara/features/store_ads/presentation/screens/ads_center_screen.dart';
 import 'package:ohara/features/store_ads/presentation/screens/new_campaign_screen.dart';
@@ -78,6 +79,7 @@ void main() {
     'center': '/seller/ads',
     'plans': '/seller/ads/plans',
     'composer': '/seller/ads/new',
+    'payment': '/seller/ads/payment',
   };
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
@@ -124,6 +126,10 @@ class _Preview extends StatelessWidget {
       GoRoute(
         path: '/seller/ads/plans',
         builder: (_, _) => const AdPlansScreen(),
+      ),
+      GoRoute(
+        path: '/seller/ads/payment',
+        builder: (_, _) => const AdPlanPaymentScreen(),
       ),
       GoRoute(
         path: '/seller/ads/new',
@@ -241,6 +247,15 @@ final class _FakeAdsRepository implements StoreAdsRepository {
     ),
     plans: _plans,
     spendLast30Days: 160000,
+    earningsBalance: 18000,
+    pendingPurchase: const AdPlanPurchase(
+      id: 'pp1',
+      tier: AdTier.diamond,
+      method: 'sham_cash',
+      amount: 120000,
+      status: AdPurchaseStatus.awaitingPayment,
+      instructions: 'حوّلي إلى حساب شام كاش رقم 0999 123 456 باسم «أوهارا»',
+    ),
     recommendation: const AdPlanRecommendation(
       tier: AdTier.diamond,
       saving: 12000,
@@ -371,6 +386,34 @@ final class _FakeAdsRepository implements StoreAdsRepository {
       insight: AdInsight.aboveAverage,
     ),
   );
+
+  @override
+  Future<Result<AdPaymentOptions>> paymentOptions() async => const Success(
+    AdPaymentOptions(
+      earningsBalance: 18000,
+      transferMethods: [
+        AdTransferMethod(method: 'sham_cash', instructions: '0999 123 456'),
+        AdTransferMethod(method: 'syriatel_cash', instructions: '0933 000 111'),
+      ],
+    ),
+  );
+
+  @override
+  Future<Result<AdPurchaseResult>> purchase(
+    AdTier tier,
+    String method, {
+    required String idempotencyKey,
+  }) async => Success(AdPurchaseResult(plans: _view));
+
+  @override
+  Future<Result<AdPlanPurchase>> submitReference(
+    String id,
+    String reference,
+  ) async => Success(_view.pendingPurchase!);
+
+  @override
+  Future<Result<AdPlanPurchase>> cancelPurchase(String id) async =>
+      Success(_view.pendingPurchase!);
 
   @override
   Future<Result<List<AdGovernorate>>> governorates() async => const Success([

@@ -24,6 +24,14 @@ export const AppEvent = {
   CouponIssued: 'coupon.issued',
   /** A Gold or Diamond boutique started a campaign; her followers hear of it. */
   PromotionLaunched: 'promotion.launched',
+  /** A boutique sent the reference for a plan paid by transfer. */
+  AdPlanPurchaseSubmitted: 'ad_plan_purchase.submitted',
+  /** Finance confirmed or rejected that transfer. */
+  AdPlanPurchaseDecided: 'ad_plan_purchase.decided',
+  /** Her plan ends soon, or has ended — plans never renew by themselves. */
+  AdPlanEnding: 'ad_plan.ending',
+  /** A campaign's window closed; she is told what it did. */
+  AdCampaignEnded: 'ad_campaign.ended',
 } as const;
 
 export interface OrderStatusChangedPayload {
@@ -107,4 +115,39 @@ export interface PromotionLaunchedPayload {
   promotionId: string;
   productId: string;
   productTitle: string;
+}
+
+export interface AdPlanPurchaseSubmittedPayload {
+  purchaseId: string;
+  sellerId: string;
+  tier: string;
+  /** Formatted, for the notice. */
+  amount: string;
+}
+
+export interface AdPlanPurchaseDecidedPayload {
+  purchaseId: string;
+  sellerId: string;
+  tier: string;
+  confirmed: boolean;
+  /** When the plan starts — now, or after the one she already has. */
+  startsAt?: string;
+  reason?: string;
+}
+
+export interface AdPlanEndingPayload {
+  sellerId: string;
+  subscriptionId: string;
+  tier: string;
+  /** Whole days left; 0 means it has ended. */
+  daysLeft: number;
+}
+
+export interface AdCampaignEndedPayload {
+  sellerId: string;
+  promotionId: string;
+  productTitle: string;
+  reach: number;
+  clicks: number;
+  orders: number;
 }

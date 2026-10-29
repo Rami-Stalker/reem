@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/errors/failure.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/store_ads/domain/entities/store_ads.dart';
 import 'package:ohara/features/store_ads/presentation/providers/store_ads_providers.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/ad_payment_widgets.dart';
 import 'package:ohara/features/store_ads/presentation/widgets/store_ads_labels.dart';
 import 'package:ohara/l10n/app_localizations.dart';
 
@@ -55,6 +57,12 @@ class AdPlansScreen extends ConsumerWidget {
             ),
           ],
           data: (view) => [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: gutter),
+                child: const _Banners(),
+              ),
+            ),
             if (view.queuedTier != null && view.queuedStartsAt != null)
               SliverToBoxAdapter(
                 child: Padding(
@@ -114,50 +122,39 @@ class _PlanCardState extends ConsumerState<_PlanCard> {
 
   Future<void> _buy() async {
     final l10n = context.l10n;
-    final confirmed = await DsBottomSheet.show<bool>(
+    final method = await DsBottomSheet.show<String>(
       context,
-      builder: (sheetContext) => DsSheetScaffold(
-        title: l10n.adsPlanConfirmTitle(plan.tier.label(l10n)),
-        subtitle: l10n.adsPlanConfirmBody(formatSyp(plan.price)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (current.tier.isPaid && plan.tier > current.tier) ...[
-              Text(
-                l10n.adsPlanConfirmUpgradeNote,
-                style: context.dsText.bodySmall.tint(context.atelier.muted),
-              ),
-              DsGaps.vMd,
-            ],
-            DsButton(
-              label: l10n.adsConfirm,
-              icon: Icons.check_rounded,
-              onPressed: () => Navigator.of(sheetContext).pop(true),
-            ),
-            DsGaps.vSm,
-            DsButton(
-              label: l10n.cancel,
-              variant: DsButtonVariant.ghost,
-              onPressed: () => Navigator.of(sheetContext).pop(false),
-            ),
-          ],
-        ),
+      builder: (_) => AdPaymentMethodSheet(
+        plan: plan,
+        isUpgrade: current.tier.isPaid && plan.tier > current.tier,
       ),
     );
-    if (confirmed != true || !mounted) return;
+    if (method == null || !mounted) return;
 
     setState(() => _busy = true);
-    final failure = await ref
+    final (failure, result) = await ref
         .read(storeAdsActionsProvider)
-        .subscribe(plan.tier);
+        .purchase(plan.tier, method);
     if (!mounted) return;
     setState(() => _busy = false);
+
+    if (failure != null) {
+      DsSnackbar.show(
+        context,
+        message: adFailureMessage(l10n, failure),
+        type: DsSnackbarType.error,
+      );
+      return;
+    }
+    // A transfer: show her where to send it and where to type the number.
+    if (result?.purchase != null) {
+      await context.push(RoutePaths.sellerAdsPayment);
+      return;
+    }
     DsSnackbar.show(
       context,
-      message: failure == null
-          ? l10n.adsPlanSubscribed(plan.tier.label(l10n))
-          : adFailureMessage(l10n, failure),
-      type: failure == null ? DsSnackbarType.success : DsSnackbarType.error,
+      message: l10n.adsPlanSubscribed(plan.tier.label(l10n)),
+      type: DsSnackbarType.success,
     );
   }
 
@@ -253,7 +250,9 @@ class _PlanCardState extends ConsumerState<_PlanCard> {
                         ? DsButtonVariant.primary
                         : DsButtonVariant.secondary,
                     isLoading: _busy,
-                    onPressed: _busy ? null : _buy,
+                    onPressed: _busy || !widget.view.storeVerified
+                        ? null
+                        : _buy,
                   ),
                 ],
               ],
@@ -372,4 +371,14 @@ class _Perk extends StatelessWidget {
       ],
     );
   }
+}
+
+/// What stands between her and buying: approval, or a payment in progress.
+class _Banners extends StatelessWidget {
+  const _Banners();
+
+  @override
+  Widget build(BuildContext context) => const Column(
+    children: [AdStoreNotVerifiedCard(), AdPendingPaymentBanner()],
+  );
 }

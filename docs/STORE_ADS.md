@@ -31,6 +31,38 @@ The numbers live in `backend/src/modules/promotions/ad-plans.ts`. Prices can
 be overridden from the console with the `promotions.plan_prices_syp` system
 setting (`{"SILVER": 25000, ...}`).
 
+### Paying for a plan
+
+Two ways, chosen on the plans screen:
+
+- **From her earnings** — instant. Offered only when her earnings balance
+  covers the price (checked before anything is written).
+- **By transfer** — Sham Cash, Syriatel Cash, MTN Cash, bank transfer or
+  hawala. She is shown exactly where to send how much, sends it, and types
+  the transaction number. Finance sees it on the **finance desk** of the
+  admin console («باقات الإعلان»), confirms or rejects with a reason, and she
+  is notified either way. Confirming grants the plan and books the money
+  (`PLATFORM_CASH` → `PROMOTION_REVENUE`) in one transaction; a double confirm
+  grants once. This is the path for a boutique that has not sold anything
+  yet — which is exactly the boutique most likely to want a plan.
+
+**Before launch, finance must fill in where the money goes**: admin console →
+Finance → «باقات الإعلان» → «أين تُرسل المتاجر دفعات الباقات». A method left
+empty is not offered. (Stored in the `promotions.payment_instructions` system
+setting; bank transfer and hawala fall back to `PAYMENT_BANK_TRANSFER_INSTRUCTIONS`
+/ `PAYMENT_HAWALA_INSTRUCTIONS` when set.)
+
+Finance and super admins are notified the moment a boutique sends a
+transaction number. The section also shows active plans and this month's
+advertising revenue.
+
+### Reminders
+
+An hourly job (`StoreAdsScheduler`) tells her three days before her plan
+ends and once it has ended — unless she already renewed — and, when a
+campaign's window closes, marks it ended and sends her what it reached and
+sold. Every notice opens the Ads Center.
+
 **Upgrading** ends the current plan now and carries its unused credit into
 the new one. **Renewing** or buying a lower plan queues the new one to start
 when the current one ends. Nothing a boutique paid for is lost or cut short.
@@ -41,7 +73,7 @@ when the current one ends. Nothing a boutique paid for is lost or cut short.
 |---|---|---|
 | `SEARCH` | Above organic results, only for a search that would have returned the piece | 3 |
 | `CATEGORY` | Top of the category shelf the piece belongs to (whole subtree) | 3 |
-| `FEED_TOP` | Her own public post, pinned at the head of the community feed («أعلى المنشورات») | 1 |
+| `FEED_TOP` | Her own public post, pinned at the head of the community feed and of the posts on the home page («أعلى المنشورات») | 1 |
 | `HOME_SPOTLIGHT` | «مختارات مميزة», near the top of the home page | 3 |
 
 Daily rates (SYP, before discount): search 1,500 · category 1,000 · feed
@@ -126,6 +158,21 @@ Seller only, always about the caller:
 | GET | `/ads/campaigns` | Her campaigns with reach and attributed sales |
 | POST | `/ads/campaigns` | Create and (unless `launch: false`) charge and start |
 | PATCH | `/ads/campaigns/:id/status` | Pause / resume |
+| GET | `/ads/plans/payment-options` | Her earnings balance and the transfer methods on offer |
+| POST | `/ads/plans/purchases` | `{tier, method}` — `earnings` buys at once; a transfer method opens a payment |
+| GET | `/ads/plans/purchases` | Her plan payments |
+| POST | `/ads/plans/purchases/:id/reference` | `{reference}` — the transaction number |
+| POST | `/ads/plans/purchases/:id/cancel` | Withdraw a payment not yet confirmed |
+
+Finance (`FINANCE_ADMIN`, `SUPER_ADMIN`):
+
+| Method | Path | |
+|---|---|---|
+| GET | `/ads/admin/summary` | Active plans by tier, payments awaiting review, this month's ad revenue |
+| GET | `/ads/admin/purchases` | Plan payments to match |
+| POST | `/ads/admin/purchases/:id/confirm` | Grant the plan |
+| POST | `/ads/admin/purchases/:id/reject` | `{reason}` — sent to her word for word |
+| GET/PUT | `/ads/admin/payment-instructions` | Where boutiques send the money, per method |
 
 Refusals carry a `code` the app words: `INSUFFICIENT_BALANCE`,
 `CAMPAIGN_LIMIT`, `FEED_POST_REQUIRED`, `PLACEMENT_LOCKED`,
@@ -136,7 +183,8 @@ so a retried tap on a slow line is one charge, not two.
 
 Shopper-facing:
 
-- `GET /content/feed` — the first page of the plain home feed may lead with a
+- `GET /content/feed` and `GET /posts/feed` (the posts on the home page) —
+  the first page may lead with a
   row carrying `sponsored: {promotion_id, offer_id, placement, store_tier}`.
 - `GET /discovery/home-content` — `sponsored_spotlight: [...]` and
   `featured_stores[].ad_tier`.
@@ -152,5 +200,11 @@ Shopper-facing:
   columns, and `credit_applied`.
 - `ad_exposures` — one row per shopper per advert per day: impressions,
   taps, last tap.
+- `ad_plan_purchases` — a plan paid by transfer: method, amount, reference,
+  status, finance's decision.
 
-Migration: `backend/prisma/migrations/20261029120000_store_advertising`.
+Every shopper-facing surface shows the paying boutique's badge: the home
+spotlight, the pinned post (community and home), search and category slots,
+«متاجر مميزة», and her own store page.
+
+Migrations: `20261029120000_store_advertising`, `20261030090000_ad_plan_purchases`.

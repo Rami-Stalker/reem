@@ -28,4 +28,27 @@ abstract interface class StoreAdsRepository {
   Future<Result<AdsOverview>> overview();
 
   Future<Result<List<AdGovernorate>>> governorates();
+
+  Future<Result<AdPaymentOptions>> paymentOptions();
+
+  /// [method] is [adPayFromEarnings] or a transfer method's wire name.
+  Future<Result<AdPurchaseResult>> purchase(
+    AdTier tier,
+    String method, {
+    required String idempotencyKey,
+  });
+
+  Future<Result<AdPlanPurchase>> submitReference(String id, String reference);
+
+  Future<Result<AdPlanPurchase>> cancelPurchase(String id);
+}
+
+/// Finance's side of plan payments.
+abstract interface class AdminAdsRepository {
+  Future<Result<AdAdminSummary>> summary();
+  Future<Result<List<AdPendingPayment>>> pending();
+  Future<Result<void>> confirm(String id);
+  Future<Result<void>> reject(String id, String reason);
+  Future<Result<Map<String, String?>>> instructions();
+  Future<Result<void>> saveInstructions(Map<String, String> values);
 }

@@ -16204,7 +16204,7 @@
       }
     }
   },
-  "adsPlanConfirmBody": "{price} will be taken from your earnings balance. The plan lasts 30 days and does not renew by itself.",
+  "adsPlanConfirmBody": "{price} for 30 days. The plan does not renew by itself.",
   "@adsPlanConfirmBody": {
     "description": "adsPlanConfirmBody",
     "placeholders": {
@@ -16468,5 +16468,248 @@
         "type": "String"
       }
     }
+  },
+  "adsPayHow": "How would you like to pay?",
+  "@adsPayHow": {
+    "description": "adsPayHow"
+  },
+  "adsPayFromEarnings": "From my earnings",
+  "@adsPayFromEarnings": {
+    "description": "adsPayFromEarnings"
+  },
+  "adsPayEarningsBalance": "Balance: {amount}",
+  "@adsPayEarningsBalance": {
+    "description": "adsPayEarningsBalance",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPayEarningsShort": "Balance {amount} — not enough yet",
+  "@adsPayEarningsShort": {
+    "description": "adsPayEarningsShort",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPayInstant": "Instant",
+  "@adsPayInstant": {
+    "description": "adsPayInstant"
+  },
+  "adsPayTransferHint": "Send the amount, then enter the transaction number",
+  "@adsPayTransferHint": {
+    "description": "adsPayTransferHint"
+  },
+  "adsPayNoMethods": "Payment by transfer is not set up yet — contact support",
+  "@adsPayNoMethods": {
+    "description": "adsPayNoMethods"
+  },
+  "adsPaymentBannerAwaiting": "Your {tier} plan is waiting for your payment — tap to finish",
+  "@adsPaymentBannerAwaiting": {
+    "description": "adsPaymentBannerAwaiting",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentBannerReview": "We received your {tier} payment number and are checking it",
+  "@adsPaymentBannerReview": {
+    "description": "adsPaymentBannerReview",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentBannerRejected": "We couldn’t match your {tier} payment — tap to see why",
+  "@adsPaymentBannerRejected": {
+    "description": "adsPaymentBannerRejected",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentTitle": "Pay for your plan",
+  "@adsPaymentTitle": {
+    "description": "adsPaymentTitle"
+  },
+  "adsPaymentPlan": "{tier} plan · 30 days",
+  "@adsPaymentPlan": {
+    "description": "adsPaymentPlan",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentStepSend": "Send {amount} by {method}",
+  "@adsPaymentStepSend": {
+    "description": "adsPaymentStepSend",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentStepReference": "Enter the transaction number you received",
+  "@adsPaymentStepReference": {
+    "description": "adsPaymentStepReference"
+  },
+  "adsPaymentStepChange": "Sent the wrong number? Send it again",
+  "@adsPaymentStepChange": {
+    "description": "adsPaymentStepChange"
+  },
+  "adsPaymentReferenceField": "Transaction number",
+  "@adsPaymentReferenceField": {
+    "description": "adsPaymentReferenceField"
+  },
+  "adsPaymentSend": "Send for review",
+  "@adsPaymentSend": {
+    "description": "adsPaymentSend"
+  },
+  "adsPaymentSent": "Received — we’ll turn your plan on as soon as it’s matched",
+  "@adsPaymentSent": {
+    "description": "adsPaymentSent"
+  },
+  "adsPaymentReviewTitle": "Being checked",
+  "@adsPaymentReviewTitle": {
+    "description": "adsPaymentReviewTitle"
+  },
+  "adsPaymentReviewBody": "Transaction {reference} is with our finance team. You’ll get a notification the moment your plan is on.",
+  "@adsPaymentReviewBody": {
+    "description": "adsPaymentReviewBody",
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentRejectedTitle": "We couldn’t match this payment",
+  "@adsPaymentRejectedTitle": {
+    "description": "adsPaymentRejectedTitle"
+  },
+  "adsPaymentHowLong": "Payments are usually matched within a few working hours.",
+  "@adsPaymentHowLong": {
+    "description": "adsPaymentHowLong"
+  },
+  "adsPaymentCancel": "Cancel this payment",
+  "@adsPaymentCancel": {
+    "description": "adsPaymentCancel"
+  },
+  "adsPaymentCopy": "Copy payment details",
+  "@adsPaymentCopy": {
+    "description": "adsPaymentCopy"
+  },
+  "adsPaymentCopied": "Copied",
+  "@adsPaymentCopied": {
+    "description": "adsPaymentCopied"
+  },
+  "adsPaymentNothingOpen": "No payment is waiting",
+  "@adsPaymentNothingOpen": {
+    "description": "adsPaymentNothingOpen"
+  },
+  "adsErrorMethodUnavailable": "This payment method isn’t available right now.",
+  "@adsErrorMethodUnavailable": {
+    "description": "adsErrorMethodUnavailable"
+  },
+  "adsErrorPurchaseInProgress": "You already have a plan payment in progress.",
+  "@adsErrorPurchaseInProgress": {
+    "description": "adsErrorPurchaseInProgress"
+  },
+  "adsErrorPurchaseClosed": "This payment has already been decided.",
+  "@adsErrorPurchaseClosed": {
+    "description": "adsErrorPurchaseClosed"
+  },
+  "adsErrorReferenceRequired": "Enter the transaction number you received.",
+  "@adsErrorReferenceRequired": {
+    "description": "adsErrorReferenceRequired"
+  },
+  "adminAdsTitle": "Advertising plans",
+  "@adminAdsTitle": {
+    "description": "adminAdsTitle"
+  },
+  "adminAdsSummary": "{plans} active plans · {revenue} ad revenue this month",
+  "@adminAdsSummary": {
+    "description": "adminAdsSummary",
+    "placeholders": {
+      "plans": {
+        "type": "int"
+      },
+      "revenue": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdsNoPending": "No plan payments waiting to be matched.",
+  "@adminAdsNoPending": {
+    "description": "adminAdsNoPending"
+  },
+  "adminAdsReference": "Transaction number: {reference}",
+  "@adminAdsReference": {
+    "description": "adminAdsReference",
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdsConfirmBody": "Confirm that {amount} arrived from {seller}? Their {tier} plan turns on at once.",
+  "@adminAdsConfirmBody": {
+    "description": "adminAdsConfirmBody",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "seller": {
+        "type": "String"
+      },
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdsConfirmed": "Plan turned on, and the boutique was told",
+  "@adminAdsConfirmed": {
+    "description": "adminAdsConfirmed"
+  },
+  "adminAdsInstructionsTitle": "Where boutiques send plan payments",
+  "@adminAdsInstructionsTitle": {
+    "description": "adminAdsInstructionsTitle"
+  },
+  "adminAdsInstructionsHint": "A method left empty is not offered",
+  "@adminAdsInstructionsHint": {
+    "description": "adminAdsInstructionsHint"
+  },
+  "adminAdsInstructionsSave": "Save payment details",
+  "@adminAdsInstructionsSave": {
+    "description": "adminAdsInstructionsSave"
+  },
+  "adminAdsInstructionsSaved": "Saved",
+  "@adminAdsInstructionsSaved": {
+    "description": "adminAdsInstructionsSaved"
+  },
+  "adsNotVerifiedTitle": "Your store needs approval to advertise",
+  "@adsNotVerifiedTitle": {
+    "description": "adsNotVerifiedTitle"
+  },
+  "adsNotVerifiedBody": "Until your store is approved its page is closed to shoppers, so ads couldn’t reach them. Complete verification and every plan opens up.",
+  "@adsNotVerifiedBody": {
+    "description": "adsNotVerifiedBody"
+  },
+  "adsNotVerifiedAction": "Complete verification",
+  "@adsNotVerifiedAction": {
+    "description": "adsNotVerifiedAction"
+  },
+  "adsErrorNotVerified": "Your store must be approved before it can advertise.",
+  "@adsErrorNotVerified": {
+    "description": "adsErrorNotVerified"
   }
 }

@@ -23963,7 +23963,7 @@ abstract class AppLocalizations {
   /// adsPlanConfirmBody
   ///
   /// In en, this message translates to:
-  /// **'{price} will be taken from your earnings balance. The plan lasts 30 days and does not renew by itself.'**
+  /// **'{price} for 30 days. The plan does not renew by itself.'**
   String adsPlanConfirmBody(String price);
 
   /// adsPlanConfirmUpgradeNote
@@ -24247,6 +24247,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sponsored: {product}, from {store}'**
   String homeSpotlightCardLabel(String product, String store);
+
+  /// adsPayHow
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to pay?'**
+  String get adsPayHow;
+
+  /// adsPayFromEarnings
+  ///
+  /// In en, this message translates to:
+  /// **'From my earnings'**
+  String get adsPayFromEarnings;
+
+  /// adsPayEarningsBalance
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: {amount}'**
+  String adsPayEarningsBalance(String amount);
+
+  /// adsPayEarningsShort
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount} — not enough yet'**
+  String adsPayEarningsShort(String amount);
+
+  /// adsPayInstant
+  ///
+  /// In en, this message translates to:
+  /// **'Instant'**
+  String get adsPayInstant;
+
+  /// adsPayTransferHint
+  ///
+  /// In en, this message translates to:
+  /// **'Send the amount, then enter the transaction number'**
+  String get adsPayTransferHint;
+
+  /// adsPayNoMethods
+  ///
+  /// In en, this message translates to:
+  /// **'Payment by transfer is not set up yet — contact support'**
+  String get adsPayNoMethods;
+
+  /// adsPaymentBannerAwaiting
+  ///
+  /// In en, this message translates to:
+  /// **'Your {tier} plan is waiting for your payment — tap to finish'**
+  String adsPaymentBannerAwaiting(String tier);
+
+  /// adsPaymentBannerReview
+  ///
+  /// In en, this message translates to:
+  /// **'We received your {tier} payment number and are checking it'**
+  String adsPaymentBannerReview(String tier);
+
+  /// adsPaymentBannerRejected
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t match your {tier} payment — tap to see why'**
+  String adsPaymentBannerRejected(String tier);
+
+  /// adsPaymentTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Pay for your plan'**
+  String get adsPaymentTitle;
+
+  /// adsPaymentPlan
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} plan · 30 days'**
+  String adsPaymentPlan(String tier);
+
+  /// adsPaymentStepSend
+  ///
+  /// In en, this message translates to:
+  /// **'Send {amount} by {method}'**
+  String adsPaymentStepSend(String amount, String method);
+
+  /// adsPaymentStepReference
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the transaction number you received'**
+  String get adsPaymentStepReference;
+
+  /// adsPaymentStepChange
+  ///
+  /// In en, this message translates to:
+  /// **'Sent the wrong number? Send it again'**
+  String get adsPaymentStepChange;
+
+  /// adsPaymentReferenceField
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction number'**
+  String get adsPaymentReferenceField;
+
+  /// adsPaymentSend
+  ///
+  /// In en, this message translates to:
+  /// **'Send for review'**
+  String get adsPaymentSend;
+
+  /// adsPaymentSent
+  ///
+  /// In en, this message translates to:
+  /// **'Received — we’ll turn your plan on as soon as it’s matched'**
+  String get adsPaymentSent;
+
+  /// adsPaymentReviewTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Being checked'**
+  String get adsPaymentReviewTitle;
+
+  /// adsPaymentReviewBody
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction {reference} is with our finance team. You’ll get a notification the moment your plan is on.'**
+  String adsPaymentReviewBody(String reference);
+
+  /// adsPaymentRejectedTitle
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t match this payment'**
+  String get adsPaymentRejectedTitle;
+
+  /// adsPaymentHowLong
+  ///
+  /// In en, this message translates to:
+  /// **'Payments are usually matched within a few working hours.'**
+  String get adsPaymentHowLong;
+
+  /// adsPaymentCancel
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this payment'**
+  String get adsPaymentCancel;
+
+  /// adsPaymentCopy
+  ///
+  /// In en, this message translates to:
+  /// **'Copy payment details'**
+  String get adsPaymentCopy;
+
+  /// adsPaymentCopied
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get adsPaymentCopied;
+
+  /// adsPaymentNothingOpen
+  ///
+  /// In en, this message translates to:
+  /// **'No payment is waiting'**
+  String get adsPaymentNothingOpen;
+
+  /// adsErrorMethodUnavailable
+  ///
+  /// In en, this message translates to:
+  /// **'This payment method isn’t available right now.'**
+  String get adsErrorMethodUnavailable;
+
+  /// adsErrorPurchaseInProgress
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a plan payment in progress.'**
+  String get adsErrorPurchaseInProgress;
+
+  /// adsErrorPurchaseClosed
+  ///
+  /// In en, this message translates to:
+  /// **'This payment has already been decided.'**
+  String get adsErrorPurchaseClosed;
+
+  /// adsErrorReferenceRequired
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the transaction number you received.'**
+  String get adsErrorReferenceRequired;
+
+  /// adminAdsTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Advertising plans'**
+  String get adminAdsTitle;
+
+  /// adminAdsSummary
+  ///
+  /// In en, this message translates to:
+  /// **'{plans} active plans · {revenue} ad revenue this month'**
+  String adminAdsSummary(int plans, String revenue);
+
+  /// adminAdsNoPending
+  ///
+  /// In en, this message translates to:
+  /// **'No plan payments waiting to be matched.'**
+  String get adminAdsNoPending;
+
+  /// adminAdsReference
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction number: {reference}'**
+  String adminAdsReference(String reference);
+
+  /// adminAdsConfirmBody
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm that {amount} arrived from {seller}? Their {tier} plan turns on at once.'**
+  String adminAdsConfirmBody(String amount, String seller, String tier);
+
+  /// adminAdsConfirmed
+  ///
+  /// In en, this message translates to:
+  /// **'Plan turned on, and the boutique was told'**
+  String get adminAdsConfirmed;
+
+  /// adminAdsInstructionsTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Where boutiques send plan payments'**
+  String get adminAdsInstructionsTitle;
+
+  /// adminAdsInstructionsHint
+  ///
+  /// In en, this message translates to:
+  /// **'A method left empty is not offered'**
+  String get adminAdsInstructionsHint;
+
+  /// adminAdsInstructionsSave
+  ///
+  /// In en, this message translates to:
+  /// **'Save payment details'**
+  String get adminAdsInstructionsSave;
+
+  /// adminAdsInstructionsSaved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get adminAdsInstructionsSaved;
+
+  /// adsNotVerifiedTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Your store needs approval to advertise'**
+  String get adsNotVerifiedTitle;
+
+  /// adsNotVerifiedBody
+  ///
+  /// In en, this message translates to:
+  /// **'Until your store is approved its page is closed to shoppers, so ads couldn’t reach them. Complete verification and every plan opens up.'**
+  String get adsNotVerifiedBody;
+
+  /// adsNotVerifiedAction
+  ///
+  /// In en, this message translates to:
+  /// **'Complete verification'**
+  String get adsNotVerifiedAction;
+
+  /// adsErrorNotVerified
+  ///
+  /// In en, this message translates to:
+  /// **'Your store must be approved before it can advertise.'**
+  String get adsErrorNotVerified;
 }
 
 class _AppLocalizationsDelegate

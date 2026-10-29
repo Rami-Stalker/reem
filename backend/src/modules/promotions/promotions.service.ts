@@ -464,6 +464,7 @@ export class PromotionsService {
 
     const current = await this.tiers.current(offer.sellerId);
     if (input.actorRole === UserRole.SELLER) {
+      await this.tiers.assertCanAdvertise(offer.sellerId);
       const refusal = planRefusal(current.plan, input.placement, audience);
       if (refusal) {
         throw new ForbiddenException({
@@ -534,6 +535,8 @@ export class PromotionsService {
         authorId: sellerId,
         status: CommerceContentStatus.PUBLISHED,
         visibility: CommerceContentVisibility.PUBLIC,
+        // A post nobody can see in a feed cannot be pinned above one.
+        authorIsPublic: true,
         moderationStatus: { not: 'REJECTED' },
         ...(contentId ? { id: contentId } : { productTags: { some: { productId } } }),
       },

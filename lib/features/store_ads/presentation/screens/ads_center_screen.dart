@@ -9,6 +9,7 @@ import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/value_objects/money_format.dart';
 import 'package:ohara/features/store_ads/domain/entities/store_ads.dart';
 import 'package:ohara/features/store_ads/presentation/providers/store_ads_providers.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/ad_payment_widgets.dart';
 import 'package:ohara/features/store_ads/presentation/widgets/ads_widgets.dart';
 import 'package:ohara/features/store_ads/presentation/widgets/store_ads_labels.dart';
 
@@ -52,6 +53,8 @@ class AdsCenterScreen extends ConsumerWidget {
           showBack: true,
         ),
         DsGaps.sliverMd,
+        padded(const AdStoreNotVerifiedCard()),
+        padded(const AdPendingPaymentBanner()),
         padded(
           plans.when(
             loading: () => const DsShimmer(
@@ -69,7 +72,10 @@ class AdsCenterScreen extends ConsumerWidget {
           DsButton(
             label: l10n.adsNewCampaign,
             icon: Icons.add_rounded,
-            onPressed: () => context.push(RoutePaths.sellerAdsNew),
+            // Only an approved store may advertise; the card above says so.
+            onPressed: plans.value?.storeVerified == false
+                ? null
+                : () => context.push(RoutePaths.sellerAdsNew),
           ),
         ),
         DsGaps.sliverXxl,

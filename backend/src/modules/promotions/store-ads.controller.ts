@@ -18,10 +18,13 @@ import { Money } from '../../common/money';
 import {
   CampaignDraftDto,
   LaunchCampaignDto,
+  PlanPaymentReferenceDto,
+  PlanPurchaseDto,
   SetPromotionStatusDto,
   SubscribePlanDto,
   toAudience,
 } from './dto/promotions.dto';
+import { AdPlanPaymentsService } from './ad-plan-payments.service';
 import { PromotionsService } from './promotions.service';
 import { StoreAdsService } from './store-ads.service';
 
@@ -49,6 +52,7 @@ export class StoreAdsController {
   constructor(
     private readonly ads: StoreAdsService,
     private readonly promotions: PromotionsService,
+    private readonly payments: AdPlanPaymentsService,
   ) {}
 
   @Get('plans')
@@ -60,6 +64,49 @@ export class StoreAdsController {
   @Post('plans/subscribe')
   subscribe(@CurrentUser() user: AuthUser, @Body() dto: SubscribePlanDto) {
     return this.ads.subscribe(user.id, dto.tier);
+  }
+
+  /** Her earnings balance and the transfer methods finance accepts. */
+  @Get('plans/payment-options')
+  paymentOptions(@CurrentUser() user: AuthUser) {
+    return this.payments.options(user.id);
+  }
+
+  /**
+   * Pays for a plan. From earnings it is instant and answers with the plans;
+   * by transfer it answers with the purchase and where to send the money.
+   */
+  @Post('plans/purchases')
+  async purchase(@CurrentUser() user: AuthUser, @Body() dto: PlanPurchaseDto) {
+    if (dto.method === 'EARNINGS') {
+      return { plans: await this.ads.subscribe(user.id, dto.tier), purchase: null };
+    }
+    return {
+      plans: null,
+      purchase: await this.payments.request(user.id, dto.tier, dto.method),
+    };
+  }
+
+  @Get('plans/purchases')
+  purchases(@CurrentUser() user: AuthUser) {
+    return this.payments.mine(user.id);
+  }
+
+  @Post('plans/purchases/:id/reference')
+  submitReference(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: PlanPaymentReferenceDto,
+  ) {
+    return this.payments.submitReference(user.id, id, dto.reference);
+  }
+
+  @Post('plans/purchases/:id/cancel')
+  cancelPurchase(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.payments.cancel(user.id, id);
   }
 
   @Post('quote')

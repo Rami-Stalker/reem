@@ -51,6 +51,11 @@ abstract final class StoreAdsMapper {
           : AdTier.fromWire(queued['tier'] as String?),
       queuedStartsAt: queued == null ? null : _date(queued['starts_at']),
       spendLast30Days: _int(json['spend_last_30_days']),
+      earningsBalance: _int(json['earnings_balance']),
+      storeVerified: json['store_verified'] != false,
+      pendingPurchase: json['pending_purchase'] is Map
+          ? purchase(_map(json['pending_purchase']))
+          : null,
       recommendation: rec == null
           ? null
           : AdPlanRecommendation(
@@ -213,6 +218,56 @@ abstract final class StoreAdsMapper {
     for (final row in rows.whereType<Map>())
       AdGovernorate(name: '${row['name']}', shoppers: _int(row['shoppers'])),
   ];
+
+  static AdPlanPurchase purchase(Map<String, dynamic> json) => AdPlanPurchase(
+    id: json['id'] as String,
+    tier: AdTier.fromWire(json['tier'] as String?),
+    method: json['method'] as String? ?? '',
+    amount: _int(json['amount']),
+    status: AdPurchaseStatus.fromWire(json['status'] as String?),
+    instructions: json['instructions'] as String?,
+    reference: json['reference'] as String?,
+    rejectionReason: json['rejection_reason'] as String?,
+  );
+
+  static AdPaymentOptions paymentOptions(Map<String, dynamic> json) =>
+      AdPaymentOptions(
+        earningsBalance: _int(json['earnings_balance']),
+        transferMethods: [
+          for (final row in _rows(json['transfer_methods']))
+            AdTransferMethod(
+              method: row['method'] as String? ?? '',
+              instructions: row['instructions'] as String? ?? '',
+            ),
+        ],
+      );
+
+  static AdPurchaseResult purchaseResult(Map<String, dynamic> json) =>
+      AdPurchaseResult(
+        plans: json['plans'] is Map ? plans(_map(json['plans'])) : null,
+        purchase: json['purchase'] is Map
+            ? purchase(_map(json['purchase']))
+            : null,
+      );
+
+  static List<AdPendingPayment> pendingPayments(List<dynamic> rows) => [
+    for (final row in rows.whereType<Map>())
+      AdPendingPayment(
+        purchase: purchase(row.cast()),
+        sellerName: _map(row['seller'])['name'] as String? ?? '',
+        sellerPhone: _map(row['seller'])['phone'] as String?,
+      ),
+  ];
+
+  static AdAdminSummary adminSummary(Map<String, dynamic> json) =>
+      AdAdminSummary(
+        activePlans: {
+          for (final e in _map(json['active_plans']).entries)
+            AdTier.fromWire(e.key): _int(e.value),
+        },
+        awaitingReview: _int(json['awaiting_review']),
+        revenueThisMonth: _int(json['revenue_this_month']),
+      );
 
   static List<AdCampaign> campaigns(List<dynamic> rows) => [
     for (final row in rows.whereType<Map>()) campaign(row.cast()),

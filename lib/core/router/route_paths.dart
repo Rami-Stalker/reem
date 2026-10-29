@@ -110,6 +110,9 @@ abstract final class RoutePaths {
   static const sellerAdsPlans = '/seller/ads/plans';
   static const sellerAdsNew = '/seller/ads/new';
 
+  /// Paying a plan by transfer: where to send it, and the transaction number.
+  static const sellerAdsPayment = '/seller/ads/payment';
+
   /// Her return and exchange desk. `/seller/orders` shows a returning parcel;
   /// this is where the request on it is actually decided.
   static const sellerReturns = '/seller/returns';

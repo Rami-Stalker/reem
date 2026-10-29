@@ -44,6 +44,10 @@ import {
   OrderStatusChangedPayload,
   PostPublishedPayload,
   PromotionLaunchedPayload,
+  AdPlanPurchaseSubmittedPayload,
+  AdPlanPurchaseDecidedPayload,
+  AdPlanEndingPayload,
+  AdCampaignEndedPayload,
   StoryPublishedPayload,
   UserFollowedPayload,
 } from '../../common/events/app-events';
@@ -629,8 +633,126 @@ export class NotificationsService {
       NotificationType.promo,
       `جديد من ${name} ✨`,
       `${payload.productTitle} — اكتشفيه الآن`,
-      { productId: payload.productId, promotionId: payload.promotionId, kind: 'store_promotion' },
+      {
+        productId: payload.productId,
+        promotionId: payload.promotionId,
+        kind: 'store_promotion',
+        deepLink: `reem://product-details?id=${payload.productId}`,
+      },
     );
+  }
+
+  /** «فضي/ذهبي/ماسي», for the notices below. */
+  private adTierName(tier: string): string {
+    switch (tier.toUpperCase()) {
+      case 'SILVER':
+        return 'الفضية';
+      case 'GOLD':
+        return 'الذهبية';
+      case 'DIAMOND':
+        return 'الماسية';
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * A boutique sent the reference for a plan paid by transfer. Finance is
+   * told at once: until somebody matches it, she has paid and has nothing.
+   */
+  @OnEvent(AppEvent.AdPlanPurchaseSubmitted)
+  async onAdPlanPurchaseSubmitted(
+    payload: AdPlanPurchaseSubmittedPayload,
+  ): Promise<void> {
+    const name = await this.repo.userName(payload.sellerId);
+    const finance = await this.prisma.user.findMany({
+      where: { role: { in: [UserRole.FINANCE_ADMIN, UserRole.SUPER_ADMIN] } },
+      select: { id: true },
+      take: 20,
+    });
+    const title = 'دفعة باقة إعلان بانتظار المطابقة';
+    const body = `${name} — الباقة ${this.adTierName(payload.tier)} — ${payload.amount}`;
+    const data = {
+      purchaseId: payload.purchaseId,
+      kind: 'ad_plan_purchase',
+      deepLink: 'reem://admin/financials',
+    };
+    for (const admin of finance) {
+      await this.safeCreate(
+        { userId: admin.id, type: NotificationType.system, title, body, data },
+        { push: false },
+      );
+    }
+    await this.queuePushes({
+      recipients: finance.map((admin) => admin.id),
+      type: NotificationType.system,
+      title,
+      body,
+      data,
+      category: NotificationCategory.TRANSACTIONAL,
+    });
+  }
+
+  /** Her transfer was matched — or why it was not. Never silent. */
+  @OnEvent(AppEvent.AdPlanPurchaseDecided)
+  async onAdPlanPurchaseDecided(payload: AdPlanPurchaseDecidedPayload): Promise<void> {
+    const tier = this.adTierName(payload.tier);
+    const startsLater =
+      payload.startsAt !== undefined && new Date(payload.startsAt).getTime() > Date.now() + 60_000;
+    await this.safeCreate({
+      userId: payload.sellerId,
+      type: NotificationType.system,
+      title: payload.confirmed ? `تم تفعيل باقتكِ ${tier} ✨` : 'لم نتمكن من مطابقة دفعتكِ',
+      body: payload.confirmed
+        ? startsLater
+          ? `وصلت دفعتكِ، وتبدأ الباقة ${tier} فور انتهاء باقتكِ الحالية.`
+          : `وصلت دفعتكِ والباقة ${tier} فعّالة الآن — رصيدكِ الإعلاني جاهز، أطلقي أول حملة.`
+        : `السبب: ${payload.reason ?? ''}. أرسلي رقم العملية الصحيح من مركز الإعلانات.`,
+      data: {
+        purchaseId: payload.purchaseId,
+        kind: 'ad_plan',
+        deepLink: payload.confirmed ? 'reem://seller/ads' : 'reem://seller/ads/payment',
+      },
+    });
+  }
+
+  /** Plans never renew by themselves, so she is told before hers runs out. */
+  @OnEvent(AppEvent.AdPlanEnding)
+  async onAdPlanEnding(payload: AdPlanEndingPayload): Promise<void> {
+    const tier = this.adTierName(payload.tier);
+    await this.safeCreate({
+      userId: payload.sellerId,
+      type: NotificationType.system,
+      title:
+        payload.daysLeft > 0
+          ? `باقتكِ ${tier} تنتهي بعد ${payload.daysLeft} أيام`
+          : `انتهت باقتكِ ${tier}`,
+      body:
+        payload.daysLeft > 0
+          ? 'جدّديها من مركز الإعلانات لتبقى إعلاناتكِ في الصدارة دون انقطاع.'
+          : 'عاد متجركِ إلى الباقة العادية. جدّديها متى شئتِ من مركز الإعلانات.',
+      data: {
+        subscriptionId: payload.subscriptionId,
+        kind: 'ad_plan',
+        deepLink: 'reem://seller/ads/plans',
+      },
+    });
+  }
+
+  /** What a finished campaign did, in one line. */
+  @OnEvent(AppEvent.AdCampaignEnded)
+  async onAdCampaignEnded(payload: AdCampaignEndedPayload): Promise<void> {
+    await this.safeCreate({
+      userId: payload.sellerId,
+      type: NotificationType.system,
+      title: `انتهت حملة «${payload.productTitle}»`,
+      body: `وصلت إلى ${payload.reach} زبونة، و${payload.clicks} نقرة، و${payload.orders} طلب من الإعلان.`,
+      data: {
+        promotionId: payload.promotionId,
+        kind: 'ad_campaign',
+        deepLink: 'reem://seller/ads',
+      },
+    });
   }
 
   @OnEvent(AppEvent.StoryPublished)

@@ -1229,6 +1229,8 @@ model User {
   promotionsBought     ProductPromotion[]  @relation("PromotionsBought")
   /// «باقات الإعلان» she has bought — the tier her boutique carries.
   adSubscriptions      StoreAdSubscription[] @relation("StoreAdSubscriptions")
+  /// Plans she asked to pay for by transfer, and their review.
+  adPlanPurchases      AdPlanPurchase[]    @relation("AdPlanPurchases")
   /// The sponsored placements she, as a shopper, was shown.
   adExposures          AdExposure[]          @relation("AdExposures")
   experimentsCreated   Experiment[]        @relation("ExperimentsCreated")
@@ -4423,6 +4425,9 @@ model ProductPromotion {
   /// a week per boutique so it never turns into spam.
   followersNotifiedAt DateTime? @map("followers_notified_at")
 
+  /// When she was sent the campaign's results after its window closed.
+  endedNoticeSentAt DateTime? @map("ended_notice_sent_at")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -4470,11 +4475,69 @@ model StoreAdSubscription {
   /// twice.
   chargeReference String? @unique @map("charge_reference")
 
+  /// When she was told it ends soon, and that it ended — each once.
+  reminderSentAt    DateTime? @map("reminder_sent_at")
+  endedNoticeSentAt DateTime? @map("ended_notice_sent_at")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([sellerId, endsAt])
   @@map("store_ad_subscriptions")
+}
+
+/// A plan she pays for outside the platform — Sham Cash, Syriatel Cash, MTN
+/// Cash, a bank transfer or a hawala — and finance's review of it.
+///
+/// Paying from her earnings is instant and needs no row here. A boutique that
+/// has not sold anything yet has no earnings, though, and the plan is exactly
+/// what she would buy to start selling — so she sends the money the way she
+/// sends any money in Syria, tells us the transaction number, and finance
+/// matches it. Only a confirmed purchase becomes a [StoreAdSubscription];
+/// the ledger entry is taken from the platform's cash, where the money landed.
+model AdPlanPurchase {
+  id String @id @default(uuid()) @db.Uuid
+
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("AdPlanPurchases", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  tier     StoreAdTier
+  method   PaymentMethodType
+  amount   Decimal              @db.Decimal(18, 4)
+  currency Currency             @default(SYP)
+  status   AdPlanPurchaseStatus @default(AWAITING_PAYMENT)
+
+  /// The transaction number her wallet, bank or exchange office gave her.
+  reference            String?
+  referenceSubmittedAt DateTime? @map("reference_submitted_at")
+
+  /// Why finance could not match it — shown to her, word for word.
+  rejectionReason String?   @map("rejection_reason")
+  decidedById     String?   @map("decided_by_id") @db.Uuid
+  decidedAt       DateTime? @map("decided_at")
+
+  /// The plan it became, once confirmed.
+  subscriptionId String? @unique @map("subscription_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, createdAt])
+  @@index([sellerId, createdAt])
+  @@map("ad_plan_purchases")
+}
+
+enum AdPlanPurchaseStatus {
+  /// Asked for; she has not sent the money yet (or not told us).
+  AWAITING_PAYMENT
+  /// She sent the reference; finance has to match it.
+  AWAITING_REVIEW
+  /// Matched — the plan is hers.
+  CONFIRMED
+  /// Finance could not match it. She may send the right reference again.
+  REJECTED
+  /// She withdrew it before it was confirmed.
+  CANCELLED
 }
 
 /// One shopper's day with one placement: how often it was shown to her and
