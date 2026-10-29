@@ -14547,4 +14547,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adsErrorNotVerified => 'يجب اعتماد متجركِ قبل أن يعلن.';
+
+  @override
+  String get feedReasonForYou => 'مقترح لكِ';
+
+  @override
+  String get feedReasonTrending => 'رائج الآن';
+
+  @override
+  String get feedReasonNewVoice => 'صوت جديد';
 }

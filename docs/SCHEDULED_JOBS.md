@@ -96,6 +96,7 @@ environment switch is on (all such switches default off).
 | `NotificationsService.processScheduled` | every minute | Starts scheduled campaigns and sends deliveries held for quiet hours. Immediate notifications are already event-driven. | Keep. |
 | `CommerceContentScheduler.processLifecycle` | every minute | Publishes scheduled posts and stories; expires stories. | Keep. |
 | `StoreAdsScheduler.run` | :20 past every hour | Tells a boutique her advertising plan ends in 3 days and that it has ended (unless she renewed); closes campaigns whose window ended and sends her what each one reached and sold. Each notice once. | Keep. Plans never renew by themselves, so without it her adverts would simply stop leading one morning. |
+| `FeedRankingService.sweepSeen` | 04:10 | Deletes `feed_seen` rows (what the ranked feeds already showed each woman) older than 14 days. | Keep. The ranker reads only the last week; without it the table only grows. |
 | `MarketScheduler.advanceDrops` | every 15 min | Opens and closes seller "drops". | Keep. **Bug fixed**: it was behind the analytics switch (off by default), so a drop a seller scheduled never opened. |
 | `ValueScheduler.collect` | every 30 min | Collects evidence for customer standing (the Value programme). | Keep. |
 | `ValueScheduler.nightly` | 03:00 | Decay, momentum and daily snapshot; expires stale grants. | Keep · catch-up. |

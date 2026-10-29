@@ -24511,6 +24511,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your store must be approved before it can advertise.'**
   String get adsErrorNotVerified;
+
+  /// Chip on a ranked feed card: chosen from what she likes and shops
+  ///
+  /// In en, this message translates to:
+  /// **'For you'**
+  String get feedReasonForYou;
+
+  /// Chip on a ranked feed card: doing unusually well right now
+  ///
+  /// In en, this message translates to:
+  /// **'Trending now'**
+  String get feedReasonTrending;
+
+  /// Chip on a ranked feed card: a good account she has not met yet
+  ///
+  /// In en, this message translates to:
+  /// **'New voice'**
+  String get feedReasonNewVoice;
 }
 
 class _AppLocalizationsDelegate

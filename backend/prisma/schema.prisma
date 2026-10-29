@@ -1231,6 +1231,8 @@ model User {
   adSubscriptions      StoreAdSubscription[] @relation("StoreAdSubscriptions")
   /// Plans she asked to pay for by transfer, and their review.
   adPlanPurchases      AdPlanPurchase[]    @relation("AdPlanPurchases")
+  /// What the ranked feed has already shown her.
+  feedSeen             FeedSeen[]          @relation("FeedSeen")
   /// The sponsored placements she, as a shopper, was shown.
   adExposures          AdExposure[]          @relation("AdExposures")
   experimentsCreated   Experiment[]        @relation("ExperimentsCreated")
@@ -3033,6 +3035,8 @@ model CommerceContent {
   hiddenBy                ContentHide[]
   /// Paid placements boosting this post to the top of the feed.
   promotions              ProductPromotion[]                @relation("PromotedContent")
+  /// Who the ranked feed has shown it to.
+  servedTo                FeedSeen[]
 
   /// Her authoring workspace: drafts and scheduled rows, most recently touched
   /// first.
@@ -4484,6 +4488,32 @@ model StoreAdSubscription {
 
   @@index([sellerId, endsAt])
   @@map("store_ad_subscriptions")
+}
+
+/// What the ranked feed has already put in front of her.
+///
+/// Written when a page is served, not when she says she looked — serving is
+/// the one thing the server knows for certain, and a piece scrolled past is a
+/// piece she has had her chance at. It is what turns a feed into something
+/// other than the same ten posts on every refresh, and what lets the ranker
+/// tell a boutique nobody has been shown yet from one everybody has.
+///
+/// Kept a fortnight; older rows are swept nightly.
+model FeedSeen {
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("FeedSeen", fields: [userId], references: [id], onDelete: Cascade)
+
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  servedCount  Int      @default(1) @map("served_count")
+  lastServedAt DateTime @map("last_served_at")
+
+  @@id([userId, contentId])
+  @@index([userId, lastServedAt])
+  @@index([contentId, lastServedAt])
+  @@index([lastServedAt])
+  @@map("feed_seen")
 }
 
 /// A plan she pays for outside the platform — Sham Cash, Syriatel Cash, MTN

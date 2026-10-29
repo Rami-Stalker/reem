@@ -14361,4 +14361,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get adsErrorNotVerified =>
       'Your store must be approved before it can advertise.';
+
+  @override
+  String get feedReasonForYou => 'For you';
+
+  @override
+  String get feedReasonTrending => 'Trending now';
+
+  @override
+  String get feedReasonNewVoice => 'New voice';
 }

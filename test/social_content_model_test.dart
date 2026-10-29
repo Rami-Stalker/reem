@@ -97,6 +97,32 @@ void main() {
     });
   });
 
+  group('ContentModel rank reason', () {
+    test('a ranked row says why it is there', () {
+      for (final (wire, reason) in const [
+        ('following', ContentRankReason.following),
+        ('for_you', ContentRankReason.forYou),
+        ('trending', ContentRankReason.trending),
+        ('new_voice', ContentRankReason.newVoice),
+        ('popular', ContentRankReason.popular),
+      ]) {
+        expect(
+          ContentModel.fromJson({..._content(), 'rank_reason': wire}).rankReason,
+          reason,
+        );
+      }
+    });
+
+    test('a newest-first row, or an unknown reason, carries none', () {
+      expect(ContentModel.fromJson(_content()).rankReason, isNull);
+      expect(
+        ContentModel.fromJson({..._content(), 'rank_reason': 'mystery'})
+            .rankReason,
+        isNull,
+      );
+    });
+  });
+
   group('ContentModel', () {
     test('decodes a bare content-only post', () {
       // No media, no products, no viewer block, no analytics. Every one of

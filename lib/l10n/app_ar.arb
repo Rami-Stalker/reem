@@ -4258,5 +4258,8 @@
   "adsNotVerifiedTitle": "يحتاج متجركِ إلى الاعتماد ليعلن",
   "adsNotVerifiedBody": "قبل اعتماد المتجر تكون صفحته مغلقة أمام الزبونات، فلن يصلهن الإعلان. أكملي التوثيق وتُفتح لكِ كل الباقات.",
   "adsNotVerifiedAction": "أكملي التوثيق",
-  "adsErrorNotVerified": "يجب اعتماد متجركِ قبل أن يعلن."
+  "adsErrorNotVerified": "يجب اعتماد متجركِ قبل أن يعلن.",
+  "feedReasonForYou": "مقترح لكِ",
+  "feedReasonTrending": "رائج الآن",
+  "feedReasonNewVoice": "صوت جديد"
 }

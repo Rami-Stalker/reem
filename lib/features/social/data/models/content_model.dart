@@ -33,6 +33,7 @@ class ContentModel extends Content {
     super.expiresAt,
     super.removalReason,
     super.sponsorship,
+    super.rankReason,
   });
 
   factory ContentModel.fromJson(Map<String, dynamic> json) {
@@ -72,6 +73,7 @@ class ContentModel extends Content {
       expiresAt: _date(json['expires_at']),
       removalReason: json['removal_reason'] as String?,
       sponsorship: _sponsorship(json['sponsored']),
+      rankReason: ContentRankReason.fromWire(json['rank_reason']),
     );
   }
 

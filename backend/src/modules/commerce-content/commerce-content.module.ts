@@ -1,3 +1,4 @@
+import { FeedRankingService } from './ranking/feed-ranking.service';
 import { PromotionsModule } from '../promotions/promotions.module';
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
@@ -47,6 +48,7 @@ import { SellerCommerceContentController } from './seller-commerce-content.contr
     ContentFeedService,
     ContentFeedControlsService,
     ContentAnalyticsService,
+    FeedRankingService,
   ],
   exports: [
     CommerceContentService,
@@ -57,6 +59,7 @@ import { SellerCommerceContentController } from './seller-commerce-content.contr
     ContentModerationService,
     ContentFeedService,
     ContentAnalyticsService,
+    FeedRankingService,
   ],
 })
 export class CommerceContentModule {}

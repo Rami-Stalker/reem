@@ -16711,5 +16711,17 @@
   "adsErrorNotVerified": "Your store must be approved before it can advertise.",
   "@adsErrorNotVerified": {
     "description": "adsErrorNotVerified"
+  },
+  "feedReasonForYou": "For you",
+  "@feedReasonForYou": {
+    "description": "Chip on a ranked feed card: chosen from what she likes and shops"
+  },
+  "feedReasonTrending": "Trending now",
+  "@feedReasonTrending": {
+    "description": "Chip on a ranked feed card: doing unusually well right now"
+  },
+  "feedReasonNewVoice": "New voice",
+  "@feedReasonNewVoice": {
+    "description": "Chip on a ranked feed card: a good account she has not met yet"
   }
 }

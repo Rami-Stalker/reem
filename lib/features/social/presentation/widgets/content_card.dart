@@ -7,6 +7,7 @@ import 'package:ohara/core/media/media_variants.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
 import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
+import 'package:ohara/l10n/app_localizations.dart';
 
 /// One piece of content in a feed.
 ///
@@ -26,6 +27,27 @@ import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 /// **The way to buy is always one tap.** The shop plate sits over the foot of
 /// the image, not below the fold, because the whole premise is that discovery
 /// and purchase are the same gesture.
+/// The label and icon for why a ranked feed showed a piece, or null when it
+/// needs no saying: someone she follows, or a guest's general feed.
+(String, IconData)? rankReasonChip(
+  AppLocalizations l10n,
+  ContentRankReason? reason,
+) => switch (reason) {
+  ContentRankReason.forYou => (
+    l10n.feedReasonForYou,
+    Icons.auto_awesome_outlined,
+  ),
+  ContentRankReason.trending => (
+    l10n.feedReasonTrending,
+    Icons.local_fire_department_outlined,
+  ),
+  ContentRankReason.newVoice => (
+    l10n.feedReasonNewVoice,
+    Icons.waving_hand_outlined,
+  ),
+  ContentRankReason.following || ContentRankReason.popular || null => null,
+};
+
 class ContentCard extends StatefulWidget {
   const ContentCard({
     super.key,
@@ -118,7 +140,12 @@ class _ContentCardState extends State<ContentCard>
                 tier: jewel,
                 label: storeTierLabel(l10n, sponsored.storeTier),
               ),
-          ],
+          ]
+          // Why the feed brought her something she does not follow. Someone
+          // she follows needs no explanation, and a guest's feed has none.
+          else if (rankReasonChip(l10n, content.rankReason)
+              case (final label, final icon))
+            DsBadge(label: label, tone: DsBadgeTone.info, icon: icon),
         ],
         // A reel plays in the feed, muted, and only while it is on screen.
         mediaOverride: video == null
