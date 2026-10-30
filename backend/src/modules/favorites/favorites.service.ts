@@ -508,8 +508,8 @@ export class FavoritesService {
       priceDrop: true,
     });
     await this.createNotifications(recipients, {
-      title: 'Price drop',
-      body: `${product.title} dropped from ${before.toString()} to ${after.toString()}.`,
+      title: 'نزل السعر على قطعة بمفضّلتكِ',
+      body: `«${product.title}» نزل سعرها من ${before.toString()} لـ ${after.toString()}.`,
       type: NotificationType.promo,
       data: {
         product_id: product.id,
@@ -531,8 +531,10 @@ export class FavoritesService {
       backInStock: true,
     });
     await this.createNotifications(recipients, {
-      title: 'Back in stock',
-      body: `${product.title} is available again.`,
+      // Arabic, like everything else she reads: this lands on a phone whose
+      // whole interface is Arabic, and it was the one English line in it.
+      title: 'رجعت القطعة اللي بتستنيها 🎉',
+      body: `«${product.title}» رجعت متوفرة — الحقي عليها قبل ما تخلص.`,
       type: NotificationType.system,
       data: { product_id: product.id },
     });

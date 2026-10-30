@@ -69,6 +69,16 @@ export class ReputationController {
     return this.reputation.productFit(productId, viewerId);
   }
 
+  /** Whether she may review this piece, and why not — asked before she writes. */
+  @OptionalAuth()
+  @Get('products/:productId/review-eligibility')
+  productReviewEligibility(
+    @Param('productId', ParseUUIDPipe) productId: string,
+    @CurrentUser('id') viewerId?: string,
+  ) {
+    return this.reputation.productReviewEligibility(productId, viewerId);
+  }
+
   @Post('products/:productId/reviews')
   @HttpCode(HttpStatus.CREATED)
   createProductReview(

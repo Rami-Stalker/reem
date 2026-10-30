@@ -132,3 +132,22 @@ enum ReviewFilter {
 
   final String? wire;
 }
+
+/// Why she may not review a piece yet. Mirrors the server's
+/// `GET /reputation/products/:id/review-eligibility`.
+enum ReviewBlock {
+  signIn('sign_in'),
+  notDelivered('not_delivered'),
+  alreadyReviewed('already_reviewed');
+
+  const ReviewBlock(this.wire);
+
+  final String wire;
+
+  static ReviewBlock? fromWire(Object? value) {
+    for (final block in ReviewBlock.values) {
+      if (block.wire == value) return block;
+    }
+    return null;
+  }
+}

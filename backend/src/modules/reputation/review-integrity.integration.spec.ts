@@ -288,7 +288,8 @@ dbTest('she cannot review the same dress twice', async (world) => {
   await world.reputation.createProductReview(customer.id, product.id, review);
   await assert.rejects(
     world.reputation.createProductReview(customer.id, product.id, review),
-    /already reviewed/i,
+    (error: { response?: { code?: string } }) =>
+      error.response?.code === 'REVIEW_ALREADY_EXISTS',
   );
 });
 
@@ -368,4 +369,70 @@ dbTest('a new review is still not published until it is approved', async (world)
     'PENDING',
     'a verified purchase earns her a voice, not an unmoderated one',
   );
+});
+
+// ── Asked before she writes ─────────────────────────────────────────────
+//
+// The page offered «اكتبي تقييم» to everyone and refused only after the form
+// was filled in. Eligibility answers the same rule up front.
+
+dbTest('a guest is asked to sign in', async (world) => {
+  const seller = await makeUser(world.tx, 'sel', UserRole.SELLER);
+  const product = await makeProduct(world.tx, seller.id);
+  const answer = await world.reputation.productReviewEligibility(product.id);
+  assert.deepEqual(answer, { can_review: false, reason: 'sign_in', review: null });
+});
+
+dbTest('she may review once the piece has reached her', async (world) => {
+  const seller = await makeUser(world.tx, 'sel', UserRole.SELLER);
+  const customer = await makeUser(world.tx, 'cus');
+  const product = await makeProduct(world.tx, seller.id);
+  await makeOrder(
+    world.tx,
+    { customerId: customer.id, sellerId: seller.id, productId: product.id },
+    SellerOrderStatus.DELIVERED,
+  );
+  const answer = await world.reputation.productReviewEligibility(
+    product.id,
+    customer.id,
+  );
+  assert.equal(answer.can_review, true);
+  assert.equal(answer.reason, null);
+});
+
+dbTest('a parcel still on its way is not yet a review', async (world) => {
+  const seller = await makeUser(world.tx, 'sel', UserRole.SELLER);
+  const customer = await makeUser(world.tx, 'cus');
+  const product = await makeProduct(world.tx, seller.id);
+  await makeOrder(
+    world.tx,
+    { customerId: customer.id, sellerId: seller.id, productId: product.id },
+    SellerOrderStatus.IN_TRANSIT,
+  );
+  const answer = await world.reputation.productReviewEligibility(
+    product.id,
+    customer.id,
+  );
+  assert.equal(answer.can_review, false);
+  assert.equal(answer.reason, 'not_delivered');
+});
+
+dbTest('after reviewing, her own review comes back instead of a button', async (world) => {
+  const seller = await makeUser(world.tx, 'sel', UserRole.SELLER);
+  const customer = await makeUser(world.tx, 'cus');
+  const product = await makeProduct(world.tx, seller.id);
+  await makeOrder(
+    world.tx,
+    { customerId: customer.id, sellerId: seller.id, productId: product.id },
+    SellerOrderStatus.DELIVERED,
+  );
+  await world.reputation.createProductReview(customer.id, product.id, review);
+
+  const answer = await world.reputation.productReviewEligibility(
+    product.id,
+    customer.id,
+  );
+  assert.equal(answer.can_review, false);
+  assert.equal(answer.reason, 'already_reviewed');
+  assert.equal(answer.review?.status, 'pending');
 });

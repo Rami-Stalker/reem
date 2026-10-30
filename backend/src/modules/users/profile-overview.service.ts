@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderStatus, ReferralParticipantType, UserRole } from '@prisma/client';
 
-import { REWARD_MATRIX } from '../rewards/referrals.service';
+import { REWARD_MATRIX, referralTerms } from '../rewards/referrals.service';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { ORDER_BUCKETS } from '../orders/orders.service';
@@ -187,7 +187,11 @@ export class ProfileOverviewService {
       // What the programme pays, from the table that pays it. The client has
       // rendered a `reward_hint` since the card was built and the server never
       // sent one, so the line under «ادعي صديقاتك» was blank on every account.
-      reward_hint: `لكِ ${REWARD_MATRIX[ReferralParticipantType.CUSTOMER].referrerPoints} نقطة ولها ${REWARD_MATRIX[ReferralParticipantType.CUSTOMER].referredPoints} عند أول طلب لها`,
+      // Written to her, the inviter. Kept for builds that still read it; the
+      // app now composes both sides' wording from `terms`, because this line
+      // was also being sent to the friend, who read the rewards backwards.
+      reward_hint: `لكِ ${REWARD_MATRIX[ReferralParticipantType.CUSTOMER].referrerPoints} نقطة، ولصاحبتكِ ${REWARD_MATRIX[ReferralParticipantType.CUSTOMER].referredPoints} نقطة وخصم ${REWARD_MATRIX[ReferralParticipantType.CUSTOMER].referredPercent}٪ على أول طلب إلها`,
+      terms: referralTerms(ReferralParticipantType.CUSTOMER),
     };
   }
 

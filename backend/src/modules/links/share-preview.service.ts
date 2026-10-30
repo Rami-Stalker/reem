@@ -10,6 +10,7 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LIVE_OFFER_WHERE } from '../../common/catalog/product-include';
+import { referralTerms } from '../rewards/referrals.service';
 import { SharePreview } from './share-preview';
 import { appRouteFor, buildPath, SHARE_PATHS, ShareLinkKind } from './share-links';
 
@@ -396,10 +397,18 @@ export class SharePreviewService {
         isActive: true,
         OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
       },
-      select: { code: true, user: { select: { name: true, imageUrl: true } } },
+      select: {
+        code: true,
+        participantType: true,
+        user: { select: { name: true, imageUrl: true } },
+      },
     });
     if (!referral) return null;
 
+    // Written to the friend who received it — the one reading this page. She
+    // is the invited side, so she is told her own half: the welcome discount
+    // at once and the points once that first order completes.
+    const terms = referralTerms(referral.participantType);
     return {
       kind: 'referral',
       path: buildPath(SHARE_PATHS.referral, { code: referral.code }),
@@ -407,9 +416,10 @@ export class SharePreviewService {
       // catalogue rather than a screen that would silently drop it.
       appRoute: '/home',
       label: 'دعوة إلى أوهارا',
-      title: `${referral.user.name} تدعوكِ إلى أوهارا`,
+      title: `${referral.user.name} بعتتلكِ دعوة لأوهارا 💕`,
       description:
-        'سوق نسائي للأزياء والجمال — استخدمي رمز الدعوة عند إنشاء حسابكِ.',
+        `إلكِ خصم ${terms.referred_discount_percent}٪ على أول طلب، و${terms.referred_points} نقطة هدية لما يكمل. ` +
+        `نزّلي التطبيق وحطّي رمز الدعوة بخانة الكوبون وقت تطلبي.`,
       imageUrl: this.absolutise(referral.user.imageUrl, origin),
       byline: referral.user.name,
       bylineImageUrl: this.absolutise(referral.user.imageUrl, origin),

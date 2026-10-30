@@ -400,6 +400,9 @@ abstract final class ApiEndpoints {
   // Reputation
   static String productReviews(String productId) =>
       '/reputation/products/$productId/reviews';
+  /// Whether she may review this piece, and why not — asked before she writes.
+  static String productReviewEligibility(String productId) =>
+      '/reputation/products/$productId/review-eligibility';
   static String sellerReviews(String sellerId) =>
       '/reputation/sellers/$sellerId/reviews';
   static String sellerReputation(String sellerId) =>

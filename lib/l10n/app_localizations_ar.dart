@@ -4586,7 +4586,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewsSubmit => 'انشري التقييم';
 
   @override
-  String get reviewsSubmitted => 'تسلمي — انتشر تقييمكِ 💕';
+  String get reviewsSubmitted => 'تسلمي 💕 وصل تقييمكِ، وبينشر بعد ما نراجعه';
 
   @override
   String get reviewsUnavailable => 'ما قدرنا نحمّل التقييمات';
@@ -14659,4 +14659,130 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get feedReasonNewVoice => 'صوت جديد';
+
+  @override
+  String get reviewsSignInToWrite => 'سجّلي دخولكِ لتقيّمي';
+
+  @override
+  String get reviewsSignInToWriteBody =>
+      'التقييم مربوط بحسابكِ وبطلبكِ، حتى نعرف إنّو جاي من وحدة استلمت القطعة.';
+
+  @override
+  String get reviewsAfterDeliveryTitle => 'بتقدري تقيّمي بعد ما توصلكِ';
+
+  @override
+  String get reviewsAfterDeliveryBody =>
+      'التقييمات هون بس من اللي اشتروا القطعة واستلموها، حتى يكون كل رأي حقيقي.';
+
+  @override
+  String get reviewsYoursPendingTitle => 'وصل تقييمكِ';
+
+  @override
+  String get reviewsYoursPendingBody =>
+      'عم نراجعه، وبينشر لكل الناس أول ما يتوافق عليه.';
+
+  @override
+  String get reviewsYoursPublishedTitle => 'قيّمتِ هالقطعة';
+
+  @override
+  String get reviewsYoursPublishedBody =>
+      'تقييمكِ منشور ضمن التقييمات — تسلمي.';
+
+  @override
+  String get fitMineTitle => 'مقاساتي';
+
+  @override
+  String fitMineSummary(String height, String size) {
+    return '$height · مقاس $size';
+  }
+
+  @override
+  String get fitMineEdit => 'عدّلي';
+
+  @override
+  String get fitMineHelp =>
+      'طولكِ ومقاسكِ ما بيظهروا لحدا بالاسم — بس بيساعدوا البنات اللي متلكِ يعرفوا إذا القطعة بتجي عليهن.';
+
+  @override
+  String get fitMineSaved => 'انحفظت مقاساتكِ';
+
+  @override
+  String get productUnavailableSoldOut => 'خلصت هالقطعة هلّق';
+
+  @override
+  String get productUnavailableSoldOutBody =>
+      'البوتيك ما عندها كمية منها حالياً. خلّيكِ عالخبر ومنقلّكِ أول ما ترجع.';
+
+  @override
+  String get productUnavailablePaused => 'البوتيك وقّفت بيع هالقطعة مؤقتاً';
+
+  @override
+  String get productUnavailablePausedBody =>
+      'ممكن ترجع قريب — اسألي البوتيك، أو خلّينا نخبّركِ لما تنعرض من جديد.';
+
+  @override
+  String get productUnavailableNoSeller => 'هالقطعة مو معروضة للبيع هلّق';
+
+  @override
+  String get productUnavailableNoSellerBody =>
+      'ما في بوتيك عم تبيعها بهالوقت. منخبّركِ أول ما تنعرض.';
+
+  @override
+  String get productUnavailableVariant => 'هالخيار خلص';
+
+  @override
+  String get productUnavailableVariantBody =>
+      'اختاري مقاس أو لون تاني من فوق — في غيره متوفر.';
+
+  @override
+  String get productNotifyWhenBack => 'خبّريني لما ترجع';
+
+  @override
+  String get productNotifyOn => 'رح نخبّركِ لما ترجع';
+
+  @override
+  String get productNotifyConfirmed =>
+      'تمام — حطّيناها بمفضّلتكِ ورح يوصلكِ إشعار أول ما ترجع';
+
+  @override
+  String get productNotifyOff => 'شلناها من مفضّلتكِ وما رح نخبّركِ عنها';
+
+  @override
+  String referralForFriend(int discount, int points, String code) {
+    return 'عندي إلكِ دعوة لأوهارا 💕\nإلكِ خصم $discount٪ على أول طلب، و$points نقطة هدية لما يكمل طلبكِ.\nحطّي رمزي $code بخانة الكوبون وقت تطلبي.';
+  }
+
+  @override
+  String referralForFriendPlain(String code) {
+    return 'عندي إلكِ دعوة لأوهارا 💕\nحطّي رمزي $code بخانة الكوبون بأول طلب إلكِ.';
+  }
+
+  @override
+  String referralForInviter(
+    int myPoints,
+    int myDiscount,
+    int herDiscount,
+    int herPoints,
+  ) {
+    return 'لكِ $myPoints نقطة وخصم $myDiscount٪ لما يكمل أول طلب لصاحبتكِ — وإلها خصم $herDiscount٪ و$herPoints نقطة.';
+  }
+
+  @override
+  String get referralHowItWorks => 'كيف بتمشي الدعوة';
+
+  @override
+  String get referralStepShare => 'شاركي رمزكِ مع صاحبتكِ';
+
+  @override
+  String referralStepUse(int discount) {
+    return 'بتحطّه بخانة الكوبون بأول طلب، وبتاخد خصم $discount٪ فوراً';
+  }
+
+  @override
+  String referralStepReward(int myPoints, int myDiscount, int herPoints) {
+    return 'لما يكمل طلبها: إلكِ $myPoints نقطة وخصم $myDiscount٪، وإلها $herPoints نقطة';
+  }
+
+  @override
+  String get referralShareInvite => 'شاركي الدعوة';
 }

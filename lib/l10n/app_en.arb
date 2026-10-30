@@ -5512,7 +5512,7 @@
   "@reviewsSubmit": {
     "description": "Submits a review [re-authored: original wording lost]"
   },
-  "reviewsSubmitted": "Thank you — your review is posted",
+  "reviewsSubmitted": "Thank you — your review is in and will appear once it has been checked",
   "@reviewsSubmitted": {
     "description": "Confirmation after posting a review [re-authored: original wording lost]"
   },
@@ -16757,5 +16757,44 @@
   "feedReasonNewVoice": "New voice",
   "@feedReasonNewVoice": {
     "description": "Chip on a ranked feed card: a good account she has not met yet"
-  }
+  },
+  "reviewsSignInToWrite": "Sign in to write a review",
+  "reviewsSignInToWriteBody": "A review is tied to your account and your order, so everyone knows it comes from someone who received the piece.",
+  "reviewsAfterDeliveryTitle": "You can review it once it arrives",
+  "reviewsAfterDeliveryBody": "Reviews here come only from people who bought and received the piece, so every one is real.",
+  "reviewsYoursPendingTitle": "Your review is in",
+  "reviewsYoursPendingBody": "We're reviewing it, and it will be published as soon as it's approved.",
+  "reviewsYoursPublishedTitle": "You've reviewed this piece",
+  "reviewsYoursPublishedBody": "Your review is published with the others — thank you.",
+  "fitMineTitle": "My sizes",
+  "fitMineSummary": "{height} · size {size}",
+  "@fitMineSummary": {"description": "Her saved height and usual size, in the review sheet.", "placeholders": {"height": {"type": "String"}, "size": {"type": "String"}}},
+  "fitMineEdit": "Edit",
+  "fitMineHelp": "Your height and size are never shown by name — they only help women like you know whether a piece will fit them.",
+  "fitMineSaved": "Your sizes are saved",
+  "productUnavailableSoldOut": "This piece is sold out for now",
+  "productUnavailableSoldOutBody": "The boutique has none in stock right now. We can tell you the moment it's back.",
+  "productUnavailablePaused": "The boutique has paused this piece",
+  "productUnavailablePausedBody": "It may be back soon — ask the boutique, or let us tell you when it's listed again.",
+  "productUnavailableNoSeller": "Nobody is selling this piece right now",
+  "productUnavailableNoSellerBody": "No boutique has it on sale at the moment. We'll tell you as soon as one does.",
+  "productUnavailableVariant": "This option is sold out",
+  "productUnavailableVariantBody": "Pick another size or colour above — others are in stock.",
+  "productNotifyWhenBack": "Tell me when it's back",
+  "productNotifyOn": "We'll tell you when it's back",
+  "productNotifyConfirmed": "Done — it's in your favourites and you'll get a notification the moment it's back",
+  "productNotifyOff": "Removed from your favourites — no alert for it",
+  "referralForFriend": "I've got an Ohara invite for you 💕\nYou get {discount}% off your first order, and {points} bonus points once it's completed.\nUse my code {code} in the coupon field when you order.",
+  "@referralForFriend": {"description": "The invite message sent TO the friend: her own half of the programme.", "placeholders": {"discount": {"type": "int"}, "points": {"type": "int"}, "code": {"type": "String"}}},
+  "referralForFriendPlain": "I've got an Ohara invite for you 💕\nUse my code {code} in the coupon field on your first order.",
+  "@referralForFriendPlain": {"description": "The invite message when the programme's terms are not known.", "placeholders": {"code": {"type": "String"}}},
+  "referralForInviter": "You get {myPoints} points and {myDiscount}% off when your friend's first order completes — she gets {herDiscount}% off and {herPoints} points.",
+  "@referralForInviter": {"description": "What the programme pays, told to the inviter: her half first.", "placeholders": {"myPoints": {"type": "int"}, "myDiscount": {"type": "int"}, "herDiscount": {"type": "int"}, "herPoints": {"type": "int"}}},
+  "referralHowItWorks": "How invites work",
+  "referralStepShare": "Share your code with a friend",
+  "referralStepUse": "She enters it in the coupon field on her first order and gets {discount}% off straight away",
+  "@referralStepUse": {"description": "Step 2 of how an invite works.", "placeholders": {"discount": {"type": "int"}}},
+  "referralStepReward": "Once her order completes: you get {myPoints} points and {myDiscount}% off, and she gets {herPoints} points",
+  "@referralStepReward": {"description": "Step 3 of how an invite works.", "placeholders": {"myPoints": {"type": "int"}, "myDiscount": {"type": "int"}, "herPoints": {"type": "int"}}},
+  "referralShareInvite": "Share invite"
 }

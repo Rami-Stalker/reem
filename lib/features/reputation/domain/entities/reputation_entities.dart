@@ -220,3 +220,17 @@ class MyReviews extends Equatable {
   @override
   List<Object?> get props => [reviews, count, average];
 }
+
+/// Whether the woman looking at a product may review it, asked before she
+/// writes rather than refused after. [myReview] is hers when she already has
+/// one — pending or published — so the page can show it instead of a button.
+class ReviewEligibility extends Equatable {
+  const ReviewEligibility({required this.canReview, this.block, this.myReview});
+
+  final bool canReview;
+  final ReviewBlock? block;
+  final ReviewEntity? myReview;
+
+  @override
+  List<Object?> get props => [canReview, block, myReview];
+}

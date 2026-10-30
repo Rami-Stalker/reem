@@ -1,5 +1,6 @@
 import 'package:ohara/features/reputation/data/models/reputation_models.dart';
 import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/domain/entities/reputation_entities.dart';
 
 /// What she changes on «مقاساتي». Every field is sent: the screen shows the
 /// whole profile, so an emptied height means "clear it".
@@ -39,6 +40,8 @@ class ReviewFitDraft {
 }
 
 abstract interface class ReputationRemoteDataSource {
+  Future<ReviewEligibility> getProductReviewEligibility(String productId);
+
   Future<List<ReviewModel>> getProductReviews(
     String productId, {
     ReviewFilter filter = ReviewFilter.all,

@@ -8267,7 +8267,7 @@ abstract class AppLocalizations {
   /// Confirmation after posting a review [re-authored: original wording lost]
   ///
   /// In en, this message translates to:
-  /// **'Thank you — your review is posted'**
+  /// **'Thank you — your review is in and will appear once it has been checked'**
   String get reviewsSubmitted;
 
   /// Error title when reviews fail to load [re-authored: original wording lost]
@@ -24691,6 +24691,209 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New voice'**
   String get feedReasonNewVoice;
+
+  /// No description provided for @reviewsSignInToWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to write a review'**
+  String get reviewsSignInToWrite;
+
+  /// No description provided for @reviewsSignInToWriteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A review is tied to your account and your order, so everyone knows it comes from someone who received the piece.'**
+  String get reviewsSignInToWriteBody;
+
+  /// No description provided for @reviewsAfterDeliveryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can review it once it arrives'**
+  String get reviewsAfterDeliveryTitle;
+
+  /// No description provided for @reviewsAfterDeliveryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews here come only from people who bought and received the piece, so every one is real.'**
+  String get reviewsAfterDeliveryBody;
+
+  /// No description provided for @reviewsYoursPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your review is in'**
+  String get reviewsYoursPendingTitle;
+
+  /// No description provided for @reviewsYoursPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re reviewing it, and it will be published as soon as it\'s approved.'**
+  String get reviewsYoursPendingBody;
+
+  /// No description provided for @reviewsYoursPublishedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reviewed this piece'**
+  String get reviewsYoursPublishedTitle;
+
+  /// No description provided for @reviewsYoursPublishedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your review is published with the others — thank you.'**
+  String get reviewsYoursPublishedBody;
+
+  /// No description provided for @fitMineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My sizes'**
+  String get fitMineTitle;
+
+  /// Her saved height and usual size, in the review sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'{height} · size {size}'**
+  String fitMineSummary(String height, String size);
+
+  /// No description provided for @fitMineEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get fitMineEdit;
+
+  /// No description provided for @fitMineHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your height and size are never shown by name — they only help women like you know whether a piece will fit them.'**
+  String get fitMineHelp;
+
+  /// No description provided for @fitMineSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sizes are saved'**
+  String get fitMineSaved;
+
+  /// No description provided for @productUnavailableSoldOut.
+  ///
+  /// In en, this message translates to:
+  /// **'This piece is sold out for now'**
+  String get productUnavailableSoldOut;
+
+  /// No description provided for @productUnavailableSoldOutBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The boutique has none in stock right now. We can tell you the moment it\'s back.'**
+  String get productUnavailableSoldOutBody;
+
+  /// No description provided for @productUnavailablePaused.
+  ///
+  /// In en, this message translates to:
+  /// **'The boutique has paused this piece'**
+  String get productUnavailablePaused;
+
+  /// No description provided for @productUnavailablePausedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It may be back soon — ask the boutique, or let us tell you when it\'s listed again.'**
+  String get productUnavailablePausedBody;
+
+  /// No description provided for @productUnavailableNoSeller.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody is selling this piece right now'**
+  String get productUnavailableNoSeller;
+
+  /// No description provided for @productUnavailableNoSellerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No boutique has it on sale at the moment. We\'ll tell you as soon as one does.'**
+  String get productUnavailableNoSellerBody;
+
+  /// No description provided for @productUnavailableVariant.
+  ///
+  /// In en, this message translates to:
+  /// **'This option is sold out'**
+  String get productUnavailableVariant;
+
+  /// No description provided for @productUnavailableVariantBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick another size or colour above — others are in stock.'**
+  String get productUnavailableVariantBody;
+
+  /// No description provided for @productNotifyWhenBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me when it\'s back'**
+  String get productNotifyWhenBack;
+
+  /// No description provided for @productNotifyOn.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll tell you when it\'s back'**
+  String get productNotifyOn;
+
+  /// No description provided for @productNotifyConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Done — it\'s in your favourites and you\'ll get a notification the moment it\'s back'**
+  String get productNotifyConfirmed;
+
+  /// No description provided for @productNotifyOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from your favourites — no alert for it'**
+  String get productNotifyOff;
+
+  /// The invite message sent TO the friend: her own half of the programme.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve got an Ohara invite for you 💕\nYou get {discount}% off your first order, and {points} bonus points once it\'s completed.\nUse my code {code} in the coupon field when you order.'**
+  String referralForFriend(int discount, int points, String code);
+
+  /// The invite message when the programme's terms are not known.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve got an Ohara invite for you 💕\nUse my code {code} in the coupon field on your first order.'**
+  String referralForFriendPlain(String code);
+
+  /// What the programme pays, told to the inviter: her half first.
+  ///
+  /// In en, this message translates to:
+  /// **'You get {myPoints} points and {myDiscount}% off when your friend\'s first order completes — she gets {herDiscount}% off and {herPoints} points.'**
+  String referralForInviter(
+    int myPoints,
+    int myDiscount,
+    int herDiscount,
+    int herPoints,
+  );
+
+  /// No description provided for @referralHowItWorks.
+  ///
+  /// In en, this message translates to:
+  /// **'How invites work'**
+  String get referralHowItWorks;
+
+  /// No description provided for @referralStepShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your code with a friend'**
+  String get referralStepShare;
+
+  /// Step 2 of how an invite works.
+  ///
+  /// In en, this message translates to:
+  /// **'She enters it in the coupon field on her first order and gets {discount}% off straight away'**
+  String referralStepUse(int discount);
+
+  /// Step 3 of how an invite works.
+  ///
+  /// In en, this message translates to:
+  /// **'Once her order completes: you get {myPoints} points and {myDiscount}% off, and she gets {herPoints} points'**
+  String referralStepReward(int myPoints, int myDiscount, int herPoints);
+
+  /// No description provided for @referralShareInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Share invite'**
+  String get referralShareInvite;
 }
 
 class _AppLocalizationsDelegate

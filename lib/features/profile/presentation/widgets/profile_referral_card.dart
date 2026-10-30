@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/services/referral_copy.dart';
 import 'package:ohara/core/shared/services/share_service.dart';
 import 'package:ohara/features/profile/domain/entities/referral.dart';
 import 'package:ohara/features/profile/presentation/providers/profile_overview_provider.dart';
@@ -63,7 +64,12 @@ class ProfileReferralCard extends ConsumerWidget {
                           style: context.dsText.tileTitle
                               .copyWith(fontWeight: DsTypography.bold)),
                       DsGaps.vXxxs,
-                      Text(referral.rewardHint,
+                      // Her half first — she is the one reading this card.
+                      Text(
+                          referral.terms == null
+                              ? referral.rewardHint
+                              : ReferralCopy.forInviter(
+                                  context.l10n, referral.terms!),
                           style: context.dsText.cardSubtitle
                               .copyWith(color: c.onSurfaceVariant)),
                     ],
@@ -111,10 +117,17 @@ class ProfileReferralCard extends ConsumerWidget {
   Future<void> _share(BuildContext context, Referral referral) async {
     await Clipboard.setData(ClipboardData(text: referral.code));
     if (!context.mounted) return;
+    // Written to the friend, not copied from this card: the card's line is
+    // the inviter's half, and sent as-is it told the friend she would get the
+    // inviter's 500 points.
     await ShareService.referral(
       context: context,
       code: referral.code,
-      hint: referral.rewardHint,
+      message: ReferralCopy.forFriend(
+        context.l10n,
+        code: referral.code,
+        terms: referral.terms,
+      ),
     );
   }
 }

@@ -41,6 +41,17 @@ class ReviewModel extends ReviewEntity {
   }
 }
 
+ReviewEligibility reviewEligibilityFromJson(Map<String, dynamic> json) {
+  final review = json['review'];
+  return ReviewEligibility(
+    canReview: json['can_review'] == true,
+    block: ReviewBlock.fromWire(json['reason']),
+    myReview: review is Map
+        ? ReviewModel.fromJson(Map<String, dynamic>.from(review))
+        : null,
+  );
+}
+
 String? _text(Object? value) {
   final text = value is String ? value.trim() : null;
   return text == null || text.isEmpty ? null : text;

@@ -1,6 +1,7 @@
 import 'package:ohara/core/network/api_endpoints.dart';
 import 'package:ohara/core/network/base_remote_datasource.dart';
 import 'package:ohara/core/shared/entities/loyalty.dart';
+import 'package:ohara/core/shared/models/referral_terms_model.dart';
 import 'package:ohara/features/profile/data/datasources/profile_overview_datasource.dart';
 import 'package:ohara/features/profile/domain/entities/followed_store.dart';
 import 'package:ohara/features/profile/domain/entities/orders_overview.dart';
@@ -78,6 +79,7 @@ final class ProfileOverviewRemoteDataSource extends BaseRemoteDataSource
       // Empty until the rewards module publishes it, so the card shows the
       // code and the count without inventing a promise.
       rewardHint: json['reward_hint'] as String? ?? '',
+      terms: referralTermsFromJson(json['terms']),
     );
   }
 

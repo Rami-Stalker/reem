@@ -69,7 +69,29 @@ const REFERRAL_COUPON_TTL_DAYS = 60;
  * gold set is a discount nobody approved. The cap is in the platform's own
  * currency because that is the only one these coupons are ever minted in.
  */
-const REFERRAL_COUPON_MAX_OFF_SYP = 150_000;
+export const REFERRAL_COUPON_MAX_OFF_SYP = 150_000;
+
+/**
+ * The programme's terms for one kind of invite, as numbers.
+ *
+ * Every screen that describes an invite reads these rather than a sentence,
+ * because the sentence depends on who is reading it. The profile card used to
+ * ship one string written to the inviter — «لكِ 500 نقطة ولها 250» — and the
+ * app pasted that same string into the message sent to the friend, who then
+ * read that *she* would get 500 and her friend 250: the programme backwards.
+ * Numbers let each side be told its own half.
+ */
+export function referralTerms(type: ReferralParticipantType) {
+  const reward = REWARD_MATRIX[type];
+  return {
+    referrer_points: reward.referrerPoints,
+    referred_points: reward.referredPoints,
+    referrer_discount_percent: reward.referrerPercent,
+    referred_discount_percent: reward.referredPercent,
+    max_discount_syp: REFERRAL_COUPON_MAX_OFF_SYP,
+    coupon_valid_days: REFERRAL_COUPON_TTL_DAYS,
+  };
+}
 
 @Injectable()
 export class ReferralsService {
@@ -181,6 +203,8 @@ export class ReferralsService {
 
     return {
       customer_code: customerCode,
+      // What a shopper's invite pays each side; see `referralTerms`.
+      terms: referralTerms(ReferralParticipantType.CUSTOMER),
       seller_code: sellerCode,
       stats: {
         total: totalMade,
