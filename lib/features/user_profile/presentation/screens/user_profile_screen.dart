@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 import 'package:go_router/go_router.dart';
-
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/platform/app_haptics.dart';
@@ -19,6 +18,7 @@ import 'package:ohara/features/social/domain/entities/content.dart';
 import 'package:ohara/features/social/presentation/open_stories.dart';
 import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 import 'package:ohara/features/social/presentation/widgets/interactive_content_card.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
 import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
 import 'package:ohara/features/user_profile/presentation/widgets/my_page_card.dart';
@@ -171,6 +171,19 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               onToggleFollow: notifier.toggleFollow,
             ),
           ),
+          // «متجر ماسي» — the plan a boutique carries, under her name.
+          if (storeTierJewel(profile.adTier) case final jewel?)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: DsSpacing.md),
+                child: Center(
+                  child: DsTierBadge(
+                    tier: jewel,
+                    label: storeTierLabel(l10n, profile.adTier),
+                  ),
+                ),
+              ),
+            ),
           if (profile.isMe && !profile.isSeller)
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(

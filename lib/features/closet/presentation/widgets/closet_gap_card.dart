@@ -66,7 +66,7 @@ class ClosetGapCard extends StatelessWidget {
                       closetGapKindLabel(context.l10n, gap.kind),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: text.overline.tint(context.toneColor(tone)),
+                      style: text.overline.tint(context.toneInk(tone)),
                     ),
                     Text(
                       gap.slotLabel,

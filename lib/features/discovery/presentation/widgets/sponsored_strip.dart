@@ -8,6 +8,7 @@ import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/discovery/domain/entities/sponsored_product.dart';
 import 'package:ohara/features/discovery/presentation/providers/sponsored_providers.dart';
 import 'package:ohara/features/discovery/presentation/widgets/product_card_compact.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 
 /// The paid slots for a listing, above it and labelled as what they are.
 ///
@@ -56,9 +57,29 @@ class SponsoredStrip extends ConsumerWidget {
                 separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.sm),
                 itemBuilder: (context, index) => SizedBox(
                   width: _cardWidth,
-                  child: ProductCardCompact(
-                    product: slots[index].product,
-                    onTap: () => _open(context, ref, slots[index]),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: ProductCardCompact(
+                          product: slots[index].product,
+                          onTap: () => _open(context, ref, slots[index]),
+                        ),
+                      ),
+                      // The paying boutique's plan, as a jewel on the card.
+                      if (storeTierJewel(slots[index].storeTier)
+                          case final jewel?)
+                        PositionedDirectional(
+                          bottom: DsSpacing.xs,
+                          end: DsSpacing.xs,
+                          child: DsTierBadge.compact(
+                            tier: jewel,
+                            label: storeTierLabel(
+                              context.l10n,
+                              slots[index].storeTier,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

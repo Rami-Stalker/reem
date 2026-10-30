@@ -616,7 +616,7 @@ class _Pulse extends ConsumerWidget {
     } else if (state.error != null) {
       body = Text(
         state.error!,
-        style: context.dsText.body.tint(palette.critical),
+        style: context.dsText.body.tint(palette.criticalInk),
       );
     } else {
       body = _PulseBody(stats: state.stats!);

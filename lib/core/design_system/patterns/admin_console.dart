@@ -35,6 +35,10 @@ class AdminConsolePalette {
     required this.caution,
     required this.critical,
     required this.info,
+    required this.positiveInk,
+    required this.cautionInk,
+    required this.criticalInk,
+    required this.infoInk,
     required this.shadow,
     required this.series,
   });
@@ -64,6 +68,12 @@ class AdminConsolePalette {
   final Color critical;
   final Color info;
 
+  /// Text-safe shades of the status colors above — use these for words.
+  final Color positiveInk;
+  final Color cautionInk;
+  final Color criticalInk;
+  final Color infoInk;
+
   final List<BoxShadow> shadow;
 
   /// Ordered data-viz series for the analytics charts.
@@ -74,8 +84,8 @@ class AdminConsolePalette {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AdminConsolePalette(
-      nav: isDark ? const Color(0xFF15101B) : const Color(0xFF1B1420),
-      navMuted: const Color(0xFF9C8FA6),
+      nav: isDark ? DsColors.surfaceDimDark : DsColors.textPrimary,
+      navMuted: DsColors.neutral400,
       navSelected: DsColors.onMedia,
       ink: c.onSurface,
       muted: c.onSurfaceVariant,
@@ -83,15 +93,19 @@ class AdminConsolePalette {
       surface: c.surface,
       surfaceAlt: c.surfaceVariant,
       line: c.border,
-      primary: isDark ? DsColors.mauve300 : DsColors.mauve600,
-      onPrimary: isDark ? DsColors.mauve900 : DsColors.onMedia,
+      primary: isDark ? DsColors.secondary300 : DsColors.secondary600,
+      onPrimary: isDark ? DsColors.secondary900 : DsColors.onMedia,
       primarySoft: isDark
-          ? DsColors.mauve300.withValues(alpha: 0.18)
-          : DsColors.mauve100,
+          ? DsColors.secondary300.withValues(alpha: 0.18)
+          : DsColors.secondary100,
       positive: c.success,
       caution: c.warning,
       critical: c.error,
       info: c.info,
+      positiveInk: c.successInk,
+      cautionInk: c.warningInk,
+      criticalInk: c.errorInk,
+      infoInk: c.infoInk,
       shadow: [
         BoxShadow(
           color: c.shadow,
@@ -100,11 +114,11 @@ class AdminConsolePalette {
         ),
       ],
       series: [
-        isDark ? DsColors.mauve300 : DsColors.mauve500,
+        isDark ? DsColors.secondary300 : DsColors.secondary500,
         isDark ? DsColors.primary400 : DsColors.primary500,
         DsColors.gold400,
-        isDark ? DsColors.accent400 : DsColors.accent500,
-        DsColors.coral400,
+        isDark ? DsColors.success400 : DsColors.success,
+        DsColors.rosewood,
       ],
     );
   }

@@ -224,6 +224,56 @@ class ContentCounts extends Equatable {
   List<Object?> get props => [views, likes, comments, saves, shares, productClicks];
 }
 
+/// A paid placement this piece is riding: pinned above the feed by the
+/// boutique that wrote it. Carried so the card can say «مُموَّل» — an advert
+/// must be shown as one — and so a tap is credited to the offer that paid.
+class ContentSponsorship extends Equatable {
+  const ContentSponsorship({
+    required this.offerId,
+    required this.placement,
+    this.storeTier,
+  });
+
+  final String offerId;
+
+  /// `feed_top` today.
+  final String placement;
+
+  /// The boutique's plan — `silver`, `gold`, `diamond` — or null for free.
+  final String? storeTier;
+
+  @override
+  List<Object?> get props => [offerId, placement, storeTier];
+}
+
+/// Why the ranked feed put a piece where it is. Sent with every organic row
+/// of a ranked page; absent on a newest-first one.
+enum ContentRankReason {
+  /// Someone she follows.
+  following,
+
+  /// Close to what she likes and shops.
+  forYou,
+
+  /// Doing unusually well right now.
+  trending,
+
+  /// A good account she has not met yet.
+  newVoice,
+
+  /// Well liked generally — what a guest's feed is made of.
+  popular;
+
+  static ContentRankReason? fromWire(Object? raw) => switch (raw) {
+    'following' => following,
+    'for_you' => forYou,
+    'trending' => trending,
+    'new_voice' => newVoice,
+    'popular' => popular,
+    _ => null,
+  };
+}
+
 /// One piece of social content — a post, a reel or a story.
 ///
 /// One entity for all three because they differ by *format*, and the format is
@@ -248,6 +298,8 @@ class Content extends Equatable {
     this.publishedAt,
     this.expiresAt,
     this.removalReason,
+    this.sponsorship,
+    this.rankReason,
   });
 
   final String id;
@@ -269,6 +321,14 @@ class Content extends Equatable {
 
   /// Why a moderator took it down. Only ever sent to the woman who wrote it.
   final String? removalReason;
+
+  /// Set when this row is a paid placement rather than an organic one.
+  final ContentSponsorship? sponsorship;
+
+  bool get isSponsored => sponsorship != null;
+
+  /// Why the ranked feed showed it, when it did.
+  final ContentRankReason? rankReason;
 
   /// The caption, wherever it lives. `body` on the wire; the payload carries a
   /// copy that the composer edits.
@@ -339,12 +399,15 @@ class Content extends Equatable {
       publishedAt: publishedAt,
       expiresAt: expiresAt,
       removalReason: removalReason,
+      sponsorship: sponsorship,
+      rankReason: rankReason,
     );
   }
 
   @override
   List<Object?> get props => [
     id,
+    sponsorship,
     status,
     moderationState,
     visibility,

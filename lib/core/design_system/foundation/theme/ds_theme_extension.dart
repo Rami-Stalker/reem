@@ -35,7 +35,7 @@ class DsThemeExtension extends ThemeExtension<DsThemeExtension> {
     colors: DsColorScheme.light,
     isDark: false,
     primaryGradient: DsGradients.primarySoft,
-    softGradient: DsGradients.lavenderBlush,
+    softGradient: DsGradients.roseMauveBlush,
     glassGradient: DsGradients.glass,
     meshGradient: DsGradients.background,
     storyRingGradient: DsGradients.storyRing,
@@ -53,7 +53,7 @@ class DsThemeExtension extends ThemeExtension<DsThemeExtension> {
     meshGradient: DsGradients.backgroundDark,
     storyRingGradient: DsGradients.storyRingDark,
     rewardsGradient: DsGradients.rewardsDark,
-    luxuryShadow: DsShadows.glow(DsColors.lavender400, blur: 28),
+    luxuryShadow: DsShadows.glow(DsColors.secondary400, blur: 28),
     softShadow: DsShadows.soft(DsColors.black),
   );
 

@@ -839,7 +839,7 @@ class _Note extends StatelessWidget {
         gradient: LinearGradient(
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
-          colors: [DsColors.mauve800, DsColors.primary700, DsColors.coral400],
+          colors: [DsColors.secondary800, DsColors.primary700, DsColors.rosewood],
         ),
       ),
       child: Stack(
@@ -948,7 +948,7 @@ class _HeartStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const size = DsSizes.iconXs + DsSpacing.xxs;
-    final shades = [color, DsColors.coral400, DsColors.gold300];
+    final shades = [color, DsColors.rosewood, DsColors.gold300];
     return SizedBox(
       width: size + DsSpacing.sm * 2,
       height: size,

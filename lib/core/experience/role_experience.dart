@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
+
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 
@@ -299,11 +301,11 @@ class AppRoleExperience {
     defaultPath: RoutePaths.home,
     profilePath: RoutePaths.profile,
     visualIdentity: RoleVisualIdentity(
-      primary: Color(0xFFC6386F),
-      secondary: Color(0xFF533447),
-      accent: Color(0xFFEACB8D),
+      primary: DsColors.primary600,
+      secondary: DsColors.secondary800,
+      accent: DsColors.softGold,
       gradient: LinearGradient(
-        colors: [Color(0xFFEF6C9B), Color(0xFFC84778), Color(0xFFEACB8D)],
+        colors: [DsColors.primary500, DsColors.primary600, DsColors.softGold],
       ),
       icon: Icons.favorite_rounded,
     ),
@@ -449,10 +451,12 @@ class AppRoleExperience {
     defaultPath: RoutePaths.sellerDashboard,
     profilePath: RoutePaths.sellerStore,
     visualIdentity: RoleVisualIdentity(
-      primary: Color(0xFF2563EB),
-      secondary: Color(0xFF0F766E),
-      accent: Color(0xFFD97706),
-      gradient: LinearGradient(colors: [Color(0xFF0F172A), Color(0xFF2563EB)]),
+      primary: DsColors.secondary600,
+      secondary: DsColors.primary600,
+      accent: DsColors.champagneGold,
+      gradient: LinearGradient(
+        colors: [DsColors.secondary900, DsColors.secondary600],
+      ),
       icon: Icons.storefront_rounded,
     ),
     navigation: [
@@ -576,10 +580,12 @@ class AppRoleExperience {
     defaultPath: RoutePaths.admin,
     profilePath: RoutePaths.adminSystemSettings,
     visualIdentity: RoleVisualIdentity(
-      primary: Color(0xFF3156D4),
-      secondary: Color(0xFF0B1220),
-      accent: Color(0xFFB91C1C),
-      gradient: LinearGradient(colors: [Color(0xFF0B1220), Color(0xFF3156D4)]),
+      primary: DsColors.secondary700,
+      secondary: DsColors.textPrimary,
+      accent: DsColors.rosewood,
+      gradient: LinearGradient(
+        colors: [DsColors.textPrimary, DsColors.secondary700],
+      ),
       icon: Icons.admin_panel_settings_rounded,
     ),
     // Every destination names the permission the API demands to open it, and

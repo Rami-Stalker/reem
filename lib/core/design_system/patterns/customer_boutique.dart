@@ -31,6 +31,9 @@ class CustomerBoutiquePalette {
     required this.positive,
     required this.caution,
     required this.critical,
+    required this.positiveInk,
+    required this.cautionInk,
+    required this.criticalInk,
     required this.signatureGradient,
     required this.groundGradient,
     required this.shadow,
@@ -69,6 +72,11 @@ class CustomerBoutiquePalette {
   final Color caution;
   final Color critical;
 
+  /// Text-safe shades of the status colors above — use these for words.
+  final Color positiveInk;
+  final Color cautionInk;
+  final Color criticalInk;
+
   /// Rose into champagne — the brand signature, used for hero fills and the
   /// shader behind display titles. Reads on both grounds, so it is one value.
   final LinearGradient signatureGradient;
@@ -97,12 +105,23 @@ class CustomerBoutiquePalette {
       positive: c.success,
       caution: c.warning,
       critical: c.error,
+      positiveInk: c.successInk,
+      cautionInk: c.warningInk,
+      criticalInk: c.errorInk,
       signatureGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: isDark
-            ? const [Color(0xFFFF9DBE), Color(0xFFE0699A), Color(0xFFE6C277)]
-            : const [Color(0xFFEF6C9B), Color(0xFFC84778), Color(0xFFEACB8D)],
+            ? const [
+                DsColors.primary300,
+                DsColors.primary400,
+                DsColors.softGold,
+              ]
+            : const [
+                DsColors.primary500,
+                DsColors.primary600,
+                DsColors.softGold,
+              ],
         stops: const [0, .58, 1],
       ),
       groundGradient: isDark
@@ -116,9 +135,9 @@ class CustomerBoutiquePalette {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFFFFFBFD),
-                Color(0xFFFFEEF5),
-                Color(0xFFFFF8EA),
+                DsColors.background,
+                DsColors.backgroundPink,
+                DsColors.backgroundSecondary,
               ],
               stops: [0, .48, 1],
             ),

@@ -83,7 +83,7 @@ class ProductFitPanel extends ConsumerWidget {
                     child: Text(
                       l10n.fitSuggestedSize(fit.suggestedSize!),
                       style: context.dsText.caption.semibold.tint(
-                        colors.success,
+                        colors.successInk,
                       ),
                     ),
                   ),

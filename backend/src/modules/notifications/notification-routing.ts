@@ -204,6 +204,9 @@ export function deepLinkFor(
       // is caught here rather than on a customer's phone.
       const link = str(data, 'deepLink', 'deep_link');
       if (link && link.startsWith(SCHEME)) return link;
+      // A boutique's campaign is about one piece; open it.
+      const productId = str(data, 'productId', 'product_id');
+      if (productId) return `${SCHEME}product-details?id=${productId}`;
       return `${SCHEME}home`;
     }
     case 'story':

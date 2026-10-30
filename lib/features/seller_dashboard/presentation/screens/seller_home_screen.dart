@@ -13,6 +13,7 @@ import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_head
 import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_recent_reviews_widget.dart';
 import 'package:ohara/features/seller_dashboard/presentation/widgets/seller_store_score_widget.dart';
 import 'package:ohara/features/seller_intelligence/presentation/widgets/intelligence_entry_card.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/ads_entry_card.dart';
 
 /// The seller's home: **behind the counter of her boutique**.
 ///
@@ -87,6 +88,10 @@ class SellerHomeScreen extends ConsumerWidget {
         section(2, const BenchOrderPath()),
         const _Gap(),
         section(3, const BenchTools()),
+        const _Gap(),
+        // Her advertising, one tap from the bench: the plan she is on and
+        // the credit she still has to spend.
+        section(3, const AdsEntryCard()),
         const _Gap(),
         fullBleed(4, const BenchShelf()),
         const _Gap(),

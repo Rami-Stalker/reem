@@ -237,7 +237,7 @@ class _PlanLine extends ConsumerWidget {
                     DsGaps.vXxxs,
                     Text(
                       context.l10n.roomsNoLongerAvailable,
-                      style: context.dsText.micro.tint(colors.error),
+                      style: context.dsText.micro.tint(colors.errorInk),
                     ),
                   ],
                 ],
@@ -300,7 +300,7 @@ class _CheckoutBar extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: DsSpacing.xs),
                 child: Text(
                   context.l10n.roomsRemoveUnavailableFirst,
-                  style: context.dsText.caption.tint(colors.error),
+                  style: context.dsText.caption.tint(colors.errorInk),
                 ),
               ),
             DsButton(

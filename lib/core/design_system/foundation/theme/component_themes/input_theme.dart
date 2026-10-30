@@ -46,7 +46,7 @@ InputDecorationTheme dsInputDecorationTheme(DsThemeExtension ds) {
     ),
     errorStyle: TextStyle(
       fontFamily: DsTypography.fontFamily,
-      color: c.error,
+      color: c.errorInk,
       fontSize: DsTypography.labelMedium,
     ),
     helperStyle: TextStyle(

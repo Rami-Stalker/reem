@@ -286,7 +286,7 @@ class _CostCard extends ConsumerWidget {
                   // The one state this report exists to surface: a benefit that
                   // spends money with no ceiling on how much.
                   context.l10n.valueAdminUnbounded(cost.unboundedCount),
-                  style: context.dsText.caption.tint(console.caution),
+                  style: context.dsText.caption.tint(console.cautionInk),
                 ),
               ),
             Row(

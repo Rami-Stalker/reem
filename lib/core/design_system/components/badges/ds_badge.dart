@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:ohara/core/design_system/foundation/theme/extensions/typography_extension.dart';
-import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 import 'package:ohara/core/design_system/foundation/tokens/ds_gaps.dart';
 import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
@@ -41,10 +40,10 @@ class DsBadge extends StatelessWidget {
     final (fill, onFill, container, onContainer) = switch (tone) {
       DsBadgeTone.primary => (c.primary, c.onPrimary, c.primaryContainer, c.onPrimaryContainer),
       DsBadgeTone.accent => (c.accent, c.onAccent, c.accentContainer, c.onAccentContainer),
-      DsBadgeTone.sale => (c.discount, DsColors.white, c.errorContainer, c.error),
-      DsBadgeTone.success => (c.success, c.onSuccess, c.successContainer, c.success),
-      DsBadgeTone.info => (c.info, c.onInfo, c.infoContainer, c.info),
-      DsBadgeTone.warning => (c.warning, c.onWarning, c.warningContainer, c.warning),
+      DsBadgeTone.sale => (c.discount, c.onDiscount, c.errorContainer, c.errorInk),
+      DsBadgeTone.success => (c.success, c.onSuccess, c.successContainer, c.successInk),
+      DsBadgeTone.info => (c.info, c.onInfo, c.infoContainer, c.infoInk),
+      DsBadgeTone.warning => (c.warning, c.onWarning, c.warningContainer, c.warningInk),
       DsBadgeTone.neutral => (c.onSurfaceVariant, c.surface, c.surfaceVariant, c.onSurface),
     };
 

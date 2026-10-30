@@ -164,6 +164,41 @@ open the app instead needs a signing fingerprint and an Apple team id, and
 until those exist the links still work as web pages:
 [docs/SHARE_LINKS.md](docs/SHARE_LINKS.md).
 
+## Store advertising
+
+«إعلانات المتاجر»: a boutique pays to be seen, and what she pays decides how
+far she reaches. Four plans — عادي، فضي، ذهبي، ماسي — unlock more placements
+(top of search, the category shelf, her post pinned above the community feed,
+the home spotlight), audience targeting (by governorate, then followers, past
+buyers, interested shoppers, new shoppers), more campaigns at once, a
+discount, ad credit worth more than the plan costs, a badge, and a bigger
+share of every contested slot.
+
+Before paying she sees the price line by line, how many women the audience
+holds and her share of the slot; afterwards, the women reached and the orders
+that came from the advert. Every advert is labelled as one, a shopper sees
+the same one at most three times a day, and plans never renew by themselves:
+[docs/STORE_ADS.md](docs/STORE_ADS.md).
+
+## The feed, ordered for her
+
+The community feed, the reels, the posts on the home page and the story tray
+are ranked for each woman rather than listed newest-first. What counts:
+- who she follows and her history with each account;
+- the categories she shops;
+- how well a piece is doing, and how fresh it is;
+- the boutique's standing;
+- for reels, how long women watch.
+
+What she has already been shown makes way for something new. One account
+never fills the screen, and a good account she has not met yet gets a place
+every few posts. A small chip says why a piece she does not follow is there
+(«مقترح لكِ»، «رائج الآن»، «صوت جديد»).
+
+Paid posts keep their labelled slots. Stories open with her own ring, then the
+people closest to her that have something new. One console switch returns
+everything to newest-first: [docs/FEED_RANKING.md](docs/FEED_RANKING.md).
+
 ## Salons and beauty
 
 «الصالونات والجمال»: a woman finds a salon near her, picks a service, a day and
@@ -275,6 +310,8 @@ python3 tools/icons/generate_app_icons.py
 | [identity-authorization-architecture.md](docs/identity-authorization-architecture.md) | Identity, OTP, devices, roles |
 | [PRODUCT_INTERACTIONS.md](docs/PRODUCT_INTERACTIONS.md) | Like/Share/Save/Repost/Comments on every product surface, and the one store behind them |
 | [SHARE_LINKS.md](docs/SHARE_LINKS.md) | Share links, App Links / Universal Links, the landing pages, and the two well-known files |
+| [STORE_ADS.md](docs/STORE_ADS.md) | «إعلانات المتاجر»: the plans, the four placements, targeting, how a slot is won, attribution, and the `/ads` endpoints |
+| [FEED_RANKING.md](docs/FEED_RANKING.md) | How the community feed, reels, home posts and the story tray are ordered for each woman: candidates, the score, sessions, adverts, tuning and the off switch |
 | [SALONS.md](docs/SALONS.md) | «الصالونات والجمال»: the booking invariant, availability, statuses, the two jobs, and why an appointment carries no money |
 | [FIT_REVIEWS.md](docs/FIT_REVIEWS.md) | «تقييمات من بمقاسي»: fit facts and photos on reviews, the privacy rules for height and size, and who counts as "my size" |
 | [OCCASIONS.md](docs/OCCASIONS.md) | «مناسباتي»: the derived checklist, the countdown and why it rings once per mark, and the repeat warning |

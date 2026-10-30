@@ -464,7 +464,7 @@ class _AdminNavTile extends ConsumerWidget {
                 ),
                 colors: [
                   DsColors.gold300.withValues(alpha: 0.22),
-                  DsColors.mauve600.withValues(alpha: 0.18),
+                  DsColors.secondary600.withValues(alpha: 0.18),
                 ],
               )
             : null,

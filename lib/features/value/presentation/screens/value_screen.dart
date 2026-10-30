@@ -130,7 +130,7 @@ class _StandingHero extends StatelessWidget {
             // Told, rather than silently protected and later surprised.
             Text(
               context.l10n.valueTierHeld,
-              style: context.dsText.caption.tint(colors.success),
+              style: context.dsText.caption.tint(colors.successInk),
             ),
           ],
 
@@ -138,7 +138,7 @@ class _StandingHero extends StatelessWidget {
             const SizedBox(height: DsSpacing.sm),
             Text(
               context.l10n.valueFrozen,
-              style: context.dsText.caption.tint(colors.warning),
+              style: context.dsText.caption.tint(colors.warningInk),
             ),
           ],
         ],
@@ -259,7 +259,7 @@ class _BenefitTile extends StatelessWidget {
               // voucher.
               Text(
                 context.l10n.valueBenefitActive,
-                style: context.dsText.micro.tint(colors.success),
+                style: context.dsText.micro.tint(colors.successInk),
               ),
           ],
         ),

@@ -255,7 +255,7 @@ class _Header extends StatelessWidget {
                 ),
                 child: Text(
                   l10n.sellerOrderCarrierPendingRetry,
-                  style: context.dsText.caption.tint(atelier.caution),
+                  style: context.dsText.caption.tint(atelier.cautionInk),
                 ),
               ),
           ],
@@ -391,7 +391,7 @@ class _Items extends StatelessWidget {
                             item.customisation!.entries
                                 .map((e) => '${e.key}: ${e.value}')
                                 .join(' • '),
-                            style: context.dsText.caption.tint(atelier.caution),
+                            style: context.dsText.caption.tint(atelier.cautionInk),
                           ),
                         ),
                     ],
@@ -659,7 +659,7 @@ class _ActionBar extends StatelessWidget {
                     : () => onAction(SellerOrderAction.cancel),
                 child: Text(
                   l10n.parcelAction(SellerOrderAction.cancel),
-                  style: context.dsText.body.tint(atelier.critical),
+                  style: context.dsText.body.tint(atelier.criticalInk),
                 ),
               ),
           ],

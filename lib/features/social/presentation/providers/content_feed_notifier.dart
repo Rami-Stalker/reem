@@ -33,6 +33,9 @@ abstract class InteractiveFeedNotifier<T> extends PaginatedNotifier<T> {
   /// A stable identity for the row, so «تراجع» never restores a duplicate.
   String keyOf(T item);
 
+  @override
+  String? identityOf(T item) => keyOf(item);
+
   /// Replace every row showing [contentId], leaving the rest of the list
   /// identical so Flutter rebuilds those rows rather than the page.
   void _patch(String contentId, Content Function(Content) update) {

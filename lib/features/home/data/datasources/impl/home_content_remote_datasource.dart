@@ -12,6 +12,7 @@ import 'package:ohara/features/home/domain/entities/home_content.dart';
 import 'package:ohara/features/home/domain/entities/home_notification.dart';
 import 'package:ohara/features/home/domain/entities/nearby_store.dart';
 import 'package:ohara/features/home/domain/entities/search_suggestions.dart';
+import 'package:ohara/features/home/domain/entities/sponsored_spotlight.dart';
 
 /// The home page, read from the server.
 ///
@@ -45,7 +46,32 @@ final class HomeContentRemoteDataSource extends BaseRemoteDataSource
       searchSuggestions: _suggestions(json['search_suggestions']),
       notifications: _notifications(json['notifications']),
       loyalty: _loyalty(json['loyalty']),
+      sponsoredSpotlight: _list(
+        json['sponsored_spotlight'],
+      ).map(_spotlight).nonNulls.toList(),
     );
+  }
+
+  /// A paid slot is the product card itself plus who paid; one whose card or
+  /// offer will not parse is dropped, never shown unlabelled.
+  SponsoredSpotlight? _spotlight(Map<String, dynamic> json) {
+    final offerId = json['sponsored_offer_id'];
+    if (offerId is! String || offerId.isEmpty) return null;
+    try {
+      final store = json['sponsored_store'] is Map
+          ? (json['sponsored_store'] as Map).cast<String, dynamic>()
+          : const <String, dynamic>{};
+      return SponsoredSpotlight(
+        product: ProductModel.fromJson(json),
+        offerId: offerId,
+        storeId: store['id'] as String? ?? '',
+        storeName: store['name'] as String? ?? '',
+        storeLogoUrl: store['logo_url'] as String? ?? '',
+        storeTier: json['sponsored_store_tier'] as String?,
+      );
+    } on Object {
+      return null;
+    }
   }
 
   HeroBanner _banner(Map<String, dynamic> json) => HeroBanner(
@@ -102,6 +128,10 @@ final class HomeContentRemoteDataSource extends BaseRemoteDataSource
     followerCount: (json['follower_count'] as num?)?.toInt() ?? 0,
     isFollowing: json['is_following'] as bool? ?? false,
     previewImages: _strings(json['preview_images']),
+    adTier: switch (json['ad_tier']) {
+      final String tier when tier != 'free' => tier,
+      _ => null,
+    },
   );
 
   /// Boutiques in her governorate. The field was on the wire and on the

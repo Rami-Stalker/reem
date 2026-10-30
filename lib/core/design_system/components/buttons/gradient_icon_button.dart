@@ -72,8 +72,8 @@ class _GradientIconButtonState
             gradient:
                 const LinearGradient(
               colors: [
-                Color(0xffFF9EB5),
-                Color(0xffFF5C8A),
+                DsColors.primary300,
+                DsColors.primary500,
               ],
             ),
 

@@ -11,6 +11,7 @@ class SponsoredProduct {
     required this.product,
     required this.offerId,
     required this.placement,
+    this.storeTier,
   });
 
   final Product product;
@@ -18,4 +19,7 @@ class SponsoredProduct {
 
   /// `search` or `category` — the page the slot was bought for.
   final String placement;
+
+  /// The paying boutique's plan — `silver`, `gold`, `diamond` — or null.
+  final String? storeTier;
 }

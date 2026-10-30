@@ -82,7 +82,7 @@ class _Mood {
       l10n.homeMoodEvening,
       l10n.homeMoodPromptEvening,
       Icons.nightlife_rounded,
-      const [DsColors.mauve800, DsColors.primary600],
+      const [DsColors.secondary800, DsColors.primary600],
     ),
     _Mood(
       l10n.homeMoodWedding,
@@ -94,25 +94,25 @@ class _Mood {
       l10n.homeMoodWork,
       l10n.homeMoodPromptWork,
       Icons.work_outline_rounded,
-      const [DsColors.mauve600, DsColors.lavender500],
+      const [DsColors.secondary600, DsColors.secondary500],
     ),
     _Mood(
       l10n.homeMoodCasual,
       l10n.homeMoodPromptCasual,
       Icons.wb_sunny_outlined,
-      const [DsColors.coral500, DsColors.gold400],
+      const [DsColors.rosewood, DsColors.gold400],
     ),
     _Mood(
       l10n.homeMoodGift,
       l10n.homeMoodPromptGift,
       Icons.card_giftcard_rounded,
-      const [DsColors.primary700, DsColors.coral400],
+      const [DsColors.primary700, DsColors.rosewood],
     ),
     _Mood(
       l10n.homeMoodTravel,
       l10n.homeMoodPromptTravel,
       Icons.flight_takeoff_rounded,
-      const [DsColors.accent600, DsColors.lavender400],
+      const [DsColors.success600, DsColors.secondary400],
     ),
   ];
 }

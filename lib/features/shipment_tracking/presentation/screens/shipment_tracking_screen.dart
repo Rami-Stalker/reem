@@ -213,7 +213,7 @@ class _StatusHeader extends StatelessWidget {
                   const SizedBox(width: DsSpacing.xxs),
                   Text(
                     l10n.trackAttempts(tracking.attemptCount),
-                    style: context.dsText.caption.semibold.tint(colors.warning),
+                    style: context.dsText.caption.semibold.tint(colors.warningInk),
                   ),
                 ],
               ),

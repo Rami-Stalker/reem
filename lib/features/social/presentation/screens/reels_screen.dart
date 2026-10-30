@@ -10,6 +10,7 @@ import 'package:ohara/core/shared/services/share_service.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/domain/repositories/social_repository.dart';
 import 'package:ohara/features/social/presentation/providers/content_feed_notifier.dart';
 import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 import 'package:ohara/features/social/presentation/widgets/content_audience_sheet.dart';
@@ -43,10 +44,62 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
   final _viewed = <String>{};
   bool _firstViewSent = false;
 
+  /// How long the reel on screen has been watched. Sent when she moves on,
+  /// leaves, or puts the app away — the reels ranking leans on it more than
+  /// on hearts, because a clip watched to the end says more than a tap.
+  final _watch = Stopwatch();
+  String? _watching;
+  late final AppLifecycleListener _lifecycle;
+
+  /// Read in build, so the last flush in dispose needs no `ref`.
+  SocialRepository? _repository;
+  bool _isSignedIn = false;
+
+  /// A glance is not watching; a clip left playing is not ten minutes of
+  /// interest.
+  static const _minWatch = Duration(seconds: 1);
+  static const _maxWatch = Duration(minutes: 10);
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycle = AppLifecycleListener(
+      onHide: _flushWatch,
+      onShow: () {
+        if (_watching != null) _watch.start();
+      },
+    );
+  }
+
   @override
   void dispose() {
+    _flushWatch();
+    _lifecycle.dispose();
     _pages.dispose();
     super.dispose();
+  }
+
+  void _startWatching(Content reel) {
+    if (_watching == reel.id) return;
+    _flushWatch();
+    _watching = reel.id;
+    _watch
+      ..reset()
+      ..start();
+  }
+
+  void _flushWatch() {
+    _watch.stop();
+    final elapsed = _watch.elapsed;
+    _watch.reset();
+    final id = _watching;
+    final repository = _repository;
+    if (id == null || repository == null || !_isSignedIn) return;
+    if (elapsed < _minWatch) return;
+    final ms = elapsed > _maxWatch
+        ? _maxWatch.inMilliseconds
+        : elapsed.inMilliseconds;
+    unawaited(repository.recordEvent(id, 'WATCH_TIME', watchTimeMs: ms));
   }
 
   ContentFeedNotifier get _notifier =>
@@ -151,13 +204,19 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
       contentFeedProvider(SocialFeedKind.reels).notifier,
     );
     final me = ref.watch(authNotifierProvider.select((s) => s.user?.id));
+    _repository = ref.watch(socialRepositoryProvider);
+    _isSignedIn = ref.watch(
+      authNotifierProvider.select((s) => s.isAuthenticated),
+    );
 
     // The first reel is on screen before any page change fires.
     if (!_firstViewSent && state.items.isNotEmpty) {
       _firstViewSent = true;
       final first = state.items.first;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _markViewed(first);
+        if (!mounted) return;
+        _markViewed(first);
+        _startWatching(first);
       });
     }
 
@@ -192,6 +251,7 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
             itemCount: state.items.length,
             onPageChanged: (index) {
               _markViewed(state.items[index]);
+              _startWatching(state.items[index]);
               // Two from the end, so the next page is there before she
               // reaches it — a reel that has to buffer while she waits is the
               // one she scrolls past.
