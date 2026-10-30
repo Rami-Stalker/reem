@@ -113,7 +113,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('M: أبقته 92% ممّن وصلهنّ بهذا المقاس'), findsOneWidget);
+      expect(find.text('M: خلّوها 92% من اللي وصلهن هالمقاس'), findsOneWidget);
     });
 
     testWidgets('cautions about a size that is often sent back', (
@@ -127,7 +127,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(
-        find.text('L: يُعاد كثيراً بسبب المقاس — أبقته 64% فقط'),
+        find.text('L: كتير بترجع بسبب المقاس — خلّوها 64% بس'),
         findsOneWidget,
       );
     });

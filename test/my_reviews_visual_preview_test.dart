@@ -128,11 +128,11 @@ void main() {
       // A review with a moderator says so rather than looking lost. It is
       // the last of the three, below the mirror's fold, so scroll to it.
       await tester.scrollUntilVisible(
-        find.text('قيد المراجعة'),
+        find.text('عم تنراجع'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('قيد المراجعة'), findsOneWidget);
+      expect(find.text('عم تنراجع'), findsOneWidget);
     });
   }
 
@@ -154,9 +154,9 @@ void main() {
     );
     await _settle(tester);
 
-    expect(find.text('لم تكتبي أي تقييم بعد'), findsOneWidget);
+    expect(find.text('لسّا ما كتبتِ ولا تقييم'), findsOneWidget);
     // A review starts from a delivered parcel, so that is where she is sent.
-    expect(find.text('اعرضي طلباتي'), findsOneWidget);
+    expect(find.text('ورجيني طلباتي'), findsOneWidget);
 
     await _capture(tester, 'my_reviews_empty');
   });

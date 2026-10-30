@@ -117,7 +117,7 @@ void main() {
   }
 
   Future<void> openFollowing(WidgetTester tester) async {
-    await tester.tap(find.text('أتابع'));
+    await tester.tap(find.text('بتابعهن'));
   }
 
   testWidgets('«اكتشفي» — stories, heading and the first posts', (
@@ -126,8 +126,8 @@ void main() {
     await render(tester, name: 'community_discover');
     expect(find.text('المجتمع'), findsOneWidget);
     expect(find.text('قصص اليوم'), findsOneWidget);
-    expect(find.text('أحدث الإطلالات'), findsOneWidget);
-    expect(find.text('شاركي إطلالتك'), findsOneWidget);
+    expect(find.text('آخر الإطلالات'), findsOneWidget);
+    expect(find.text('شاركي إطلالتكِ'), findsOneWidget);
   });
 
   testWidgets('«اكتشفي» in the dark', (tester) async {
@@ -142,7 +142,7 @@ void main() {
       name: 'community_following',
       interact: () => openFollowing(tester),
     );
-    expect(find.text('من اللواتي تتابعينهن'), findsOneWidget);
+    expect(find.text('من اللي بتتابعيهن'), findsOneWidget);
     // A reshare is drawn as the boutique's post: its name heads the card.
     expect(find.text(_atelier.name), findsWidgets);
   });
@@ -158,7 +158,7 @@ void main() {
       social: social,
       interact: () => openFollowing(tester),
     );
-    expect(find.text('دائرتكِ الخاصة'), findsOneWidget);
+    expect(find.text('دايرتكِ الخاصة'), findsOneWidget);
     expect(social.followingCalls, 0);
   });
 
@@ -185,7 +185,7 @@ void main() {
         );
       },
     );
-    expect(find.text('وصلتِ إلى آخر الجديد'), findsOneWidget);
+    expect(find.text('شفتِ كل الجديد ✨'), findsOneWidget);
   });
 }
 

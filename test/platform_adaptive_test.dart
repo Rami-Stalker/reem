@@ -278,7 +278,7 @@ void main() {
         expect(find.text('ما قدرنا نكمّل الطلب'), findsOneWidget);
         expect(tester.takeException(), isNull, reason: '$kind laid out');
 
-        await tester.tap(find.text('حسناً'));
+        await tester.tap(find.text('تمام'));
         await tester.pumpAndSettle();
       }
     });
@@ -352,7 +352,7 @@ void main() {
           await tester.tap(find.text('back'));
           await tester.pumpAndSettle();
 
-          expect(find.text('هل تتركين ما كتبتِه؟'), findsOneWidget);
+          expect(find.text('بدّك تتركي اللي كتبتيه؟'), findsOneWidget);
           await tester.tap(find.text('كمّلي'));
           await tester.pumpAndSettle();
           expect(find.text('back'), findsOneWidget);

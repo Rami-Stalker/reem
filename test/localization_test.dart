@@ -52,13 +52,13 @@ void main() {
     test('addresses the customer as a woman, not a man', () {
       // Q69 P2: "بصيغة المؤنث دائماً". The masculine forms these replaced are
       // listed so a regression is obvious in the diff.
-      expect(ar.addToCart, 'أضيفي إلى السلة'); // was: أضف إلى السلة
-      expect(ar.buyNow, 'اشتري الآن');
-      expect(ar.writeComment, 'اكتبي تعليقاً…');
+      expect(ar.addToCart, 'ضيفي عالسلّة'); // was: أضف إلى السلة
+      expect(ar.buyNow, 'اشتريها هلّق');
+      expect(ar.writeComment, 'اكتبي تعليق…');
       expect(ar.shareMoment, 'شاركي لحظتكِ');
-      expect(ar.welcomeToOhara, 'مرحباً بكِ في أوهارا'); // was: مرحباً بك
-      expect(ar.contactSupport, 'تواصلي مع الدعم');
-      expect(ar.followDeviceLanguage, 'اتّبعي لغة الجهاز'); // was ungrammatical
+      expect(ar.welcomeToOhara, 'يا هلا فيكِ بأوهارا'); // was: مرحباً بك
+      expect(ar.contactSupport, 'احكي مع الدعم');
+      expect(ar.followDeviceLanguage, 'متل لغة الجهاز'); // was ungrammatical
     });
 
     test('no Arabic string uses a masculine second-person address', () {
@@ -86,14 +86,14 @@ void main() {
     test('plurals cover the Arabic categories, not just one and other', () {
       // Arabic distinguishes zero, one, two, few, many and other. A naive
       // `$count عنصر` would read wrong for two thirds of the number line.
-      expect(ar.itemsCount(0), contains('لا'));
-      expect(ar.itemsCount(1), 'قطعة واحدة');
-      expect(ar.itemsCount(2), 'قطعتان');
+      expect(ar.itemsCount(0), contains('ما في'));
+      expect(ar.itemsCount(1), 'قطعة وحدة');
+      expect(ar.itemsCount(2), 'قطعتين');
       expect(ar.itemsCount(3), contains('قطع'));
       expect(ar.itemsCount(11), contains('11'));
 
-      expect(ar.sellersOffering(1), 'بائعة واحدة');
-      expect(ar.sellersOffering(2), 'بائعتان');
+      expect(ar.sellersOffering(1), 'بائعة وحدة');
+      expect(ar.sellersOffering(2), 'بائعتين');
     });
 
     test('English and Arabic define exactly the same keys', () {

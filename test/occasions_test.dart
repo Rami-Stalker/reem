@@ -196,7 +196,7 @@ void main() {
       expect(OccasionLabels.countdown(_ar, 1), 'بكرا');
       expect(OccasionLabels.countdown(_ar, 2), 'بعد يومين');
       expect(OccasionLabels.countdown(_ar, 5), 'بعد 5 أيام');
-      expect(OccasionLabels.countdown(_ar, 14), 'بعد 14 يوماً');
+      expect(OccasionLabels.countdown(_ar, 14), 'بعد 14 يوم');
     });
 
     test('every step in every state has a title', () {

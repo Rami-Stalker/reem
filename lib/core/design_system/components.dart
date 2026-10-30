@@ -48,3 +48,4 @@ export 'package:ohara/core/design_system/components/states/offline_banner.dart';
 export 'package:ohara/core/design_system/components/time/countdown_timer.dart';
 export 'package:ohara/core/design_system/components/typography/ds_rich_text.dart';
 export 'package:ohara/core/design_system/components/typography/gradient_text.dart';
+export 'package:ohara/core/design_system/components/typography/ohara_wordmark.dart';

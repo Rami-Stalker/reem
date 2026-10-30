@@ -13,6 +13,10 @@ abstract final class DsTypography {
   static const String fontFamily = 'Cairo';
   static const String fontFamilyDisplay = 'PlayfairDisplay';
 
+  /// The brand face — Cinzel Decorative, used only by `OharaWordmark`. It
+  /// carries Latin capitals alone, which is all the mark ever spells.
+  static const String fontFamilyBrand = 'CinzelDecorative';
+
   /// Display fallback — Playfair Display is Latin-only, so Arabic (and any
   /// glyph it lacks) falls back to [fontFamily]. Applied to every display /
   /// headline style.

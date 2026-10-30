@@ -96,9 +96,10 @@ class _VersionFooter extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Text(
-            context.l10n.appTitle,
-            style: context.dsText.tileTitle.displayFamily.bold.tint(palette.muted).copyWith(letterSpacing: 2),
+          OharaWordmark(
+            semanticLabel: context.l10n.appTitle,
+            size: OharaWordmarkSize.footer,
+            color: palette.muted,
           ),
           DsGaps.vXxxs,
           Text(

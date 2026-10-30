@@ -249,7 +249,7 @@ void main() {
       );
       expect(
         ar.parcelStatus(SellerOrderStatus.cancelledByCustomer),
-        'ألغته الزبونة',
+        'الزبونة لغته',
       );
     });
 

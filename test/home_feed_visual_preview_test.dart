@@ -193,9 +193,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('يُنسَّق مع 3 قطع من خزانتكِ'), findsOneWidget);
-      expect(find.text('ويُكمل إطلالة محفوظة'), findsOneWidget);
-      expect(find.text('عندكِ مثلها في خزانتكِ'), findsOneWidget);
+      expect(find.text('بيلبق مع 3 قطع من خزانتكِ'), findsOneWidget);
+      expect(find.text('وبيكمّل إطلالة محفوظة'), findsOneWidget);
+      expect(find.text('عندكِ متلها بخزانتكِ'), findsOneWidget);
       expect(find.text('خزانتي'), findsNWidgets(2));
 
       await _capture(tester, 'post_closet_strip_${mode.name}');

@@ -21,7 +21,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get a11yLike => 'إعجاب';
 
   @override
-  String get a11yMore => 'خيارات أخرى';
+  String get a11yMore => 'خيارات تانية';
 
   @override
   String get a11yMute => 'كتم الصوت';
@@ -31,7 +31,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String a11yOpen(String name) {
-    return 'فتح $name';
+    return 'افتحي $name';
   }
 
   @override
@@ -54,7 +54,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get aboutOharaBlurb =>
-      'بيت راقٍ للتسوّق الاجتماعي يجمع القطع التي تحبّينها — تسوّق واكتشاف ومجتمع في مكان واحد.';
+      'بيت أنيق للتسوّق الاجتماعي بيجمعلك القطع اللي بتحبّيها — تسوّق واكتشاف ومجتمع، كلّه بمحلّ واحد.';
 
   @override
   String get account => 'الحساب';
@@ -66,20 +66,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountSettings => 'إعدادات الحساب';
 
   @override
-  String get accountUpdated => 'تم تحديث الحساب.';
+  String get accountUpdated => 'انحفظت تعديلات حسابكِ.';
 
   @override
   String get accountVerification => 'توثيق الحساب';
 
   @override
-  String get accountVerificationApprovedBlurb => 'علامة التوثيق صارت جنب اسمك.';
+  String get accountVerificationApprovedBlurb =>
+      'علامة التوثيق صارت جنب اسمك، مبروك!';
 
   @override
   String get accountVerificationBack => 'الوثيقة — الظهر';
 
   @override
   String get accountVerificationBlurb =>
-      'علامة التوثيق جنب اسمك بتقول إنّ أوهارا تحققت من هويتك. ابعتي وثيقة ومنراجعها.';
+      'علامة التوثيق جنب اسمك بتعني إنّو أوهارا تأكّدت من هويتك. ابعتيلنا وثيقة ونحنا منراجعها.';
 
   @override
   String get accountVerificationDocType => 'نوع الوثيقة';
@@ -91,53 +92,56 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountVerificationFront => 'الوثيقة — الوجه';
 
   @override
-  String get accountVerificationLegalName => 'الاسم كما في الوثيقة';
+  String get accountVerificationLegalName => 'الاسم متل ما هو بالوثيقة';
 
   @override
-  String get accountVerificationNeedsPhone => 'وثّقي رقم هاتفك أولاً.';
+  String get accountVerificationNeedsPhone =>
+      'وثّقي رقم موبايلك بالأول لو سمحتِ.';
 
   @override
-  String get accountVerificationNote => 'ليش عم تطلبي التوثيق';
+  String get accountVerificationNote => 'ليش حابّة توثّقي حسابكِ؟';
 
   @override
   String get accountVerificationPrivacy =>
-      'وثائقك ما بيقرأها إلا الفريق اللي بيراجعها، وما بتظهر لحدا تاني على أوهارا.';
+      'وثائقك ما بيشوفها غير الفريق اللي بيراجعها، وما بتبيّن لحدا تاني على أوهارا.';
 
   @override
-  String get accountVerificationResubmit => 'إعادة الإرسال';
+  String get accountVerificationResubmit => 'ابعتيها من جديد';
 
   @override
-  String get accountVerificationSelfie => 'صورة إلك وأنت ماسكة الوثيقة';
+  String get accountVerificationSelfie => 'صورة إلك وإنتِ ماسكة الوثيقة';
 
   @override
-  String get accountVerificationSent => 'انبعتت. منخبّرك أول ما تنراجع.';
+  String get accountVerificationSent =>
+      'وصلتنا! منخبّرك أول ما نخلّص المراجعة.';
 
   @override
   String get accountVerificationStatusApproved => 'موثّقة';
 
   @override
-  String get accountVerificationStatusNeedsInfo => 'منحتاج منك شي إضافي';
+  String get accountVerificationStatusNeedsInfo =>
+      'محتاجين منك شغلة زغيرة كمان';
 
   @override
-  String get accountVerificationStatusPending => 'بانتظار المراجعة';
+  String get accountVerificationStatusPending => 'ناطرة المراجعة';
 
   @override
-  String get accountVerificationStatusRejected => 'ما تمت الموافقة';
+  String get accountVerificationStatusRejected => 'ما انقبلت هالمرة';
 
   @override
-  String get accountVerificationStatusRevoked => 'تم سحب التوثيق';
+  String get accountVerificationStatusRevoked => 'انسحب التوثيق';
 
   @override
-  String get accountVerificationStatusUnderReview => 'قيد المراجعة';
+  String get accountVerificationStatusUnderReview => 'عم نراجعها';
 
   @override
-  String get accountVerificationSubmit => 'إرسال للمراجعة';
+  String get accountVerificationSubmit => 'ابعتيها للمراجعة';
 
   @override
-  String get accountVerificationWithdraw => 'سحب الطلب';
+  String get accountVerificationWithdraw => 'اسحبي الطلب';
 
   @override
-  String get accountVerificationWithdrawn => 'تم سحب الطلب.';
+  String get accountVerificationWithdrawn => 'انسحب الطلب.';
 
   @override
   String get achievements => 'الإنجازات';
@@ -175,8 +179,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get actionSalons => 'الصالونات والجمال';
 
   @override
-  String get actionDidNotSave =>
-      'لم يُحفظ ذلك — تحقّقي من الاتصال وحاولي مجدداً';
+  String get actionDidNotSave => 'ما انحفظت — تأكّدي من النت وجرّبي مرة تانية';
 
   @override
   String get actionFinance => 'المالية';
@@ -248,44 +251,43 @@ class AppLocalizationsAr extends AppLocalizations {
   String get activeSessions => 'الجلسات النشطة';
 
   @override
-  String get activityMessagesBlurb =>
-      'محادثاتك مع البائعات وما شاركتِه من قصص.';
+  String get activityMessagesBlurb => 'حكيك مع البائعات والقصص اللي شاركتيها.';
 
   @override
   String get activityNotificationsBlurb =>
-      'تنبيهات الأسعار، وتحديثات الطلبات، وردود البائعات، والمكافآت.';
+      'تنبيهات الأسعار، وأخبار طلباتك، وردود البائعات، والمكافآت.';
 
   @override
-  String get activityOrdersBlurb => 'تتبّعي مشترياتك ومراحل التوصيل والإرجاع.';
+  String get activityOrdersBlurb => 'تابعي مشترياتك ووين وصل التوصيل والإرجاع.';
 
   @override
-  String get add => 'أضيفي';
+  String get add => 'ضيفي';
 
   @override
-  String get addCommentHint => 'اكتبي تعليقاً…';
+  String get addCommentHint => 'اكتبيلنا تعليق…';
 
   @override
-  String get addCoupon => 'أضيفي كوبوناً';
+  String get addCoupon => 'ضيفي كوبون';
 
   @override
-  String get addMoment => 'أضيفي لحظتكِ';
+  String get addMoment => 'ضيفي لحظتكِ';
 
   @override
-  String get addStory => 'أضيفي ستوري';
+  String get addStory => 'ضيفي ستوري';
 
   @override
-  String get addToCart => 'أضيفي إلى السلة';
+  String get addToCart => 'ضيفي عالسلّة';
 
   @override
-  String get addedToBag => 'أُضيفت إلى سلّتك';
+  String get addedToBag => 'انضافت لسلّتكِ';
 
   @override
   String addedToCollection(String name) {
-    return 'تمت الإضافة إلى $name';
+    return 'انضافت لـ $name';
   }
 
   @override
-  String get additionalDocuments => 'مستندات إضافية';
+  String get additionalDocuments => 'مستندات زيادة';
 
   @override
   String get addresses => 'العناوين';
@@ -306,7 +308,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminActionDecideReport => 'البتّ في البلاغ';
 
   @override
-  String get adminActionDone => 'تم.';
+  String get adminActionDone => 'تمام.';
 
   @override
   String get adminActionEditSetting => 'تعديل الإعداد';
@@ -343,7 +345,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminAnalyticsSubtitle =>
-      'المبيعات والإيرادات والتحويل والفئات والعمليات الحيّة.';
+      'المبيعات والإيرادات والتحويل والفئات والشغل اللي ماشي هلّق.';
 
   @override
   String get adminAov => 'متوسط قيمة الطلب';
@@ -355,15 +357,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminAuditLogs => 'سجلّات التدقيق';
 
   @override
-  String get adminAuditUnavailable => 'تعذّر تحميل سجلّ التدقيق';
+  String get adminAuditUnavailable => 'ما قدرنا نحمّل سجلّ التدقيق';
 
   @override
   String adminAwaitingReview(String count) {
-    return '$count بانتظار المراجعة';
+    return '$count ناطرين المراجعة';
   }
 
   @override
-  String get adminBackToShop => 'العودة للمتجر';
+  String get adminBackToShop => 'ارجعي عالمتجر';
 
   @override
   String get adminBankDetails => 'البيانات المصرفية';
@@ -375,27 +377,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminBusinessIntelligence => 'ذكاء الأعمال';
 
   @override
-  String get adminCampaignCreated => 'تم إنشاء الحملة.';
+  String get adminCampaignCreated => 'انعملت الحملة.';
 
   @override
   String get adminCampaignFieldsRequired =>
-      'الاسم والعنوان والنصّ حقول مطلوبة.';
+      'الاسم والعنوان والنصّ لازم ينكتبوا.';
 
   @override
   String get adminCampaignName => 'اسم الحملة';
 
   @override
-  String get adminCampaignQueued => 'الحملة في قائمة الإرسال.';
+  String get adminCampaignQueued => 'الحملة صارت بالدور للإرسال.';
 
   @override
-  String get adminBriefing => 'ما يحتاج انتباهكِ اليوم';
+  String get adminBriefing => 'شو محتاج انتباهكِ اليوم';
 
   @override
   String get adminBriefingQuiet =>
-      'لا شيء يحتاج انتباهكِ اليوم — آخر قراءة لم تجد ما يستحقّ وقتكِ.';
+      'ما في شي محتاج انتباهكِ اليوم — آخر قراءة ما لقت شي بيستاهل وقتكِ.';
 
   @override
-  String get adminBriefingUnavailable => 'تعذّرت قراءة الملخّص الآن.';
+  String get adminBriefingUnavailable => 'ما قدرنا نقرأ الملخّص هلّق.';
 
   @override
   String get adminCampaigns => 'الحملات';
@@ -404,7 +406,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminChannels => 'قنوات الإرسال';
 
   @override
-  String get adminClearSearch => 'مسح البحث';
+  String get adminClearSearch => 'امسحي البحث';
 
   @override
   String get adminCommissionManagement => 'إدارة العمولات';
@@ -422,7 +424,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminCourtGreetingMorning => 'صباح الخير';
 
   @override
-  String get adminCourtGreetingEvening => 'مساء الخير';
+  String get adminCourtGreetingEvening => 'مسا الخير';
 
   @override
   String adminCourtGreetingNamed(String greeting, String name) {
@@ -430,18 +432,18 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adminCourtStateCalm => 'البيت هادئ — لا شيء ينتظركِ اليوم.';
+  String get adminCourtStateCalm => 'البيت رايق — ما في شي ناطرك اليوم.';
 
   @override
   String adminCourtStateWaiting(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count أمر ينتظركِ اليوم',
-      many: '$count أمراً ينتظركِ اليوم',
-      few: '$count أمور تنتظركِ اليوم',
-      two: 'أمران ينتظرانكِ اليوم',
-      one: 'أمر واحد ينتظركِ اليوم',
+      other: 'في $count شغلة ناطرينكِ اليوم',
+      many: 'في $count شغلة ناطرينكِ اليوم',
+      few: 'في $count شغلات ناطرينكِ اليوم',
+      two: 'في شغلتين ناطرينكِ اليوم',
+      one: 'في شغلة وحدة ناطرتكِ اليوم',
     );
     return '$_temp0';
   }
@@ -451,39 +453,39 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count منها عاجلة',
-      many: '$count منها عاجلة',
-      few: '$count منها عاجلة',
-      two: 'اثنان منها عاجلان',
-      one: 'واحد منها عاجل',
+      other: '$count منهن مستعجلين',
+      many: '$count منهن مستعجلين',
+      few: '$count منهن مستعجلين',
+      two: 'تنتين منهن مستعجلين',
+      one: 'وحدة منهن مستعجلة',
     );
     return '$_temp0';
   }
 
   @override
   String get adminCourtStateUnknown =>
-      'تعذّرت قراءة ملخّص اليوم — الأبواب أدناه ما زالت تُظهر من ينتظركِ.';
+      'ما قدرنا نقرأ ملخّص اليوم — بس الأبواب تحت لسّا بتورجيكِ مين ناطرك.';
 
   @override
-  String get adminCourtJumpHint => 'إلى أين؟ اكتبي اسم أي قسم…';
+  String get adminCourtJumpHint => 'لوين؟ اكتبي اسم أي قسم…';
 
   @override
-  String get adminCourtJumpEmpty => 'لا يوجد قسم بهذا الاسم.';
+  String get adminCourtJumpEmpty => 'ما في قسم بهالاسم.';
 
   @override
-  String get adminCourtNowTitle => 'ابدئي من هنا';
+  String get adminCourtNowTitle => 'ابدئي من هون';
 
   @override
-  String get adminCourtNowOpen => 'اذهبي إليه';
+  String get adminCourtNowOpen => 'روحي لعنده';
 
   @override
-  String get adminCourtThenTitle => 'بعد ذلك';
+  String get adminCourtThenTitle => 'بعدين';
 
   @override
   String get adminCourtSeverityCritical => 'عاجل';
 
   @override
-  String get adminCourtSeverityWarning => 'يستحق المتابعة';
+  String get adminCourtSeverityWarning => 'بيستاهل متابعة';
 
   @override
   String get adminCourtSeverityOpportunity => 'فرصة';
@@ -493,10 +495,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminCourtPulseCaption =>
-      'كل بتلة تطول بقدر نموّ مؤشّرها هذا الشهر، والبتلة الحمراء تعني تراجعاً.';
+      'كل بتلة بتطول قدّ ما كبر مؤشّرها هالشهر، والبتلة الحمرا يعني في تراجع.';
 
   @override
-  String get adminCourtPulseSemantics => 'وردة اتجاهات هذا الشهر';
+  String get adminCourtPulseSemantics => 'وردة اتجاهات هالشهر';
 
   @override
   String get adminCourtDoorsTitle => 'الأبواب';
@@ -520,28 +522,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminCourtGroupHouse => 'إدارة البيت';
 
   @override
-  String get adminCourtJumpShort => 'إلى أين؟';
+  String get adminCourtJumpShort => 'لوين؟';
 
   @override
-  String get adminCourtDoorsCaption => 'الباب المضاء خلفه من ينتظركِ.';
+  String get adminCourtDoorsCaption => 'الباب المضوّي في حدا ناطرك وراه.';
 
   @override
-  String get adminCourtDoorWaiting => 'بانتظاركِ';
+  String get adminCourtDoorWaiting => 'ناطرينكِ';
 
   @override
-  String get adminCourtDoorClear => 'لا أحد ينتظر';
+  String get adminCourtDoorClear => 'ما حدا ناطر';
 
   @override
-  String get adminCourtDoorUnknown => 'تعذّر العدّ';
+  String get adminCourtDoorUnknown => 'ما قدرنا نعدّ';
 
   @override
-  String get adminCourtDoorEnter => 'ادخلي';
+  String get adminCourtDoorEnter => 'فوتي';
 
   @override
   String get adminCourtThreadTitle => 'خيط اليوم';
 
   @override
-  String get adminCourtThreadAll => 'السجلّ كاملاً';
+  String get adminCourtThreadAll => 'السجلّ كلّه';
 
   @override
   String get adminConversionFunnel => 'قمع التحويل';
@@ -592,7 +594,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminFieldCommercialRegistration => 'السجل التجاري';
 
   @override
-  String get adminFieldFeatured => 'مُبرز في الصفحة الرئيسية';
+  String get adminFieldFeatured => 'مُبرز بالصفحة الرئيسية';
 
   @override
   String get adminFieldIban => 'رقم الآيبان';
@@ -611,7 +613,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminFieldRequired(String field) {
-    return '$field مطلوب.';
+    return '$field لازم ينكتب.';
   }
 
   @override
@@ -636,7 +638,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminFieldSettingValue => 'القيمة';
 
   @override
-  String get adminFieldShowInFeed => 'ظاهر في التغذية';
+  String get adminFieldShowInFeed => 'ظاهر بالتغذية';
 
   @override
   String get adminFieldTaxId => 'الرقم الضريبي';
@@ -670,13 +672,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminGrossRevenue => 'الإيراد الإجمالي';
 
   @override
-  String get adminInvalidJson => 'يجب أن تكون القيمة بصيغة JSON صحيحة.';
+  String get adminInvalidJson => 'لازم تكون القيمة بصيغة JSON صحيحة.';
 
   @override
-  String get adminInvalidRate => 'أدخلي نسبة بين 0 و5000 نقطة أساس.';
+  String get adminInvalidRate => 'حطّي نسبة بين 0 و5000 نقطة أساس.';
 
   @override
-  String get adminJsonHint => 'قيمة بصيغة JSON، مثل: true أو 12 أو كائن';
+  String get adminJsonHint => 'قيمة بصيغة JSON، متل: true أو 12 أو كائن';
 
   @override
   String adminLastDays(int count) {
@@ -693,7 +695,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adminLoadMore => 'تحميل المزيد';
+  String get adminLoadMore => 'حمّلي أكتر';
 
   @override
   String get adminManageCatalog => 'إدارة الكتالوج';
@@ -717,23 +719,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminNewCampaignTitle => 'حملة إشعارات جديدة';
 
   @override
-  String get adminNoApplications => 'لا توجد طلبات ضمن هذه التصفية.';
+  String get adminNoApplications => 'ما في طلبات بهالتصفية.';
 
   @override
-  String get adminNoDataYet => 'لا توجد بيانات بعد.';
+  String get adminNoDataYet => 'ما في بيانات لسّا.';
 
   @override
-  String get adminNoMatchingRecords => 'لا توجد سجلّات مطابقة.';
+  String get adminNoMatchingRecords => 'ما في سجلّات مطابقة.';
 
   @override
-  String get adminNoRankedData => 'لا توجد بيانات مرتّبة بعد.';
+  String get adminNoRankedData => 'ما في بيانات مرتّبة لسّا.';
 
   @override
-  String get adminNoRecentActivity => 'لا يوجد نشاط إداري حديث.';
+  String get adminNoRecentActivity => 'ما في نشاط إداري جديد.';
 
   @override
   String adminNoRecordsYet(String section) {
-    return 'لا توجد سجلات في $section بعد.';
+    return 'ما في سجلات بـ $section لسّا.';
   }
 
   @override
@@ -749,7 +751,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminNotifyAnalytics => 'تحليلات الإشعارات';
 
   @override
-  String get adminOnlineNow => 'متصلات الآن';
+  String get adminOnlineNow => 'متصلات هلّق';
 
   @override
   String get adminOrderManagement => 'إدارة الطلبات';
@@ -785,19 +787,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminQuickActions => 'إجراءات سريعة';
 
   @override
-  String get adminRateHint => '250 تعني 2.5%';
+  String get adminRateHint => '250 يعني 2.5%';
 
   @override
-  String get adminRecordNoDetails => 'لا تفاصيل إضافية لهذا السجل.';
+  String get adminRecordNoDetails => 'ما في تفاصيل زيادة لهالسجل.';
 
   @override
   String adminRecordNestedObject(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count حقلاً',
+      other: '$count حقل',
       few: '$count حقول',
-      two: 'حقلان',
+      two: 'حقلين',
       one: 'حقل واحد',
     );
     return '$_temp0';
@@ -809,11 +811,11 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count عنصر',
-      many: '$count عنصراً',
+      many: '$count عنصر',
       few: '$count عناصر',
-      two: 'عنصران',
+      two: 'عنصرين',
       one: 'عنصر واحد',
-      zero: 'لا عناصر',
+      zero: 'ما في عناصر',
     );
     return '$_temp0';
   }
@@ -823,10 +825,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminReasonReachesApplicant =>
-      'ما تكتبينه هنا يصل إلى مقدّمة الطلب.';
+      'اللي بتكتبيه هون بيوصل لصاحبة الطلب.';
 
   @override
-  String get adminReasonRequired => 'اكتبي سببًا من ثلاثة أحرف على الأقل.';
+  String get adminReasonRequired => 'اكتبي سبب من تلات أحرف عالأقل.';
 
   @override
   String get adminRecentActivity => 'النشاط الأخير';
@@ -843,9 +845,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count سطر',
-      many: '$count سطراً',
+      many: '$count سطر',
       few: '$count أسطر',
-      two: 'سطران',
+      two: 'سطرين',
       one: 'سطر واحد',
       zero: 'بلا أسطر',
     );
@@ -862,7 +864,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminRetentionRate => 'نسبة الاحتفاظ';
 
   @override
-  String get adminRetryFromAudit => 'أعيدي المحاولة من سجلّات التدقيق';
+  String get adminRetryFromAudit => 'جرّبي مرة تانية من سجلّات التدقيق';
 
   @override
   String get adminRevenueTrend => 'منحنى الإيرادات';
@@ -872,7 +874,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminReviewNotPermitted =>
-      'يمكنكِ الاطلاع على هذا الطلب دون البتّ فيه.';
+      'فيكِ تشوفي هالطلب بس ما فيكِ تبتّي فيه.';
 
   @override
   String get adminRoleAdmin => 'مسؤول';
@@ -893,7 +895,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminRoleOperationsAdmin => 'مدير العمليات';
 
   @override
-  String get adminRoleSegment => 'شريحة الأدوار (اختياري)';
+  String get adminRoleSegment => 'شريحة الأدوار (إذا حابّة)';
 
   @override
   String get adminRoleSeller => 'بائعة';
@@ -911,40 +913,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminRunCampaign => 'تشغيل الحملة';
 
   @override
-  String get adminScheduleIsoHint => 'استخدمي صيغة وقت ISO للجدولة.';
+  String get adminScheduleIsoHint => 'استعملي صيغة وقت ISO للجدولة.';
 
   @override
-  String get adminScheduleTime => 'وقت الجدولة (اختياري)';
+  String get adminScheduleTime => 'وقت الجدولة (إذا حابّة)';
 
   @override
   String get adminSearchApplications =>
-      'ابحثي بالاسم التجاري أو السجل أو جهة الاتصال';
+      'دوّري بالاسم التجاري أو السجل أو جهة الاتصال';
 
   @override
-  String get adminSectionNoActions => 'لا توجد إجراءات هنا بعد';
+  String get adminSectionNoActions => 'ما في إجراءات هون لسّا';
 
   @override
-  String get adminSectionNoCreate => 'لا يمكن الإنشاء من هنا';
+  String get adminSectionNoCreate => 'ما فيكِ تنشئي شي من هون';
 
   @override
   String get adminSectionSubtitle =>
-      'أدوات تشغيلية، وقوائم مراجعة، وسجلّات حيّة.';
+      'أدوات تشغيل، وقوائم مراجعة، وسجلّات حيّة.';
 
   @override
-  String get adminSectionUnavailable => 'تعذّر تحميل هذا القسم.';
+  String get adminSectionUnavailable => 'ما قدرنا نحمّل هالقسم.';
 
   @override
   String get adminSecurity => 'الأمان';
 
   @override
-  String get adminSelectChannel => 'اختاري قناة إرسال واحدة على الأقل.';
+  String get adminSelectChannel => 'نقّي قناة إرسال وحدة عالأقل.';
 
   @override
   String get adminSellerApplications => 'طلبات البائعات';
 
   @override
   String get adminSellerApplicationsSubtitle =>
-      'المستندات وبيانات النشاط والقرار الذي يسمح لها بالبيع.';
+      'المستندات وبيانات النشاط والقرار اللي بيسمحلها تبيع.';
 
   @override
   String get adminSellerManagement => 'إدارة البائعات';
@@ -960,7 +962,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminShowingCount(int shown, int total) {
-    return 'عرض $shown من $total';
+    return 'عم نعرض $shown من $total';
   }
 
   @override
@@ -988,31 +990,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminStatusEscalated => 'مُصعَّد';
 
   @override
-  String get adminStatusNotSubmitted => 'لم يُقدَّم';
+  String get adminStatusNotSubmitted => 'ما انبعت';
 
   @override
   String get adminStatusOpen => 'مفتوح';
 
   @override
-  String get adminStatusOutOfStock => 'نفدت الكمية';
+  String get adminStatusOutOfStock => 'خلصت الكمية';
 
   @override
   String get adminStatusPaid => 'مدفوعة';
 
   @override
-  String get adminStatusPending => 'قيد الانتظار';
+  String get adminStatusPending => 'ناطر';
 
   @override
   String get adminStatusRejected => 'مرفوض';
 
   @override
-  String get adminStatusResolved => 'تمت المعالجة';
+  String get adminStatusResolved => 'انحلّت';
 
   @override
   String get adminStatusReversed => 'معكوسة';
 
   @override
-  String get adminStatusReviewing => 'قيد المراجعة';
+  String get adminStatusReviewing => 'عم ينراجع';
 
   @override
   String get adminStatusSuspended => 'موقوف';
@@ -1048,24 +1050,24 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$units قطعة',
       few: '$units قطع',
-      two: 'قطعتان',
-      one: 'قطعة واحدة',
+      two: 'قطعتين',
+      one: 'قطعة وحدة',
     );
     return '$_temp0';
   }
 
   @override
   String get adminNotificationAnalyticsSubtitle =>
-      'ما الذي أُرسل، عبر أي قناة، وكم منه وصل.';
+      'شو انبعت، وعن أي قناة، وقدّيش وصل منه.';
 
   @override
-  String get adminUnreadInApp => 'غير مقروء داخل التطبيق';
+  String get adminUnreadInApp => 'مو مقروء جوّا التطبيق';
 
   @override
-  String get adminNotificationsSent => 'أُرسلت';
+  String get adminNotificationsSent => 'انبعتت';
 
   @override
-  String get adminNotificationsFailed => 'فشلت';
+  String get adminNotificationsFailed => 'ما انبعتت';
 
   @override
   String get adminDeliveriesByChannel => 'الإرسال حسب القناة';
@@ -1080,7 +1082,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminChannelPush => 'إشعار فوري';
 
   @override
-  String get adminChannelInApp => 'داخل التطبيق';
+  String get adminChannelInApp => 'جوّا التطبيق';
 
   @override
   String get adminChannelEmail => 'بريد إلكتروني';
@@ -1095,13 +1097,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminUsers => 'المستخدمات';
 
   @override
-  String get adminVerificationApprove => 'موافقة';
+  String get adminVerificationApprove => 'وافقي';
 
   @override
-  String get adminVerificationDecision => 'اتخاذ قرار';
+  String get adminVerificationDecision => 'خدي قرار';
 
   @override
-  String get adminVerificationNeedsInfo => 'طلب توضيح';
+  String get adminVerificationNeedsInfo => 'اطلبي توضيح';
 
   @override
   String get adminVerificationReasonReaches => 'بتشوف تماماً اللي بتكتبيه هون.';
@@ -1113,16 +1115,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminVerificationRevoke => 'سحب التوثيق';
 
   @override
-  String get adminVerificationUnderReview => 'أخذها للمراجعة';
+  String get adminVerificationUnderReview => 'خديها للمراجعة';
 
   @override
-  String get adminVerifiedSellersOnly => 'البائعات الموثّقات فقط';
+  String get adminVerifiedSellersOnly => 'البائعات الموثّقات بس';
 
   @override
-  String get adminViewReports => 'عرض التقارير';
+  String get adminViewReports => 'شوفي التقارير';
 
   @override
-  String get adminWelcome => 'مرحباً بعودتكِ';
+  String get adminWelcome => 'يا هلا فيكِ من جديد';
 
   @override
   String get aiStylistTitle => 'مساعِدة أوهارا';
@@ -1131,13 +1133,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get all => 'الكل';
 
   @override
-  String get allSet => 'كل شيء جاهز ✨';
+  String get allSet => 'كلشي جاهز ✨';
 
   @override
   String get analyticsActiveCarts => 'سلات مفتوحة';
 
   @override
-  String get analyticsActiveCartsHint => 'سلات فيها بضاعتكِ ولم تُطلب بعد.';
+  String get analyticsActiveCartsHint => 'سلّات فيها بضاعتكِ وما انطلبت لسّا.';
 
   @override
   String get analyticsActiveCustomers => 'زبونات نشطات';
@@ -1158,26 +1160,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get analyticsCustomersSection => 'الزبونات';
 
   @override
-  String get analyticsEmpty => 'لا توجد بيانات في هذه الفترة';
+  String get analyticsEmpty => 'ما في بيانات بهالفترة';
 
   @override
   String get analyticsEmptyBlurb =>
-      'جرّبي فترة أطول، أو انشري منتجاً ليبدأ العدّ.';
+      'جرّبي فترة أطول، أو انشري منتج ليبلّش العدّ.';
 
   @override
-  String get analyticsFailed => 'تعذّر تحميل التحليلات';
+  String get analyticsFailed => 'ما قدرنا نحمّل التحليلات';
 
   @override
   String get analyticsFunnel => 'رحلة الشراء';
 
   @override
-  String get analyticsFunnelHint => 'من مشاهدة المنتج إلى الطلب.';
+  String get analyticsFunnelHint => 'من أول ما تنشاف القطعة لحتى تنطلب.';
 
   @override
   String get analyticsGross => 'الإجمالي';
 
   @override
-  String get analyticsMultiCurrencyHint => 'المبالغ لا تُجمع بين عملتين.';
+  String get analyticsMultiCurrencyHint => 'المبالغ ما بتنجمع بين عملتين.';
 
   @override
   String get analyticsNet => 'الصافي';
@@ -1192,7 +1194,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get analyticsPaidOrders => 'طلبات محقّقة';
 
   @override
-  String get analyticsPeriodMonth => '30 يوماً';
+  String get analyticsPeriodMonth => '30 يوم';
 
   @override
   String get analyticsPeriodQuarter => '3 أشهر';
@@ -1213,10 +1215,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get analyticsRepeatRate => 'نسبة العودة';
 
   @override
-  String get analyticsRetention30 => 'عادت خلال شهر';
+  String get analyticsRetention30 => 'رجعت خلال شهر';
 
   @override
-  String get analyticsRetention7 => 'عادت خلال أسبوع';
+  String get analyticsRetention7 => 'رجعت خلال أسبوع';
 
   @override
   String get analyticsRevenueSection => 'الإيرادات';
@@ -1249,8 +1251,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count قطعة',
       few: '$count قطع',
-      two: 'قطعتان',
-      one: 'قطعة واحدة',
+      two: 'قطعتين',
+      one: 'قطعة وحدة',
     );
     return '$_temp0';
   }
@@ -1271,7 +1273,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appearanceDescription =>
-      'اختاري كيف يظهر تطبيق أوهارا على جهازكِ. يُحفظ تفضيلكِ تلقائياً.';
+      'اختاري كيف بدّك يبيّن أوهارا على جهازكِ. اختياركِ بينحفظ لحالو.';
 
   @override
   String get apply => 'تطبيق';
@@ -1283,7 +1285,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ar => 'العربية';
 
   @override
-  String get askAboutThisPiece => 'اسألي عن هذه القطعة';
+  String get askAboutThisPiece => 'اسألي عن هالقطعة';
 
   @override
   String get averageYouGive => 'متوسّط تقييمكِ';
@@ -1295,17 +1297,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bankName => 'اسم المصرف';
 
   @override
-  String get beTheFirstToComment => 'كوني أول من تقول رأيها.';
+  String get beTheFirstToComment => 'خليكِ أول وحدة بتقول رأيها.';
 
   @override
   String get bestSeller => 'الأكثر مبيعاً';
 
   @override
-  String get browseAndAdd => 'تصفّحي المتجر وأضيفي ما يعجبكِ.';
+  String get browseAndAdd => 'اتفرّجي عالمتجر وضيفي اللي بيعجبكِ.';
 
   @override
   String get browsingWithoutAccount =>
-      'سجّلي الدخول لتحتفظي بسلّتكِ وطلباتكِ ومحفوظاتكِ';
+      'سجّلي دخولكِ لتضلّ سلّتكِ وطلباتكِ ومحفوظاتكِ معكِ';
 
   @override
   String get businessAddress => 'عنوان النشاط';
@@ -1323,7 +1325,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get businessName => 'اسم النشاط';
 
   @override
-  String get buyNow => 'اشتري الآن';
+  String get buyNow => 'اشتريها هلّق';
 
   @override
   String get call => 'اتصلي';
@@ -1344,13 +1346,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get categoryAccessories => 'إكسسوارات';
 
   @override
-  String get categoryAccessoriesBlurb => 'أوشحة وأحزمة ولمسات أخيرة';
+  String get categoryAccessoriesBlurb => 'شالات وأحزمة ولمسات أخيرة';
 
   @override
   String get categoryBags => 'حقائب';
 
   @override
-  String get categoryBagsBlurb => 'حقائب يد وسهرة ويوميّة';
+  String get categoryBagsBlurb => 'جزادين إيد وسهرة وللمشاوير';
 
   @override
   String get categoryBeauty => 'جمال وعناية';
@@ -1362,7 +1364,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get categoryDresses => 'فساتين';
 
   @override
-  String get categoryDressesBlurb => 'للسهرة والمناسبات وكل يوم';
+  String get categoryDressesBlurb => 'للسهرة والمناسبات ولكل يوم';
 
   @override
   String get categoryFragrance => 'عطور';
@@ -1380,32 +1382,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get categoryJewellery => 'مجوهرات';
 
   @override
-  String get categoryJewelleryBlurb => 'ذهب وفضّة وقطع يوميّة';
+  String get categoryJewelleryBlurb => 'دهب وفضّة وقطع لكل يوم';
 
   @override
   String get categoryShoes => 'أحذية';
 
   @override
-  String get categoryShoesBlurb => 'كعب عالٍ ومسطّح وصنادل';
+  String get categoryShoesBlurb => 'كعب عالي وفلات وصنادل';
 
   @override
   String get categoryTitle => 'القسم';
 
   @override
-  String get changeAccountNumber => 'تغيير رقم حسابي';
+  String get changeAccountNumber => 'غيّري رقم حسابي';
 
   @override
   String get changeNumberExplainer =>
-      'سنرسل رمزًا إلى رقمك الحالي أولاً، ثم إلى الرقم الجديد.';
+      'رح نبعت رمز لرقمك الحالي بالأول، وبعدين للرقم الجديد.';
 
   @override
-  String get changePassword => 'تغيير كلمة المرور';
+  String get changePassword => 'غيّري كلمة السر';
 
   @override
-  String get chatAttachTitle => 'أرفقي صورة';
+  String get chatAttachTitle => 'ضيفي صورة';
 
   @override
-  String get chatAttachmentFailed => 'تعذّر إرسال الصورة.';
+  String get chatAttachmentFailed => 'ما انبعتت الصورة.';
 
   @override
   String get chatAttachments => 'إرفاق';
@@ -1423,13 +1425,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatDelivered => 'وصلت';
 
   @override
-  String get chatDownloadFailed => 'تعذّر تنزيل الملف.';
+  String get chatDownloadFailed => 'ما قدرنا ننزّل الملف.';
 
   @override
   String get chatFileMessage => 'ملف';
 
   @override
-  String get chatFromFiles => 'أرسلي ملفاً';
+  String get chatFromFiles => 'ابعتي ملف';
 
   @override
   String chatLastSeen(String when) {
@@ -1437,26 +1439,25 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get chatLoadOlder => 'تحميل الرسائل السابقة';
+  String get chatLoadOlder => 'حمّلي الرسايل الأقدم';
 
   @override
-  String get chatMessageNotSent => 'لم تُرسل · اضغطي لإعادة المحاولة';
+  String get chatMessageNotSent => 'ما انبعتت · كبسي لتجرّبي مرة تانية';
 
   @override
   String get chatMessageFailed => 'ما انبعتت';
 
   @override
-  String get chatNoMessagesYet => 'لا رسائل بعد';
+  String get chatNoMessagesYet => 'ما في رسايل لسّا';
 
   @override
-  String get chatNoSharedMedia => 'لم تُشارَك أي صورة هنا بعد.';
+  String get chatNoSharedMedia => 'ما حدا شارك صور هون لسّا.';
 
   @override
-  String get chatOnlineNow => 'متصلة الآن';
+  String get chatOnlineNow => 'متصلة هلّق';
 
   @override
-  String get chatOpenFileFailed =>
-      'لا يوجد تطبيق على هذا الهاتف يفتح هذا الملف.';
+  String get chatOpenFileFailed => 'ما في تطبيق على هالموبايل بيفتح هالملف.';
 
   @override
   String get chatOrder => 'طلب';
@@ -1471,92 +1472,92 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatRetrySend => 'جرّبي مرة تانية';
 
   @override
-  String get chatSafetyNote => 'أبقي الدفع داخل أوهارا';
+  String get chatSafetyNote => 'خلّي الدفع جوّا أوهارا';
 
   @override
   String get chatSafetyNoteBody =>
-      'لن يطلب منكِ أي متجر الدفع خارج التطبيق. أبلغي عن أي محاولة لذلك.';
+      'ولا متجر رح يطلب منكِ تدفعي برّا التطبيق. إذا حدا حاول، بلّغينا.';
 
   @override
-  String get chatSeen => 'تمّت القراءة';
+  String get chatSeen => 'انقرت';
 
   @override
-  String get chatSendFailed => 'تعذّر إرسال الرسالة';
+  String get chatSendFailed => 'ما انبعتت الرسالة';
 
   @override
-  String get chatSending => 'جارٍ الإرسال…';
+  String get chatSending => 'عم تنبعت…';
 
   @override
-  String get chatSent => 'تم الإرسال';
+  String get chatSent => 'انبعتت';
 
   @override
-  String get chatShareImage => 'أرسلي صورة';
+  String get chatShareImage => 'ابعتي صورة';
 
   @override
-  String get chatSharedMedia => 'الصور المتبادلة';
+  String get chatSharedMedia => 'الصور اللي تبادلتوها';
 
   @override
-  String get chatStartConversation => 'ابدئي المحادثة';
+  String get chatStartConversation => 'بلّشي الحكي';
 
   @override
   String get chatStartConversationHint =>
-      'اسألي عن القطعة أو المقاس أو التوصيل، أو أرسلي صورة أو ملاحظة صوتية.';
+      'اسألي عن القطعة أو المقاس أو التوصيل، أو ابعتي صورة أو رسالة صوتية.';
 
   @override
-  String get chatStartFailed => 'تعذّر فتح المحادثة';
+  String get chatStartFailed => 'ما قدرنا نفتح المحادثة';
 
   @override
-  String get chatTyping => 'تكتب الآن…';
+  String get chatTyping => 'عم تكتب…';
 
   @override
   String get chatUntitled => 'محادثة';
 
   @override
-  String get chatVoice => 'ملاحظة صوتية';
+  String get chatVoice => 'رسالة صوتية';
 
   @override
   String get chatWriteMessage => 'اكتبي رسالة…';
 
   @override
-  String get chatYesterday => 'أمس';
+  String get chatYesterday => 'مبارح';
 
   @override
-  String get chatsEmptyAction => 'تصفّحي المتاجر';
+  String get chatsEmptyAction => 'اتفرّجي عالمتاجر';
 
   @override
   String get chatsEmptyMessage =>
-      'اسألي المتجر عن قطعة أو مقاس أو طلب، وستظهر المحادثة هنا.';
+      'اسألي المتجر عن قطعة أو مقاس أو طلب، والمحادثة رح تطلع هون.';
 
   @override
   String get chatsEmptyMessageSeller =>
-      'حين تسأل زبونة عن قطعة أو طلب، تصلكِ رسالتها هنا.';
+      'لمّا تسأل زبونة عن قطعة أو طلب، بتوصلكِ رسالتها هون.';
 
   @override
-  String get chatsEmptyTitle => 'لا توجد محادثات بعد';
+  String get chatsEmptyTitle => 'ما في محادثات لسّا';
 
   @override
-  String get chatsLoadFailed => 'تعذّر تحميل المحادثات';
+  String get chatsLoadFailed => 'ما قدرنا نحمّل المحادثات';
 
   @override
   String chatsSearchEmptyMessage(String query) {
-    return 'لا توجد محادثة تطابق «$query».';
+    return 'ما في محادثة فيها «$query».';
   }
 
   @override
-  String get chatsSearchEmptyTitle => 'لا نتائج';
+  String get chatsSearchEmptyTitle => 'ما لقينا شي';
 
   @override
-  String get chatsSearchHint => 'ابحثي عن اسم أو رسالة';
+  String get chatsSearchHint => 'دوّري على اسم أو رسالة';
 
   @override
-  String get chatsSubtitle => 'محادثاتكِ مع المتاجر التي تتسوّقين منها';
+  String get chatsSubtitle => 'حكيكِ مع المتاجر اللي بتتسوّقي منها';
 
   @override
   String get chatsSubtitleSeller =>
-      'محادثاتكِ مع الزبونات اللواتي يتسوّقن من متجركِ';
+      'حكيكِ مع الزبونات اللي بيتسوّقوا من متجركِ';
 
   @override
-  String get chatsTitle => 'الرسائل';
+  String get chatsTitle => 'الرسايل';
 
   @override
   String get checkout => 'إتمام الشراء';
@@ -1565,7 +1566,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutAddressLine => 'العنوان بالتفصيل';
 
   @override
-  String get checkoutAddressLineHint => 'الشارع، رقم البناء، الطابق';
+  String get checkoutAddressLineHint => 'الشارع، رقم البناية، الطابق';
 
   @override
   String get checkoutChooseGovernorate => 'اختاري المحافظة';
@@ -1574,13 +1575,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutChoosePayment => 'اختاري طريقة الدفع';
 
   @override
-  String get checkoutCity => 'المدينة أو البلدة';
+  String get checkoutCity => 'المدينة أو الضيعة';
 
   @override
   String get checkoutCoupon => 'كوبون الحسم';
 
   @override
-  String get checkoutCouponOptional => 'رمز الكوبون (اختياري)';
+  String get checkoutCouponOptional => 'كود الكوبون (إذا في)';
 
   @override
   String get checkoutDelivery => 'التوصيل';
@@ -1592,25 +1593,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutDistrict => 'المنطقة';
 
   @override
-  String get checkoutDistrictOptional => 'المنطقة (اختياري)';
+  String get checkoutDistrictOptional => 'المنطقة (إذا حابّة)';
 
   @override
   String get checkoutGovernorate => 'المحافظة';
 
   @override
-  String get checkoutInstructions => 'ملاحظات للتوصيل (اختياري)';
+  String get checkoutInstructions => 'ملاحظات للتوصيل (إذا حابّة)';
 
   @override
-  String get checkoutInstructionsHint => 'اتصلي قبل الوصول';
+  String get checkoutInstructionsHint => 'اتصلي قبل ما توصلي';
 
   @override
-  String get checkoutInvalidPhone => 'اكتبي رقم هاتف صحيحاً';
+  String get checkoutInvalidPhone => 'اكتبي رقم موبايل صحيح';
 
   @override
-  String get checkoutLandmark => 'أقرب معلم (اختياري)';
+  String get checkoutLandmark => 'أقرب معلم (إذا حابّة)';
 
   @override
-  String get checkoutLandmarkHint => 'مقابل الصيدلية';
+  String get checkoutLandmarkHint => 'قبال الصيدلية';
 
   @override
   String get checkoutNewAddress => 'عنوان جديد';
@@ -1622,50 +1623,51 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutPaymentMethod => 'طريقة الدفع';
 
   @override
-  String get checkoutPlaceOrder => 'تأكيد الطلب';
+  String get checkoutPlaceOrder => 'أكّدي الطلب';
 
   @override
   String checkoutPlacedSuccess(String number) {
-    return 'تم تأكيد طلبكِ $number';
+    return 'تأكّد طلبكِ $number 🎉';
   }
 
   @override
-  String get checkoutPrivacyMask => 'أخفي اسمي الكامل عن البائعة';
+  String get checkoutPrivacyMask => 'خبّي اسمي الكامل عن البائعة';
 
   @override
   String get checkoutPrivacyMaskHint =>
-      'تصل البائعة اسمكِ الأول فقط. المندوبة تحتاج بياناتكِ كاملة لتوصيل الطلب.';
+      'البائعة بيوصلها اسمكِ الأول بس. المندوبة محتاجة بياناتكِ كاملة لتوصّلك الطلب.';
 
   @override
   String get checkoutRecipientName => 'اسم المستلِمة';
 
   @override
-  String get checkoutRecipientPhone => 'رقم الهاتف';
+  String get checkoutRecipientPhone => 'رقم الموبايل';
 
   @override
-  String get checkoutRequired => 'هذا الحقل مطلوب';
+  String get checkoutRequired => 'هالخانة لازم تنعبّى';
 
   @override
   String get checkoutRural => 'المنطقة ريفية';
 
   @override
-  String get checkoutRuralHint => 'أجرة التوصيل ومدّته تختلفان عن مركز المدينة';
+  String get checkoutRuralHint =>
+      'أجرة التوصيل ومدّته بيختلفوا عن مركز المدينة';
 
   @override
   String get checkoutSafely => 'ادفعي بأمان';
 
   @override
-  String get checkoutSafelyBlurb => 'طلباتكِ وعناوينكِ ودفعاتكِ محميّة.';
+  String get checkoutSafelyBlurb => 'طلباتكِ وعناوينكِ ودفعاتكِ بأمان.';
 
   @override
-  String get checkoutSaveAddress => 'احفظي هذا العنوان لطلباتكِ القادمة';
+  String get checkoutSaveAddress => 'احفظي هالعنوان لطلباتكِ الجاية';
 
   @override
   String get checkoutSavedAddresses => 'عناوينكِ المحفوظة';
 
   @override
   String checkoutSplitNotice(String count) {
-    return 'طلبكِ من $count بائعات، وسيصلكِ على عدة شحنات — بأجرة توصيل واحدة.';
+    return 'طلبكِ من $count بائعات، ورح يوصلكِ على كذا شحنة — بس بأجرة توصيل وحدة.';
   }
 
   @override
@@ -1675,65 +1677,66 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutTitle => 'إتمام الطلب';
 
   @override
-  String get checkoutTotalPending => 'يُحتسب المجموع النهائي عند تأكيد الطلب';
+  String get checkoutTotalPending => 'المجموع النهائي بينحسب لمّا تأكّدي الطلب';
 
   @override
-  String get checkoutUseThisAddress => 'التوصيل إلى هنا';
+  String get checkoutUseThisAddress => 'وصّلوا لهون';
 
   @override
   String get city => 'المدينة';
 
   @override
-  String get clear => 'مسح';
+  String get clear => 'امسحي';
 
   @override
-  String get close => 'إغلاق';
+  String get close => 'سكّري';
 
   @override
-  String get codAwaitingBanner => 'هذا الطلب بانتظار رمز التأكيد.';
+  String get codAwaitingBanner => 'هالطلب ناطر رمز التأكيد.';
 
   @override
-  String get codConfirmAction => 'تأكيد الطلب';
+  String get codConfirmAction => 'أكّدي الطلب';
 
   @override
-  String get codConfirmDispatchFailed => 'تعذّر إرسال الرمز. حاولي مرّة أخرى.';
+  String get codConfirmDispatchFailed =>
+      'ما قدرنا نبعت الرمز. جرّبي مرة تانية.';
 
   @override
   String get codConfirmFallback =>
-      'أرسلنا رمزاً إلى رقم التوصيل — أدخليه لتأكيد الطلب.';
+      'بعتنا رمز لرقم التوصيل — حطّيه لتأكّدي الطلب.';
 
   @override
-  String get codConfirmLater => 'ليس الآن';
+  String get codConfirmLater => 'مو هلّق';
 
   @override
-  String get codConfirmResend => 'أعيدي إرسال الرمز';
+  String get codConfirmResend => 'ابعتولي الرمز من جديد';
 
   @override
-  String get codConfirmResent => 'الرمز في طريقه إليكِ';
+  String get codConfirmResent => 'الرمز بالطريق لعندكِ';
 
   @override
   String get codConfirmTitle => 'أكّدي طلبكِ';
 
   @override
-  String get codConfirmed => 'تم تأكيد طلبكِ';
+  String get codConfirmed => 'تأكّد طلبكِ';
 
   @override
-  String get codEnterCode => 'أدخلي الرمز';
+  String get codEnterCode => 'حطّي الرمز';
 
   @override
-  String get codeCopied => 'تم نسخ الرمز';
+  String get codeCopied => 'انتسخ الرمز';
 
   @override
-  String get codeSent => 'أُرسل رمز التحقق إلى موبايلكِ.';
+  String get codeSent => 'بعتنالكِ رمز التحقق على موبايلكِ.';
 
   @override
   String codeSentTo(String phone) {
-    return 'أرسلنا رمزاً لمرة واحدة إلى $phone.';
+    return 'بعتنا رمز لمرة وحدة على $phone.';
   }
 
   @override
   String codeSentToMasked(String destination) {
-    return 'أرسلنا الرمز إلى $destination';
+    return 'بعتنا الرمز على $destination';
   }
 
   @override
@@ -1743,27 +1746,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get collectionFeatured => 'مختارات أوهارا';
 
   @override
-  String get collectionMostLoved => 'الأكثر إعجاباً';
+  String get collectionMostLoved => 'الأكتر حبّاً';
 
   @override
-  String get collectionTopRated => 'الأعلى تقييماً';
+  String get collectionTopRated => 'الأعلى تقييم';
 
   @override
   String get collections => 'المجموعات';
 
   @override
-  String get collectionsBlurb =>
-      'قوائم قابلة للمشاركة للمنتجات والبائعات والمنشورات';
+  String get collectionsBlurb => 'قوائم بتنشارك للمنتجات والبائعات والمنشورات';
 
   @override
   String get collectionsEmptyHint =>
-      'ما عندك مجموعات بعد — أنشئي وحدة وبتطلع هون.';
+      'ما عندكِ مجموعات لسّا — اعملي وحدة وبتطلع هون.';
 
   @override
   String get comingSoon => 'قريباً';
 
   @override
-  String get comingSoonBlurb => 'نُحسّن هذه التجربة — ستصلكِ قريباً.';
+  String get comingSoonBlurb => 'عم نحسّن هالتجربة — قريباً بتوصلكِ.';
 
   @override
   String get comments => 'التعليقات';
@@ -1775,20 +1777,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get comparePrices => 'قارني الأسعار';
 
   @override
-  String get completeProfile => 'أكملي ملفكِ الشخصي';
+  String get completeProfile => 'كمّلي ملفكِ الشخصي';
 
   @override
-  String get completeSellerFields =>
-      'أكملي جميع الحقول المطلوبة في طلب البائعة.';
+  String get completeSellerFields => 'كمّلي كل الخانات المطلوبة بطلب البائعة.';
 
   @override
   String get confirm => 'تأكيد';
 
   @override
-  String get confirmPassword => 'تأكيد كلمة المرور';
+  String get confirmPassword => 'أكّدي كلمة السر';
 
   @override
-  String get confirmPasswordMismatch => 'كلمتا المرور غير متطابقتين';
+  String get confirmPasswordMismatch => 'كلمتين السر مو متطابقين';
 
   @override
   String get connected => 'مرتبط';
@@ -1800,22 +1801,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contactPhone => 'هاتف التواصل';
 
   @override
-  String get contactSupport => 'تواصلي مع الدعم';
+  String get contactSupport => 'احكي مع الدعم';
 
   @override
-  String get continueAsGuest => 'المتابعة كضيفة';
+  String get continueAsGuest => 'كمّلي كضيفة';
 
   @override
-  String get continueLabel => 'متابعة';
+  String get continueLabel => 'كمّلي';
 
   @override
-  String get copy => 'نسخ';
+  String get copy => 'انسخي';
 
   @override
   String get country => 'الدولة';
 
   @override
-  String get couponFreeShipping => 'شحن مجاني';
+  String get couponFreeShipping => 'شحن ببلاش';
 
   @override
   String get coupons => 'الكوبونات';
@@ -1826,11 +1827,11 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count كوبون',
-      many: '$count كوبوناً',
+      many: '$count كوبون',
       few: '$count كوبونات',
-      two: 'كوبونان',
+      two: 'كوبونين',
       one: 'كوبون واحد',
-      zero: 'لا كوبونات',
+      zero: 'ما في كوبونات',
     );
     return '$_temp0';
   }
@@ -1845,7 +1846,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get courierCollectedAmount => 'المبلغ المحصّل';
 
   @override
-  String get courierCollectedHint => 'اتركيه فارغاً إن حصّلتِ المبلغ كاملاً';
+  String get courierCollectedHint => 'اتركيه فاضي إذا حصّلتِ المبلغ كامل';
 
   @override
   String get courierConfirm => 'تأكيد';
@@ -1854,25 +1855,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get courierDay => 'طلبات اليوم';
 
   @override
-  String get courierDeliver => 'تم التسليم';
+  String get courierDeliver => 'سلّمتها';
 
   @override
-  String get courierDeliverTitle => 'تأكيد التسليم';
+  String get courierDeliverTitle => 'أكّدي التسليم';
 
   @override
-  String get courierDone => 'أُنجزت اليوم';
+  String get courierDone => 'خلصت اليوم';
 
   @override
-  String get courierEmptyBody => 'ستظهر الطلبات هنا فور إسنادها إليكِ.';
+  String get courierEmptyBody => 'الطلبات رح تطلع هون أول ما تنعطى إلكِ.';
 
   @override
-  String get courierEmptyTitle => 'لا طلبات اليوم';
+  String get courierEmptyTitle => 'ما في طلبات اليوم';
 
   @override
-  String get courierFail => 'تعذّر التسليم';
+  String get courierFail => 'ما قدرت سلّم';
 
   @override
-  String get courierFailTitle => 'سبب تعذّر التسليم';
+  String get courierFailTitle => 'ليش ما قدرتِ تسلّمي؟';
 
   @override
   String get courierInstructions => 'ملاحظات التوصيل';
@@ -1881,19 +1882,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get courierNavigate => 'الخريطة';
 
   @override
-  String get courierOpen => 'قيد التنفيذ';
+  String get courierOpen => 'عم تنعمل';
 
   @override
   String get courierPickUp => 'استلمت الطلب';
 
   @override
-  String get courierPrepaid => 'مدفوع مسبقاً';
+  String get courierPrepaid => 'مدفوعة سلف';
 
   @override
   String get courierRecipientNote => 'ملاحظة';
 
   @override
-  String get courierStartDelivery => 'خرجت للتسليم';
+  String get courierStartDelivery => 'طلعت للتسليم';
 
   @override
   String get create => 'إنشاء';
@@ -1902,81 +1903,80 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createAccount => 'إنشاء حساب';
 
   @override
-  String get createCaptionHint => 'اكتبي وصفاً…';
+  String get createCaptionHint => 'اكتبي وصف…';
 
   @override
-  String get createCollection => 'إنشاء مجموعة';
+  String get createCollection => 'اعملي مجموعة';
 
   @override
-  String get createPostAction => 'نشر';
+  String get createPostAction => 'انشري';
 
   @override
-  String get createPostAddProduct => 'أضيفي منتجاً';
+  String get createPostAddProduct => 'ضيفي منتج';
 
   @override
-  String get createPostBody => 'اعرضي قطعة واذكري لماذا تستحق.';
+  String get createPostBody => 'اعرضي قطعة واحكي ليش بتستاهل.';
 
   @override
   String get createPostFeatured => 'المنتج المميّز';
 
   @override
-  String get createPostLoadingProducts => 'جارٍ تحميل منتجاتكِ';
+  String get createPostLoadingProducts => 'عم نحمّل منتجاتكِ';
 
   @override
-  String get createPostNeedsCaption => 'اكتبي وصفاً أولاً';
+  String get createPostNeedsCaption => 'اكتبي وصف بالأول';
 
   @override
-  String get createPostNeedsProduct => 'اختاري منتجاً أولاً';
+  String get createPostNeedsProduct => 'نقّي منتج بالأول';
 
   @override
-  String get createPostNoProducts => 'لا توجد منتجات بعد';
+  String get createPostNoProducts => 'ما في منتجات لسّا';
 
   @override
-  String get createPostNoProductsBody =>
-      'أضيفي منتجاً إلى متجركِ، ثم انشري عنه.';
+  String get createPostNoProductsBody => 'ضيفي منتج لمتجركِ، وبعدين انشري عنه.';
 
   @override
-  String get createPostSuccess => 'تم نشر منشوركِ';
+  String get createPostSuccess => 'انتشر منشوركِ ✨';
 
   @override
   String get createPostTitle => 'منشور جديد';
 
   @override
-  String get createStoryAction => 'نشر الستوري';
+  String get createStoryAction => 'انشري الستوري';
 
   @override
-  String get createStoryBadLink => 'الرابط غير صالح';
+  String get createStoryBadLink => 'الرابط مو صحيح';
 
   @override
-  String get createStoryBody => 'لقطة من اليوم، تختفي بعد 24 ساعة.';
+  String get createStoryBody => 'لقطة من يومكِ، بتختفي بعد 24 ساعة.';
 
   @override
-  String get createStoryOptionalLink => 'رابط (اختياري)';
+  String get createStoryOptionalLink => 'رابط (إذا حابّة)';
 
   @override
-  String get createStorySuccess => 'تم نشر ستوريتكِ';
+  String get createStorySuccess => 'انتشرت ستوريتكِ ✨';
 
   @override
   String get createStoryTitle => 'ستوري جديدة';
 
   @override
-  String get currentNumberCode => 'أرسلنا رمزًا إلى رقمك الحالي';
+  String get currentNumberCode => 'بعتنا رمز لرقمكِ الحالي';
 
   @override
-  String get currentPassword => 'كلمة المرور الحالية';
+  String get currentPassword => 'كلمة السر الحالية';
 
   @override
   String get declaredFemaleLabel =>
-      'أُقرّ بأنني أنثى، وأوافق على شروط استخدام أوهارا';
+      'بأكّد إنّي أنثى، وموافقة على شروط استخدام أوهارا';
 
   @override
-  String get delete => 'حذف';
+  String get delete => 'احذفي';
 
   @override
-  String get deleteComment => 'حذف التعليق';
+  String get deleteComment => 'احذفي التعليق';
 
   @override
-  String get deleteCommentBody => 'سيُحذف للجميع.';
+  String get deleteCommentBody => 'رح ينحذف عند الكل.';
 
   @override
   String get delivery => 'التوصيل';
@@ -1988,13 +1988,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deviceName => 'اسم الجهاز';
 
   @override
-  String get deviceNotVerified => 'لم يتم تسجيل الدخول من هنا';
+  String get deviceNotVerified => 'ما في تسجيل دخول من هون';
 
   @override
-  String get deviceTrusted => 'مُوثّق على هذا الجهاز';
+  String get deviceTrusted => 'موثوق على هالجهاز';
 
   @override
-  String get deviceUpdated => 'تم تحديث الجهاز.';
+  String get deviceUpdated => 'تحدّث الجهاز.';
 
   @override
   String get devices => 'الأجهزة';
@@ -2003,17 +2003,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dialogConfirm => 'تأكيد';
 
   @override
-  String get dialogGotIt => 'حسناً';
+  String get dialogGotIt => 'تمام';
 
   @override
   String get discount => 'الخصم';
 
   @override
   String get discoverAskHelper =>
-      'صفي المناسبة أو الإحساس — «عرس صيفي، شيء ناعم، تحت 60 ألف»';
+      'احكيلي عن المناسبة أو الجو اللي بدّك ياه — «عرس صيفي، شي ناعم، تحت 60 ألف»';
 
   @override
-  String get discoverAskHint => 'ماذا تحتاجين؟';
+  String get discoverAskHint => 'شو بدّك؟';
 
   @override
   String get discoverAskLabel => 'اسألي أوهارا';
@@ -2022,22 +2022,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get discoverAskSend => 'اسألي';
 
   @override
-  String get discoverByName => 'ابحثي بالاسم';
+  String get discoverByName => 'دوّري بالاسم';
 
   @override
-  String get discoverEyebrow => 'بالحاجة، لا بالقسم';
+  String get discoverEyebrow => 'حسب حاجتكِ، مو حسب القسم';
 
   @override
-  String get discoverGapCta => 'اعرضي الخيارات';
+  String get discoverGapCta => 'ورجيني الخيارات';
 
   @override
-  String get discoverGapEyebrow => 'فجوة في خزانتكِ';
+  String get discoverGapEyebrow => 'في شي ناقص بخزانتكِ';
 
   @override
   String get discoverPhotoSearch => 'صوّري قطعة';
 
   @override
-  String get discoverPromptsTitle => 'جرّبي أن تسألي';
+  String get discoverPromptsTitle => 'جرّبي اسألي';
 
   @override
   String get discoverRoomCta => 'افتحي الغرفة';
@@ -2048,26 +2048,26 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: 'بعد $days يوم',
-      many: 'بعد $days يوماً',
+      many: 'بعد $days يوم',
       few: 'بعد $days أيام',
       two: 'بعد يومين',
-      one: 'غداً',
+      one: 'بكرا',
       zero: 'اليوم',
     );
     return '$_temp0';
   }
 
   @override
-  String get discoverTrendingTitle => 'يبحثن الآن عن';
+  String get discoverTrendingTitle => 'عم يدوّروا هلّق على';
 
   @override
   String get discoverWaitingSubtitle => 'من غرفكِ وخزانتكِ';
 
   @override
-  String get discoverWaitingTitle => 'ما ينتظركِ';
+  String get discoverWaitingTitle => 'شو ناطركِ';
 
   @override
-  String get done => 'تم';
+  String get done => 'تمام';
 
   @override
   String get earned => 'مكتسبة';
@@ -2076,29 +2076,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get earningsAvailable => 'جاهز للسحب';
 
   @override
-  String get earningsAvailableHint => 'يُحوَّل أسبوعياً';
+  String get earningsAvailableHint => 'بيتحوّل كل أسبوع';
 
   @override
   String get earningsEmptyBody =>
-      'عند تسليم أول طلب ستظهر أرباحكِ هنا خطوة بخطوة.';
+      'أول ما يتسلّم أول طلب، أرباحكِ رح تطلع هون خطوة بخطوة.';
 
   @override
-  String get earningsEmptyTitle => 'لا أرباح بعد';
+  String get earningsEmptyTitle => 'ما في أرباح لسّا';
 
   @override
-  String get earningsFrozen => 'مجمّد لنزاع';
+  String get earningsFrozen => 'مجمّد بسبب نزاع';
 
   @override
-  String get earningsFrozenHint => 'حتى صدور القرار';
+  String get earningsFrozenHint => 'لحتى يطلع القرار';
 
   @override
-  String get earningsHeld => 'قيد الضمان';
+  String get earningsHeld => 'بالضمان';
 
   @override
-  String get earningsHeldHint => 'حتى انتهاء مدة الإرجاع';
+  String get earningsHeldHint => 'لحتى تخلص مدة الإرجاع';
 
   @override
-  String get earningsLifetime => 'الإجمالي منذ البداية';
+  String get earningsLifetime => 'المجموع من الأول';
 
   @override
   String get earningsLifetimeCommission => 'عمولة المنصة';
@@ -2107,7 +2107,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get earningsLifetimeGross => 'إجمالي المبيعات';
 
   @override
-  String get earningsLifetimePaid => 'استلمتِه';
+  String get earningsLifetimePaid => 'وصلكِ';
 
   @override
   String get earningsMoveDisputeDone => 'تسوية نزاع';
@@ -2135,22 +2135,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get earningsOffline =>
-      'لا يوجد اتصال. سنحدّث أرباحكِ عند عودة الشبكة.';
+      'ما في نت. رح نحدّث أرباحكِ أول ما ترجع الشبكة.';
 
   @override
   String get earningsPayoutApproved => 'معتمدة';
 
   @override
-  String get earningsPayoutPending => 'بانتظار الاعتماد';
+  String get earningsPayoutPending => 'ناطرة الاعتماد';
 
   @override
-  String get earningsPendingPayouts => 'دفعات قيد التحويل';
+  String get earningsPendingPayouts => 'دفعات عم تتحوّل';
 
   @override
   String get earningsStatement => 'كشف الحساب';
 
   @override
-  String get editProfile => 'تعديل الملف الشخصي';
+  String get editProfile => 'عدّلي ملفكِ';
 
   @override
   String get email => 'البريد الإلكتروني';
@@ -2159,125 +2159,125 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailOrPhone => 'البريد أو رقم الموبايل';
 
   @override
-  String get emailOrPhoneRequired => 'البريد أو رقم الموبايل مطلوب';
+  String get emailOrPhoneRequired => 'لازم تكتبي البريد أو رقم الموبايل';
 
   @override
-  String get emailRequired => 'البريد الإلكتروني مطلوب';
+  String get emailRequired => 'لازم تكتبي البريد الإلكتروني';
 
   @override
-  String get emailUs => 'راسلينا بالبريد';
+  String get emailUs => 'راسلينا عالإيميل';
 
   @override
-  String get emptyCart => 'سلّتكِ فارغة';
+  String get emptyCart => 'سلّتكِ فاضية';
 
   @override
-  String get emptyCartAction => 'ابدئي التسوّق';
+  String get emptyCartAction => 'يلّا نتسوّق';
 
   @override
-  String get emptyFeed => 'لا يوجد شيء هنا بعد';
+  String get emptyFeed => 'ما في شي هون لسّا';
 
   @override
   String emptySearch(String query) {
-    return 'لا نتائج لـ«$query»';
+    return 'ما لقينا شي لـ«$query»';
   }
 
   @override
-  String get emptyStories => 'لا ستوريات حالياً';
+  String get emptyStories => 'ما في ستوريات هلّق';
 
   @override
-  String get emptyWishlist => 'مفضّلتكِ فارغة';
+  String get emptyWishlist => 'مفضّلتكِ فاضية';
 
   @override
   String get en => 'الإنجليزية';
 
   @override
-  String get enable => 'تفعيل';
+  String get enable => 'فعّلي';
 
   @override
-  String get enterVerificationCode => 'أدخلي رمز التحقق.';
+  String get enterVerificationCode => 'حطّي رمز التحقق.';
 
   @override
-  String get error => 'حدث خطأ ما';
+  String get error => 'صار في غلط، معلش';
 
   @override
   String etaDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'يصلكِ خلال $count يوماً',
-      few: 'يصلكِ خلال $count أيام',
-      two: 'يصلكِ خلال يومين',
-      one: 'يصلكِ خلال يوم',
+      other: 'بيوصلكِ خلال $count يوم',
+      few: 'بيوصلكِ خلال $count أيام',
+      two: 'بيوصلكِ خلال يومين',
+      one: 'بيوصلكِ خلال يوم',
     );
     return '$_temp0';
   }
 
   @override
-  String get etaSameDay => 'يصلكِ اليوم بإذن الله';
+  String get etaSameDay => 'بيوصلكِ اليوم إن شاء الله';
 
   @override
-  String get failCustomerRefused => 'رفضت الزبونة الاستلام';
+  String get failCustomerRefused => 'الزبونة ما رضيت تستلم';
 
   @override
-  String get failNoAnswer => 'لم يرد أحد';
+  String get failNoAnswer => 'ما حدا ردّ';
 
   @override
-  String get failOther => 'سبب آخر';
+  String get failOther => 'سبب تاني';
 
   @override
-  String get failPostponed => 'طلبت التأجيل';
+  String get failPostponed => 'طلبت نأجّل';
 
   @override
-  String get failUnreachableArea => 'المنطقة غير آمنة أو يصعب الوصول';
+  String get failUnreachableArea => 'المنطقة مو آمنة أو صعب الوصول إلها';
 
   @override
-  String get failWrongAddress => 'العنوان خاطئ';
+  String get failWrongAddress => 'العنوان غلط';
 
   @override
   String get faq => 'الأسئلة الشائعة';
 
   @override
-  String get faqContactSeller => 'كيف أتواصل مع المتجر؟';
+  String get faqContactSeller => 'كيف بحكي مع المتجر؟';
 
   @override
   String get faqContactSellerAnswer =>
-      'افتحي المنتج أو المتجر أو طلبكِ واضغطي «راسلي المتجر». محادثاتكِ محفوظة في «الرسائل».';
+      'افتحي المنتج أو المتجر أو طلبكِ وكبسي «راسلي المتجر». كل حكيكِ محفوظ بـ«الرسايل».';
 
   @override
-  String get faqPayment => 'كيف أدفع؟';
+  String get faqPayment => 'كيف بدفع؟';
 
   @override
   String get faqPaymentAnswer =>
-      'الدفع عند الاستلام، أو من محفظتكِ في أوهارا. لا تدفعي لأي متجر خارج التطبيق — الطلب المدفوع خارجه غير محمي.';
+      'بتدفعي عند الاستلام، أو من محفظتكِ بأوهارا. لا تدفعي لأي متجر برّا التطبيق — الطلب المدفوع برّا ما بيكون محمي.';
 
   @override
-  String get faqPoints => 'كيف تعمل نقاط الولاء؟';
+  String get faqPoints => 'كيف بتشتغل نقاط الولاء؟';
 
   @override
-  String get faqReturns => 'ما سياسة الإرجاع لديكم؟';
+  String get faqReturns => 'شو سياسة الإرجاع عندكن؟';
 
   @override
   String get faqReturnsAnswer =>
-      'يمكن إرجاع معظم القطع خلال 7 أيام من الاستلام. افتحي الطلب لبدء الإرجاع.';
+      'فيكِ ترجّعي أغلب القطع خلال 7 أيام من الاستلام. افتحي الطلب لتبلّشي بالإرجاع.';
 
   @override
-  String get faqTracking => 'كيف أتتبّع طلبي؟';
+  String get faqTracking => 'كيف بتابع طلبي؟';
 
   @override
   String get faqTrackingAnswer =>
-      'افتحي «طلباتي» من ملفكِ لمتابعة الحالة وتحديثات التوصيل.';
+      'افتحي «طلباتي» من ملفكِ لتتابعي الحالة وأخبار التوصيل.';
 
   @override
-  String get favorite => 'حفظ';
+  String get favorite => 'احفظي';
 
   @override
   String get feed => 'المنشورات';
 
   @override
-  String get fieldRequired => 'هذا الحقل مطلوب';
+  String get fieldRequired => 'هالخانة لازم تنعبّى';
 
   @override
-  String get fieldTooShort => 'أقصر من اللازم';
+  String get fieldTooShort => 'قصير شوي';
 
   @override
   String fileSizeMegabytes(String size) {
@@ -2297,19 +2297,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get financeCommissionRevenue => 'إيراد العمولة';
 
   @override
-  String get financeCourierCash => 'كاش لدى المندوبين';
+  String get financeCourierCash => 'كاش مع المندوبين';
 
   @override
-  String get financeCourierCashEmpty => 'لا كاش معلّق لدى أي مندوب.';
+  String get financeCourierCashEmpty => 'ما في كاش معلّق مع أي مندوب.';
 
   @override
-  String get financeCourierInTransit => 'نقد لدى المندوبين';
+  String get financeCourierInTransit => 'كاش مع المندوبين';
 
   @override
   String get financeCoverage => 'التغطية';
 
   @override
-  String get financeCoverageShort => 'التزاماتنا تفوق ما نملك';
+  String get financeCoverageShort => 'التزاماتنا أكتر من اللي معنا';
 
   @override
   String get financeCustomerWallets => 'محافظ الزبونات';
@@ -2327,8 +2327,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count ملاحظة',
       few: '$count ملاحظات',
-      two: 'ملاحظتان',
-      one: 'ملاحظة واحدة',
+      two: 'ملاحظتين',
+      one: 'ملاحظة وحدة',
     );
     return '$_temp0';
   }
@@ -2340,7 +2340,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get financeFxExposure => 'صافي الانكشاف';
 
   @override
-  String get financeFxNone => 'لم يُنشر سعر صرف بعد.';
+  String get financeFxNone => 'ما انحطّ سعر صرف لسّا.';
 
   @override
   String get financeFxRate => 'سعر الصرف';
@@ -2349,42 +2349,42 @@ class AppLocalizationsAr extends AppLocalizations {
   String get financeFxResult => 'نتيجة التحويلات';
 
   @override
-  String get financeFxSync => 'تحديث السعر الآن';
+  String get financeFxSync => 'حدّثي السعر هلّق';
 
   @override
   String get financeGatewayReceivable => 'ذمة مزوّد الدفع';
 
   @override
-  String get financeHeld => 'ما نملكه';
+  String get financeHeld => 'اللي معنا';
 
   @override
   String get financeLoyaltyLiability => 'التزام نقاط الولاء';
 
   @override
-  String get financeNoOverdue => 'لا نزاعات متأخرة.';
+  String get financeNoOverdue => 'ما في نزاعات متأخرة.';
 
   @override
-  String get financeNotBalanced => 'الميزان غير متوازن';
+  String get financeNotBalanced => 'الميزان مو متوازن';
 
   @override
   String financeOverdueBy(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'متأخر $count يوماً',
+      other: 'متأخر $count يوم',
       few: 'متأخر $count أيام',
       two: 'متأخر يومين',
-      one: 'متأخر يوماً',
+      one: 'متأخر يوم',
       zero: 'اليوم',
     );
     return '$_temp0';
   }
 
   @override
-  String get financeOverdueDisputes => 'نزاعات تجاوزت المهلة';
+  String get financeOverdueDisputes => 'نزاعات طوّلت أكتر من المهلة';
 
   @override
-  String get financeOwed => 'ما ندين به';
+  String get financeOwed => 'اللي علينا';
 
   @override
   String get financePlatformCash => 'نقد المنصة';
@@ -2402,7 +2402,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get financeSound => 'الدفاتر سليمة';
 
   @override
-  String get financeSoundHint => 'المدين يساوي الدائن، ولا انحراف في أي حساب';
+  String get financeSoundHint => 'المدين قدّ الدائن، وما في انحراف بأي حساب';
 
   @override
   String get financeTotalCredit => 'إجمالي الدائن';
@@ -2414,26 +2414,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get financeTrialBalance => 'ميزان المراجعة';
 
   @override
-  String get financeUnsound => 'الدفاتر تحتاج مراجعة';
+  String get financeUnsound => 'الدفاتر محتاجة مراجعة';
 
   @override
-  String get finishSignUp => 'أكملي إنشاء حسابكِ';
+  String get finishSignUp => 'كمّلي حسابكِ';
 
   @override
   String get firstName => 'الاسم الأول';
 
   @override
-  String get flagNewDevices => 'طلب تحقق عند دخول جهاز جديد.';
+  String get flagNewDevices => 'اطلبي تحقق لمّا يفوت جهاز جديد.';
 
   @override
   String flashAlmostGone(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'بقيت $count قطعة',
-      few: 'بقيت $count قطع',
-      two: 'بقيت قطعتان',
-      one: 'بقيت قطعة واحدة',
+      other: 'باقي $count قطعة',
+      few: 'باقي $count قطع',
+      two: 'باقي قطعتين',
+      one: 'باقي قطعة وحدة',
     );
     return '$_temp0';
   }
@@ -2443,88 +2443,88 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'بقيت $count قطعة',
-      few: 'بقيت $count قطع',
-      two: 'بقيت قطعتان',
-      one: 'بقيت قطعة واحدة',
+      other: 'باقي $count قطعة',
+      few: 'باقي $count قطع',
+      two: 'باقي قطعتين',
+      one: 'باقي قطعة وحدة',
     );
     return '$_temp0';
   }
 
   @override
-  String get flashLimitedTime => 'لوقت محدود';
+  String get flashLimitedTime => 'لفترة محدودة';
 
   @override
-  String get follow => 'متابعة';
+  String get follow => 'تابعي';
 
   @override
-  String get followAction => 'متابعة';
+  String get followAction => 'تابعي';
 
   @override
-  String get followDeviceLanguage => 'اتّبعي لغة الجهاز';
+  String get followDeviceLanguage => 'متل لغة الجهاز';
 
   @override
-  String get followListEmptyFollowers => 'لا متابِعات بعد';
+  String get followListEmptyFollowers => 'ما في متابِعات لسّا';
 
   @override
-  String get followListEmptyFollowing => 'لا تتابعين أحداً بعد';
+  String get followListEmptyFollowing => 'لسّا ما عم تتابعي حدا';
 
   @override
   String get followers => 'المتابِعات';
 
   @override
-  String get following => 'تتابعينها';
+  String get following => 'عم تتابعيها';
 
   @override
-  String get followingState => 'تتابعينها';
+  String get followingState => 'عم تتابعيها';
 
   @override
-  String get forgetPassword => 'نسيتِ كلمة المرور؟';
+  String get forgetPassword => 'نسيتِ كلمة السر؟';
 
   @override
-  String get formAcceptsReturns => 'أقبل الإرجاع';
+  String get formAcceptsReturns => 'بقبل الإرجاع';
 
   @override
-  String get formAddImage => 'إضافة صورة';
+  String get formAddImage => 'ضيفي صورة';
 
   @override
-  String get formAddVariant => 'إضافة خيار';
+  String get formAddVariant => 'ضيفي خيار';
 
   @override
-  String get formAiDescription => 'اكتبي بالذكاء الاصطناعي';
+  String get formAiDescription => 'خلّي الذكاء الاصطناعي يكتب';
 
   @override
-  String get formAiDescriptionAdded => 'تمّت كتابة الوصف';
+  String get formAiDescriptionAdded => 'انكتب الوصف ✨';
 
   @override
-  String get formAiTags => 'اقتراح وسوم';
+  String get formAiTags => 'اقترحيلي وسوم';
 
   @override
   String get formCategory => 'القسم';
 
   @override
-  String get formCategoryChange => 'تغيير';
+  String get formCategoryChange => 'غيّري';
 
   @override
-  String get formCategoryDetails => 'تفاصيل يطلبها القسم';
+  String get formCategoryDetails => 'تفاصيل بيطلبها القسم';
 
   @override
-  String get formCategoryEmpty => 'لا يوجد قسم بهذا الاسم';
+  String get formCategoryEmpty => 'ما في قسم بهالاسم';
 
   @override
-  String get formCategoryFailed => 'تعذّر تحميل الأقسام';
+  String get formCategoryFailed => 'ما قدرنا نحمّل الأقسام';
 
   @override
-  String get formCategoryNeedsDetails => 'أكملي التفاصيل التي يطلبها القسم';
+  String get formCategoryNeedsDetails => 'كمّلي التفاصيل اللي بيطلبها القسم';
 
   @override
-  String get formCategoryPick => 'اختاري القسم';
+  String get formCategoryPick => 'نقّي القسم';
 
   @override
-  String get formCategoryRequired => 'القسم مطلوب';
+  String get formCategoryRequired => 'لازم تنقّي القسم';
 
   @override
-  String get formCategorySearch => 'ابحثي عن قسم';
+  String get formCategorySearch => 'دوّري على قسم';
 
   @override
   String get formComparePrice => 'السعر قبل الخصم';
@@ -2533,16 +2533,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get formDescription => 'الوصف';
 
   @override
-  String get formDescriptionRequired => 'الوصف مطلوب';
+  String get formDescriptionRequired => 'لازم تكتبي وصف';
 
   @override
-  String get formEditProduct => 'تعديل المنتج';
+  String get formEditProduct => 'عدّلي المنتج';
 
   @override
   String get formFeatured => 'مميّز';
 
   @override
-  String get formFieldRequired => 'هذا الحقل مطلوب';
+  String get formFieldRequired => 'هالخانة لازم تنعبّى';
 
   @override
   String get formHandlingDays => 'أيام التجهيز';
@@ -2554,48 +2554,48 @@ class AppLocalizationsAr extends AppLocalizations {
   String get formListingTerms => 'شروط البيع';
 
   @override
-  String get formMadeToOrder => 'يُصنَع عند الطلب';
+  String get formMadeToOrder => 'بينعمل عالطلب';
 
   @override
   String get formMinOrderQty => 'أقل كمية للطلب';
 
   @override
   String get formNewListingReview =>
-      'المنتج الجديد يمرّ بمراجعة قصيرة قبل أن تراه الزبونات.';
+      'المنتج الجديد بيمرق بمراجعة قصيرة قبل ما تشوفه الزبونات.';
 
   @override
   String get formNewProduct => 'منتج جديد';
 
   @override
-  String get formNoTags => 'لا توجد وسوم مقترحة';
+  String get formNoTags => 'ما في وسوم مقترحة';
 
   @override
-  String get formOptional => 'اختياري';
+  String get formOptional => 'إذا حابّة';
 
   @override
   String get formPrice => 'السعر';
 
   @override
-  String get formPriceInvalid => 'أدخلي سعراً صحيحاً';
+  String get formPriceInvalid => 'حطّي سعر صحيح';
 
   @override
   String get formPricingSection => 'السعر والمخزون';
 
   @override
-  String get formProductCreated => 'تم نشر المنتج';
+  String get formProductCreated => 'انتشر المنتج ✨';
 
   @override
-  String get formProductUpdated => 'تم حفظ التعديلات';
+  String get formProductUpdated => 'انحفظت التعديلات';
 
   @override
-  String get formPublishProduct => 'نشر المنتج';
+  String get formPublishProduct => 'انشري المنتج';
 
   @override
   String get formSharedProductLocked =>
-      'بائعات أخريات يعرضن هذا المنتج، فصفحته مشتركة بينكنّ. يمكنكِ تعديل سعركِ ومخزونكِ وشروطكِ.';
+      'في بائعات تانيات عم يعرضوا نفس المنتج، فصفحته مشتركة بيناتكن. فيكِ تعدّلي سعركِ ومخزونكِ وشروطكِ.';
 
   @override
-  String get formShowInFeed => 'إظهار في المنشورات';
+  String get formShowInFeed => 'بيّنيه بالمنشورات';
 
   @override
   String get formSku => 'رمز التخزين';
@@ -2607,16 +2607,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get formStock => 'المخزون';
 
   @override
-  String get formStockInvalid => 'أدخلي كميّة صحيحة';
+  String get formStockInvalid => 'حطّي كمية صحيحة';
 
   @override
   String get formTitle => 'العنوان';
 
   @override
-  String get formTitleCategoryFirst => 'أضيفي العنوان والقسم أولاً';
+  String get formTitleCategoryFirst => 'ضيفي العنوان والقسم بالأول';
 
   @override
-  String get formTitleRequired => 'العنوان مطلوب';
+  String get formTitleRequired => 'لازم تكتبي عنوان';
 
   @override
   String get formVariantName => 'اسم الخيار';
@@ -2625,25 +2625,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get formVariantPrice => 'سعره';
 
   @override
-  String get formVariantsHint => 'اتركيها فارغة إن كان المنتج بخيار واحد.';
+  String get formVariantsHint => 'اتركيها فاضية إذا المنتج إلو خيار واحد.';
 
   @override
   String get formVariantsTitle => 'الخيارات — المقاس واللون';
 
   @override
-  String get friendsInvited => 'صديقات مدعوّات';
+  String get friendsInvited => 'صحبات مدعوّات';
 
   @override
   String get fullName => 'الاسم الكامل';
 
   @override
-  String get fullNameRequired => 'الاسم الكامل مطلوب';
+  String get fullNameRequired => 'لازم تكتبي اسمكِ الكامل';
 
   @override
-  String get galleryClose => 'إغلاق';
+  String get galleryClose => 'سكّري';
 
   @override
-  String get galleryOpenPhoto => 'تكبير الصورة';
+  String get galleryOpenPhoto => 'كبّري الصورة';
 
   @override
   String galleryPhotoPosition(int index, int count) {
@@ -2651,13 +2651,13 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get generateRecoveryCodes => 'توليد رموز جديدة';
+  String get generateRecoveryCodes => 'طلّعي رموز جديدة';
 
   @override
-  String get goodAfternoon => 'مساء الخير';
+  String get goodAfternoon => 'مسا الخير';
 
   @override
-  String get goodEvening => 'مساء الخير';
+  String get goodEvening => 'مسا الخير';
 
   @override
   String get goodMorning => 'صباح الخير';
@@ -2669,25 +2669,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get governmentIdUrl => 'رابط صورة الهوية';
 
   @override
-  String get greetingEveningKhair => 'مساء الخير';
+  String get greetingEveningKhair => 'مسا الخير';
 
   @override
-  String get greetingEveningNour => 'مساء النور';
+  String get greetingEveningNour => 'مسا النور';
 
   @override
-  String get greetingEveningWard => 'مساء الورد';
+  String get greetingEveningWard => 'مسا الورد';
 
   @override
-  String get greetingEveningYasmine => 'مساء الياسمين';
+  String get greetingEveningYasmine => 'مسا الياسمين';
 
   @override
-  String get greetingMiddaySaeed => 'نهارك سعيد';
+  String get greetingMiddaySaeed => 'نهاركِ سعيد';
 
   @override
-  String get greetingMiddayTab => 'طاب نهارك';
+  String get greetingMiddayTab => 'يسعد نهاركِ';
 
   @override
-  String get greetingMiddayWard => 'نهارك ورد';
+  String get greetingMiddayWard => 'نهاركِ ورد';
 
   @override
   String get greetingMorningFull => 'صباح الفل';
@@ -2699,30 +2699,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get greetingMorningNour => 'صباح النور';
 
   @override
-  String get greetingMorningWard => 'صباحك ورد';
+  String get greetingMorningWard => 'صباحكِ ورد';
 
   @override
   String get greetingMorningYasmine => 'صباح الياسمين';
 
   @override
-  String get greetingNightFull => 'ليلتك فل';
+  String get greetingNightFull => 'ليلتكِ فل';
 
   @override
   String get greetingNightSahra => 'سهرة هنية';
 
   @override
   String get guestBrowseBlurb =>
-      'سجّلي الدخول لحفظ القطع ومتابعة البوتيكات وتتبّع طلباتكِ.';
+      'سجّلي دخولكِ لتحفظي القطع وتتابعي البوتيكات وطلباتكِ.';
 
   @override
   String get guestCartSafe =>
-      'سلّتكِ محفوظة. سجّلي الدخول لتأكيد الطلبات وحفظ العناوين وتتبّع التوصيل.';
+      'سلّتكِ محفوظة. سجّلي دخولكِ لتأكّدي الطلبات وتحفظي العناوين وتتابعي التوصيل.';
 
   @override
   String get guestProfile => 'ملفكِ كضيفة';
 
   @override
-  String get guestShopper => 'تتصفّحين كضيفة';
+  String get guestShopper => 'عم تتفرّجي كضيفة';
 
   @override
   String get helpAndFaq => 'المساعدة والأسئلة الشائعة';
@@ -2731,32 +2731,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get helpCenter => 'مركز المساعدة';
 
   @override
-  String get hidePassword => 'إخفاء كلمة المرور';
+  String get hidePassword => 'خبّي كلمة السر';
 
   @override
-  String get highlightAddStories => 'أضيفي قصص';
+  String get highlightAddStories => 'ضيفي قصص';
 
   @override
   String get highlightArchiveEmpty =>
-      'ما نشرتِ قصة بعد. انشري وحدة وبتلاقيها هون.';
+      'لسّا ما نشرتِ ولا قصة. انشري وحدة وبتلاقيها هون.';
 
   @override
   String get highlightCreate => 'إبراز جديد';
 
   @override
-  String get highlightDelete => 'حذف الإبراز';
+  String get highlightDelete => 'احذفي الإبراز';
 
   @override
   String highlightDeleteConfirm(String name) {
-    return 'بدك تحذفي «$name»؟ القصص نفسها بتضل مكانها.';
+    return 'أكيد بدّك تحذفي «$name»؟ القصص نفسها بتضلّ مكانها.';
   }
 
   @override
-  String get highlightEmptyOpen => 'لسا ما في شي هون';
+  String get highlightEmptyOpen => 'لسّا ما في شي هون';
 
   @override
   String get highlightEmptyOwner =>
-      'خلّي القصة تضل بعد يومها — دليل مقاسات، إطلالة، تسليم.';
+      'خلّي القصة تعيش أكتر من يومها — دليل مقاسات، إطلالة، تسليم.';
 
   @override
   String get highlightNameHint => 'مقاسات، إطلالات، تسليمات…';
@@ -2768,21 +2768,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get highlightNew => 'جديد';
 
   @override
-  String get highlightPickStories => 'اختاري القصص';
+  String get highlightPickStories => 'نقّي القصص';
 
   @override
-  String get highlightRename => 'إعادة تسمية';
+  String get highlightRename => 'غيّري الاسم';
 
   @override
   String highlightSelected(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count مختارة',
-      few: '$count مختارة',
-      two: 'اثنتان مختارتان',
-      one: 'وحدة مختارة',
-      zero: 'ما اخترتِ شي',
+      other: '$count منقّاة',
+      few: '$count منقّايين',
+      two: 'تنتين منقّايين',
+      one: 'وحدة منقّاة',
+      zero: 'ما نقّيتِ شي',
     );
     return '$_temp0';
   }
@@ -2794,7 +2794,7 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count قصة',
       few: '$count قصص',
-      two: 'قصتان',
+      two: 'قصتين',
       one: 'قصة وحدة',
       zero: 'فاضية',
     );
@@ -2808,25 +2808,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get home => 'الرئيسية';
 
   @override
-  String get homeBestSellersEyebrow => 'الأكثر محبة';
+  String get homeBestSellersEyebrow => 'الأكتر محبّة';
 
   @override
   String get homeBoutiqueStories => 'ستوريات البوتيكات';
 
   @override
-  String get homeCategoriesEyebrow => 'تصفّحي';
+  String get homeCategoriesEyebrow => 'اتفرّجي';
 
   @override
-  String get homeContinueShopping => 'أكملي تسوّقكِ';
+  String get homeContinueShopping => 'كمّلي تسوّقكِ';
 
   @override
-  String get homeContinueShoppingEyebrow => 'أهلاً بعودتكِ';
+  String get homeContinueShoppingEyebrow => 'يا هلا فيكِ من جديد';
 
   @override
   String get homeExploreEyebrow => 'اكتشفي';
 
   @override
-  String get homeExploreTitle => 'كل ما يناسبكِ';
+  String get homeExploreTitle => 'كل شي بيلبقلكِ';
 
   @override
   String get homeFeaturedEyebrow => 'اكتشفي';
@@ -2835,20 +2835,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeFeaturedStores => 'بوتيكات مميّزة';
 
   @override
-  String get homeFeaturedStoresEyebrow => 'بائعات مختارات';
+  String get homeFeaturedStoresEyebrow => 'بائعات منقّايات';
 
   @override
   String get homeFeedEmptyBody =>
-      'تابعي البوتيكات التي تحبّينها ليمتلئ فيدكِ بكل ما يعجبكِ.';
+      'تابعي البوتيكات اللي بتحبّيها ليتعبّى فيدكِ بكل شي بيعجبكِ.';
 
   @override
-  String get homeFeedEmptyTitle => 'فيدكِ يستعدّ';
+  String get homeFeedEmptyTitle => 'فيدكِ عم يتجهّز';
 
   @override
   String get homeFeedEyebrow => 'من البائعات';
 
   @override
-  String get homeFeedTitle => 'أحدث المنشورات';
+  String get homeFeedTitle => 'آخر المنشورات';
 
   @override
   String get homeFlashDeals => 'عروض سريعة';
@@ -2866,10 +2866,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get homeGreetingSubtitle =>
-      'مختارات أنيقة من الأزياء والجمال والهدايا — منتقاة لكِ.';
+      'تشكيلة أنيقة من الأزياء والجمال والهدايا — منقّاية إلكِ.';
 
   @override
-  String get homeLoyaltySubtitle => 'اكسبي نقاطاً مع كل عملية شراء ✨';
+  String get homeLoyaltySubtitle => 'اجمعي نقاط مع كل شروة ✨';
 
   @override
   String get homeLoyaltyTitle => 'مكافآت أوهارا';
@@ -2878,31 +2878,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeNearbyEyebrow => 'قريبة منكِ';
 
   @override
-  String get homeNearbyInGovernorate => 'في محافظتكِ';
+  String get homeNearbyInGovernorate => 'بمحافظتكِ';
 
   @override
-  String get homeNearbyInYourCity => 'في مدينتكِ';
+  String get homeNearbyInYourCity => 'بمدينتكِ';
 
   @override
   String get homeNearbyStores => 'بوتيكات قريبة';
 
   @override
-  String get homeNearbySubtitle => 'بوتيكات تشحن من محافظتكِ — وصول أسرع';
+  String get homeNearbySubtitle => 'بوتيكات بتشحن من محافظتكِ — بتوصل أسرع';
 
   @override
-  String get homeNewArrivalsEyebrow => 'وصل حديثاً';
+  String get homeNewArrivalsEyebrow => 'واصل جديد';
 
   @override
-  String get homeRecentlyViewed => 'آخر ما تصفّحتِ';
+  String get homeRecentlyViewed => 'آخر شي اتفرّجتِ عليه';
 
   @override
-  String get homeRecentlyViewedEyebrow => 'شاهدتِها مؤخراً';
+  String get homeRecentlyViewedEyebrow => 'شفتيها من شوي';
 
   @override
-  String get homeRecommendedEyebrow => 'منتقاة لكِ';
+  String get homeRecommendedEyebrow => 'منقّاية إلكِ';
 
   @override
-  String get homeSearchHint => 'ابحثي عن فستان، عطر، هدية…';
+  String get homeSearchHint => 'دوّري على فستان، عطر، هدية…';
 
   @override
   String get homeShapeGrid => 'شبكة';
@@ -2917,14 +2917,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeShopByCategory => 'تسوّقي حسب القسم';
 
   @override
-  String get homeShowcaseEyebrow => 'مباشرةً من البوتيكات';
+  String get homeShowcaseEyebrow => 'من البوتيكات لعندكِ';
 
   @override
   String get homeShowcaseSubtitle =>
-      'أحدث القطع تُروى كحكايات — تصفّحي، أحبّي، تسوّقي.';
+      'آخر القطع بتنحكى متل الحكايات — اتفرّجي، حبّي، تسوّقي.';
 
   @override
-  String get homeShowcaseTitle => 'وصل حديثاً';
+  String get homeShowcaseTitle => 'واصل جديد';
 
   @override
   String get homeStoriesEyebrow => 'جديد اليوم';
@@ -2934,11 +2934,11 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count بوتيك نشر ستوري اليوم',
-      many: '$count بوتيكاً نشر ستوري اليوم',
-      few: '$count بوتيكات نشرت ستوري اليوم',
-      two: 'بوتيكان نشرا ستوري اليوم',
-      one: 'بوتيك واحد نشر ستوري اليوم',
+      other: '$count بوتيك نزّلوا ستوري اليوم',
+      many: '$count بوتيك نزّلوا ستوري اليوم',
+      few: '$count بوتيكات نزّلوا ستوري اليوم',
+      two: 'بوتيكين نزّلوا ستوري اليوم',
+      one: 'بوتيك واحد نزّل ستوري اليوم',
     );
     return '$_temp0';
   }
@@ -2950,16 +2950,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeTasteGifts => 'هدايا';
 
   @override
-  String get homeTasteNewDrops => 'وصل حديثاً';
+  String get homeTasteNewDrops => 'واصل جديد';
 
   @override
   String get homeWishlist => 'من مفضّلتكِ';
 
   @override
-  String get homeWishlistEyebrow => 'أعجبتكِ';
+  String get homeWishlistEyebrow => 'عجبوكِ';
 
   @override
-  String get homeYourStory => 'ستوريتك';
+  String get homeYourStory => 'ستوريتكِ';
 
   @override
   String get iban => 'رقم الآيبان';
@@ -2968,15 +2968,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get inStock => 'متوفّر';
 
   @override
-  String get invalidCoupon => 'هذا الكوبون غير صالح';
+  String get invalidCoupon => 'هالكوبون مو صالح';
 
   @override
   String inviteCodeCopied(String code) {
-    return 'تم نسخ رمز الدعوة $code — شاركيه!';
+    return 'انتسخ رمز الدعوة $code — شاركيه مع صحباتكِ!';
   }
 
   @override
-  String get inviteFriends => 'ادعي صديقاتكِ واكسبي مكافآت';
+  String get inviteFriends => 'ادعي صحباتكِ واربحي مكافآت';
 
   @override
   String get invoice => 'الفاتورة';
@@ -2997,10 +2997,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invoiceDiscount => 'الخصم';
 
   @override
-  String get invoiceEmptyBody => 'تصدر الفاتورة عند شحن طلبكِ.';
+  String get invoiceEmptyBody => 'الفاتورة بتطلع لمّا ينشحن طلبكِ.';
 
   @override
-  String get invoiceEmptyTitle => 'لا فواتير بعد';
+  String get invoiceEmptyTitle => 'ما في فواتير لسّا';
 
   @override
   String get invoiceIssuedAt => 'تاريخ الإصدار';
@@ -3009,7 +3009,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invoiceItems => 'التفاصيل';
 
   @override
-  String get invoiceNoTax => 'هذه فاتورة تجارية وليست فاتورة ضريبية.';
+  String get invoiceNoTax => 'هاي فاتورة تجارية، مو فاتورة ضريبية.';
 
   @override
   String get invoiceNumber => 'رقم الفاتورة';
@@ -3046,21 +3046,21 @@ class AppLocalizationsAr extends AppLocalizations {
       other: '$count قطعة',
       many: '$count قطعة',
       few: '$count قطع',
-      two: 'قطعتان',
-      one: 'قطعة واحدة',
-      zero: 'لا قطع',
+      two: 'قطعتين',
+      one: 'قطعة وحدة',
+      zero: 'ما في قطع',
     );
     return '$_temp0';
   }
 
   @override
-  String get justIn => 'وصل حديثاً';
+  String get justIn => 'واصل جديد';
 
   @override
-  String get justNow => 'الآن';
+  String get justNow => 'هلّق';
 
   @override
-  String get keepBrowsing => 'تابعي التصفّح';
+  String get keepBrowsing => 'كمّلي فرجة';
 
   @override
   String get language => 'اللغة';
@@ -3087,29 +3087,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get liveChat => 'محادثة مباشرة';
 
   @override
-  String get locked => 'مقفلة';
+  String get locked => 'مقفولة';
 
   @override
-  String get logOutAll => 'تسجيل الخروج من كل الأجهزة';
+  String get logOutAll => 'اطلعي من كل الأجهزة';
 
   @override
-  String get login => 'تسجيل الدخول';
+  String get login => 'سجّلي دخولكِ';
 
   @override
-  String get loginSubtitle => 'سجّلي دخولكِ للتسوّق والمشاركة والتألّق ✨';
+  String get loginSubtitle => 'سجّلي دخولكِ لتتسوّقي وتشاركي وتتألّقي ✨';
 
   @override
   String get logout => 'تسجيل الخروج';
 
   @override
   String get lostSimExplainer =>
-      'إن فقدتِ رقمك نهائيًا، يمكننا مراجعة حسابكِ يدويًا. تستغرق المراجعة عدة أيام عن قصد.';
+      'إذا ضاع رقمكِ للأبد، فينا نراجع حسابكِ يدوياً. المراجعة بتاخد كم يوم، وهالشي مقصود لأمانكِ.';
 
   @override
-  String get lostYourSim => 'فقدتِ شريحتك؟';
+  String get lostYourSim => 'ضاعت شريحتكِ؟';
 
   @override
-  String get loyaltyConvert => 'حوّلي إلى رصيد';
+  String get loyaltyConvert => 'حوّليها لرصيد';
 
   @override
   String get loyaltyConvertHint => 'كل 10 نقاط = 5,000 ل.س رصيد';
@@ -3119,19 +3119,19 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تم تحويل $count نقطة إلى رصيدكِ ✨',
-      few: 'تم تحويل $count نقاط إلى رصيدكِ ✨',
-      two: 'تم تحويل نقطتين إلى رصيدكِ ✨',
-      one: 'تم تحويل نقطة واحدة إلى رصيدكِ ✨',
+      other: 'تحوّلوا $count نقطة لرصيدكِ ✨',
+      few: 'تحوّلوا $count نقاط لرصيدكِ ✨',
+      two: 'تحوّلوا نقطتين لرصيدكِ ✨',
+      one: 'تحوّلت نقطة وحدة لرصيدكِ ✨',
     );
     return '$_temp0';
   }
 
   @override
-  String get loyaltyNeedMultipleOfTen => 'النقاط تُحوَّل بمضاعفات العشرة.';
+  String get loyaltyNeedMultipleOfTen => 'النقاط بتتحوّل عشرة عشرة.';
 
   @override
-  String get loyaltyNotEnoughPoints => 'نقاطكِ لا تكفي لهذا التحويل.';
+  String get loyaltyNotEnoughPoints => 'نقاطكِ ما بتكفي لهالتحويل.';
 
   @override
   String get loyaltyPoints => 'نقاط الولاء';
@@ -3143,9 +3143,9 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count نقطة',
       few: '$count نقاط',
-      two: 'نقطتان',
-      one: 'نقطة واحدة',
-      zero: 'لا نقاط بعد',
+      two: 'نقطتين',
+      one: 'نقطة وحدة',
+      zero: 'ما في نقاط لسّا',
     );
     return '$_temp0';
   }
@@ -3157,11 +3157,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get manageSecurityBlurb =>
-      'أديري الجلسات والأجهزة والاسترداد وتفاصيل الدفع.';
+      'تحكّمي بالجلسات والأجهزة والاسترداد وتفاصيل الدفع.';
 
   @override
   String get matchCodeHint =>
-      'تأكّدي أن الرسالة تحمل الرقمين نفسهما. لن يطلب منك فريق أوهارا قراءة الرمز أبدًا.';
+      'تأكّدي إنّو الرسالة فيها نفس الرقمين. فريق أوهارا عمرو ما رح يطلب منكِ تقريلو الرمز.';
 
   @override
   String get matchCodeLabel => 'رمز المطابقة';
@@ -3176,17 +3176,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mediaDocumentsHint => 'صورة واضحة، أو ملف PDF الأصلي.';
 
   @override
-  String get mediaFromCamera => 'التقطي صورة';
+  String get mediaFromCamera => 'صوّري';
 
   @override
-  String get mediaFromFiles => 'اختاري ملفاً';
+  String get mediaFromFiles => 'نقّي ملف';
 
   @override
-  String get mediaFromGallery => 'اختاري من المعرض';
+  String get mediaFromGallery => 'نقّي من الاستوديو';
 
   @override
   String mediaGalleryHint(int count) {
-    return 'أول صورة هي الغلاف. حتى $count صور.';
+    return 'أول صورة بتكون الغلاف. لحد $count صور.';
   }
 
   @override
@@ -3194,39 +3194,39 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get mediaPickFailed =>
-      'تعذّر فتح الصور. تأكّدي من إذن الصور في إعدادات التطبيق.';
+      'ما قدرنا نفتح الصور. تأكّدي إنّك سامحة بالوصول للصور من إعدادات التطبيق.';
 
   @override
   String get mediaProductGallery => 'صور المنتج';
 
   @override
-  String get mediaRemovePhoto => 'إزالة الصورة';
+  String get mediaRemovePhoto => 'شيلي الصورة';
 
   @override
-  String get mediaSourceTitle => 'أضيفي صورة';
+  String get mediaSourceTitle => 'ضيفي صورة';
 
   @override
   String get mediaStoryLabel => 'صورة القصة';
 
   @override
-  String get mediaStoryRequired => 'اختاري صورة القصة أولاً.';
+  String get mediaStoryRequired => 'نقّي صورة القصة بالأول.';
 
   @override
   String mediaTooLarge(String size) {
-    return 'هذا الملف أكبر من $size ميغابايت.';
+    return 'هالملف أكبر من $size ميغابايت.';
   }
 
   @override
-  String get mediaUploadFailed => 'تعذّر الرفع';
+  String get mediaUploadFailed => 'ما قدرنا نرفعها';
 
   @override
-  String get mediaUploading => 'جارٍ الرفع…';
+  String get mediaUploading => 'عم نرفع…';
 
   @override
   String get mediaVideo => 'فيديو';
 
   @override
-  String get mediaWaitForUploads => 'انتظري انتهاء رفع الصور.';
+  String get mediaWaitForUploads => 'استنّي شوي لحتى يخلص رفع الصور.';
 
   @override
   String get menuGroupAccount => 'الحساب';
@@ -3262,7 +3262,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get messageSellerAboutOrder => 'راسلي المتجر بخصوص الطلب';
 
   @override
-  String get messages => 'الرسائل';
+  String get messages => 'الرسايل';
 
   @override
   String get moments => 'لحظاتكن';
@@ -3283,20 +3283,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myReviews => 'تقييماتي';
 
   @override
-  String get myReviewsEmpty => 'لم تكتبي أي تقييم بعد';
+  String get myReviewsEmpty => 'لسّا ما كتبتِ ولا تقييم';
 
   @override
-  String get myReviewsEmptyAction => 'اعرضي طلباتي';
+  String get myReviewsEmptyAction => 'ورجيني طلباتي';
 
   @override
   String get myReviewsEmptyBody =>
-      'بعد وصول طلبكِ، أخبري من تأتي بعدكِ إن كان يستحق.';
+      'بعد ما يوصلكِ طلبكِ، خبّري اللي جايين بعدكِ إذا بيستاهل.';
 
   @override
-  String get myReviewsFailed => 'تعذّر تحميل تقييماتكِ';
+  String get myReviewsFailed => 'ما قدرنا نحمّل تقييماتكِ';
 
   @override
-  String get myReviewsSubtitle => 'كل ما قلتِه عن قطعة أو عن متجر';
+  String get myReviewsSubtitle => 'كل شي حكيتيه عن قطعة أو عن متجر';
 
   @override
   String get navActivity => 'النشاط';
@@ -3335,7 +3335,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navSellerStore => 'متجري';
 
   @override
-  String get newArrivals => 'وصل حديثاً';
+  String get newArrivals => 'واصل جديد';
 
   @override
   String get newCollection => 'مجموعة جديدة';
@@ -3345,68 +3345,68 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get newDeviceCodeSent =>
-      'هذا الجهاز جديد. أرسلنا رمزًا إلى رقمك لإكمال تسجيل الدخول.';
+      'هاد جهاز جديد. بعتنا رمز لرقمكِ لتكمّلي تسجيل الدخول.';
 
   @override
   String newDeviceCooldown(String date) {
-    return 'هذا الجهاز جديد. التغييرات الحساسة تُفتح $date.';
+    return 'هاد جهاز جديد. التغييرات الحساسة بتنفتح $date.';
   }
 
   @override
-  String get newNumberCode => 'أرسلنا رمزًا إلى الرقم الجديد';
+  String get newNumberCode => 'بعتنا رمز للرقم الجديد';
 
   @override
   String get newNumberLabel => 'الرقم الجديد';
 
   @override
-  String get newPassword => 'كلمة المرور الجديدة';
+  String get newPassword => 'كلمة السر الجديدة';
 
   @override
-  String get next => 'التالي';
+  String get next => 'اللي بعدو';
 
   @override
   String nextStep(String step) {
-    return 'التالي: $step';
+    return 'اللي بعدو: $step';
   }
 
   @override
-  String get no => 'لا';
+  String get no => 'لأ';
 
   @override
-  String get noActiveSessions => 'لا جلسات نشطة.';
+  String get noActiveSessions => 'ما في جلسات شغّالة.';
 
   @override
-  String get noCollection => 'بدون مجموعة';
+  String get noCollection => 'بلا مجموعة';
 
   @override
   String get noCollectionBlurb => 'بتضل بالمحفوظات.';
 
   @override
-  String get noCommentsYet => 'لا تعليقات بعد';
+  String get noCommentsYet => 'ما في تعليقات لسّا';
 
   @override
-  String get noConnection => 'لا يوجد اتصال بالإنترنت';
+  String get noConnection => 'ما في نت';
 
   @override
-  String get noDevicesYet => 'لا أجهزة بعد.';
+  String get noDevicesYet => 'ما في أجهزة لسّا.';
 
   @override
-  String get noProductsFound => 'لا توجد قطع هنا بعد';
+  String get noProductsFound => 'ما في قطع هون لسّا';
 
   @override
-  String get noSavedItems => 'لا محفوظات بعد';
+  String get noSavedItems => 'ما في محفوظات لسّا';
 
   @override
-  String get noVerificationSubmitted => 'لم يُرسل طلب توثيق';
+  String get noVerificationSubmitted => 'ما انبعت طلب توثيق';
 
   @override
-  String get notConnected => 'غير مرتبط';
+  String get notConnected => 'مو مربوط';
 
   @override
-  String get notifActivity => 'من المتاجر التي تتابعينها';
+  String get notifActivity => 'من المتاجر اللي بتتابعيها';
 
   @override
-  String get notifChannels => 'كيف نصل إليكِ';
+  String get notifChannels => 'كيف منوصلّك';
 
   @override
   String get notifCommerce => 'طلباتكِ وعروضكِ';
@@ -3415,14 +3415,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifEmail => 'البريد الإلكتروني';
 
   @override
-  String get notifEmailBlurb => 'الفواتير وإشعارات الحساب والتحديثات المطوّلة.';
+  String get notifEmailBlurb => 'الفواتير وإشعارات الحساب والأخبار الطويلة.';
 
   @override
   String get notifModeration => 'قرارات المراجعة';
 
   @override
   String get notifModerationBlurb =>
-      'لمّا يتغيّر قرار مراجعة على أحد منشوراتكِ.';
+      'لمّا يتغيّر قرار مراجعة على شي منشور إلكِ.';
 
   @override
   String get notifOffers => 'العروض والكوبونات';
@@ -3431,7 +3431,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifOffersBlurb => 'الخصومات والكوبونات والمكافآت.';
 
   @override
-  String get notifOrders => 'تحديثات الطلبات';
+  String get notifOrders => 'أخبار الطلبات';
 
   @override
   String get notifOrdersBlurb => 'الدفع والتجهيز والشحن والتسليم.';
@@ -3440,14 +3440,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifPush => 'إشعارات التطبيق';
 
   @override
-  String get notifPushBlurb => 'تنبيهات الرسائل وتحديثات الطلبات والعروض.';
+  String get notifPushBlurb => 'تنبيهات الرسايل وأخبار الطلبات والعروض.';
 
   @override
-  String get notifPushBlocked => 'جوّالكِ مانع إشعارات أوهارا.';
+  String get notifPushBlocked => 'موبايلكِ مانع إشعارات أوهارا.';
 
   @override
   String get notifPushBlockedBody =>
-      'هاتفكِ يمنع إشعارات أوهارا، فلن يصلكِ شيء مما يلي حتى تسمحي بها من إعدادات النظام.';
+      'موبايلكِ مانع إشعارات أوهارا، فما رح يوصلكِ شي من اللي تحت لحتى تسمحيلها من إعدادات الجهاز.';
 
   @override
   String get notifPushBlockedTitle => 'الإشعارات مطفية';
@@ -3456,74 +3456,74 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifPushOpenSettings => 'افتحي الإعدادات';
 
   @override
-  String get notifPushUnavailable => 'إشعارات التطبيق مش متوفّرة بهالنسخة.';
+  String get notifPushUnavailable => 'إشعارات التطبيق مو متوفّرة بهالنسخة.';
 
   @override
   String get notifRooms => 'غرف التسوّق';
 
   @override
   String get notifRoomsBlurb =>
-      'الاقتراحات والأصوات والقرارات في الغرف التي أنتِ فيها.';
+      'الاقتراحات والأصوات والقرارات بالغرف اللي إنتِ فيها.';
 
   @override
   String get notifSellerPosts => 'منشورات جديدة';
 
   @override
-  String get notifSellerPostsBlurb => 'حين ينشر متجر تتابعينه شيئاً جديداً.';
+  String get notifSellerPostsBlurb => 'لمّا متجر بتتابعيه ينزّل شي جديد.';
 
   @override
   String get notifSellerStories => 'قصص جديدة';
 
   @override
-  String get notifSellerStoriesBlurb => 'قصص جديدة من المتاجر التي تتابعينها.';
+  String get notifSellerStoriesBlurb => 'قصص جديدة من المتاجر اللي بتتابعيها.';
 
   @override
-  String get notifSms => 'الرسائل النصية';
+  String get notifSms => 'الرسايل النصية';
 
   @override
-  String get notifSmsBlurb => 'رسائل التوصيل والحساب التي لا تحتمل التأجيل.';
+  String get notifSmsBlurb => 'رسايل التوصيل والحساب اللي ما بتتحمّل تأجيل.';
 
   @override
   String get notifSocial => 'الإعجابات والتعليقات';
 
   @override
   String get notifSocialBlurb =>
-      'حين يُعجب أحد بمنشوركِ أو يعلّق عليه أو يشاركه.';
+      'لمّا حدا يعجبه منشوركِ أو يعلّق عليه أو يشاركه.';
 
   @override
-  String get notificationAllRead => 'لا شيء غير مقروء';
+  String get notificationAllRead => 'ما في شي مو مقروء';
 
   @override
   String get notificationInboxEmptyBody =>
-      'تحديثات طلباتكِ وردود البائعات والعروض ستظهر هنا.';
+      'أخبار طلباتكِ وردود البائعات والعروض رح تطلع هون.';
 
   @override
-  String get notificationInboxEmptyTitle => 'لا جديد بعد';
+  String get notificationInboxEmptyTitle => 'ما في جديد لسّا';
 
   @override
-  String get notificationInboxLoadFailed => 'تعذّر تحميل الإشعارات';
+  String get notificationInboxLoadFailed => 'ما قدرنا نحمّل الإشعارات';
 
   @override
   String get notificationInboxTitle => 'الإشعارات';
 
   @override
-  String get notificationMarkAllRead => 'علّمي الكل كمقروء';
+  String get notificationMarkAllRead => 'علّمي الكل مقروء';
 
   @override
   String get notificationPreferencesTitle => 'إعدادات الإشعارات';
 
   @override
-  String get notificationPrefsSaved => 'حُفظت تفضيلات الإشعارات';
+  String get notificationPrefsSaved => 'انحفظت إعدادات الإشعارات';
 
   @override
   String notificationUnreadCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count إشعار غير مقروء',
-      few: '$count إشعارات غير مقروءة',
-      two: 'إشعاران غير مقروءين',
-      one: 'إشعار واحد غير مقروء',
+      other: '$count إشعار مو مقروء',
+      few: '$count إشعارات مو مقروءة',
+      two: 'إشعارين مو مقروءين',
+      one: 'إشعار واحد مو مقروء',
     );
     return '$_temp0';
   }
@@ -3532,67 +3532,67 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifications => 'الإشعارات';
 
   @override
-  String get notificationsLoadFailed => 'تعذّر تحميل الإعدادات';
+  String get notificationsLoadFailed => 'ما قدرنا نحمّل الإعدادات';
 
   @override
-  String get notificationsLoading => 'نحمّل الإعدادات';
+  String get notificationsLoading => 'عم نحمّل الإعدادات';
 
   @override
-  String get numberChanged => 'تم تغيير رقم حسابكِ';
+  String get numberChanged => 'تغيّر رقم حسابكِ';
 
   @override
-  String get numberVerified => 'تم تأكيد الرقم';
+  String get numberVerified => 'تأكّد الرقم';
 
   @override
-  String get offlineShowingSaved => 'لا يوجد اتصال — نعرض ما هو محفوظ';
+  String get offlineShowingSaved => 'ما في نت — عم نعرضلك المحفوظ';
 
   @override
-  String get onboardContinue => 'متابعة';
+  String get onboardContinue => 'كمّلي';
 
   @override
   String get onboardShareBody =>
-      'احفظي القطع، واكتبي تقييماتكِ، وأرسلي مفضّلاتكِ إلى صديقاتكِ.';
+      'احفظي القطع، واكتبي تقييماتكِ، وابعتي مفضّلاتكِ لصحباتكِ.';
 
   @override
-  String get onboardShareTitle => 'شاركي ما يعجبكِ';
+  String get onboardShareTitle => 'شاركي اللي بيعجبكِ';
 
   @override
   String get onboardShopBody =>
-      'فساتين ومستحضرات وهدايا من بوتيكات سورية، في مكان واحد.';
+      'فساتين ومستحضرات وهدايا من بوتيكات سورية، كلّها بمحلّ واحد.';
 
   @override
-  String get onboardShopTitle => 'بوتيك في جيبكِ';
+  String get onboardShopTitle => 'بوتيك بجيبتكِ';
 
   @override
   String get onboardSkip => 'تخطّي';
 
   @override
-  String get onboardStart => 'ابدئي التسوّق';
+  String get onboardStart => 'يلّا نتسوّق';
 
   @override
   String get onboardStoriesBody =>
-      'تابعي البوتيكات التي تحبّينها، وشاهدي ستورياتها لحظة نشرها.';
+      'تابعي البوتيكات اللي بتحبّيها، وشوفي ستورياتها أول ما تنزل.';
 
   @override
-  String get onboardStoriesTitle => 'شاهدي جديد اليوم';
+  String get onboardStoriesTitle => 'شوفي جديد اليوم';
 
   @override
-  String get orderCancelBody => 'سنُبلغ البائعات ولن يُشحن شيء.';
+  String get orderCancelBody => 'رح نخبّر البائعات وما رح ينشحن شي.';
 
   @override
-  String get orderCancelConfirm => 'إلغاء الطلب';
+  String get orderCancelConfirm => 'ألغي الطلب';
 
   @override
-  String get orderCancelKeep => 'الاحتفاظ به';
+  String get orderCancelKeep => 'خلّيه';
 
   @override
-  String get orderCancelTitle => 'إلغاء هذا الطلب؟';
+  String get orderCancelTitle => 'بدّك تلغي هالطلب؟';
 
   @override
   String get orderCancelled => 'ملغاة';
 
   @override
-  String get orderDelivered => 'تم التسليم';
+  String get orderDelivered => 'تسلّمت';
 
   @override
   String get orderDetails => 'تفاصيل الطلب';
@@ -3601,13 +3601,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get orderNew => 'جديدة';
 
   @override
-  String get orderNotFound => 'لم نعثر على هذا الطلب';
+  String get orderNotFound => 'ما لقينا هالطلب';
 
   @override
   String get orderPrivacyMaskOn => 'اسمكِ مخفي عن البائعة';
 
   @override
-  String get orderProcessing => 'قيد التجهيز';
+  String get orderProcessing => 'عم تتجهّز';
 
   @override
   String get orderReady => 'جاهزة للشحن';
@@ -3628,23 +3628,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get orders => 'الطلبات';
 
   @override
-  String get ordersEmptyForFilter => 'لا طلبات في هذه القائمة';
+  String get ordersEmptyForFilter => 'ما في طلبات بهالقائمة';
 
   @override
   String get ordersFilterAll => 'الكل';
 
   @override
-  String get otherSessionsEnded => 'تم إنهاء بقية الجلسات';
+  String get otherSessionsEnded => 'انسكّرت باقي الجلسات';
 
   @override
   String get otpOnSensitive => 'رمز تحقق للإجراءات الحساسة';
 
   @override
   String get otpOnSensitiveDescription =>
-      'طلب رمز تحقق قبل التغييرات الحسّاسة.';
+      'اطلبي رمز تحقق قبل التغييرات الحسّاسة.';
 
   @override
-  String get outOfStock => 'نفد المخزون';
+  String get outOfStock => 'خلص من المخزون';
 
   @override
   String get ownerLegalName => 'الاسم القانوني للمالكة';
@@ -3653,81 +3653,80 @@ class AppLocalizationsAr extends AppLocalizations {
   String get parcels => 'الشحنات';
 
   @override
-  String get password => 'كلمة المرور';
+  String get password => 'كلمة السر';
 
   @override
-  String get passwordChanged => 'تم تغيير كلمة المرور.';
+  String get passwordChanged => 'تغيّرت كلمة السر.';
 
   @override
-  String get passwordDisabled => 'غير مفعّلة — تسجّلين الدخول برمز';
+  String get passwordDisabled => 'مو مفعّلة — بتسجّلي دخولكِ برمز';
 
   @override
-  String get passwordEnabled => 'مفعّلة — على الأجهزة المعروفة فقط';
+  String get passwordEnabled => 'مفعّلة — عالأجهزة المعروفة بس';
 
   @override
-  String get passwordGood => 'جيدة';
+  String get passwordGood => 'منيحة';
 
   @override
   String passwordMinLength(int count) {
-    return 'لا تقلّ عن $count محارف';
+    return 'مو أقل من $count محارف';
   }
 
   @override
   String get passwordOnlyOnKnownDevice =>
-      'كلمة المرور تعمل فقط على جهاز سبق أن سجّلتِ الدخول منه.';
+      'كلمة السر بتشتغل بس على جهاز سجّلتِ دخولكِ منه قبل.';
 
   @override
-  String get passwordOptional => 'كلمة المرور (اختيارية)';
+  String get passwordOptional => 'كلمة السر (إذا حابّة)';
 
   @override
   String get passwordOptionalHint =>
-      'يمكنك تخطّيها. ستسجّلين الدخول برمز في كل مرة.';
+      'فيكِ تتخطّيها، وبتسجّلي دخولكِ برمز كل مرة.';
 
   @override
-  String get passwordRequired => 'كلمة المرور مطلوبة';
+  String get passwordRequired => 'لازم تكتبي كلمة السر';
 
   @override
-  String get passwordSignIn => 'الدخول بكلمة المرور';
+  String get passwordSignIn => 'ادخلي بكلمة السر';
 
   @override
   String passwordStrengthLabel(String label) {
-    return 'قوة كلمة المرور: $label';
+    return 'قوة كلمة السر: $label';
   }
 
   @override
-  String get passwordStrengthRule =>
-      'استخدمي أحرفاً كبيرة وصغيرة ورقماً ورمزاً.';
+  String get passwordStrengthRule => 'استعملي أحرف كبيرة وزغيرة ورقم ورمز.';
 
   @override
   String get passwordStrong => 'قوية';
 
   @override
   String get passwordUpdatedSignInAgain =>
-      'تم تحديث كلمة المرور. سجّلي الدخول من جديد.';
+      'تحدّثت كلمة السر. سجّلي دخولكِ من جديد.';
 
   @override
   String get passwordWeak => 'ضعيفة';
 
   @override
-  String get paymentActionTitle => 'إكمال الدفع';
+  String get paymentActionTitle => 'كمّلي الدفع';
 
   @override
-  String get paymentCheckAgain => 'تحقّقي من الدفع';
+  String get paymentCheckAgain => 'تأكّدي من الدفع';
 
   @override
-  String get paymentConfirmed => 'تم تأكيد الدفع';
+  String get paymentConfirmed => 'تأكّد الدفع';
 
   @override
-  String get paymentCouldNotOpen => 'تعذّر فتح صفحة الدفع';
+  String get paymentCouldNotOpen => 'ما قدرنا نفتح صفحة الدفع';
 
   @override
   String paymentGatewayHint(String method) {
-    return 'سنفتح صفحة $method لإتمام الدفع، ثم ارجعي وتحقّقي.';
+    return 'رح نفتحلك صفحة $method لتدفعي، وبعدين ارجعي وتأكّدي.';
   }
 
   @override
   String paymentManualHint(String method) {
-    return 'حوّلي المبلغ عبر $method، ثم اكتبي رقم الحوالة هنا ليطابقه فريق المالية.';
+    return 'حوّلي المبلغ عن طريق $method، وبعدين اكتبي رقم الحوالة هون ليطابقه فريق المالية.';
   }
 
   @override
@@ -3737,7 +3736,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get paymentMethods => 'طرق الدفع';
 
   @override
-  String get paymentOpenGateway => 'ادفعي الآن';
+  String get paymentOpenGateway => 'ادفعي هلّق';
 
   @override
   String get paymentReferenceLabel => 'رقم الحوالة أو الإشعار';
@@ -3746,47 +3745,48 @@ class AppLocalizationsAr extends AppLocalizations {
   String get paymentReferenceOnFile => 'رقم الحوالة المسجّل';
 
   @override
-  String get paymentReferenceRequired => 'اكتبي رقم الحوالة أولاً';
+  String get paymentReferenceRequired => 'اكتبي رقم الحوالة بالأول';
 
   @override
-  String get paymentReferenceSaved => 'وصلنا الرقم — سنؤكّد الدفع بعد المطابقة';
+  String get paymentReferenceSaved =>
+      'وصلنا الرقم — منأكّد الدفع بعد ما نطابقه';
 
   @override
-  String get paymentReferenceSubmit => 'إرسال الرقم';
+  String get paymentReferenceSubmit => 'ابعتي الرقم';
 
   @override
-  String get paymentStillPending => 'لم يصلنا الدفع بعد';
+  String get paymentStillPending => 'لسّا ما وصلنا الدفع';
 
   @override
-  String get payoutApprovedTitle => 'طلبكِ مُعتمَد — المبلغ في طريقه';
+  String get payoutApprovedTitle => 'طلبكِ انعتمد — المبلغ بالطريق';
 
   @override
   String payoutBlockedFrozen(Object date) {
-    return 'السحب موقوف مؤقتاً لحماية حسابكِ. يُرفع تلقائياً $date.';
+    return 'السحب موقّف شوي لنحمي حسابكِ. بينفتح لحالو $date.';
   }
 
   @override
-  String get payoutBlockedFrozenNoDate => 'السحب موقوف مؤقتاً لحماية حسابكِ.';
+  String get payoutBlockedFrozenNoDate => 'السحب موقّف شوي لنحمي حسابكِ.';
 
   @override
   String get payoutBlockedNothing =>
-      'لا شيء جاهز للسحب بعد. تصبح الأرباح متاحة بعد تسليم الطلب وانتهاء مهلة الإرجاع.';
+      'ما في شي جاهز للسحب لسّا. الأرباح بتصير متاحة بعد ما يتسلّم الطلب وتخلص مهلة الإرجاع.';
 
   @override
-  String get payoutCancelAction => 'إلغاء الطلب';
+  String get payoutCancelAction => 'ألغي الطلب';
 
   @override
   String get payoutCancelBlurb =>
-      'يعود المبلغ إلى رصيدكِ المتاح، ويمكنكِ طلبه متى شئتِ.';
+      'المبلغ بيرجع لرصيدكِ المتاح، وفيكِ تطلبيه أيمتى ما بدّك.';
 
   @override
-  String get payoutCancelConfirm => 'إلغاء طلب السحب؟';
+  String get payoutCancelConfirm => 'بدّك تلغي طلب السحب؟';
 
   @override
-  String get payoutCancelled => 'أُلغي الطلب';
+  String get payoutCancelled => 'انلغى الطلب';
 
   @override
-  String get payoutClaimable => 'قيمة هذا الطلب';
+  String get payoutClaimable => 'قيمة هالطلب';
 
   @override
   String payoutFromOrders(int count) {
@@ -3794,7 +3794,7 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: 'من $count طلب',
-      many: 'من $count طلباً',
+      many: 'من $count طلب',
       few: 'من $count طلبات',
       two: 'من طلبين',
       one: 'من طلب واحد',
@@ -3803,34 +3803,34 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get payoutPendingTitle => 'طلب سحب قيد المراجعة';
+  String get payoutPendingTitle => 'طلب سحب عم ينراجع';
 
   @override
   String get payoutRequestAction => 'اطلبي السحب';
 
   @override
   String get payoutRequestBlurb =>
-      'يذهب الطلب إلى الإدارة للاعتماد. لا يُحوَّل المبلغ إلا بعد الموافقة عليه.';
+      'الطلب بيروح للإدارة لتعتمده. المبلغ ما بيتحوّل إلا بعد الموافقة.';
 
   @override
   String payoutRequestConfirm(Object amount) {
-    return 'طلب سحب $amount؟';
+    return 'بدّك تسحبي $amount؟';
   }
 
   @override
   String get payoutRequestTitle => 'طلب سحب الأرباح';
 
   @override
-  String get payoutRequested => 'وصل طلبكِ. سنخبركِ حين يُعتمد.';
+  String get payoutRequested => 'وصلنا طلبكِ. منخبّرك لمّا ينعتمد.';
 
   @override
   String payoutRequestedOn(Object date) {
-    return 'طُلب في $date';
+    return 'انطلب بـ $date';
   }
 
   @override
   String payoutsFrozenUntil(String date) {
-    return 'التحويلات المالية موقوفة حتى $date';
+    return 'التحويلات المالية موقّفة لـ $date';
   }
 
   @override
@@ -3858,7 +3858,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get periodYearly => 'سنوي';
 
   @override
-  String get personalRecommendations => 'توصيات تخصّكِ';
+  String get personalRecommendations => 'اقتراحات إلكِ';
 
   @override
   String get personalRecommendationsBlurb =>
@@ -3868,10 +3868,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get phone => 'رقم الموبايل';
 
   @override
-  String get phoneRequired => 'رقم الموبايل مطلوب';
+  String get phoneRequired => 'لازم تكتبي رقم الموبايل';
 
   @override
-  String get phoneVerified => 'تم تأكيد رقم الموبايل.';
+  String get phoneVerified => 'تأكّد رقم الموبايل.';
 
   @override
   String piecesCount(String count) {
@@ -3879,7 +3879,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get placeOrder => 'تأكيد الطلب';
+  String get placeOrder => 'أكّدي الطلب';
 
   @override
   String get points => 'النقاط';
@@ -3888,17 +3888,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pointsEarned => 'النقاط المكتسبة';
 
   @override
-  String get post => 'نشر';
+  String get post => 'انشري';
 
   @override
   String postClosetCompletes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'ويُكمل $count إطلالة محفوظة',
-      few: 'ويُكمل $count إطلالات محفوظة',
-      two: 'ويُكمل إطلالتين محفوظتين',
-      one: 'ويُكمل إطلالة محفوظة',
+      other: 'وبيكمّل $count إطلالة محفوظة',
+      few: 'وبيكمّل $count إطلالات محفوظة',
+      two: 'وبيكمّل إطلالتين محفوظين',
+      one: 'وبيكمّل إطلالة محفوظة',
     );
     return '$_temp0';
   }
@@ -3907,17 +3907,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get postClosetOpen => 'خزانتي';
 
   @override
-  String get postClosetOwned => 'عندكِ مثلها في خزانتكِ';
+  String get postClosetOwned => 'عندكِ متلها بخزانتكِ';
 
   @override
   String postClosetPairs(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'يُنسَّق مع $count قطعة من خزانتكِ',
-      few: 'يُنسَّق مع $count قطع من خزانتكِ',
-      two: 'يُنسَّق مع قطعتين من خزانتكِ',
-      one: 'يُنسَّق مع قطعة من خزانتكِ',
+      other: 'بيلبق مع $count قطعة من خزانتكِ',
+      few: 'بيلبق مع $count قطع من خزانتكِ',
+      two: 'بيلبق مع قطعتين من خزانتكِ',
+      one: 'بيلبق مع قطعة من خزانتكِ',
     );
     return '$_temp0';
   }
@@ -3931,17 +3931,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get postOptions => 'خيارات المنشور';
 
   @override
-  String get postMore => 'المزيد';
+  String get postMore => 'كمان';
 
   @override
-  String get postSaved => 'حُفظ المنشور في المفضّلة';
+  String get postSaved => 'انحفظ المنشور بالمفضّلة';
 
   @override
-  String get postUnsaved => 'أُزيل المنشور من المفضّلة';
+  String get postUnsaved => 'انشال المنشور من المفضّلة';
 
   @override
   String postViewComments(String count) {
-    return 'عرض كل التعليقات ($count)';
+    return 'شوفي كل التعليقات ($count)';
   }
 
   @override
@@ -3951,27 +3951,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get preview => 'معاينة';
 
   @override
-  String get priceDropsBlurb => 'تنبيهات انخفاض السعر وعودة التوفّر';
+  String get priceDropsBlurb => 'تنبيهات لمّا ينزل السعر أو ترجع القطعة';
 
   @override
   String priceFrom(String price) {
-    return 'ابتداءً من $price';
+    return 'من $price وطالع';
   }
 
   @override
-  String get productArchive => 'إزالة من المتجر';
+  String get productArchive => 'شيليها من المتجر';
 
   @override
   String get productArchiveBlurb =>
-      'لن تظهر للزبونات بعد الآن، والطلبات السابقة عليها تبقى كما هي.';
+      'ما رح تبيّن للزبونات بعد هلّق، والطلبات القديمة عليها بتضلّ متل ما هي.';
 
   @override
   String productArchiveQuestion(Object title) {
-    return 'إزالة «$title» من المتجر؟';
+    return 'بدّك تشيلي «$title» من المتجر؟';
   }
 
   @override
-  String get productArchived => 'أُزيلت من المتجر';
+  String get productArchived => 'انشالت من المتجر';
 
   @override
   String get productCategories => 'فئات المنتجات';
@@ -3981,21 +3981,21 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String productFitKept(String size, int percent) {
-    return '$size: أبقته $percent% ممّن وصلهنّ بهذا المقاس';
+    return '$size: خلّوها $percent% من اللي وصلهن هالمقاس';
   }
 
   @override
   String productFitOftenReturned(String size, int percent) {
-    return '$size: يُعاد كثيراً بسبب المقاس — أبقته $percent% فقط';
+    return '$size: كتير بترجع بسبب المقاس — خلّوها $percent% بس';
   }
 
   @override
   String productChooseOption(Object axis) {
-    return 'اختاري $axis';
+    return 'نقّي $axis';
   }
 
   @override
-  String get productChooseSeller => 'اختاري البوتيك';
+  String get productChooseSeller => 'نقّي البوتيك';
 
   @override
   String get productDetails => 'تفاصيل المنتج';
@@ -4005,14 +4005,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String productOffersFrom(Object count) {
-    return '$count بوتيك يعرضن هذه القطعة';
+    return '$count بوتيك عم يعرضوا هالقطعة';
   }
 
   @override
-  String get productPause => 'إيقاف مؤقت';
+  String get productPause => 'وقّفيها شوي';
 
   @override
-  String get productPublish => 'نشر';
+  String get productPublish => 'انشري';
 
   @override
   String productRatingSummary(String rating, int count) {
@@ -4020,28 +4020,28 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count تقييم',
-      many: '$count تقييماً',
+      many: '$count تقييم',
       few: '$count تقييمات',
-      two: 'تقييمان',
+      two: 'تقييمين',
       one: 'تقييم واحد',
     );
     return '$rating · $_temp0';
   }
 
   @override
-  String get productRelated => 'قد يعجبكِ أيضاً';
+  String get productRelated => 'يمكن يعجبكِ كمان';
 
   @override
-  String get productRestock => 'تعديل المخزون';
+  String get productRestock => 'عدّلي المخزون';
 
   @override
   String get productRestockAmount => 'الكمية';
 
   @override
-  String get productStockUpdated => 'تم تحديث المخزون';
+  String get productStockUpdated => 'تحدّث المخزون';
 
   @override
-  String get productUnavailable => 'هذه القطعة غير متوفرة حالياً';
+  String get productUnavailable => 'هالقطعة مو متوفرة هلّق';
 
   @override
   String get products => 'المنتجات';
@@ -4053,22 +4053,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileBio => 'نبذة عنكِ';
 
   @override
-  String get profileBioTooLong => 'النبذة أطول من اللازم';
+  String get profileBioTooLong => 'النبذة طويلة شوي';
 
   @override
-  String get profileEdit => 'تعديل الملف الشخصي';
+  String get profileEdit => 'عدّلي ملفكِ';
 
   @override
-  String get profileEditTitle => 'تعديل الملف الشخصي';
+  String get profileEditTitle => 'عدّلي ملفكِ';
 
   @override
-  String get profileEmailInvalid => 'اكتبي بريداً إلكترونياً صحيحاً';
+  String get profileEmailInvalid => 'اكتبي إيميل صحيح';
 
   @override
   String get profileFollowers => 'المتابِعات';
 
   @override
-  String get profileFollowing => 'تتابعينها';
+  String get profileFollowing => 'عم تتابعيها';
 
   @override
   String get profileFullName => 'الاسم الكامل';
@@ -4077,108 +4077,110 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileIdentity => 'بيانات الملف';
 
   @override
-  String get profileLoadFailed => 'تعذّر تحميل هذا الملف';
+  String get profileLoadFailed => 'ما قدرنا نحمّل هالملف';
 
   @override
   String get profileLocation => 'المدينة';
 
   @override
-  String get profileLooksBeautiful => 'ملفكِ يبدو رائعاً.';
+  String get profileLooksBeautiful => 'ملفكِ بيجنّن ✨';
 
   @override
   String get profileManageStore => 'إدارة المتجر';
 
   @override
-  String get profileNameTooShort => 'الرجاء كتابة اسمكِ';
+  String get profileNameTooShort => 'اكتبي اسمكِ لو سمحتِ';
 
   @override
   String get profilePosts => 'المنشورات';
 
   @override
-  String get profileRecoveryEmail => 'بريد إلكتروني للاستعادة';
+  String get profileRecoveryEmail => 'إيميل للاستعادة';
 
   @override
   String get profileRecoveryEmailHint =>
-      'نستخدمه لاستعادة حسابكِ إن فقدتِ رقمكِ';
+      'منستعمله لنرجّعلك حسابكِ إذا ضاع رقمكِ';
 
   @override
-  String get profileSaveChanges => 'حفظ التغييرات';
+  String get profileSaveChanges => 'احفظي التغييرات';
 
   @override
   String get profileTitle => 'حسابي';
 
   @override
-  String get profileUpdated => 'تم حفظ ملفكِ';
+  String get profileUpdated => 'انحفظ ملفكِ';
 
   @override
   String get quantity => 'الكمية';
 
   @override
-  String get quickSteps => 'خطوات سريعة لتجربة أغنى.';
+  String get quickSteps => 'كم خطوة سريعة لتجربة أحلى.';
 
   @override
-  String get recent => 'بحثتِ عنه مؤخراً';
+  String get recent => 'دوّرتِ عليه من شوي';
 
   @override
-  String get recentlyViewed => 'شاهدتِها مؤخراً';
+  String get recentlyViewed => 'شفتيها من شوي';
 
   @override
-  String get recommended => 'مختارة لكِ';
+  String get recommended => 'منقّاية إلكِ';
 
   @override
-  String get recoveryCaseCancelled => 'تم إيقاف الطلب';
+  String get recoveryCaseCancelled => 'وقّفنا الطلب';
 
   @override
   String recoveryCaseCoolOff(String date) {
-    return 'سيُنقل حسابكِ في $date ما لم توقفي ذلك.';
+    return 'حسابكِ رح ينتقل بـ $date إلا إذا وقّفتي هالشي.';
   }
 
   @override
-  String get recoveryCaseOpenWarning => 'طلب أحدهم نقل حسابكِ إلى رقم آخر.';
+  String get recoveryCaseOpenWarning => 'في حدا طلب ينقل حسابكِ لرقم تاني.';
 
   @override
   String get recoveryCodes => 'رموز الاستعادة';
 
   @override
   String recoveryCodesRemaining(int count) {
-    return '$count غير مستخدم';
+    return '$count مو مستعمل';
   }
 
   @override
   String get recoveryCodesWarning =>
-      'دوّنيها الآن. تُعرض مرة واحدة فقط، وتوليد مجموعة جديدة يلغي القديمة.';
+      'اكتبيهن هلّق. بيطلعوا مرة وحدة بس، وإذا طلّعتِ مجموعة جديدة القديمة بتنلغى.';
 
   @override
-  String get recoveryContactNumber => 'رقم يمكننا التواصل معكِ عليه الآن';
+  String get recoveryContactNumber => 'رقم فينا نحكيكِ عليه هلّق';
 
   @override
-  String get recoveryDeviceLabel => 'ما اسم أحد أجهزتك؟';
+  String get recoveryDeviceLabel => 'شو اسم شي جهاز من أجهزتكِ؟';
 
   @override
   String get recoveryKeepSecret =>
-      'احتفظي بهذا الرمز. إنه الطريقة الوحيدة لمتابعة طلبكِ.';
+      'خلّي هالرمز معكِ. هو الطريقة الوحيدة لتتابعي طلبكِ.';
 
   @override
-  String get recoveryLastOrderMonth => 'متى كان آخر طلب لك؟ (سنة-شهر)';
+  String get recoveryLastOrderMonth => 'أيمتى كان آخر طلب إلكِ؟ (سنة-شهر)';
 
   @override
-  String get recoveryLastOrderTotal => 'كم كانت قيمته تقريبًا؟';
+  String get recoveryLastOrderTotal => 'قدّيش كانت قيمته تقريباً؟';
 
   @override
   String get recoveryNoDocuments =>
-      'لن نطلب منك صورة شخصية ولا صورة عن أي وثيقة هوية.';
+      'ما رح نطلب منكِ صورة شخصية ولا صورة عن أي وثيقة هوية.';
 
   @override
-  String get recoveryQuestionsHint => 'أجيبي عمّا تستطيعين. لا شيء هنا إلزامي.';
+  String get recoveryQuestionsHint =>
+      'جاوبي عاللي بتقدري عليه. ما في شي إجباري هون.';
 
   @override
-  String get recoveryQuestionsTitle => 'ماذا تتذكّرين؟';
+  String get recoveryQuestionsTitle => 'شو بتتذكّري؟';
 
   @override
-  String get recoveryRegistrationMonth => 'متى انضممتِ تقريبًا؟ (سنة-شهر)';
+  String get recoveryRegistrationMonth =>
+      'أيمتى سجّلتِ معنا تقريباً؟ (سنة-شهر)';
 
   @override
-  String get recoverySubmitted => 'استلمنا طلبكِ';
+  String get recoverySubmitted => 'وصلنا طلبكِ';
 
   @override
   String get redeem => 'استبدلي';
@@ -4187,88 +4189,88 @@ class AppLocalizationsAr extends AppLocalizations {
   String get redeemed => 'مستبدَلة';
 
   @override
-  String get refresh => 'تحديث';
+  String get refresh => 'حدّثي';
 
   @override
-  String get rememberThisDevice => 'تذكّري هذا الجهاز';
+  String get rememberThisDevice => 'تذكّري هالجهاز';
 
   @override
-  String get removeFromCart => 'إزالة من السلة';
+  String get removeFromCart => 'شيليها من السلّة';
 
   @override
-  String get removeOutOfStock => 'إزالة غير المتوفّر';
+  String get removeOutOfStock => 'شيلي اللي مو متوفّر';
 
   @override
-  String get removePassword => 'إزالة كلمة المرور';
+  String get removePassword => 'شيلي كلمة السر';
 
   @override
   String removedFromCollection(String name) {
-    return 'تمت الإزالة من $name';
+    return 'انشالت من $name';
   }
 
   @override
-  String get rename => 'إعادة تسمية';
+  String get rename => 'غيّري الاسم';
 
   @override
-  String get renameDevice => 'إعادة تسمية الجهاز';
+  String get renameDevice => 'غيّري اسم الجهاز';
 
   @override
-  String get reorder => 'اطلبيه مجدداً';
+  String get reorder => 'اطلبيه مرة تانية';
 
   @override
   String get reply => 'ردّي';
 
   @override
-  String get replyWithinHour => 'نردّ عادةً خلال ساعة';
+  String get replyWithinHour => 'عادةً منردّ خلال ساعة';
 
   @override
-  String get requestReturn => 'طلب إرجاع';
+  String get requestReturn => 'اطلبي إرجاع';
 
   @override
-  String get requestingCode => 'جارٍ طلب رمز لمرة واحدة…';
+  String get requestingCode => 'عم نطلبلك رمز لمرة وحدة…';
 
   @override
-  String get resendCode => 'إعادة إرسال الرمز';
+  String get resendCode => 'ابعتولي الرمز من جديد';
 
   @override
   String resendInSeconds(int seconds) {
-    return 'إعادة الإرسال بعد $seconds ثانية';
+    return 'فيكِ تعيدي الإرسال بعد $seconds ثانية';
   }
 
   @override
-  String get resetPassword => 'إعادة تعيين كلمة المرور';
+  String get resetPassword => 'غيّري كلمة السر';
 
   @override
-  String get resetYourPassword => 'إعادة تعيين كلمة المرور';
+  String get resetYourPassword => 'غيّري كلمة السر';
 
   @override
-  String get retry => 'حاولي مرة أخرى';
+  String get retry => 'جرّبي مرة تانية';
 
   @override
-  String get returnActionApprove => 'الموافقة على الإرجاع';
+  String get returnActionApprove => 'وافقي عالإرجاع';
 
   @override
-  String get returnActionExchange => 'استبدال بدل الإرجاع';
+  String get returnActionExchange => 'بدّليها بدل ما ترجع';
 
   @override
-  String get returnActionExchangeDelivered => 'وصل البديل للزبونة';
+  String get returnActionExchangeDelivered => 'البديل وصل للزبونة';
 
   @override
-  String get returnActionInTransit => 'القطعة في الطريق';
+  String get returnActionInTransit => 'القطعة بالطريق';
 
   @override
-  String get returnActionReceive => 'استلمتُ القطعة';
+  String get returnActionReceive => 'استلمت القطعة';
 
   @override
-  String get returnActionReject => 'رفض الطلب';
+  String get returnActionReject => 'ارفضي الطلب';
 
   @override
   String returnAlreadyClaimed(int count) {
-    return 'طُلب إرجاع $count منها';
+    return 'انطلب إرجاع $count منها';
   }
 
   @override
-  String get returnApproveTitle => 'الموافقة على الإرجاع';
+  String get returnApproveTitle => 'الموافقة عالإرجاع';
 
   @override
   String get returnBearerCustomer => 'الزبونة';
@@ -4283,40 +4285,38 @@ class AppLocalizationsAr extends AppLocalizations {
   String get returnBearerSeller => 'أنا';
 
   @override
-  String get returnChooseItems => 'أي القطع؟';
+  String get returnChooseItems => 'أي قطع؟';
 
   @override
-  String get returnChooseReason => 'لماذا تُرجعينها؟';
+  String get returnChooseReason => 'ليش بدّك ترجّعيها؟';
 
   @override
   String get returnEvidence => 'صور الزبونة';
 
   @override
   String get returnEvidenceHelper =>
-      'صورة واحدة على الأقل، لأن الطلب يحرّك مبلغاً من البائعة';
+      'صورة وحدة عالأقل، لأنّو الطلب بيحرّك مبلغ من البائعة';
 
   @override
-  String get returnEvidenceLabel => 'صور توضّح المشكلة';
+  String get returnEvidenceLabel => 'صور بتوضّح المشكلة';
 
   @override
-  String get returnEvidenceRequired =>
-      'أضيفي صورة واحدة على الأقل توضّح المشكلة';
+  String get returnEvidenceRequired => 'ضيفي صورة وحدة عالأقل بتوضّح المشكلة';
 
   @override
   String get returnItems => 'القطع المُعادة';
 
   @override
-  String get returnLineQuantity => 'العدد المُعاد';
+  String get returnLineQuantity => 'العدد المرتجع';
 
   @override
-  String get returnNoEvidence => 'لم ترفق صوراً';
+  String get returnNoEvidence => 'ما حطّت صور';
 
   @override
-  String get returnNoteOptional => 'ملاحظة (اختيارية)';
+  String get returnNoteOptional => 'ملاحظة (إذا حابّة)';
 
   @override
-  String get returnNothingReturnable =>
-      'لا توجد قطعة في هذا الطلب يمكن إرجاعها';
+  String get returnNothingReturnable => 'ما في قطعة بهالطلب فيكِ ترجّعيها';
 
   @override
   String returnParcelLabel(Object number) {
@@ -4335,25 +4335,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get returnReasonChangedMind => 'غيّرت رأيها';
 
   @override
-  String get returnReasonDamagedInTransit => 'تضرّرت في الشحن';
+  String get returnReasonDamagedInTransit => 'انضرّت بالشحن';
 
   @override
-  String get returnReasonDefective => 'القطعة معطوبة';
+  String get returnReasonDefective => 'القطعة فيها عيب';
 
   @override
-  String get returnReasonLateDelivery => 'تأخّر التوصيل';
+  String get returnReasonLateDelivery => 'التوصيل تأخّر';
 
   @override
-  String get returnReasonNotAsDescribed => 'مختلفة عن الوصف';
+  String get returnReasonNotAsDescribed => 'مو متل الوصف';
 
   @override
-  String get returnReasonOther => 'سبب آخر';
+  String get returnReasonOther => 'سبب تاني';
 
   @override
-  String get returnReasonSizeIssue => 'المقاس لا يناسبها';
+  String get returnReasonSizeIssue => 'المقاس ما ظبط معها';
 
   @override
-  String get returnReasonWrongItem => 'وصلتها قطعة أخرى';
+  String get returnReasonWrongItem => 'وصلتها قطعة غلط';
 
   @override
   String get returnReceiveTitle => 'استلام القطعة';
@@ -4363,89 +4363,88 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get returnRefundIsPlatforms =>
-      'ردّ المبلغ تتولّاه المنصّة بعد تأكيدكِ الاستلام.';
+      'المنصّة بتتكفّل برجعة المبلغ بعد ما تأكّدي الاستلام.';
 
   @override
-  String get returnRefundQuote => 'المبلغ المتوقّع ردّه';
+  String get returnRefundQuote => 'المبلغ اللي متوقّع يرجع';
 
   @override
   String get returnRefundQuoteHint =>
-      'تقدير يعيد الخادم حسابه؛ ليس مبلغاً نهائياً بعد.';
+      'تقدير بيرجع السيرفر يحسبه؛ لسّا مو المبلغ النهائي.';
 
   @override
-  String get returnRefundSettled => 'المبلغ المردود';
+  String get returnRefundSettled => 'المبلغ اللي رجع';
 
   @override
   String get returnRefundShipping => 'أجرة الإرجاع';
 
   @override
   String get returnRejectHint =>
-      'الزبونة ستقرأ هذا، ويُقرأ أيضاً إن فتحت نزاعاً.';
+      'الزبونة رح تقرأ هالكلام، وبينقرأ كمان إذا فتحت نزاع.';
 
   @override
   String get returnRejectReason => 'سبب الرفض';
 
   @override
-  String get returnRejectTooShort => 'اكتبي سبباً واضحاً (5 أحرف على الأقل)';
+  String get returnRejectTooShort => 'اكتبي سبب واضح (5 أحرف عالأقل)';
 
   @override
-  String get returnRequestAction => 'إرجاع أو استبدال';
+  String get returnRequestAction => 'إرجاع أو تبديل';
 
   @override
   String get returnRequestTitle => 'طلب إرجاع';
 
   @override
-  String get returnRestock => 'إعادتها إلى المخزون';
+  String get returnRestock => 'رجّعيها للمخزون';
 
   @override
-  String get returnRestockHint =>
-      'اتركيه مغلقاً إن كانت القطعة غير صالحة للبيع.';
+  String get returnRestockHint => 'خلّيه مسكّر إذا القطعة ما بتنفع للبيع.';
 
   @override
-  String get returnSelectAtLeastOne => 'اختاري قطعة واحدة على الأقل';
+  String get returnSelectAtLeastOne => 'نقّي قطعة وحدة عالأقل';
 
   @override
-  String get returnShippingBearer => 'من يتحمّل أجرة الإرجاع؟';
+  String get returnShippingBearer => 'مين بيتحمّل أجرة الإرجاع؟';
 
   @override
-  String get returnStatusApproved => 'تمّت الموافقة';
+  String get returnStatusApproved => 'انقبل';
 
   @override
-  String get returnStatusCancelled => 'ألغتْه الزبونة';
+  String get returnStatusCancelled => 'الزبونة لغته';
 
   @override
-  String get returnStatusExchanged => 'تمّ الاستبدال';
+  String get returnStatusExchanged => 'تبدّلت';
 
   @override
-  String get returnStatusInTransit => 'في الطريق إليكِ';
+  String get returnStatusInTransit => 'بالطريق لعندكِ';
 
   @override
-  String get returnStatusReceived => 'استلمتِها';
+  String get returnStatusReceived => 'استلمتيها';
 
   @override
-  String get returnStatusRefunded => 'تمّ ردّ المبلغ';
+  String get returnStatusRefunded => 'رجع المبلغ';
 
   @override
   String get returnStatusRejected => 'مرفوض';
 
   @override
-  String get returnStatusRequested => 'بانتظار قراركِ';
+  String get returnStatusRequested => 'ناطر قراركِ';
 
   @override
-  String get returnSubmit => 'إرسال الطلب';
+  String get returnSubmit => 'ابعتي الطلب';
 
   @override
-  String get returnSubmitted => 'وصل طلبكِ، وستراجعه البائعة';
+  String get returnSubmitted => 'وصلنا طلبكِ، والبائعة رح تراجعه';
 
   @override
-  String get returnUploadingWait => 'انتظري انتهاء رفع الصور';
+  String get returnUploadingWait => 'استنّي شوي لحتى يخلص رفع الصور';
 
   @override
-  String get returnWindowClosed => 'انتهت مهلة الإرجاع لهذا الطلب';
+  String get returnWindowClosed => 'خلصت مهلة الإرجاع لهالطلب';
 
   @override
   String returnWindowCloses(Object date) {
-    return 'تنتهي مهلة الإرجاع $date';
+    return 'مهلة الإرجاع بتخلص $date';
   }
 
   @override
@@ -4453,55 +4452,56 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: 'لكِ $days يوم إضافي على المهلة',
-      many: 'لكِ $days يوماً إضافياً على المهلة',
-      few: 'لكِ $days أيام إضافية على المهلة',
-      two: 'لكِ يومان إضافيان على المهلة',
-      one: 'لكِ يوم إضافي على المهلة',
+      other: 'إلكِ $days يوم زيادة عالمهلة',
+      many: 'إلكِ $days يوم زيادة عالمهلة',
+      few: 'إلكِ $days أيام زيادة عالمهلة',
+      two: 'إلكِ يومين زيادة عالمهلة',
+      one: 'إلكِ يوم زيادة عالمهلة',
     );
     return '$_temp0';
   }
 
   @override
   String returnWindowUntil(String date) {
-    return 'يمكنكِ طلب الإرجاع حتى $date';
+    return 'فيكِ تطلبي إرجاع لـ $date';
   }
 
   @override
-  String get returnsEmptyAwaiting => 'لا شيء بانتظار التسوية';
+  String get returnsEmptyAwaiting => 'ما في شي ناطر تسوية';
 
   @override
-  String get returnsEmptyClosed => 'لا توجد طلبات منتهية بعد';
+  String get returnsEmptyClosed => 'ما في طلبات خالصة لسّا';
 
   @override
-  String get returnsEmptyOpen => 'لا يوجد طلب إرجاع ينتظركِ';
+  String get returnsEmptyOpen => 'ما في طلب إرجاع ناطركِ';
 
   @override
-  String get returnsEmptyOpenBody => 'حين تطلب زبونة إرجاع قطعة، تجدينها هنا.';
+  String get returnsEmptyOpenBody =>
+      'لمّا تطلب زبونة ترجّع قطعة، بتلاقيها هون.';
 
   @override
-  String get returnsFailed => 'تعذّر تحميل طلبات الإرجاع';
+  String get returnsFailed => 'ما قدرنا نحمّل طلبات الإرجاع';
 
   @override
-  String get returnsTabAwaiting => 'بانتظار التسوية';
+  String get returnsTabAwaiting => 'ناطرة تسوية';
 
   @override
-  String get returnsTabClosed => 'منتهية';
+  String get returnsTabClosed => 'خالصة';
 
   @override
-  String get returnsTabOpen => 'بانتظاركِ';
+  String get returnsTabOpen => 'ناطرتكِ';
 
   @override
-  String get returnsUpdated => 'تم تحديث الطلب';
+  String get returnsUpdated => 'تحدّث الطلب';
 
   @override
   String get reviewAboutShop => 'عن المتجر';
 
   @override
-  String get reviewPending => 'قيد المراجعة';
+  String get reviewPending => 'عم تنراجع';
 
   @override
-  String get reviewRejected => 'لم يُنشر';
+  String get reviewRejected => 'ما انتشر';
 
   @override
   String get reviewsAboutShop => 'تقييم للمتجر';
@@ -4510,26 +4510,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewsAndRatings => 'التقييمات والمراجعات';
 
   @override
-  String get reviewsDeleteReply => 'حذف الردّ';
+  String get reviewsDeleteReply => 'احذفي الردّ';
 
   @override
-  String get reviewsEditReply => 'تعديل الردّ';
+  String get reviewsEditReply => 'عدّلي الردّ';
 
   @override
-  String get reviewsEmptyAll => 'لا توجد تقييمات بعد';
+  String get reviewsEmptyAll => 'ما في تقييمات لسّا';
 
   @override
   String get reviewsEmptyAllBody =>
-      'حين تقيّم زبونة قطعة منكِ أو متجركِ، تجدينها هنا.';
+      'لمّا تقيّم زبونة قطعة منكِ أو متجركِ، بتلاقيها هون.';
 
   @override
-  String get reviewsEmptyUnanswered => 'رددتِ على كل شيء';
+  String get reviewsEmptyUnanswered => 'رديتِ على كل شي، يعطيكِ العافية';
 
   @override
-  String get reviewsFailed => 'تعذّر تحميل التقييمات';
+  String get reviewsFailed => 'ما قدرنا نحمّل التقييمات';
 
   @override
-  String get reviewsFieldBody => 'ما رأيكِ؟';
+  String get reviewsFieldBody => 'شو رأيكِ؟';
 
   @override
   String get reviewsFieldTitle => 'العنوان';
@@ -4538,19 +4538,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewsFilterAll => 'الكل';
 
   @override
-  String get reviewsFilterUnanswered => 'بانتظار ردّك';
+  String get reviewsFilterUnanswered => 'ناطرة ردّكِ';
 
   @override
-  String get reviewsNoneBody => 'كوني أول من تقول رأيها.';
+  String get reviewsNoneBody => 'خليكِ أول وحدة بتقول رأيها.';
 
   @override
-  String get reviewsNoneTitle => 'لا توجد تقييمات بعد';
+  String get reviewsNoneTitle => 'ما في تقييمات لسّا';
 
   @override
-  String get reviewsPendingYours => 'تقييمك وصلنا — سيظهر للجميع بعد المراجعة';
+  String get reviewsPendingYours =>
+      'وصلنا تقييمكِ — رح يبيّن للكل بعد المراجعة';
 
   @override
-  String get reviewsReplied => 'نُشر ردّكِ';
+  String get reviewsReplied => 'انتشر ردّكِ';
 
   @override
   String get reviewsReplyAction => 'ردّي';
@@ -4559,10 +4560,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewsReplyField => 'اكتبي ردّكِ';
 
   @override
-  String get reviewsReplyHint => 'ردّكِ يظهر للجميع تحت التقييم.';
+  String get reviewsReplyHint => 'ردّكِ بيبيّن للكل تحت التقييم.';
 
   @override
-  String get reviewsReplyRemoved => 'حُذف ردّكِ';
+  String get reviewsReplyRemoved => 'انحذف ردّكِ';
 
   @override
   String get reviewsSectionTitle => 'التقييمات';
@@ -4573,22 +4574,22 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count نجمة',
-      many: '$count نجمةً',
+      many: '$count نجمة',
       few: '$count نجوم',
-      two: 'نجمتان',
-      one: 'نجمة واحدة',
+      two: 'نجمتين',
+      one: 'نجمة وحدة',
     );
     return '$_temp0';
   }
 
   @override
-  String get reviewsSubmit => 'نشر التقييم';
+  String get reviewsSubmit => 'انشري التقييم';
 
   @override
-  String get reviewsSubmitted => 'شكراً لكِ — تم نشر تقييمكِ';
+  String get reviewsSubmitted => 'تسلمي — انتشر تقييمكِ 💕';
 
   @override
-  String get reviewsUnavailable => 'تعذّر تحميل التقييمات';
+  String get reviewsUnavailable => 'ما قدرنا نحمّل التقييمات';
 
   @override
   String get reviewsVerified => 'شراء مؤكَّد';
@@ -4597,7 +4598,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewsVerifiedBuyer => 'شراء مؤكَّد';
 
   @override
-  String get reviewsWriteAction => 'اكتبي تقييماً';
+  String get reviewsWriteAction => 'اكتبي تقييم';
 
   @override
   String get reviewsWriteShort => 'اكتبي';
@@ -4608,9 +4609,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count تقييمات',
-      two: 'تقييمان',
+      two: 'تقييمين',
       one: 'تقييم واحد',
-      zero: 'لا تقييمات',
+      zero: 'ما في تقييمات',
     );
     return '$_temp0';
   }
@@ -4619,10 +4620,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewsYourReply => 'ردّكِ';
 
   @override
-  String get revoke => 'إنهاء';
+  String get revoke => 'سكّري';
 
   @override
-  String get revokeSession => 'إنهاء الجلسة';
+  String get revokeSession => 'سكّري الجلسة';
 
   @override
   String get rewards => 'المكافآت';
@@ -4631,7 +4632,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rewardsAndOffers => 'المكافآت والعروض';
 
   @override
-  String get rewardsApplyCode => 'تطبيق';
+  String get rewardsApplyCode => 'طبّقي';
 
   @override
   String get rewardsAvailable => 'المتاح';
@@ -4646,35 +4647,35 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$points نقطة، فئة $tier',
       few: '$points نقاط، فئة $tier',
-      two: 'نقطتان، فئة $tier',
-      one: 'نقطة واحدة، فئة $tier',
+      two: 'نقطتين، فئة $tier',
+      one: 'نقطة وحدة، فئة $tier',
     );
     return '$_temp0';
   }
 
   @override
-  String get rewardsBenefitOffers => 'عروض للعضوات فقط';
+  String get rewardsBenefitOffers => 'عروض للعضوات بس';
 
   @override
   String get rewardsBenefitPoints => 'نقاط مع كل طلب';
 
   @override
-  String get rewardsBenefitReferrals => 'مكافأة عن كل صديقة تدعينها';
+  String get rewardsBenefitReferrals => 'مكافأة عن كل صاحبة بتدعيها';
 
   @override
-  String get rewardsBonus => 'مكافأة إضافية';
+  String get rewardsBonus => 'مكافأة زيادة';
 
   @override
   String get rewardsCashback => 'الاسترداد النقدي';
 
   @override
-  String get rewardsCashbackBody => 'جزء ممّا تنفقينه يعود إلى محفظتكِ.';
+  String get rewardsCashbackBody => 'شي من اللي بتصرفيه بيرجع لمحفظتكِ.';
 
   @override
-  String get rewardsCashbackConverted => 'تم تحويل الاسترداد إلى كوبون';
+  String get rewardsCashbackConverted => 'تحوّل الاسترداد لكوبون';
 
   @override
-  String get rewardsCashbackNote => 'يُعاد إلى محفظتكِ بعد التسليم';
+  String get rewardsCashbackNote => 'بيرجع لمحفظتكِ بعد التسليم';
 
   @override
   String rewardsCashbackRate(String rate) {
@@ -4682,63 +4683,62 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get rewardsClaim => 'احصلي عليها';
+  String get rewardsClaim => 'خديها';
 
   @override
-  String get rewardsCodeApplied => 'تم تطبيق الرمز';
+  String get rewardsCodeApplied => 'انطبّق الرمز';
 
   @override
   String rewardsCodeCopied(String code) {
-    return 'تم نسخ $code';
+    return 'انتسخ $code';
   }
 
   @override
-  String get rewardsCodeInvalid => 'هذا الرمز غير صالح';
+  String get rewardsCodeInvalid => 'هالرمز مو صالح';
 
   @override
-  String get rewardsConvertToCoupon => 'تحويل إلى كوبون';
+  String get rewardsConvertToCoupon => 'حوّليه لكوبون';
 
   @override
   String rewardsCopyLabel(String label) {
-    return 'نسخ $label';
+    return 'انسخي $label';
   }
 
   @override
-  String get rewardsCustomerCode => 'رمز الدعوة الخاص بكِ';
+  String get rewardsCustomerCode => 'رمز الدعوة تبعكِ';
 
   @override
-  String get rewardsEmptyBody => 'تابعي التسوّق وستظهر العروض هنا.';
+  String get rewardsEmptyBody => 'كمّلي تسوّق والعروض رح تطلع هون.';
 
   @override
-  String get rewardsEmptyTitle => 'لا توجد مكافآت بعد';
+  String get rewardsEmptyTitle => 'ما في مكافآت لسّا';
 
   @override
-  String get rewardsEnterCode => 'أدخلي الرمز';
+  String get rewardsEnterCode => 'حطّي الرمز';
 
   @override
   String get rewardsExclusive => 'حصري';
 
   @override
-  String get rewardsGenerating => 'جارٍ الإنشاء…';
+  String get rewardsGenerating => 'عم نجهّزها…';
 
   @override
-  String get rewardsHaveCode => 'لديكِ رمز؟';
+  String get rewardsHaveCode => 'معكِ رمز؟';
 
   @override
-  String get rewardsInviteBody =>
-      'تحصل هي على عرض ترحيبي، وتحصلين أنتِ على نقاط.';
+  String get rewardsInviteBody => 'هي بيوصلها عرض ترحيبي، وإنتِ بتاخدي نقاط.';
 
   @override
-  String get rewardsInviteTitle => 'ادعي صديقة';
+  String get rewardsInviteTitle => 'ادعي صاحبتكِ';
 
   @override
-  String get rewardsInvited => 'صديقات مدعوّات';
+  String get rewardsInvited => 'صحبات مدعوّات';
 
   @override
-  String get rewardsLifetime => 'إجمالي المكتسب';
+  String get rewardsLifetime => 'كل اللي جمعتيه';
 
   @override
-  String get rewardsLoadFailed => 'تعذّر تحميل المكافآت';
+  String get rewardsLoadFailed => 'ما قدرنا نحمّل المكافآت';
 
   @override
   String get rewardsMemberReward => 'مكافأة للعضوات';
@@ -4750,14 +4750,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String rewardsNextTier(String tier) {
-    return 'التالية: $tier';
+    return 'الجاية: $tier';
   }
 
   @override
-  String get rewardsNoCashback => 'لا يوجد استرداد للتحويل بعد';
+  String get rewardsNoCashback => 'ما في استرداد للتحويل لسّا';
 
   @override
-  String get rewardsNotEnoughPoints => 'النقاط غير كافية بعد';
+  String get rewardsNotEnoughPoints => 'النقاط لسّا ما بتكفي';
 
   @override
   String rewardsOffersCount(int count) {
@@ -4765,30 +4765,30 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count عرض',
-      many: '$count عرضاً',
+      many: '$count عرض',
       few: '$count عروض',
-      two: 'عرضان',
+      two: 'عرضين',
       one: 'عرض واحد',
-      zero: 'لا شيء للاستبدال بعد',
+      zero: 'ما في شي للاستبدال لسّا',
     );
     return '$_temp0';
   }
 
   @override
-  String get rewardsOfflineHint => 'لا يوجد اتصال — تحتاج هذه الخطوة إلى شبكة';
+  String get rewardsOfflineHint => 'ما في نت — هالخطوة محتاجة شبكة';
 
   @override
-  String get rewardsOfflineRetry => 'حاولي مرة أخرى';
+  String get rewardsOfflineRetry => 'جرّبي مرة تانية';
 
   @override
-  String get rewardsPending => 'قيد الانتظار';
+  String get rewardsPending => 'ناطرة';
 
   @override
   String get rewardsPoints => 'النقاط';
 
   @override
   String get rewardsPointsBlurb =>
-      'اكسبي نقاطاً مع كل طلب وتقييم، واستبدليها بكوبونات ومزايا.';
+      'اجمعي نقاط مع كل طلب وتقييم، وبدّليها بكوبونات ومزايا.';
 
   @override
   String rewardsPointsCost(int points) {
@@ -4797,48 +4797,48 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$points نقطة',
       few: '$points نقاط',
-      two: 'نقطتان',
-      one: 'نقطة واحدة',
+      two: 'نقطتين',
+      one: 'نقطة وحدة',
     );
     return '$_temp0';
   }
 
   @override
   String rewardsProgressToward(int percent, String tier) {
-    return '$percent% من الطريق إلى $tier';
+    return 'قطعتِ $percent% من الطريق لـ $tier';
   }
 
   @override
-  String get rewardsRedeem => 'استبدلي';
+  String get rewardsRedeem => 'بدّلي';
 
   @override
   String get rewardsRedeemSection => 'الاستبدال';
 
   @override
-  String get rewardsRedeemed => 'تم الاستبدال — الرمز في كوبوناتكِ';
+  String get rewardsRedeemed => 'تبدّلت — الرمز صار بكوبوناتكِ';
 
   @override
-  String get rewardsRewarded => 'مكافآت مستلَمة';
+  String get rewardsRewarded => 'مكافآت وصلت';
 
   @override
-  String get rewardsSellerCode => 'رمز البائعة الخاص بكِ';
+  String get rewardsSellerCode => 'رمز البائعة تبعكِ';
 
   @override
   String rewardsSuspiciousChecks(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count دعوة قيد المراجعة',
-      many: '$count دعوةً قيد المراجعة',
-      few: '$count دعوات قيد المراجعة',
-      two: 'دعوتان قيد المراجعة',
-      one: 'دعوة واحدة قيد المراجعة',
+      other: '$count دعوة عم ينراجعوا',
+      many: '$count دعوة عم ينراجعوا',
+      few: '$count دعوات عم ينراجعوا',
+      two: 'دعوتين عم ينراجعوا',
+      one: 'دعوة وحدة عم تنراجع',
     );
     return '$_temp0';
   }
 
   @override
-  String get rewardsTierBonusNote => 'تُحتسب تلقائياً مع كل طلب';
+  String get rewardsTierBonusNote => 'بتنحسب لحالها مع كل طلب';
 
   @override
   String rewardsTierMember(String tier) {
@@ -4860,10 +4860,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rewardsTopTier => 'أعلى فئة';
 
   @override
-  String get rewardsTopTierUnlocked => 'وصلتِ إلى أعلى فئة';
+  String get rewardsTopTierUnlocked => 'وصلتِ لأعلى فئة 👑';
 
   @override
-  String get rewardsUnavailable => 'المكافآت غير متاحة حالياً';
+  String get rewardsUnavailable => 'المكافآت مو متاحة هلّق';
 
   @override
   String get roleBuyer => 'زبونة';
@@ -4872,17 +4872,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roleSeller => 'بائعة';
 
   @override
-  String get save => 'حفظ';
+  String get save => 'احفظي';
 
   @override
-  String get saveChanges => 'حفظ التغييرات';
+  String get saveChanges => 'احفظي التغييرات';
 
   @override
-  String get saveToCollection => 'احفظيها في مجموعة';
+  String get saveToCollection => 'احفظيها بمجموعة';
 
   @override
   String get saveToCollectionBlurb =>
-      'خلّيها بدون مجموعة، أو رتّبيها بمكان بتلاقيها فيه.';
+      'خلّيها بلا مجموعة، أو رتّبيها بمحلّ بتلاقيها فيه.';
 
   @override
   String get saveYourProgress => 'احفظي تقدّمكِ';
@@ -4896,7 +4896,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get savedForLater => 'محفوظ لاحقاً';
+  String get savedForLater => 'محفوظ لبعدين';
 
   @override
   String get savedItems => 'المحفوظات';
@@ -4909,7 +4909,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get savedProgressBlurb =>
-      'احتفظي بالمفضّلة والسلة والطلبات والقطع التي تصفّحتِها.';
+      'خلّي المفضّلة والسلّة والطلبات والقطع اللي اتفرّجتِ عليها محفوظة معكِ.';
 
   @override
   String get savedSellers => 'بائعات محفوظات';
@@ -4918,28 +4918,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get search => 'البحث';
 
   @override
-  String get searchBrowseCategories => 'تصفّحي الأقسام';
+  String get searchBrowseCategories => 'اتفرّجي عالأقسام';
 
   @override
   String get searchSponsored => 'مُموَّل';
 
   @override
-  String get searchClear => 'مسح';
+  String get searchClear => 'امسحي';
 
   @override
-  String get searchClearAll => 'مسح الكل';
+  String get searchClearAll => 'امسحي الكل';
 
   @override
   String get searchDiscoverEyebrow => 'اكتشفي';
 
   @override
-  String get searchHint => 'ابحثي عن فساتين، مكياج، هدايا…';
+  String get searchHint => 'دوّري على فساتين، مكياج، هدايا…';
 
   @override
-  String get searchRecent => 'عمليات البحث الأخيرة';
+  String get searchRecent => 'آخر شي دوّرتِ عليه';
 
   @override
-  String get searchTrendBags => 'حقيبة';
+  String get searchTrendBags => 'جزدان';
 
   @override
   String get searchTrendDresses => 'فستان';
@@ -4954,7 +4954,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchTrendGifts => 'هدية';
 
   @override
-  String get searchTrendHeels => 'حذاء';
+  String get searchTrendHeels => 'كندرة';
 
   @override
   String get searchTrendPerfume => 'عطر';
@@ -4966,7 +4966,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchTrendingEyebrow => 'رائج';
 
   @override
-  String get searchTrendingNow => 'الأكثر رواجاً';
+  String get searchTrendingNow => 'الأكتر رواجاً';
 
   @override
   String get secureAccountControls => 'أدوات حماية الحساب';
@@ -4976,28 +4976,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get securityCentreSubtitle =>
-      'أجهزتك وجلساتك والطرق التي تعيدكِ إلى حسابكِ.';
+      'أجهزتكِ وجلساتكِ والطرق اللي بترجّعكِ لحسابكِ.';
 
   @override
   String get securityTitle => 'الخصوصية والأمان';
 
   @override
-  String get seeMore => 'عرض المزيد';
+  String get seeMore => 'شوفي أكتر';
 
   @override
-  String get selectGovernorate => 'اختاري المحافظة';
+  String get selectGovernorate => 'نقّي المحافظة';
 
   @override
-  String get selectLanguage => 'اختاري لغتكِ';
+  String get selectLanguage => 'نقّي لغتكِ';
 
   @override
   String get sellerActivityLog => 'سجلّ النشاط';
 
   @override
-  String get sellerAddProduct => 'إضافة منتج';
+  String get sellerAddProduct => 'ضيفي منتج';
 
   @override
-  String get sellerAllClear => 'كل شيء تمام — لا شيء ينتظركِ';
+  String get sellerAllClear => 'كلشي تمام — ما في شي ناطركِ';
 
   @override
   String get sellerAnalytics => 'التحليلات';
@@ -5009,7 +5009,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerBenchGreetingMorning => 'صباح الخير';
 
   @override
-  String get sellerBenchGreetingEvening => 'مساء الخير';
+  String get sellerBenchGreetingEvening => 'مسا الخير';
 
   @override
   String sellerBenchGreetingNamed(String greeting, String name) {
@@ -5020,33 +5020,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerBenchTodayTakings => 'مبيعات اليوم';
 
   @override
-  String get sellerBenchGoalReached => 'اكتمل الهدف';
+  String get sellerBenchGoalReached => 'وصلتِ للهدف 🎉';
 
   @override
-  String get sellerBenchStartHere => 'ابدئي من هنا';
+  String get sellerBenchStartHere => 'ابدئي من هون';
 
   @override
-  String get sellerBenchThen => 'وبعدها';
+  String get sellerBenchThen => 'وبعدين';
 
   @override
-  String get sellerBenchCalm => 'متجركِ هادئ — لا شيء ينتظركِ الآن.';
+  String get sellerBenchCalm => 'متجركِ رايق — ما في شي ناطركِ هلّق.';
 
   @override
   String sellerBenchNewOrders(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count طلب جديد بانتظار تأكيدكِ',
-      many: '$count طلباً جديداً بانتظار تأكيدكِ',
-      few: '$count طلبات جديدة بانتظار تأكيدكِ',
-      two: 'طلبان جديدان بانتظار تأكيدكِ',
-      one: 'طلب جديد واحد بانتظار تأكيدكِ',
+      other: 'في $count طلب جديد ناطر تأكيدكِ',
+      many: 'في $count طلب جديد ناطر تأكيدكِ',
+      few: 'في $count طلبات جديدة ناطرة تأكيدكِ',
+      two: 'في طلبين جداد ناطرين تأكيدكِ',
+      one: 'في طلب جديد ناطر تأكيدكِ',
     );
     return '$_temp0';
   }
 
   @override
-  String get sellerBenchNewOrdersHint => 'كل ساعة انتظار تُبرّد حماس الزبونة.';
+  String get sellerBenchNewOrdersHint => 'كل ساعة انتظار بتبرّد حماس الزبونة.';
 
   @override
   String sellerBenchReadyOrders(int count) {
@@ -5054,25 +5054,25 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count طلب جاهز للشحن',
-      many: '$count طلباً جاهزاً للشحن',
+      many: '$count طلب جاهز للشحن',
       few: '$count طلبات جاهزة للشحن',
-      two: 'طلبان جاهزان للشحن',
+      two: 'طلبين جاهزين للشحن',
       one: 'طلب واحد جاهز للشحن',
     );
     return '$_temp0';
   }
 
   @override
-  String get sellerBenchReadyOrdersHint => 'سلّميها للمندوب قبل نهاية اليوم.';
+  String get sellerBenchReadyOrdersHint => 'سلّميها للمندوب قبل آخر النهار.';
 
   @override
   String sellerBenchSoldOut(String title) {
-    return 'نفدت «$title»';
+    return 'خلصت «$title»';
   }
 
   @override
   String get sellerBenchSoldOutHint =>
-      'زوّدي الكمية كي لا تختفي من نتائج البحث.';
+      'زيدي الكمية لحتى ما تختفي من نتايج البحث.';
 
   @override
   String get sellerBenchOpenOrders => 'افتحي الطلبات';
@@ -5084,7 +5084,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerBenchSeamTitle => 'خط الطلبات';
 
   @override
-  String get sellerBenchSeamCaption => 'النقاط المضيئة تنتظركِ.';
+  String get sellerBenchSeamCaption => 'النقاط المضوّية ناطرتكِ.';
 
   @override
   String get sellerBenchToolsTitle => 'أدواتكِ';
@@ -5093,11 +5093,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerBenchRailTitle => 'على الرف';
 
   @override
-  String get sellerBenchRailCaption => 'ما يُباع أكثر، وما يوشك أن ينفد.';
+  String get sellerBenchRailCaption => 'شو عم ينباع أكتر، وشو قرّب يخلص.';
 
   @override
   String sellerBenchTagSold(String count) {
-    return 'بيعت $count';
+    return 'انباع $count';
   }
 
   @override
@@ -5106,61 +5106,61 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get sellerBenchTagOut => 'نفدت';
+  String get sellerBenchTagOut => 'خلصت';
 
   @override
   String get sellerBenchPatternTitle => 'إيقاع المبيعات';
 
   @override
   String get sellerBenchPatternCaption =>
-      'كل لؤلؤة على الشريط فترة، والذهبية هي الآن.';
+      'كل لؤلؤة عالشريط فترة، والدهبية هي هلّق.';
 
   @override
-  String get sellerBenchPatternSemantics => 'المبيعات خلال الفترة المختارة';
+  String get sellerBenchPatternSemantics => 'المبيعات بالفترة اللي نقّيتيها';
 
   @override
-  String get sellerBenchMoreTitle => 'المزيد عن متجركِ';
+  String get sellerBenchMoreTitle => 'كمان عن متجركِ';
 
   @override
-  String get sellerArchive => 'أرشفة';
+  String get sellerArchive => 'أرشفي';
 
   @override
   String get sellerAvailableToWithdraw => 'متاح للسحب';
 
   @override
-  String get sellerCancelConfirm => 'تأكيد الإلغاء';
+  String get sellerCancelConfirm => 'أكّدي الإلغاء';
 
   @override
-  String get sellerCancelDismiss => 'تراجع';
+  String get sellerCancelDismiss => 'لأ، رجعت';
 
   @override
-  String get sellerCancelPresetNoTime => 'لا أستطيع التجهيز بالوقت المطلوب';
+  String get sellerCancelPresetNoTime => 'ما بقدر جهّزه بالوقت المطلوب';
 
   @override
-  String get sellerCancelPresetOutOfStock => 'الكمية غير متوفرة';
+  String get sellerCancelPresetOutOfStock => 'الكمية مو متوفرة';
 
   @override
-  String get sellerCancelPresetPriceError => 'خطأ في السعر المعروض';
+  String get sellerCancelPresetPriceError => 'في غلط بالسعر المعروض';
 
   @override
-  String get sellerCancelPresetSizeGone => 'المقاس المطلوب نفد';
+  String get sellerCancelPresetSizeGone => 'المقاس المطلوب خلص';
 
   @override
-  String get sellerCancelReasonHint => 'اكتبي سبباً واضحاً للزبونة';
+  String get sellerCancelReasonHint => 'اكتبي سبب واضح للزبونة';
 
   @override
   String get sellerCancelReasonLabel => 'السبب';
 
   @override
-  String get sellerCancelReasonTooShort => 'اكتبي سبباً من خمسة أحرف على الأقل';
+  String get sellerCancelReasonTooShort => 'اكتبي سبب من خمس أحرف عالأقل';
 
   @override
   String get sellerCancelSubtitle =>
-      'ستُعاد القطع إلى مخزونكِ، وستصل الزبونة رسالة بالسبب الذي تكتبينه.';
+      'القطع رح ترجع لمخزونكِ، والزبونة رح توصلها رسالة بالسبب اللي بتكتبيه.';
 
   @override
   String sellerCartAbandon(String rate) {
-    return '$rate% تركن السلة';
+    return '$rate% تركوا السلّة';
   }
 
   @override
@@ -5176,51 +5176,51 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerConversionRate => 'نسبة التحويل';
 
   @override
-  String get sellerCreateCoupon => 'إنشاء كوبون';
+  String get sellerCreateCoupon => 'اعملي كوبون';
 
   @override
   String get sellerDashboard => 'لوحة متجري';
 
   @override
-  String get sellerDashboardLoadFailed => 'تعذّر تحميل لوحة التحكم';
+  String get sellerDashboardLoadFailed => 'ما قدرنا نحمّل لوحة التحكم';
 
   @override
-  String get sellerDashboardUnavailable => 'لوحة الإدارة غير متاحة';
+  String get sellerDashboardUnavailable => 'لوحة الإدارة مو متاحة';
 
   @override
-  String get sellerDeleteProduct => 'حذف المنتج؟';
+  String get sellerDeleteProduct => 'بدّك تحذفي المنتج؟';
 
   @override
   String sellerDeleteProductBody(String title) {
-    return 'سيُحذف «$title» نهائياً.';
+    return '«$title» رح ينحذف للأبد.';
   }
 
   @override
   String get sellerDeliverCollectedHint =>
-      'اتركيه فارغاً إذا استلمتِ المبلغ كاملاً';
+      'اتركيه فاضي إذا استلمتِ المبلغ كامل';
 
   @override
   String get sellerDeliverCollectedLabel => 'المبلغ المُحصّل';
 
   @override
   String get sellerDeliverSubtitleCash =>
-      'اكتبي المبلغ الذي استلمتِه فعلاً. اتركيه فارغاً إذا استلمتِ المبلغ كاملاً.';
+      'اكتبي المبلغ اللي استلمتيه عن جد. اتركيه فاضي إذا استلمتِ المبلغ كامل.';
 
   @override
   String get sellerDeliverSubtitlePrepaid =>
-      'الطلب مدفوع مسبقاً، لا يوجد مبلغ للتحصيل.';
+      'الطلب مدفوع سلف، ما في مبلغ لتحصّليه.';
 
   @override
-  String get sellerDeliverTitle => 'تأكيد التسليم';
+  String get sellerDeliverTitle => 'أكّدي التسليم';
 
   @override
   String get sellerEarnings => 'أرباحي';
 
   @override
-  String get sellerEditProduct => 'تعديل';
+  String get sellerEditProduct => 'عدّلي';
 
   @override
-  String get sellerEditStore => 'تعديل المتجر';
+  String get sellerEditStore => 'عدّلي المتجر';
 
   @override
   String get sellerFees => 'العمولات';
@@ -5238,7 +5238,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerFulfilmentPlatformCourier => 'مندوب المنصة';
 
   @override
-  String get sellerFulfilmentSelfShips => 'توصيل بنفسكِ';
+  String get sellerFulfilmentSelfShips => 'بتوصّلي بنفسكِ';
 
   @override
   String get sellerFulfilmentThirdParty => 'شركة شحن';
@@ -5259,7 +5259,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerInsights => 'رؤى ذكية';
 
   @override
-  String get sellerLiveStore => 'المتجر يعمل';
+  String get sellerLiveStore => 'المتجر شغّال';
 
   @override
   String get sellerLowStockTitle => 'مخزون منخفض';
@@ -5275,53 +5275,53 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String sellerMemberSince(String year) {
-    return 'تبيع منذ $year';
+    return 'عم تبيع من $year';
   }
 
   @override
-  String get sellerMoveToDraft => 'نقل إلى المسودّات';
+  String get sellerMoveToDraft => 'انقليه للمسودّات';
 
   @override
-  String get sellerNeedsYou => 'يحتاج انتباهكِ الآن';
+  String get sellerNeedsYou => 'محتاج انتباهكِ هلّق';
 
   @override
   String get sellerNewProduct => 'منتج جديد';
 
   @override
-  String get sellerNoProductsBlurb => 'أضيفي أول قطعة وستظهر هنا.';
+  String get sellerNoProductsBlurb => 'ضيفي أول قطعة وبتطلع هون.';
 
   @override
-  String get sellerNoProductsYet => 'لا توجد منتجات بعد';
+  String get sellerNoProductsYet => 'ما في منتجات لسّا';
 
   @override
   String get sellerOpenTasks => 'مهام مفتوحة';
 
   @override
-  String get sellerOrderActionCancel => 'إلغاء الطلب';
+  String get sellerOrderActionCancel => 'ألغي الطلب';
 
   @override
-  String get sellerOrderActionConfirm => 'قبول الطلب';
+  String get sellerOrderActionConfirm => 'اقبلي الطلب';
 
   @override
-  String get sellerOrderActionDeliver => 'تم التسليم';
+  String get sellerOrderActionDeliver => 'تسلّم';
 
   @override
-  String get sellerOrderActionHandOver => 'سلّمتُه للتوصيل';
+  String get sellerOrderActionHandOver => 'سلّمته للتوصيل';
 
   @override
   String get sellerOrderActionReady => 'جاهز للشحن';
 
   @override
-  String get sellerOrderAddressCopied => 'نُسخ العنوان';
+  String get sellerOrderAddressCopied => 'انتسخ العنوان';
 
   @override
-  String get sellerOrderAwaitingCustomerCode => 'بانتظار رمز تأكيد الزبونة';
+  String get sellerOrderAwaitingCustomerCode => 'ناطرين رمز تأكيد الزبونة';
 
   @override
   String get sellerOrderCallCustomer => 'اتصلي بالزبونة';
 
   @override
-  String get sellerOrderCancelled => 'أُلغي الطلب وأُعيدت القطع للمخزون';
+  String get sellerOrderCancelled => 'انلغى الطلب ورجعت القطع للمخزون';
 
   @override
   String get sellerOrderCashOnDelivery => 'الدفع عند الاستلام';
@@ -5330,40 +5330,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerOrderCommission => 'عمولة المنصة';
 
   @override
-  String get sellerOrderConfirmed => 'قبلتِ الطلب، صار قيد التجهيز';
+  String get sellerOrderConfirmed => 'قبلتِ الطلب، وصار عم يتجهّز';
 
   @override
-  String get sellerOrderCourierAssigned => 'أُسند لمندوب';
+  String get sellerOrderCourierAssigned => 'انعطى لمندوب';
 
   @override
-  String get sellerOrderCourierPending => 'بانتظار مندوب';
+  String get sellerOrderCourierPending => 'ناطرين مندوب';
 
   @override
-  String get sellerOrderDelivered => 'سُجّل التسليم';
+  String get sellerOrderDelivered => 'انسجّل التسليم';
 
   @override
   String get sellerOrderDiscount => 'حسم من متجركِ';
 
   @override
   String sellerOrderEscrowOn(String date) {
-    return 'تُتاح الأرباح بعد انتهاء مهلة الإرجاع في $date.';
+    return 'الأرباح بتصير متاحة بعد ما تخلص مهلة الإرجاع بـ $date.';
   }
 
   @override
   String get sellerOrderEscrowPending =>
-      'تُحتسب الأرباح بعد التسليم وانتهاء مهلة الإرجاع.';
+      'الأرباح بتنحسب بعد التسليم وبعد ما تخلص مهلة الإرجاع.';
 
   @override
-  String get sellerOrderEscrowReleased => 'أصبحت هذه الأرباح متاحة للتحويل.';
+  String get sellerOrderEscrowReleased => 'هالأرباح صارت جاهزة للتحويل.';
 
   @override
-  String get sellerOrderHandedOver => 'سُجّل خروج الطلب للتوصيل';
+  String get sellerOrderHandedOver => 'انسجّل إنّو الطلب طلع للتوصيل';
 
   @override
   String get sellerOrderItemsSubtotal => 'إجمالي القطع';
 
   @override
-  String get sellerOrderItemsToPack => 'ما يجب تجهيزه';
+  String get sellerOrderItemsToPack => 'شو لازم تجهّزي';
 
   @override
   String get sellerOrderMarkedReady => 'الطلب جاهز للشحن';
@@ -5375,59 +5375,59 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerOrderStepConfirmed => 'قبلتِ الطلب';
 
   @override
-  String get sellerOrderStepDelivered => 'تم التسليم';
+  String get sellerOrderStepDelivered => 'تسلّم';
 
   @override
   String get sellerOrderStepPlaced => 'وصل الطلب';
 
   @override
-  String get sellerOrderStepShipped => 'خرج للتوصيل';
+  String get sellerOrderStepShipped => 'طلع للتوصيل';
 
   @override
-  String get sellerOrdersEmptyBody => 'ستنتقل الطلبات إلى هنا مع تقدّمها.';
+  String get sellerOrdersEmptyBody => 'الطلبات رح تنتقل لهون كل ما تقدّمت.';
 
   @override
-  String get sellerOrdersEmptyCompleted => 'لا طلبات منتهية بعد';
+  String get sellerOrdersEmptyCompleted => 'ما في طلبات خالصة لسّا';
 
   @override
-  String get sellerOrdersEmptyNew => 'لا طلبات جديدة';
+  String get sellerOrdersEmptyNew => 'ما في طلبات جديدة';
 
   @override
   String get sellerOrdersEmptyNewBody =>
-      'ستظهر الطلبات هنا فور أن تشتري زبونة منكِ.';
+      'الطلبات رح تطلع هون أول ما تشتري منكِ زبونة.';
 
   @override
-  String get sellerOrdersEmptyPreparing => 'لا شيء قيد التجهيز';
+  String get sellerOrdersEmptyPreparing => 'ما في شي عم يتجهّز';
 
   @override
-  String get sellerOrdersEmptyReady => 'لا شيء جاهز للشحن';
+  String get sellerOrdersEmptyReady => 'ما في شي جاهز للشحن';
 
   @override
-  String get sellerOrdersEmptyReturns => 'لا مرتجعات';
+  String get sellerOrdersEmptyReturns => 'ما في مرتجعات';
 
   @override
-  String get sellerOrdersEmptyReturnsBody => 'وهذا خبر جيد.';
+  String get sellerOrdersEmptyReturnsBody => 'وهاد خبر حلو 😊';
 
   @override
-  String get sellerOrdersEmptyShipping => 'لا شحنات بالطريق';
+  String get sellerOrdersEmptyShipping => 'ما في شحنات بالطريق';
 
   @override
-  String get sellerOrdersLoadFailed => 'تعذّر فتح الطلب';
+  String get sellerOrdersLoadFailed => 'ما قدرنا نفتح الطلب';
 
   @override
-  String get sellerOrdersOffline => 'لا يوجد اتصال بالإنترنت';
+  String get sellerOrdersOffline => 'ما في نت';
 
   @override
   String get sellerOrdersStat => 'الطلبات';
 
   @override
-  String get sellerOrdersTabCompleted => 'منتهية';
+  String get sellerOrdersTabCompleted => 'خالصة';
 
   @override
   String get sellerOrdersTabNew => 'جديدة';
 
   @override
-  String get sellerOrdersTabPreparing => 'قيد التجهيز';
+  String get sellerOrdersTabPreparing => 'عم تتجهّز';
 
   @override
   String get sellerOrdersTabReady => 'جاهزة';
@@ -5442,37 +5442,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerOrdersTitle => 'طلباتي';
 
   @override
-  String get sellerOrdersUpdated => 'تم تحديث الطلب';
+  String get sellerOrdersUpdated => 'تحدّث الطلب';
 
   @override
-  String get sellerOutOfStock => 'نفد المخزون';
+  String get sellerOutOfStock => 'خلص المخزون';
 
   @override
   String get sellerPaidOut => 'المدفوع';
 
   @override
-  String get sellerParcelStatusAwaitingConfirmation => 'بانتظار تأكيدكِ';
+  String get sellerParcelStatusAwaitingConfirmation => 'ناطرة تأكيدكِ';
 
   @override
-  String get sellerParcelStatusCancelledByCustomer => 'ألغته الزبونة';
+  String get sellerParcelStatusCancelledByCustomer => 'الزبونة لغته';
 
   @override
-  String get sellerParcelStatusCancelledBySeller => 'ألغيتِه';
+  String get sellerParcelStatusCancelledBySeller => 'إنتِ لغيتيه';
 
   @override
-  String get sellerParcelStatusDelivered => 'تم التسليم';
+  String get sellerParcelStatusDelivered => 'تسلّم';
 
   @override
-  String get sellerParcelStatusDeliveryFailed => 'فشل التسليم';
+  String get sellerParcelStatusDeliveryFailed => 'ما قدرنا نسلّمه';
 
   @override
-  String get sellerParcelStatusDisputed => 'قيد النزاع';
+  String get sellerParcelStatusDisputed => 'عليه نزاع';
 
   @override
-  String get sellerParcelStatusExchangeInProgress => 'قيد الاستبدال';
+  String get sellerParcelStatusExchangeInProgress => 'عم يتبدّل';
 
   @override
-  String get sellerParcelStatusExchanged => 'تم الاستبدال';
+  String get sellerParcelStatusExchanged => 'تبدّل';
 
   @override
   String get sellerParcelStatusHandedToCourier => 'مع المندوب';
@@ -5484,19 +5484,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerParcelStatusNew => 'طلب جديد';
 
   @override
-  String get sellerParcelStatusPreparing => 'قيد التجهيز';
+  String get sellerParcelStatusPreparing => 'عم يتجهّز';
 
   @override
   String get sellerParcelStatusReadyToShip => 'جاهز للشحن';
 
   @override
-  String get sellerParcelStatusRefundPending => 'قيد الاسترداد';
+  String get sellerParcelStatusRefundPending => 'عم يرجع المبلغ';
 
   @override
-  String get sellerParcelStatusRefunded => 'تم الاسترداد';
+  String get sellerParcelStatusRefunded => 'رجع المبلغ';
 
   @override
-  String get sellerParcelStatusRejectedOnDelivery => 'رفضت الاستلام';
+  String get sellerParcelStatusRejectedOnDelivery => 'ما رضيت تستلم';
 
   @override
   String get sellerParcelStatusReturnInTransit => 'المرتجع بالطريق';
@@ -5511,10 +5511,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerPaymentSettings => 'إعدادات الدفع';
 
   @override
-  String get sellerPendingOrders => 'بانتظار التأكيد';
+  String get sellerPendingOrders => 'ناطرة تأكيد';
 
   @override
-  String get sellerPendingPayout => 'قيد الانتظار';
+  String get sellerPendingPayout => 'ناطر';
 
   @override
   String sellerPlanBadge(String plan) {
@@ -5550,9 +5550,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$rating · $countLabel تقييم',
-      many: '$rating · $countLabel تقييماً',
+      many: '$rating · $countLabel تقييم',
       few: '$rating · $countLabel تقييمات',
-      two: '$rating · تقييمان',
+      two: '$rating · تقييمين',
       one: '$rating · تقييم واحد',
     );
     return '$_temp0';
@@ -5565,21 +5565,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerReplied => 'ردّ المتجر';
 
   @override
-  String get sellerResponsiveness => 'سرعة الرد';
+  String get sellerResponsiveness => 'سرعة الردّ';
 
   @override
-  String get sellerRestock => 'إعادة التوريد';
+  String get sellerRestock => 'رجّعي عبّي';
 
   @override
   String sellerRestockNeeded(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count قطعة تحتاج إعادة توريد',
-      many: '$count قطعةً تحتاج إعادة توريد',
-      few: '$count قطع تحتاج إعادة توريد',
-      two: 'قطعتان تحتاجان إعادة توريد',
-      one: 'قطعة واحدة تحتاج إعادة توريد',
+      other: '$count قطعة محتاجة تعبئة',
+      many: '$count قطعة محتاجة تعبئة',
+      few: '$count قطع محتاجة تعبئة',
+      two: 'قطعتين محتاجين تعبئة',
+      one: 'قطعة وحدة محتاجة تعبئة',
     );
     return '$_temp0';
   }
@@ -5597,7 +5597,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerReviewsTitle => 'التقييمات والردود';
 
   @override
-  String get sellerRunningLow => 'أوشك على النفاد';
+  String get sellerRunningLow => 'قرّبت تخلص';
 
   @override
   String get sellerSalesStat => 'المبيعات';
@@ -5606,14 +5606,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerSalesTrend => 'منحنى المبيعات';
 
   @override
-  String get sellerSetActive => 'نشر';
+  String get sellerSetActive => 'انشري';
 
   @override
   String get sellerShippingSettings => 'إعدادات الشحن';
 
   @override
   String sellerStock(String count) {
-    return '$count في المخزون';
+    return '$count بالمخزون';
   }
 
   @override
@@ -5635,19 +5635,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerTeamManagement => 'إدارة الفريق';
 
   @override
-  String get sellerTopProducts => 'الأكثر مبيعاً';
+  String get sellerTopProducts => 'الأكتر مبيع';
 
   @override
   String get sellerVerification => 'توثيق البائعة';
 
   @override
-  String get sellerVsPrior => 'مقارنةً بالفترة السابقة';
+  String get sellerVsPrior => 'قدّام الفترة اللي قبلها';
 
   @override
   String get sellerWishlistAdds => 'إضافات للمفضّلة';
 
   @override
-  String get sellerWithdraw => 'سحب';
+  String get sellerWithdraw => 'اسحبي';
 
   @override
   String get sellerWithdrawalCentre => 'مركز السحب';
@@ -5660,9 +5660,9 @@ class AppLocalizationsAr extends AppLocalizations {
       other: '$count بائعة',
       many: '$count بائعة',
       few: '$count بائعات',
-      two: 'بائعتان',
-      one: 'بائعة واحدة',
-      zero: 'لا بائعات',
+      two: 'بائعتين',
+      one: 'بائعة وحدة',
+      zero: 'ما في بائعات',
     );
     return '$_temp0';
   }
@@ -5675,68 +5675,68 @@ class AppLocalizationsAr extends AppLocalizations {
       other: '$count بائعة',
       many: '$count بائعة',
       few: '$count بائعات',
-      two: 'بائعتان',
-      one: 'بائعة واحدة',
-      zero: 'لا يوجد بائعات',
+      two: 'بائعتين',
+      one: 'بائعة وحدة',
+      zero: 'ما في بائعات',
     );
     return '$_temp0';
   }
 
   @override
-  String get send => 'إرسال';
+  String get send => 'ابعتي';
 
   @override
-  String get sendCode => 'إرسال الرمز';
+  String get sendCode => 'ابعتيلي الرمز';
 
   @override
   String sessionExpiresOn(String date) {
-    return 'الجلسة سارية حتى $date';
+    return 'الجلسة شغّالة لـ $date';
   }
 
   @override
   String get sessions => 'الجلسات';
 
   @override
-  String get setPassword => 'تعيين كلمة مرور';
+  String get setPassword => 'حطّي كلمة سر';
 
   @override
   String get settings => 'الإعدادات';
 
   @override
-  String get settingsProfileUpdated => 'تم حفظ ملفكِ';
+  String get settingsProfileUpdated => 'انحفظ ملفكِ';
 
   @override
   String get shareMoment => 'شاركي لحظتكِ';
 
   @override
-  String get shipStageAssigned => 'أُسندت لمندوبة';
+  String get shipStageAssigned => 'انعطت لمندوبة';
 
   @override
   String get shipStageCancelled => 'ملغاة';
 
   @override
-  String get shipStageCreated => 'تم تجهيز الطلب';
+  String get shipStageCreated => 'الطلب تجهّز';
 
   @override
-  String get shipStageDelivered => 'تم التسليم';
+  String get shipStageDelivered => 'تسلّمت';
 
   @override
-  String get shipStageFailed => 'تعذّر التسليم';
+  String get shipStageFailed => 'ما قدرنا نسلّمها';
 
   @override
-  String get shipStageInTransit => 'في الطريق';
+  String get shipStageInTransit => 'بالطريق';
 
   @override
-  String get shipStageOutForDelivery => 'خرجت للتسليم';
+  String get shipStageOutForDelivery => 'طلعت للتسليم';
 
   @override
-  String get shipStagePickedUp => 'استلمها المندوب';
+  String get shipStagePickedUp => 'المندوب استلمها';
 
   @override
-  String get shipStageReturned => 'تم الإرجاع';
+  String get shipStageReturned => 'رجعت';
 
   @override
-  String get shipStageReturning => 'قيد الإرجاع';
+  String get shipStageReturning => 'عم ترجع';
 
   @override
   String get shippingMethods => 'طرق الشحن';
@@ -5765,115 +5765,115 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get showLess => 'عرض أقل';
+  String get showLess => 'شوفي أقل';
 
   @override
-  String get showMore => 'عرض المزيد';
+  String get showMore => 'شوفي أكتر';
 
   @override
-  String get showPassword => 'إظهار كلمة المرور';
+  String get showPassword => 'بيّني كلمة السر';
 
   @override
-  String get signBackInLater => 'يمكنكِ العودة وتسجيل الدخول في أي وقت.';
+  String get signBackInLater => 'فيكِ ترجعي تسجّلي دخولكِ أيمتى ما بدّك.';
 
   @override
-  String get signIn => 'تسجيل الدخول';
+  String get signIn => 'سجّلي دخولكِ';
 
   @override
-  String get signInRequired => 'يلزم تسجيل الدخول';
+  String get signInRequired => 'لازم تسجّلي دخولكِ';
 
   @override
-  String get signInSubtitle => 'أدخلي رقمك وسنرسل لكِ رمزًا.';
+  String get signInSubtitle => 'حطّي رقمكِ ومنبعتلكِ رمز.';
 
   @override
-  String get signInToCheckout => 'سجّلي الدخول لإتمام الشراء';
+  String get signInToCheckout => 'سجّلي دخولكِ لتكمّلي الشروة';
 
   @override
-  String get signInToComment => 'سجّلي الدخول للتعليق';
+  String get signInToComment => 'سجّلي دخولكِ لتعلّقي';
 
   @override
-  String get signInToContinue => 'سجّلي الدخول للمتابعة';
+  String get signInToContinue => 'سجّلي دخولكِ لتكمّلي';
 
   @override
-  String get signInToInteract => 'سجّلي الدخول للمشاركة';
+  String get signInToInteract => 'سجّلي دخولكِ لتشاركي';
 
   @override
   String get signInToInteractBody =>
-      'الإعجاب والحفظ والتعليق مرتبطة بحسابكِ، لتبقى معكِ أينما دخلتِ.';
+      'الإعجاب والحفظ والتعليق مربوطين بحسابكِ، ليضلّوا معكِ وين ما فتتِ.';
 
   @override
   String get signInToManageSecurely =>
-      'سجّلي الدخول ليبقى هذا محفوظاً على كل أجهزتكِ';
+      'سجّلي دخولكِ ليضلّ هالشي محفوظ على كل أجهزتكِ';
 
   @override
-  String get signInToMessage => 'سجّلي الدخول لمراسلة المتجر';
+  String get signInToMessage => 'سجّلي دخولكِ لتراسلي المتجر';
 
   @override
   String get signInToMessageBody =>
-      'المحادثات مرتبطة بحسابكِ، لتبقى معكِ على كل أجهزتكِ.';
+      'المحادثات مربوطة بحسابكِ، لتضلّ معكِ على كل أجهزتكِ.';
 
   @override
-  String get signInWithCode => 'الدخول برمز';
+  String get signInWithCode => 'ادخلي برمز';
 
   @override
   String get signOut => 'تسجيل الخروج';
 
   @override
-  String get signOutConfirm => 'هل تريدين تسجيل الخروج؟';
+  String get signOutConfirm => 'أكيد بدّك تطلعي من حسابكِ؟';
 
   @override
-  String get signOutEverywhere => 'تسجيل الخروج من كل الأجهزة الأخرى';
+  String get signOutEverywhere => 'اطلعي من كل الأجهزة التانية';
 
   @override
-  String get signOutQuestion => 'تسجيل الخروج؟';
+  String get signOutQuestion => 'بدّك تطلعي؟';
 
   @override
   String get signUpBenefitsBlurb =>
-      'أنشئي حساباً لإتمام الشراء ومراسلة البائعات وحفظ مفضّلاتكِ.';
+      'اعملي حساب لتكمّلي الشروة وتراسلي البائعات وتحفظي مفضّلاتكِ.';
 
   @override
-  String get signup => 'إنشاء حساب';
+  String get signup => 'اعملي حساب';
 
   @override
-  String get soldBy => 'تبيعه';
+  String get soldBy => 'بتبيعها';
 
   @override
-  String get soldOut => 'نفدت الكمية';
+  String get soldOut => 'خلصت الكمية';
 
   @override
-  String get splashTagline => 'حيث يلتقي الجمال بالتسوّق الاجتماعي';
+  String get splashTagline => 'وين الجمال بيلتقي بالتسوّق';
 
   @override
   String splitOrderNotice(int count) {
-    return 'طلبكِ من $count بائعات وسيصلكِ على عدة شحنات — بأجرة توصيل واحدة.';
+    return 'طلبكِ من $count بائعات ورح يوصلكِ على كذا شحنة — بأجرة توصيل وحدة.';
   }
 
   @override
-  String get startConversation => 'ابدئي محادثة';
+  String get startConversation => 'بلّشي محادثة';
 
   @override
   String get statusCancelled => 'ملغى';
 
   @override
-  String get statusDelivered => 'تم التسليم';
+  String get statusDelivered => 'تسلّم';
 
   @override
   String get statusInTransit => 'بالطريق';
 
   @override
-  String get statusPending => 'قيد الانتظار';
+  String get statusPending => 'ناطر';
 
   @override
-  String get statusProcessing => 'قيد التجهيز';
+  String get statusProcessing => 'عم يتجهّز';
 
   @override
-  String get stockLow => 'بقي القليل';
+  String get stockLow => 'باقي شوي';
 
   @override
-  String get stockOut => 'نفد المخزون';
+  String get stockOut => 'خلص المخزون';
 
   @override
-  String get stopThisRequest => 'لستُ أنا — أوقفي الطلب';
+  String get stopThisRequest => 'مو أنا — وقّفوا الطلب';
 
   @override
   String get storeDescription => 'وصف المتجر';
@@ -5885,7 +5885,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get storeLogoUrl => 'رابط شعار المتجر';
 
   @override
-  String get storesToRevisit => 'متاجر تودّين العودة إليها';
+  String get storesToRevisit => 'متاجر بتحبّي ترجعيلها';
 
   @override
   String get stories => 'الستوريات';
@@ -5898,16 +5898,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get submitBusinessDetails =>
-      'أرسلي بيانات نشاطكِ للحصول على علامة التوثيق.';
+      'ابعتي بيانات نشاطكِ لتاخدي علامة التوثيق.';
 
   @override
-  String get submitVerification => 'إرسال طلب التوثيق';
+  String get submitVerification => 'ابعتي طلب التوثيق';
 
   @override
   String get subtotal => 'المجموع الفرعي';
 
   @override
-  String get success => 'تم بنجاح';
+  String get success => 'تمّ بنجاح ✨';
 
   @override
   String get support => 'الدعم';
@@ -5925,10 +5925,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get surfaceMarketing => 'التسويق';
 
   @override
-  String get syncBlurb => 'مزامنة المفضّلة والسلة والتوصيات.';
+  String get syncBlurb => 'مزامنة المفضّلة والسلّة والاقتراحات.';
 
   @override
-  String get syncingWishlist => 'جارٍ مزامنة مفضّلتكِ';
+  String get syncingWishlist => 'عم نزامن مفضّلتكِ';
 
   @override
   String get systemLanguage => 'النظام';
@@ -5937,13 +5937,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get taxNumber => 'الرقم الضريبي';
 
   @override
-  String get themeDark => 'داكن';
+  String get themeDark => 'غامق';
 
   @override
-  String get themeDarkActive => 'المظهر الداكن مفعّل';
+  String get themeDarkActive => 'المظهر الغامق مفعّل';
 
   @override
-  String get themeDarkSubtitle => 'بنفسجي عميق ولمسات وردية متوهّجة';
+  String get themeDarkSubtitle => 'بنفسجي غامق ولمسات وردية بتلمع';
 
   @override
   String get themeLight => 'فاتح';
@@ -5958,24 +5958,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get themeSystem => 'النظام';
 
   @override
-  String get themeSystemActive => 'يتبع مظهر النظام';
+  String get themeSystemActive => 'ماشي مع مظهر الجهاز';
 
   @override
-  String get themeSystemSubtitle => 'يتبع إعدادات جهازكِ';
+  String get themeSystemSubtitle => 'ماشي مع إعدادات جهازكِ';
 
   @override
-  String get thisDevice => 'هذا الجهاز';
+  String get thisDevice => 'هالجهاز';
 
   @override
   String timeAgoDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'قبل $count يوم',
-      many: 'قبل $count يوماً',
-      few: 'قبل $count أيام',
-      two: 'قبل يومين',
-      one: 'أمس',
+      other: 'من $count يوم',
+      many: 'من $count يوم',
+      few: 'من $count أيام',
+      two: 'من يومين',
+      one: 'مبارح',
     );
     return '$_temp0';
   }
@@ -5985,10 +5985,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'قبل $count ساعة',
-      few: 'قبل $count ساعات',
-      two: 'قبل ساعتين',
-      one: 'قبل ساعة',
+      other: 'من $count ساعة',
+      few: 'من $count ساعات',
+      two: 'من ساعتين',
+      one: 'من ساعة',
     );
     return '$_temp0';
   }
@@ -5998,10 +5998,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'قبل $count دقيقة',
-      few: 'قبل $count دقائق',
-      two: 'قبل دقيقتين',
-      one: 'قبل دقيقة',
+      other: 'من $count دقيقة',
+      few: 'من $count دقايق',
+      two: 'من دقيقتين',
+      one: 'من دقيقة',
     );
     return '$_temp0';
   }
@@ -6019,38 +6019,38 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totpCodeLabel => 'الرمز من التطبيق';
 
   @override
-  String get totpConfirm => 'تأكيد';
+  String get totpConfirm => 'أكّدي';
 
   @override
-  String get totpConfirmed => 'تم تفعيل تطبيق المصادقة';
+  String get totpConfirmed => 'تفعّل تطبيق المصادقة';
 
   @override
-  String get totpCopied => 'نُسخ المفتاح';
+  String get totpCopied => 'انتسخ المفتاح';
 
   @override
-  String get totpCopySecret => 'نسخ المفتاح';
+  String get totpCopySecret => 'انسخي المفتاح';
 
   @override
-  String get totpDisabled => 'غير مُفعّل';
+  String get totpDisabled => 'مو مفعّل';
 
   @override
-  String get totpEnabled => 'مُفعّل — تطبيقكِ يولّد رمزاً كل 30 ثانية';
+  String get totpEnabled => 'مفعّل — تطبيقكِ بيطلّع رمز كل 30 ثانية';
 
   @override
-  String get totpEnrol => 'تفعيل';
+  String get totpEnrol => 'فعّلي';
 
   @override
-  String get totpRequired => 'مطلوب لحسابكِ';
+  String get totpRequired => 'لازم لحسابكِ';
 
   @override
   String get totpSecretHint =>
-      'انسخيه إلى Google Authenticator أو أي تطبيق مشابه. لن يُعرض مرة أخرى.';
+      'انسخيه على Google Authenticator أو أي تطبيق متله. ما رح يبيّن مرة تانية.';
 
   @override
   String get totpSecretLabel => 'المفتاح السرّي';
 
   @override
-  String get totpSetupTitle => 'أضيفي أوهارا إلى تطبيق المصادقة';
+  String get totpSetupTitle => 'ضيفي أوهارا لتطبيق المصادقة';
 
   @override
   String get totpTitle => 'تطبيق المصادقة';
@@ -6062,14 +6062,14 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count محاولة تسليم',
       few: '$count محاولات تسليم',
-      two: 'محاولتا تسليم',
-      one: 'محاولة تسليم واحدة',
+      two: 'محاولتين تسليم',
+      one: 'محاولة تسليم وحدة',
     );
     return '$_temp0';
   }
 
   @override
-  String get trackDeliveredAt => 'سُلّمت في';
+  String get trackDeliveredAt => 'تسلّمت بـ';
 
   @override
   String get trackExpress => 'توصيل سريع';
@@ -6081,36 +6081,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trackJourney => 'مسار الشحنة';
 
   @override
-  String get trackNotFound => 'لم نجد شحنة بهذا الرمز.';
+  String get trackNotFound => 'ما لقينا شحنة بهالرمز.';
 
   @override
-  String get trackReviewReorder => 'تتبّعي وقيّمي وأعيدي الطلب';
+  String get trackReviewReorder => 'تابعي وقيّمي واطلبي من جديد';
 
   @override
   String get trackScheduledFor => 'موعد التسليم';
 
   @override
-  String get trackShipment => 'تتبّع الشحنة';
+  String get trackShipment => 'تابعي الشحنة';
 
   @override
   String get adminDelivery => 'شركات التوصيل';
 
   @override
   String get adminDeliverySubtitle =>
-      'الشركات التي تنقل الطرود، وتغطيتها، وما تعثّر منها.';
+      'الشركات اللي بتنقل الطرود، ووين بتغطّي، وشو اللي تعرقل منها.';
 
   @override
-  String get adminDeliveryNoProviders => 'لا توجد شركة توصيل مسجّلة بعد.';
+  String get adminDeliveryNoProviders => 'ما في شركة توصيل مسجّلة لسّا.';
 
   @override
-  String get adminDeliveryStuck => 'طرود لم تستلمها الشركة';
+  String get adminDeliveryStuck => 'طرود ما استلمتها الشركة';
 
   @override
   String get adminDeliveryNothingStuck =>
-      'لا شيء متوقف — كل الطرود مع شركاتها.';
+      'ما في شي واقف — كل الطرود مع شركاتها.';
 
   @override
-  String get adminDeliveryRetry => 'إعادة المحاولة';
+  String get adminDeliveryRetry => 'جرّبي مرة تانية';
 
   @override
   String get adminDeliveryEverywhere => 'كل المحافظات';
@@ -6128,7 +6128,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminDeliveryAdapterMissing(String adapter) {
-    return 'لا يوجد في هذه النسخة موصّل باسم $adapter';
+    return 'ما في بهالنسخة موصّل اسمه $adapter';
   }
 
   @override
@@ -6136,10 +6136,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get sellerOrderCarrierPendingRetry =>
-      'لم تستلمها شركة التوصيل بعد — نعيد المحاولة تلقائيًا.';
+      'شركة التوصيل لسّا ما استلمتها — عم نرجع نجرّب لحالنا.';
 
   @override
-  String get deliveryCarrierTracking => 'رقم الشحنة لدى الشركة';
+  String get deliveryCarrierTracking => 'رقم الشحنة عند الشركة';
 
   @override
   String get trackingCode => 'رمز التتبّع';
@@ -6150,34 +6150,34 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get trendAlertCartAbandon => 'سلات متروكة';
+  String get trendAlertCartAbandon => 'سلّات متروكة';
 
   @override
   String get trendAlertLowConversion => 'تحويل منخفض';
 
   @override
-  String get trendAlertOverstock => 'مخزون راكد';
+  String get trendAlertOverstock => 'مخزون واقف';
 
   @override
-  String get trendAlertSoldOut => 'نفد والطلب قائم';
+  String get trendAlertSoldOut => 'خلص والطلب لسّا موجود';
 
   @override
   String trendAlertStockOutIn(int days) {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: 'ينفد خلال $days يوم',
-      many: 'ينفد خلال $days يوماً',
-      few: 'ينفد خلال $days أيام',
-      two: 'ينفد خلال يومين',
-      one: 'ينفد خلال يوم',
-      zero: 'ينفد اليوم',
+      other: 'بيخلص خلال $days يوم',
+      many: 'بيخلص خلال $days يوم',
+      few: 'بيخلص خلال $days أيام',
+      two: 'بيخلص خلال يومين',
+      one: 'بيخلص خلال يوم',
+      zero: 'بيخلص اليوم',
     );
     return '$_temp0';
   }
 
   @override
-  String get trendAlertStockRisk => 'المخزون على وشك النفاد';
+  String get trendAlertStockRisk => 'المخزون قرّب يخلص';
 
   @override
   String get trendAverageScore => 'متوسّط مؤشر الترند';
@@ -6197,16 +6197,16 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: '$days يوم',
-      many: '$days يوماً',
+      many: '$days يوم',
       few: '$days أيام',
-      two: 'يومان',
+      two: 'يومين',
       one: 'يوم واحد',
     );
     return '$_temp0';
   }
 
   @override
-  String get trendDismiss => 'تجاهل';
+  String get trendDismiss => 'طنّشي';
 
   @override
   String get trendFavorites => 'الإضافات للمفضّلة';
@@ -6216,16 +6216,16 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       units,
       locale: localeName,
-      other: 'متوقّع بيع $units قطعة',
-      few: 'متوقّع بيع $units قطع',
-      two: 'متوقّع بيع قطعتين',
-      one: 'متوقّع بيع قطعة واحدة',
+      other: 'متوقّع ينباع $units قطعة',
+      few: 'متوقّع ينباع $units قطع',
+      two: 'متوقّع تنباع قطعتين',
+      one: 'متوقّع تنباع قطعة وحدة',
     );
     String _temp1 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
       other: 'خلال $days يوم',
-      many: 'خلال $days يوماً',
+      many: 'خلال $days يوم',
       few: 'خلال $days أيام',
       two: 'خلال يومين',
       one: 'خلال يوم',
@@ -6234,10 +6234,10 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get trendHideEvidence => 'إخفاء الأرقام';
+  String get trendHideEvidence => 'خبّي الأرقام';
 
   @override
-  String get trendMarkDone => 'تم التنفيذ';
+  String get trendMarkDone => 'خلصت';
 
   @override
   String get trendMyUnits => 'مبيعاتكِ';
@@ -6261,11 +6261,11 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count منتج في ارتفاع',
-      many: '$count منتجاً في ارتفاع',
-      few: '$count منتجات في ارتفاع',
-      two: 'منتجان في ارتفاع',
-      one: 'منتج واحد في ارتفاع',
+      other: '$count منتج عم يطلع',
+      many: '$count منتج عم يطلع',
+      few: '$count منتجات عم تطلع',
+      two: 'منتجين عم يطلعوا',
+      one: 'منتج واحد عم يطلع',
     );
     return '$_temp0';
   }
@@ -6277,28 +6277,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trendSearches => 'عمليات البحث';
 
   @override
-  String get trendShowEvidence => 'اعرضي الأرقام';
+  String get trendShowEvidence => 'ورجيني الأرقام';
 
   @override
-  String get trendStageCooling => 'يتباطأ';
+  String get trendStageCooling => 'عم يبرد';
 
   @override
-  String get trendStageDeclining => 'في تراجع';
+  String get trendStageDeclining => 'عم ينزل';
 
   @override
-  String get trendStageDormant => 'خامل';
+  String get trendStageDormant => 'نايم';
 
   @override
-  String get trendStageEmerging => 'صاعد مبكرًا';
+  String get trendStageEmerging => 'بلّش يطلع';
 
   @override
-  String get trendStagePeaking => 'في الذروة';
+  String get trendStagePeaking => 'بعزّه';
 
   @override
-  String get trendStageRising => 'في ارتفاع';
+  String get trendStageRising => 'عم يطلع';
 
   @override
-  String get trendStageSteady => 'مستقر';
+  String get trendStageSteady => 'ثابت';
 
   @override
   String get trendStock => 'المخزون';
@@ -6310,26 +6310,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trendUnits => 'القطع';
 
   @override
-  String get trendUnitsSold => 'القطع المباعة';
+  String get trendUnitsSold => 'القطع اللي انباعت';
 
   @override
-  String get trendUnmetAcknowledged => 'تمت المراجعة';
+  String get trendUnmetAcknowledged => 'انراجع';
 
   @override
-  String get trendUnmetAddressed => 'تمّت التغطية';
+  String get trendUnmetAddressed => 'تغطّى';
 
   @override
-  String get trendUnmetDismissed => 'مُستبعد';
+  String get trendUnmetDismissed => 'متروك';
 
   @override
   String get trendUnmetOpen => 'جديد';
 
   @override
-  String get trendUnmetSourcing => 'قيد التوريد';
+  String get trendUnmetSourcing => 'عم نأمّنه';
 
   @override
   String trendUnmetSummary(int searches, int missRate) {
-    return '$searches عملية بحث · $missRate% بلا نتيجة مناسبة';
+    return '$searches بحث · $missRate% بلا نتيجة مناسبة';
   }
 
   @override
@@ -6341,36 +6341,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trendViews => 'المشاهدات';
 
   @override
-  String get trendWindow14 => '14 يومًا';
+  String get trendWindow14 => '14 يوم';
 
   @override
-  String get trendWindow30 => '30 يومًا';
+  String get trendWindow30 => '30 يوم';
 
   @override
   String get trendWindow7 => '7 أيام';
 
   @override
-  String get trending => 'الأكثر رواجاً';
+  String get trending => 'الأكتر رواجاً';
 
   @override
-  String get trendingNow => 'الأكثر رواجاً';
+  String get trendingNow => 'الأكتر رواجاً';
 
   @override
-  String get trendingSubtitle => 'الأكثر حباً هذا الأسبوع';
+  String get trendingSubtitle => 'الأكتر محبّة هالأسبوع';
 
   @override
   String get trendsAdminEmptyBody =>
-      'لم تُنفَّذ عملية التحليل الليلية بعد، أو لا يوجد نشاط كافٍ. يمكنكِ تشغيلها الآن من زر إعادة الاحتساب.';
+      'التحليل الليلي لسّا ما اشتغل، أو ما في نشاط كفاية. فيكِ تشغّليه هلّق من زر إعادة الاحتساب.';
 
   @override
-  String get trendsAdminEmptyTitle => 'لا توجد نتائج تحليل بعد';
+  String get trendsAdminEmptyTitle => 'ما في نتايج تحليل لسّا';
 
   @override
   String get trendsAdminTitle => 'تحليل السوق';
 
   @override
   String trendsAsOf(String date) {
-    return 'الأرقام محسوبة في $date — تُحدَّث مرة واحدة يوميًا';
+    return 'الأرقام محسوبة بـ $date — بتتحدّث مرة باليوم';
   }
 
   @override
@@ -6378,7 +6378,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get trendsCategoriesHint =>
-      'مرتّبة بمؤشر الترند، مع نسبة التوفّر في كل فئة';
+      'مرتّبة حسب مؤشر الترند، مع نسبة التوفّر بكل فئة';
 
   @override
   String trendsCategorySupply(int inStock, int total) {
@@ -6390,52 +6390,53 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get trendsColoursHint =>
-      'حصّة كل لون من الطلب، الآن ومقارنةً بالفترة السابقة';
+      'حصّة كل لون من الطلب، هلّق وقدّام الفترة اللي قبلها';
 
   @override
-  String get trendsDeclining => 'منتجات في تراجع';
+  String get trendsDeclining => 'منتجات عم تنزل';
 
   @override
-  String get trendsDecliningHint => 'أكبر انخفاض في مؤشر الترند';
+  String get trendsDecliningHint => 'أكبر نزلة بمؤشر الترند';
 
   @override
   String get trendsDemandForecast => 'توقّع الطلب';
 
   @override
-  String get trendsDemandForecastHint => 'إجمالي المنصّة خلال الأيام القادمة';
+  String get trendsDemandForecastHint => 'مجموع المنصّة بالأيام الجاية';
 
   @override
   String get trendsDemandSignals => 'مؤشرات الطلب';
 
   @override
   String get trendsDemandSignalsHint =>
-      'الاهتمام بمنتجاتكِ، منفصلًا عمّا بِيع فعلًا';
+      'الاهتمام بمنتجاتكِ، لحالو عن اللي انباع عن جد';
 
   @override
-  String get trendsEmerging => 'منتجات صاعدة مبكرًا';
+  String get trendsEmerging => 'منتجات بلّشت تطلع';
 
   @override
-  String get trendsEmergingHint => 'طلبها يتسارع قبل أن تصبح الأكثر مبيعًا';
+  String get trendsEmergingHint =>
+      'الطلب عليها عم يسرع قبل ما تصير الأكتر مبيع';
 
   @override
   String get trendsEmptyBody =>
-      'يحتاج محرّك الترند إلى أسبوع من النشاط ليبدأ في رصد الاتجاهات. تابعي عرض منتجاتكِ وستظهر النتائج هنا.';
+      'محرّك الترند محتاج أسبوع نشاط ليبلّش يلقط الاتجاهات. كمّلي اعرضي منتجاتكِ والنتايج رح تطلع هون.';
 
   @override
-  String get trendsEmptyTitle => 'لم يجمع المحرّك بيانات كافية بعد';
+  String get trendsEmptyTitle => 'المحرّك لسّا ما جمع بيانات كفاية';
 
   @override
-  String get trendsFailed => 'تعذّر تحميل تحليل الترند';
+  String get trendsFailed => 'ما قدرنا نحمّل تحليل الترند';
 
   @override
   String get trendsForecast => 'توقّع المبيعات';
 
   @override
-  String get trendsForecastHint => 'مبني على تاريخ مبيعاتكِ، مع درجة الثقة به';
+  String get trendsForecastHint => 'مبني على تاريخ مبيعاتكِ، مع قدّيش منثق فيه';
 
   @override
   String get trendsForecastInsufficient =>
-      'لا يوجد تاريخ مبيعات كافٍ بعد لبناء توقّع. سيظهر هنا تلقائيًا بعد أسبوعين من النشاط.';
+      'ما في تاريخ مبيعات كفاية لسّا لنعمل توقّع. رح يطلع هون لحالو بعد أسبوعين نشاط.';
 
   @override
   String trendsForecastMethod(String method, int confidence) {
@@ -6448,7 +6449,7 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: 'القطع المتوقّعة خلال $days يوم',
-      many: 'القطع المتوقّعة خلال $days يوماً',
+      many: 'القطع المتوقّعة خلال $days يوم',
       few: 'القطع المتوقّعة خلال $days أيام',
       two: 'القطع المتوقّعة خلال يومين',
       one: 'القطع المتوقّعة خلال يوم',
@@ -6463,13 +6464,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trendsGapPrice => 'فجوة سعرية';
 
   @override
-  String get trendsGapSearch => 'بحث غير ملبّى';
+  String get trendsGapSearch => 'بحث ما لقى طلبه';
 
   @override
   String get trendsLowConversion => 'تنبيهات ضعف التحويل';
 
   @override
-  String get trendsLowConversionHint => 'مشاهدات مرتفعة لا تتحوّل إلى طلبات';
+  String get trendsLowConversionHint => 'مشاهدات كتير بس ما عم تتحوّل لطلبات';
 
   @override
   String get trendsMarketInsights => 'ملاحظات السوق';
@@ -6491,37 +6492,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trendsOpportunities => 'فرص السوق';
 
   @override
-  String get trendsOpportunitiesHint => 'أين يوجد طلب لا تقابله تشكيلة';
+  String get trendsOpportunitiesHint => 'وين في طلب وما في تشكيلة تقابله';
 
   @override
   String get trendsOverall => 'المؤشرات العامة';
 
   @override
   String get trendsOverallHint =>
-      'حركة المنصّة خلال الفترة، مقارنةً بالفترة التي سبقتها';
+      'حركة المنصّة بالفترة، قدّام الفترة اللي قبلها';
 
   @override
   String get trendsPriceBands => 'اتجاهات النطاقات السعرية';
 
   @override
-  String get trendsPriceBandsHint => 'إلى أين ينتقل الطلب في السعر';
+  String get trendsPriceBandsHint => 'لوين عم يروح الطلب بالسعر';
 
   @override
-  String get trendsRecommendedActions => 'ما الذي تفعلينه اليوم';
+  String get trendsRecommendedActions => 'شو تعملي اليوم';
 
   @override
   String get trendsRecommendedActionsHint =>
-      'ملاحظات محسوبة من بيانات متجركِ، مرتّبة بالأهم';
+      'ملاحظات محسوبة من بيانات متجركِ، مرتّبة حسب الأهم';
 
   @override
-  String get trendsRecompute => 'إعادة احتساب التحليل';
+  String get trendsRecompute => 'رجّعي احسبي التحليل';
 
   @override
   String get trendsSearches => 'اتجاهات البحث';
 
   @override
   String get trendsSearchesHint =>
-      'أكثر ما تبحث عنه العميلات، ونسبة الإخفاق في كل بحث';
+      'أكتر شي عم تدوّر عليه الزبونات، وقدّيش البحث ما بيلاقي';
 
   @override
   String get trendsSellerPerformance => 'أداء البائعات';
@@ -6542,28 +6543,26 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trendsStageScored(int scored, int total) {
-    return 'منتجات نشطة: $scored من أصل $total مُقيَّمة';
+    return 'منتجات شغّالة: $scored من أصل $total متقيّمة';
   }
 
   @override
   String get trendsStockOpportunities => 'فرص المخزون';
 
   @override
-  String get trendsStockOpportunitiesHint =>
-      'طلب قائم ومخزون على وشك النفاد أو نافد';
+  String get trendsStockOpportunitiesHint => 'في طلب والمخزون قرّب يخلص أو خلص';
 
   @override
   String get trendsTrending => 'المنتجات الرائجة';
 
   @override
-  String get trendsTrendingHint => 'الأعلى في مؤشر الترند ضمن الفترة المختارة';
+  String get trendsTrendingHint => 'الأعلى بمؤشر الترند بالفترة اللي نقّيتيها';
 
   @override
-  String get trendsUnmetDemand => 'طلب غير ملبّى';
+  String get trendsUnmetDemand => 'طلب ما انلبّى';
 
   @override
-  String get trendsUnmetDemandHint =>
-      'عمليات بحث لم تجد العميلات لها نتائج مناسبة';
+  String get trendsUnmetDemandHint => 'بحث ما لقت فيه الزبونات نتايج مناسبة';
 
   @override
   String get trust => 'موثوق';
@@ -6572,60 +6571,60 @@ class AppLocalizationsAr extends AppLocalizations {
   String get unfavorite => 'محفوظ';
 
   @override
-  String get unknownDevice => 'جهاز غير معروف';
+  String get unknownDevice => 'جهاز مو معروف';
 
   @override
-  String get unlink => 'فك الربط';
+  String get unlink => 'فكّي الربط';
 
   @override
-  String get unverified => 'غير موثّقة';
+  String get unverified => 'مو موثّقة';
 
   @override
-  String get updatePassword => 'تحديث كلمة المرور';
+  String get updatePassword => 'حدّثي كلمة السر';
 
   @override
   String get useEveryDevice => 'من أي جهاز';
 
   @override
   String get useEveryDeviceBlurb =>
-      'تابعي من الموبايل أو الويب أو التابلت بأمان.';
+      'كمّلي من الموبايل أو الويب أو التابلت بأمان.';
 
   @override
-  String get usePasswordInstead => 'استخدام كلمة المرور بدلاً من ذلك';
+  String get usePasswordInstead => 'ادخلي بكلمة السر بدالها';
 
   @override
-  String get usedCoupon => 'تم تطبيق الكوبون';
+  String get usedCoupon => 'انطبّق الكوبون';
 
   @override
-  String get validEmailOrPhone => 'أدخلي بريداً أو رقم موبايل صالحاً';
+  String get validEmailOrPhone => 'حطّي إيميل أو رقم موبايل صحيح';
 
   @override
-  String get validEmailRequired => 'أدخلي بريداً إلكترونياً صالحاً';
+  String get validEmailRequired => 'حطّي إيميل صحيح';
 
   @override
-  String get validPhone => 'أدخلي رقم موبايل صالحاً';
+  String get validPhone => 'حطّي رقم موبايل صحيح';
 
   @override
   String get verificationCode => 'رمز التحقق';
 
   @override
-  String get verificationComplete => 'تم التحقق بنجاح.';
+  String get verificationComplete => 'تمّ التحقق، تسلمي ✨';
 
   @override
-  String get verificationDocumentsHint => 'صوّري كل مستند كاملاً وبإضاءة جيدة.';
+  String get verificationDocumentsHint => 'صوّري كل مستند كامل وبضو منيح.';
 
   @override
   String get verificationDocumentsPrivate =>
-      'لا يفتحها أحد سواكِ وفريق المراجعة، ولا تظهر في متجركِ أبداً.';
+      'ما حدا بيفتحها غيركِ وفريق المراجعة، وعمرها ما بتبيّن بمتجركِ.';
 
   @override
   String verificationFieldRequired(String field) {
-    return '«$field» مطلوب.';
+    return 'لازم تعبّي «$field».';
   }
 
   @override
   String get verificationResubmitNotice =>
-      'لديكِ طلب سابق. التعديل والإرسال يستبدلانه.';
+      'عندكِ طلب قديم. إذا عدّلتِ وبعتِ، الجديد بياخد محلّه.';
 
   @override
   String get verificationSectionContact => 'التواصل والعناوين';
@@ -6646,13 +6645,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get verificationStatusApproved => 'موثّقة';
 
   @override
-  String get verificationStatusNeedsMoreDocuments => 'بحاجة إلى مستندات إضافية';
+  String get verificationStatusNeedsMoreDocuments => 'محتاجين مستندات زيادة';
 
   @override
-  String get verificationStatusNeedsMoreInfo => 'بحاجة إلى معلومات إضافية';
+  String get verificationStatusNeedsMoreInfo => 'محتاجين معلومات زيادة';
 
   @override
-  String get verificationStatusPending => 'في الانتظار';
+  String get verificationStatusPending => 'ناطرة';
 
   @override
   String get verificationStatusRejected => 'مرفوضة';
@@ -6661,74 +6660,74 @@ class AppLocalizationsAr extends AppLocalizations {
   String get verificationStatusSuspended => 'موقوفة';
 
   @override
-  String get verificationStatusUnderReview => 'قيد المراجعة';
+  String get verificationStatusUnderReview => 'عم تنراجع';
 
   @override
-  String get verificationSubmitted => 'تم إرسال طلب التوثيق.';
+  String get verificationSubmitted => 'انبعت طلب التوثيق.';
 
   @override
-  String get verificationUploadPending => 'انتظري انتهاء رفع المستندات.';
+  String get verificationUploadPending => 'استنّي شوي لحتى يخلص رفع المستندات.';
 
   @override
   String get verified => 'موثّقة';
 
   @override
-  String get verify => 'تأكيد';
+  String get verify => 'أكّدي';
 
   @override
-  String get verifyCode => 'تأكيد الرمز';
+  String get verifyCode => 'أكّدي الرمز';
 
   @override
-  String get verifyNewDevices => 'التحقق من الأجهزة الجديدة';
+  String get verifyNewDevices => 'تأكّدي من الأجهزة الجديدة';
 
   @override
-  String get verifyToContinue => 'تأكّدي من هويتك';
+  String get verifyToContinue => 'أكّدي هويتكِ';
 
   @override
-  String get verifyYourPhone => 'تأكيد رقم موبايلكِ';
+  String get verifyYourPhone => 'أكّدي رقم موبايلكِ';
 
   @override
-  String get viewAll => 'عرض الكل';
+  String get viewAll => 'شوفي الكل';
 
   @override
   String viewAllComments(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'عرض كل التعليقات ($count)',
-      few: 'عرض التعليقات $count',
-      two: 'عرض التعليقين',
-      one: 'عرض تعليق واحد',
+      other: 'شوفي كل التعليقات ($count)',
+      few: 'شوفي التعليقات الـ$count',
+      two: 'شوفي التعليقين',
+      one: 'شوفي التعليق',
     );
     return '$_temp0';
   }
 
   @override
-  String get viewSaved => 'عرض';
+  String get viewSaved => 'شوفي';
 
   @override
   String get visitStore => 'زوري المتجر';
 
   @override
-  String get visualSearchTitle => 'البحث بالصورة';
+  String get visualSearchTitle => 'دوّري بالصورة';
 
   @override
-  String get voiceMessage => 'ملاحظة صوتية';
+  String get voiceMessage => 'رسالة صوتية';
 
   @override
-  String get voicePermissionDenied => 'يحتاج أوهارا إذن استخدام الميكروفون.';
+  String get voicePermissionDenied => 'أوهارا محتاجة إذن الميكروفون.';
 
   @override
-  String get voiceRecord => 'سجّلي ملاحظة صوتية';
+  String get voiceRecord => 'سجّلي رسالة صوتية';
 
   @override
-  String get voiceRecordFailed => 'تعذّر بدء التسجيل.';
+  String get voiceRecordFailed => 'ما قدرنا نبلّش التسجيل.';
 
   @override
-  String get voiceSend => 'أرسلي التسجيل';
+  String get voiceSend => 'ابعتي التسجيل';
 
   @override
-  String get voiceUnavailable => 'هذا التسجيل غير متاح.';
+  String get voiceUnavailable => 'هالتسجيل مو متاح.';
 
   @override
   String get wallet => 'محفظتي';
@@ -6738,16 +6737,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get walletEmptyBody =>
-      'سيظهر هنا رصيد المرتجعات والهدايا والنقاط المحوّلة.';
+      'هون رح يطلع رصيد المرتجعات والهدايا والنقاط اللي حوّلتيها.';
 
   @override
-  String get walletEmptyTitle => 'محفظتكِ فارغة الآن';
+  String get walletEmptyTitle => 'محفظتكِ فاضية هلّق';
 
   @override
-  String get walletNotWithdrawable => 'يُستخدم داخل أوهارا فقط';
+  String get walletNotWithdrawable => 'بينصرف جوّا أوهارا بس';
 
   @override
-  String get walletOffline => 'لا يوجد اتصال. سنحدّث رصيدكِ عند عودة الشبكة.';
+  String get walletOffline => 'ما في نت. رح نحدّث رصيدكِ أول ما ترجع الشبكة.';
 
   @override
   String get walletSourceAdjustment => 'تسوية سعر';
@@ -6786,31 +6785,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get website => 'الموقع الإلكتروني';
 
   @override
-  String get welcomeBack => 'مرحباً بعودتكِ';
+  String get welcomeBack => 'يا هلا فيكِ من جديد';
 
   @override
-  String get welcomeToOhara => 'مرحباً بكِ في أوهارا';
+  String get welcomeToOhara => 'يا هلا فيكِ بأوهارا';
 
   @override
   String get wishlist => 'المفضّلة';
 
   @override
-  String get wishlistLinkCopied => 'تم نسخ رابط المفضّلة';
+  String get wishlistLinkCopied => 'انتسخ رابط المفضّلة';
 
   @override
-  String get writeComment => 'اكتبي تعليقاً…';
+  String get writeComment => 'اكتبي تعليق…';
 
   @override
   String get yearsOfExperience => 'سنوات الخبرة';
 
   @override
-  String get yes => 'نعم';
+  String get yes => 'إي';
 
   @override
-  String get yesterdayLabel => 'أمس';
+  String get yesterdayLabel => 'مبارح';
 
   @override
-  String get you => 'أنتِ';
+  String get you => 'إنتِ';
 
   @override
   String get yourOrders => 'طلباتكِ';
@@ -6819,30 +6818,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get yourWishlist => 'مفضّلتكِ';
 
   @override
-  String get a11yUnmute => 'تشغيل الصوت';
+  String get a11yUnmute => 'شغّلي الصوت';
 
   @override
-  String get composerPublished => 'تم النشر ✨';
+  String get composerPublished => 'انتشر ✨';
 
   @override
   String get composerPublishedForReview =>
-      'وصلنا منشوركِ ✨ سنراجعه سريعاً ثم يظهر للجميع.';
+      'وصلنا منشوركِ ✨ منراجعه بسرعة وبعدين بيبيّن للكل.';
 
   @override
-  String get composerNeedsMedia => 'أضيفي صورة أو مقطعاً أولاً';
+  String get composerNeedsMedia => 'ضيفي صورة أو مقطع بالأول';
 
   @override
-  String get composerNeedsVideo => 'الريلز بحاجة إلى مقطع فيديو';
+  String get composerNeedsVideo => 'الريلز محتاج مقطع فيديو';
 
   @override
-  String get composerNeedsCaption => 'اكتبي شيئاً أو أضيفي صورة';
+  String get composerNeedsCaption => 'اكتبي شي أو ضيفي صورة';
 
   @override
   String get composerVideoTooLong => 'المقطع أطول من 30 ثانية';
 
   @override
   String contentResharedBy(String name) {
-    return 'أضافته $name إلى صفحتها';
+    return '$name ضافته لصفحتها';
   }
 
   @override
@@ -6852,33 +6851,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contentFromBoutique => 'من بوتيك';
 
   @override
-  String get contentUnderReview => 'قيد المراجعة';
+  String get contentUnderReview => 'عم ينراجع';
 
   @override
-  String get contentAddToMyPage => 'أضيفي إلى صفحتي';
+  String get contentAddToMyPage => 'ضيفيه لصفحتي';
 
   @override
-  String get contentShare => 'مشاركة';
+  String get contentShare => 'شاركي';
 
   @override
-  String get contentReply => 'رد';
+  String get contentReply => 'ردّي';
 
   @override
   String contentReplyingTo(String name) {
-    return 'ردّاً على $name';
+    return 'عم تردّي على $name';
   }
 
   @override
   String contentShowReplies(int count) {
-    return 'عرض $count من الردود';
+    return 'شوفي $count من الردود';
   }
 
   @override
-  String get contentUnavailableTitle => 'هذا المنشور لم يعد متاحاً';
+  String get contentUnavailableTitle => 'هالمنشور ما عاد متاح';
 
   @override
   String get contentUnavailableBody =>
-      'ربّما حُذف أو أصبح خاصّاً، أو انتهت صلاحية القصة.';
+      'يمكن انحذف أو صار خاص، أو القصة خلص وقتها.';
 
   @override
   String get socialFeedTitle => 'المجتمع';
@@ -6887,88 +6886,88 @@ class AppLocalizationsAr extends AppLocalizations {
   String get socialFeedDiscover => 'اكتشفي';
 
   @override
-  String get socialFeedFollowing => 'أتابع';
+  String get socialFeedFollowing => 'بتابعهن';
 
   @override
-  String get socialFeedEmptyTitle => 'لا منشورات بعد';
+  String get socialFeedEmptyTitle => 'ما في منشورات لسّا';
 
   @override
-  String get socialFeedEmptyBody => 'كوني أول وحدة تشاركي إطلالتك 🌸';
+  String get socialFeedEmptyBody => 'خليكِ أول وحدة بتشارك إطلالتها 🌸';
 
   @override
-  String get socialFeedFollowingEmptyTitle => 'تابعي بوتيكات تحبيها';
+  String get socialFeedFollowingEmptyTitle => 'تابعي بوتيكات بتحبّيها';
 
   @override
   String get socialFeedFollowingEmptyBody =>
-      'هنا ترين كل جديد من البوتيكات والصديقات اللواتي تتابعينهن.';
+      'هون بتشوفي كل جديد من البوتيكات والصحبات اللي بتتابعيهن.';
 
   @override
-  String get socialFeedSubtitle => 'إطلالات وقصص من نساء أوهارا';
+  String get socialFeedSubtitle => 'إطلالات وقصص من صبايا أوهارا';
 
   @override
   String get socialFeedStoriesTitle => 'قصص اليوم';
 
   @override
-  String get socialFeedStoriesEyebrow => 'مباشر الآن';
+  String get socialFeedStoriesEyebrow => 'مباشر هلّق';
 
   @override
   String get socialFeedDiscoverEyebrow => 'من المجتمع';
 
   @override
-  String get socialFeedDiscoverHeading => 'أحدث الإطلالات';
+  String get socialFeedDiscoverHeading => 'آخر الإطلالات';
 
   @override
-  String get socialFeedFollowingEyebrow => 'لكِ وحدكِ';
+  String get socialFeedFollowingEyebrow => 'إلكِ لحالكِ';
 
   @override
-  String get socialFeedFollowingHeading => 'من اللواتي تتابعينهن';
+  String get socialFeedFollowingHeading => 'من اللي بتتابعيهن';
 
   @override
-  String get socialFeedShareLook => 'شاركي إطلالتك';
+  String get socialFeedShareLook => 'شاركي إطلالتكِ';
 
   @override
-  String get socialFeedCaughtUp => 'وصلتِ إلى آخر الجديد';
+  String get socialFeedCaughtUp => 'شفتِ كل الجديد ✨';
 
   @override
-  String get socialFeedCaughtUpBody =>
-      'عودي قريباً — إطلالات جديدة تصل كل يوم.';
+  String get socialFeedCaughtUpBody => 'ارجعي قريب — في إطلالات جديدة كل يوم.';
 
   @override
-  String get socialFeedLoadMoreFailed => 'تعذّر تحميل المزيد من المنشورات';
+  String get socialFeedLoadMoreFailed => 'ما قدرنا نحمّل منشورات زيادة';
 
   @override
-  String get socialFeedGuestFollowingTitle => 'دائرتكِ الخاصة';
+  String get socialFeedGuestFollowingTitle => 'دايرتكِ الخاصة';
 
   @override
   String get socialFeedGuestFollowingBody =>
-      'سجّلي الدخول ليجتمع هنا كل جديد من البوتيكات والصديقات اللواتي تتابعينهن.';
+      'سجّلي دخولكِ ليتجمّع هون كل جديد من البوتيكات والصحبات اللي بتتابعيهن.';
 
   @override
   String get socialFeedExploreAction => 'اكتشفي المجتمع';
 
   @override
-  String get socialFeedBackToTop => 'العودة إلى الأعلى';
+  String get socialFeedBackToTop => 'ارجعي لفوق';
 
   @override
   String get reelsTitle => 'ريلز';
 
   @override
-  String get reelsEmptyTitle => 'لا ريلز بعد';
+  String get reelsEmptyTitle => 'ما في ريلز لسّا';
 
   @override
-  String get reelsEmptyBody => 'قد يكون أول مقطع لكِ 🎬';
+  String get reelsEmptyBody => 'يمكن يكون أول مقطع إلكِ 🎬';
 
   @override
   String get composerTitle => 'منشور جديد';
 
   @override
-  String get contentAddToMyPageBody => 'سيظهر على صفحتكِ، ويبقى الفضل للبوتيك.';
+  String get contentAddToMyPageBody =>
+      'رح يبيّن على صفحتكِ، والفضل بيضلّ للبوتيك.';
 
   @override
   String get contentAddToMyPagePreview => 'معاينة المنشور';
 
   @override
-  String get contentAddToMyPageCredit => 'المنشور الأصلي منها — ويبقى باسمها';
+  String get contentAddToMyPageCredit => 'المنشور الأصلي منها — وبيضلّ باسمها';
 
   @override
   String contentAddToMyPageProduct(String title) {
@@ -6976,58 +6975,59 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get contentAddToMyPageNote => 'تعليقك (اختياري)';
+  String get contentAddToMyPageNote => 'تعليقكِ (إذا حابّة)';
 
   @override
-  String get contentAddToMyPageNoteHint => 'ماذا تحبين أن تقولي عنه؟';
+  String get contentAddToMyPageNoteHint => 'شو حابّة تقولي عنه؟';
 
   @override
-  String get contentAddToMyPageConfirm => 'أضيفيه إلى صفحتي';
+  String get contentAddToMyPageConfirm => 'ضيفيه لصفحتي';
 
   @override
   String get composerMediaLabel => 'الصور أو المقطع';
 
   @override
-  String get composerMediaVideoHelp => 'مقطع واحد، حتى 30 ثانية';
+  String get composerMediaVideoHelp => 'مقطع واحد، لحد 30 ثانية';
 
   @override
   String get composerCaptionLabel => 'الوصف';
 
   @override
-  String get composerCaptionHint => 'احكي عن الإطلالة…';
+  String get composerCaptionHint => 'احكيلنا عن الإطلالة…';
 
   @override
-  String get composerPublish => 'نشر';
+  String get composerPublish => 'انشري';
 
   @override
-  String get composerAudience => 'من يراه';
+  String get composerAudience => 'مين بيشوفه';
 
   @override
   String get composerAudiencePublic => 'الكل';
 
   @override
-  String get composerAudienceFollowers => 'متابِعاتي فقط';
+  String get composerAudienceFollowers => 'متابِعاتي بس';
 
   @override
   String get composerTagProducts => 'اربطي القطعة';
 
   @override
-  String get composerTagProductsHelp => 'فقط القطع التي وصلتكِ فعلاً';
+  String get composerTagProductsHelp => 'بس القطع اللي وصلتكِ عن جد';
 
   @override
-  String get composerTagProductsEmpty => 'حين يصلكِ أول طلب، ستجدين قطعكِ هنا.';
+  String get composerTagProductsEmpty =>
+      'لمّا يوصلكِ أول طلب، بتلاقي قطعكِ هون.';
 
   @override
   String get studioTitle => 'استوديو المحتوى';
 
   @override
-  String get studioSubtitle => 'ما الذي ينجح، وإلى أين وصل';
+  String get studioSubtitle => 'شو اللي ماشي، ولوين وصل';
 
   @override
   String get studioFormats => 'أداء المحتوى';
 
   @override
-  String get studioFormatsEmpty => 'لا محتوى منشوراً بعد';
+  String get studioFormatsEmpty => 'ما في محتوى منشور لسّا';
 
   @override
   String get studioFormatPost => 'منشورات';
@@ -7042,7 +7042,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get studioSaves => 'حفظ';
 
   @override
-  String get studioProductClicks => 'فتح المنتج';
+  String get studioProductClicks => 'فتحوا المنتج';
 
   @override
   String studioPublishedCount(int count) {
@@ -7050,9 +7050,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count منشور',
-      many: '$count منشوراً',
+      many: '$count منشور',
       few: '$count منشورات',
-      two: 'منشوران',
+      two: 'منشورين',
       one: 'منشور واحد',
     );
     return '$_temp0';
@@ -7067,11 +7067,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get studioReach => 'الانتشار';
 
   @override
-  String get studioReachEmpty => 'لم تُضِف أي زبونة منشوراتكِ بعد';
+  String get studioReachEmpty => 'لسّا ما في زبونة ضافت منشوراتكِ';
 
   @override
   String get studioReachEmptyBody =>
-      'حين تضيف زبونة منشوركِ إلى صفحتها، سترينها هنا.';
+      'لمّا تضيف زبونة منشوركِ لصفحتها، بتشوفيها هون.';
 
   @override
   String get studioReshares => 'إضافات لصفحاتهن';
@@ -7080,21 +7080,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get studioPromotersCount => 'زبونة';
 
   @override
-  String get studioTopProducts => 'أكثر القطع انتشاراً';
+  String get studioTopProducts => 'أكتر القطع انتشاراً';
 
   @override
-  String get studioPromoters => 'من نشر منتجاتكِ';
+  String get studioPromoters => 'مين نشر منتجاتكِ';
 
   @override
   String get studioPromotersHelp =>
-      'تظهر الأسماء فقط لمن حسابها عام، وتُحتسب الباقيات دون أسماء.';
+      'الأسماء بتبيّن بس للي حسابها عام، والباقيات بينحسبوا بلا أسماء.';
 
   @override
-  String get studioPromotersEmpty => 'لا أحد بعد';
+  String get studioPromotersEmpty => 'ما حدا لسّا';
 
   @override
   String get studioPromotersEmptyBody =>
-      'حين تضيف زبونة منشوركِ إلى صفحتها، ستجدينها هنا.';
+      'لمّا تضيف زبونة منشوركِ لصفحتها، بتلاقيها هون.';
 
   @override
   String get studioPromoterAnonymous => 'زبونة (حساب خاص)';
@@ -7105,7 +7105,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get viewProfile => 'عرض الصفحة';
+  String get viewProfile => 'شوفي الصفحة';
 
   @override
   String get adminContentTitle => 'إدارة المحتوى';
@@ -7116,19 +7116,19 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count منشور عليها بلاغات',
-      many: '$count منشوراً عليها بلاغات',
+      many: '$count منشور عليها بلاغات',
       few: '$count منشورات عليها بلاغات',
-      two: 'منشوران عليهما بلاغ',
+      two: 'منشورين عليهن بلاغ',
       one: 'منشور واحد عليه بلاغ',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminContentEmpty => 'لا شيء بانتظار المراجعة';
+  String get adminContentEmpty => 'ما في شي ناطر مراجعة';
 
   @override
-  String get adminContentNoCaption => '(بدون وصف)';
+  String get adminContentNoCaption => '(بلا وصف)';
 
   @override
   String get adminContentFilterAll => 'الكل';
@@ -7137,13 +7137,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminContentFilterReported => 'عليه بلاغ';
 
   @override
-  String get adminContentFilterUnderReview => 'قيد المراجعة';
+  String get adminContentFilterUnderReview => 'عم ينراجع';
 
   @override
   String get adminContentFilterRemoved => 'محذوف';
 
   @override
-  String get adminContentFilterCustomers => 'من الزبائن';
+  String get adminContentFilterCustomers => 'من الزبونات';
 
   @override
   String get adminContentFilterSellers => 'من المتاجر';
@@ -7160,33 +7160,33 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adminContentRemoveTitle => 'حذف المنشور';
+  String get adminContentRemoveTitle => 'احذفي المنشور';
 
   @override
   String get adminContentRemoveBody =>
-      'ستصل صاحبة المنشور رسالة فيها السبب الذي تكتبينه هنا، فاكتبيه بلغة واضحة ومحترمة.';
+      'صاحبة المنشور رح توصلها رسالة فيها السبب اللي بتكتبيه هون، فاكتبيه بلغة واضحة ومحترمة.';
 
   @override
-  String get adminContentRemoveConfirm => 'حذف';
+  String get adminContentRemoveConfirm => 'احذفي';
 
   @override
-  String get adminContentReinstateTitle => 'إعادة المنشور';
+  String get adminContentReinstateTitle => 'رجّعي المنشور';
 
   @override
-  String get adminContentReinstateBody => 'اكتبي سبب إعادة النشر للسجل.';
+  String get adminContentReinstateBody => 'اكتبي ليش رجّعتِ المنشور، للسجل.';
 
   @override
-  String get adminContentReinstateConfirm => 'إعادة';
+  String get adminContentReinstateConfirm => 'رجّعيه';
 
   @override
   String get adminContentReasonLabel => 'السبب';
 
   @override
-  String get adminContentReasonHint => 'مثلاً: الصورة لا تلتزم بسياسة المحتوى…';
+  String get adminContentReasonHint =>
+      'مثلاً: الصورة ما بتلتزم بسياسة المحتوى…';
 
   @override
-  String get adminContentReasonTooShort =>
-      'اكتبي سبباً واضحاً (10 أحرف على الأقل)';
+  String get adminContentReasonTooShort => 'اكتبي سبب واضح (10 أحرف عالأقل)';
 
   @override
   String get adminContentFilterPosts => 'منشورات';
@@ -7215,84 +7215,82 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count بلاغ',
-      many: '$count بلاغاً',
+      many: '$count بلاغ',
       few: '$count بلاغات',
-      two: 'بلاغان',
+      two: 'بلاغين',
       one: 'بلاغ واحد',
-      zero: 'لا بلاغات',
+      zero: 'ما في بلاغات',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminContentAutoFlagged => 'رصد تلقائي: كلمات تستدعي المراجعة';
+  String get adminContentAutoFlagged => 'لقطة تلقائية: كلمات بدها مراجعة';
 
   @override
-  String get adminContentKeep => 'إبقاء';
+  String get adminContentKeep => 'خلّيه';
 
   @override
-  String get adminContentKeepTitle => 'إبقاء المحتوى';
+  String get adminContentKeepTitle => 'خلّي المحتوى';
 
   @override
   String get adminContentKeepBody =>
-      'ستُغلق كل البلاغات المفتوحة عليه ويبقى ظاهراً. يمكنك إضافة ملاحظة للسجل.';
+      'كل البلاغات المفتوحة عليه رح تتسكّر وبيضلّ ظاهر. فيكِ تضيفي ملاحظة للسجل.';
 
   @override
-  String get adminContentNoteLabel => 'ملاحظة (اختيارية)';
+  String get adminContentNoteLabel => 'ملاحظة (إذا حابّة)';
 
   @override
-  String get adminContentRemovedToast =>
-      'تم الحذف، ووصل السبب إلى صاحبة المحتوى.';
+  String get adminContentRemovedToast => 'انحذف، ووصل السبب لصاحبة المحتوى.';
 
   @override
-  String get adminContentReinstatedToast => 'أُعيد المحتوى إلى مكانه.';
+  String get adminContentReinstatedToast => 'رجع المحتوى لمحلّه.';
 
   @override
-  String get adminContentKeptToast => 'أُغلقت البلاغات وبقي المحتوى ظاهراً.';
+  String get adminContentKeptToast => 'تسكّرت البلاغات وضلّ المحتوى ظاهر.';
 
   @override
   String get adminContentQuickReasons => 'أسباب شائعة';
 
   @override
   String get adminContentPresetImmodest =>
-      'الصورة لا تلتزم بسياسة الحشمة المعتمدة للمحتوى.';
+      'الصورة ما بتلتزم بسياسة الحشمة المعتمدة للمحتوى.';
 
   @override
   String get adminContentPresetOffPlatform =>
-      'يحتوي على وسيلة تواصل للتعامل خارج التطبيق.';
+      'فيه وسيلة تواصل للتعامل برّا التطبيق.';
 
   @override
-  String get adminContentPresetSpam => 'محتوى ترويجي مكرر أو مضلل.';
+  String get adminContentPresetSpam => 'محتوى ترويجي مكرّر أو مضلّل.';
 
   @override
   String get adminContentPresetStolen =>
-      'صور منسوخة من متجر أو شخص آخر دون إذن.';
+      'صور منسوخة من متجر أو حدا تاني بلا إذن.';
 
   @override
-  String get adminContentPresetHarassment =>
-      'يحتوي على إساءة أو تحرش بالآخرين.';
+  String get adminContentPresetHarassment => 'فيه إساءة أو تحرّش بالغير.';
 
   @override
   String get adminContentPresetCounterfeit =>
-      'يروّج لمنتج مقلَّد أو موصوف بشكل مضلل.';
+      'بيروّج لمنتج مقلّد أو موصوف بشكل مضلّل.';
 
   @override
-  String get adminContentLoadMore => 'عرض المزيد';
+  String get adminContentLoadMore => 'شوفي أكتر';
 
   @override
-  String get adminContentOpenMedia => 'فتح الوسائط';
+  String get adminContentOpenMedia => 'افتحي الوسائط';
 
   @override
-  String get adminContentRemoveHeading => 'حذف المحتوى';
+  String get adminContentRemoveHeading => 'احذفي المحتوى';
 
   @override
-  String get adminContentReinstateHeading => 'إعادة المحتوى';
+  String get adminContentReinstateHeading => 'رجّعي المحتوى';
 
   @override
-  String get discardChangesTitle => 'هل تتركين ما كتبتِه؟';
+  String get discardChangesTitle => 'بدّك تتركي اللي كتبتيه؟';
 
   @override
-  String get discardChangesBody => 'إن خرجتِ الآن، سيضيع كل ما في هذه الصفحة.';
+  String get discardChangesBody => 'إذا طلعتِ هلّق، كل شي بهالصفحة رح يروح.';
 
   @override
   String get discardChangesConfirm => 'اتركيه';
@@ -7301,15 +7299,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get discardChangesKeep => 'كمّلي';
 
   @override
-  String get postMenuNotInterested => 'غير مهتمة بهذا المنشور';
+  String get postMenuNotInterested => 'ما بيهمّني هالمنشور';
 
   @override
   String get postMenuNotInterestedDone =>
-      'حسناً، لن يظهر لكِ هذا المنشور مرة أخرى.';
+      'تمام، ما رح يطلعلكِ هالمنشور مرة تانية.';
 
   @override
   String postMenuMuteAuthor(String name) {
-    return 'إخفاء منشورات $name';
+    return 'خبّي منشورات $name';
   }
 
   @override
@@ -7318,48 +7316,48 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get postMenuReport => 'الإبلاغ عن المنشور';
+  String get postMenuReport => 'بلّغي عن المنشور';
 
   @override
-  String get productMenuReport => 'الإبلاغ عن المنتج';
+  String get productMenuReport => 'بلّغي عن المنتج';
 
   @override
-  String get postMenuCopyLink => 'نسخ الرابط';
+  String get postMenuCopyLink => 'انسخي الرابط';
 
   @override
-  String get linkCopied => 'تم نسخ الرابط';
+  String get linkCopied => 'انتسخ الرابط';
 
   @override
   String postMenuViewAuthor(String name) {
-    return 'زيارة صفحة $name';
+    return 'زوري صفحة $name';
   }
 
   @override
-  String get postMenuViewProduct => 'عرض المنتج';
+  String get postMenuViewProduct => 'شوفي المنتج';
 
   @override
-  String get postMenuRemoveFromMyPage => 'إزالة من صفحتي';
+  String get postMenuRemoveFromMyPage => 'شيليه من صفحتي';
 
   @override
-  String get postMenuSave => 'حفظ في المفضّلة';
+  String get postMenuSave => 'احفظيه بالمفضّلة';
 
   @override
-  String get postMenuUnsave => 'إزالة من المفضّلة';
+  String get postMenuUnsave => 'شيليه من المفضّلة';
 
   @override
-  String get actionUndo => 'تراجع';
+  String get actionUndo => 'رجّعي';
 
   @override
-  String get reportTitle => 'ما سبب البلاغ؟';
+  String get reportTitle => 'شو سبب البلاغ؟';
 
   @override
-  String get reportSubtitle => 'البلاغ سرّي، ولن يعرف أحد من أرسله.';
+  String get reportSubtitle => 'البلاغ سرّي، وما حدا رح يعرف مين بعته.';
 
   @override
-  String get reportReasonImmodest => 'محتوى غير محتشم';
+  String get reportReasonImmodest => 'محتوى مو محتشم';
 
   @override
-  String get reportReasonNotTheProduct => 'لا يطابق المنتج';
+  String get reportReasonNotTheProduct => 'مو متل المنتج';
 
   @override
   String get reportReasonStolenPhoto => 'صورة مسروقة';
@@ -7374,26 +7372,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportReasonCounterfeit => 'منتج مقلّد';
 
   @override
-  String get reportReasonOther => 'سبب آخر';
+  String get reportReasonOther => 'سبب تاني';
 
   @override
-  String get reportSent => 'شكراً لكِ، سيراجعه فريقنا.';
+  String get reportSent => 'تسلمي، فريقنا رح يراجعه.';
 
   @override
-  String get productPickedDone => 'أُضيفت إلى صفحتكِ';
+  String get productPickedDone => 'انضافت لصفحتكِ';
 
   @override
-  String get productPickedPrivate => 'أُضيفت — صفحتكِ خاصة، فلا يراها غيركِ.';
+  String get productPickedPrivate =>
+      'انضافت — صفحتكِ خاصة، فما حدا بيشوفها غيركِ.';
 
   @override
-  String get productUnpickedDone => 'أُزيلت من صفحتكِ';
+  String get productUnpickedDone => 'انشالت من صفحتكِ';
 
   @override
-  String get viewMyPage => 'عرض صفحتي';
+  String get viewMyPage => 'شوفي صفحتي';
 
   @override
   String productPicksCount(String count) {
-    return '$count أضافتها إلى صفحتها';
+    return '$count ضافوها لصفحتهن';
   }
 
   @override
@@ -7409,28 +7408,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileTabStories => 'الستوريات';
 
   @override
-  String get profilePrivateTitle => 'هذه الصفحة خاصة';
+  String get profilePrivateTitle => 'هالصفحة خاصة';
 
   @override
   String profilePrivateBody(String name) {
-    return 'لم تفتح $name صفحتها للجميع بعد.';
+    return '$name لسّا ما فتحت صفحتها للكل.';
   }
 
   @override
-  String get profileEmptyPosts => 'لا منشورات بعد';
+  String get profileEmptyPosts => 'ما في منشورات لسّا';
 
   @override
-  String get profileEmptyReels => 'لا ريلز بعد';
+  String get profileEmptyReels => 'ما في ريلز لسّا';
 
   @override
-  String get profileEmptyStories => 'لا ستوريات الآن';
+  String get profileEmptyStories => 'ما في ستوريات هلّق';
 
   @override
-  String get profileEmptyPicks => 'لم تُضف قطع إلى هذه الصفحة بعد';
+  String get profileEmptyPicks => 'لسّا ما انضاف قطع لهالصفحة';
 
   @override
   String get profileEmptyPicksMine =>
-      'اضغطي «أضيفي إلى صفحتي» على أي قطعة لتظهر هنا.';
+      'كبسي «ضيفيه لصفحتي» على أي قطعة لتطلع هون.';
 
   @override
   String get profileEmptyPostsMine => 'شاركي أول منشور أو ريل أو ستوري إلكِ.';
@@ -7440,10 +7439,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get myPagePublicBody =>
-      'صفحتكِ عامة — يمكن للجميع رؤية منشوراتكِ وريلزاتكِ واختياراتكِ.';
+      'صفحتكِ عامة — الكل فيه يشوف منشوراتكِ وريلزاتكِ واختياراتكِ.';
 
   @override
-  String get myPagePrivateBody => 'صفحتكِ خاصة — لا يراها غيركِ.';
+  String get myPagePrivateBody => 'صفحتكِ خاصة — ما حدا بيشوفها غيركِ.';
 
   @override
   String get myPagePublicToggle => 'صفحة عامة';
@@ -7455,25 +7454,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myPageMadePrivate => 'صارت صفحتكِ خاصة';
 
   @override
-  String get createSheetTitle => 'ماذا تحبين أن تنشري؟';
+  String get createSheetTitle => 'شو حابّة تنشري؟';
 
   @override
   String get createPost => 'منشور';
 
   @override
-  String get createPostHint => 'صور، إطلالة، قطعة تحبينها';
+  String get createPostHint => 'صور، إطلالة، قطعة بتحبّيها';
 
   @override
   String get createReel => 'ريل';
 
   @override
-  String get createReelHint => 'فيديو قصير حتى 30 ثانية';
+  String get createReelHint => 'فيديو قصير لحد 30 ثانية';
 
   @override
   String get createStory => 'ستوري';
 
   @override
-  String get createStoryHint => 'تختفي بعد 24 ساعة';
+  String get createStoryHint => 'بتختفي بعد 24 ساعة';
 
   @override
   String get createTooltip => 'إنشاء';
@@ -7501,7 +7500,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String searchNoResultsFor(String query) {
-    return 'لم نجد شيئاً لـ«$query». جرّبي كلمة أخرى.';
+    return 'ما لقينا شي لـ«$query». جرّبي كلمة تانية.';
   }
 
   @override
@@ -7510,14 +7509,14 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get postMenuDelete => 'حذف المنشور';
+  String get postMenuDelete => 'احذفي المنشور';
 
   @override
-  String get postDeleteTitle => 'هل تحذفين هذا المنشور؟';
+  String get postDeleteTitle => 'بدّك تحذفي هالمنشور؟';
 
   @override
   String get postDeleteBody =>
-      'سيختفي من صفحتكِ ومن كل صفحة أُضيف إليها، ولا يمكن التراجع.';
+      'رح يختفي من صفحتكِ ومن كل صفحة انضاف عليها، وما في رجعة.';
 
   @override
   String get postDeleted => 'انحذف المنشور';
@@ -7526,22 +7525,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policiesTitle => 'السياسات والشروط';
 
   @override
-  String get policiesSubtitle => 'الوثائق التي تحكم استخدامك لأوهارا';
+  String get policiesSubtitle => 'الوثايق اللي بتنظّم استخدامكِ لأوهارا';
 
   @override
-  String get policiesSectionForYou => 'يخصّك';
+  String get policiesSectionForYou => 'إلكِ';
 
   @override
-  String get policiesSectionEveryone => 'للجميع';
+  String get policiesSectionEveryone => 'للكل';
 
   @override
   String get policiesSectionSellers => 'للبائعات';
 
   @override
-  String get policiesSectionCustomers => 'للمشتريات';
+  String get policiesSectionCustomers => 'للزبونات';
 
   @override
-  String get policiesEmpty => 'لا سياسات منشورة بعد';
+  String get policiesEmpty => 'ما في سياسات منشورة لسّا';
 
   @override
   String policiesVersionLabel(String version) {
@@ -7550,46 +7549,46 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String policiesEffectiveFrom(String date) {
-    return 'سارية من $date';
+    return 'شغّالة من $date';
   }
 
   @override
   String policiesAcceptedOn(String date) {
-    return 'وافقتِ عليها في $date';
+    return 'وافقتِ عليها بـ $date';
   }
 
   @override
   String policiesAcceptedOlderVersion(String version, String date) {
-    return 'وافقتِ على النسخة $version في $date';
+    return 'وافقتِ عالنسخة $version بـ $date';
   }
 
   @override
-  String get policiesNotAccepted => 'لم توافقي عليها بعد';
+  String get policiesNotAccepted => 'لسّا ما وافقتِ عليها';
 
   @override
-  String get policiesRequiredBadge => 'تتطلّب موافقة';
+  String get policiesRequiredBadge => 'محتاجة موافقة';
 
   @override
-  String get policiesUpdatedBadge => 'مُحدَّثة';
+  String get policiesUpdatedBadge => 'متحدّثة';
 
   @override
   String get policiesMyConsents => 'موافقاتي';
 
   @override
   String get policiesMyConsentsSubtitle =>
-      'كل سياسة وافقتِ عليها، وتاريخ موافقتك';
+      'كل سياسة وافقتِ عليها، وأيمتى وافقتِ';
 
   @override
-  String get policiesReceiptsEmpty => 'لم توافقي على أي سياسة بعد';
+  String get policiesReceiptsEmpty => 'لسّا ما وافقتِ على ولا سياسة';
 
   @override
-  String get policiesSourceRegistration => 'عند التسجيل';
+  String get policiesSourceRegistration => 'وقت التسجيل';
 
   @override
   String get policiesSourceReconsent => 'بعد تحديث';
 
   @override
-  String get policiesSourceSellerApplication => 'عند طلب البيع';
+  String get policiesSourceSellerApplication => 'وقت طلب البيع';
 
   @override
   String get policiesHistoryTitle => 'سجل النسخ';
@@ -7598,64 +7597,64 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policiesHistoryCurrent => 'الحالية';
 
   @override
-  String get policiesOpenVersion => 'اقرئي هذه النسخة';
+  String get policiesOpenVersion => 'اقري هالنسخة';
 
   @override
   String policiesArchivedNotice(String version) {
-    return 'تقرئين النسخة $version، وهي ليست النسخة السارية حاليًا.';
+    return 'عم تقري النسخة $version، وهي مو النسخة الشغّالة هلّق.';
   }
 
   @override
-  String get policiesReadCurrent => 'اقرئي النسخة السارية';
+  String get policiesReadCurrent => 'اقري النسخة الشغّالة';
 
   @override
-  String get policiesConsentTitle => 'قبل أن تتابعي';
+  String get policiesConsentTitle => 'قبل ما تكمّلي';
 
   @override
   String get policiesConsentIntroNew =>
-      'اقرئي الوثائق التالية ووافقي عليها لمتابعة استخدام أوهارا.';
+      'اقري الوثايق اللي تحت ووافقي عليها لتكمّلي مع أوهارا.';
 
   @override
   String get policiesConsentIntroUpdated =>
-      'حدّثنا الوثائق التالية. اقرئيها ووافقي عليها لتكملي.';
+      'حدّثنا الوثايق اللي تحت. اقريها ووافقي عليها لتكمّلي.';
 
   @override
-  String get policiesConsentAgree => 'قرأتُ الوثائق أعلاه وأوافق عليها';
+  String get policiesConsentAgree => 'قريت الوثايق اللي فوق وموافقة عليها';
 
   @override
-  String get policiesConsentContinue => 'أوافق ومتابعة';
+  String get policiesConsentContinue => 'موافقة، كمّلي';
 
   @override
-  String get policiesConsentFailed => 'لم تُسجَّل موافقتكِ. جرّبي مرة أخرى.';
+  String get policiesConsentFailed => 'ما انسجّلت موافقتكِ. جرّبي مرة تانية.';
 
   @override
-  String get policiesConsentSignOut => 'تسجيل الخروج بدلًا من ذلك';
+  String get policiesConsentSignOut => 'اطلعي من الحساب بدالها';
 
   @override
-  String get policiesConsentTapToRead => 'اضغطي للقراءة';
+  String get policiesConsentTapToRead => 'كبسي لتقري';
 
   @override
-  String get policiesConsentRead => 'قرأتها';
+  String get policiesConsentRead => 'قريتها';
 
   @override
-  String get registerConsentIntro => 'بإنشائك حسابًا فإنك توافقين على:';
+  String get registerConsentIntro => 'لمّا تعملي حساب، إنتِ موافقة على:';
 
   @override
-  String get registerConsentAgree => 'قرأتُ الوثائق أعلاه وأوافق عليها';
+  String get registerConsentAgree => 'قريت الوثايق اللي فوق وموافقة عليها';
 
   @override
   String get registerConsentRequired =>
-      'وافقي على شروط الاستخدام وسياسة الخصوصية لإنشاء الحساب';
+      'وافقي على شروط الاستخدام وسياسة الخصوصية لتعملي الحساب';
 
   @override
-  String get sellerConsentIntro => 'بتقديمك طلب البيع فإنك توافقين على:';
+  String get sellerConsentIntro => 'لمّا تقدّمي طلب البيع، إنتِ موافقة على:';
 
   @override
-  String get sellerConsentAgree => 'قرأتُ الوثائق أعلاه وأوافق عليها';
+  String get sellerConsentAgree => 'قريت الوثايق اللي فوق وموافقة عليها';
 
   @override
   String get sellerConsentRequired =>
-      'وافقي على شروط البائع وسياسة العمولات لتقديم الطلب';
+      'وافقي على شروط البائعة وسياسة العمولات لتقدّمي الطلب';
 
   @override
   String get policiesLinkReturns => 'سياسة الإرجاع والاستبدال';
@@ -7668,14 +7667,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get checkoutPolicyNotice =>
-      'تأكيدك للطلب يعني موافقتك على شروط الاستخدام وسياسة الإرجاع.';
+      'لمّا تأكّدي الطلب يعني إنّك موافقة على شروط الاستخدام وسياسة الإرجاع.';
 
   @override
   String get adminPolicies => 'السياسات';
 
   @override
   String get adminPoliciesSubtitle =>
-      'حرّري وانشري سياسات المنصة. بلا تحديث للتطبيق.';
+      'عدّلي وانشري سياسات المنصة، بلا ما نحدّث التطبيق.';
 
   @override
   String get adminPolicyStatusDraft => 'مسودة';
@@ -7687,41 +7686,42 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminPolicyStatusArchived => 'مؤرشفة';
 
   @override
-  String get adminPolicyAudience => 'من يجب أن يوافق';
+  String get adminPolicyAudience => 'مين لازم يوافق';
 
   @override
-  String get adminPolicyAudienceEveryone => 'الجميع';
+  String get adminPolicyAudienceEveryone => 'الكل';
 
   @override
-  String get adminPolicyAudienceCustomer => 'المشتريات';
+  String get adminPolicyAudienceCustomer => 'الزبونات';
 
   @override
   String get adminPolicyAudienceSeller => 'البائعات';
 
   @override
-  String get adminPolicyRequiredForConsent => 'مطلوبة عند التسجيل';
+  String get adminPolicyRequiredForConsent => 'لازم وقت التسجيل';
 
   @override
-  String get adminPolicyVisible => 'ظاهرة في التطبيق';
+  String get adminPolicyVisible => 'ظاهرة بالتطبيق';
 
   @override
   String get adminPolicyNewDraft => 'مسودة جديدة';
 
   @override
-  String get adminPolicyEditDraft => 'تحرير المسودة';
+  String get adminPolicyEditDraft => 'عدّلي المسودة';
 
   @override
-  String get adminPolicyDiscardDraft => 'حذف المسودة';
+  String get adminPolicyDiscardDraft => 'احذفي المسودة';
 
   @override
-  String get adminPolicyDiscardConfirm => 'حذف هذه المسودة؟ نصّها لا يُحفظ.';
+  String get adminPolicyDiscardConfirm =>
+      'بدّك تحذفي هالمسودة؟ نصّها ما بينحفظ.';
 
   @override
-  String get adminPolicyPublish => 'نشر';
+  String get adminPolicyPublish => 'انشري';
 
   @override
   String adminPolicyPublishTitle(String version) {
-    return 'نشر النسخة $version';
+    return 'انشري النسخة $version';
   }
 
   @override
@@ -7729,13 +7729,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminPolicyRequiresReacceptanceHint =>
-      'فعّلي هذا للتغيير الجوهري فقط. كل من تسري عليه الوثيقة سيُطلب منه التوقيع مجددًا قبل أن يتابع استخدام التطبيق.';
+      'فعّلي هالشي بس للتغيير الكبير. كل حدا بتمشي عليه الوثيقة رح ينطلب منه يوقّع من جديد قبل ما يكمّل بالتطبيق.';
 
   @override
-  String get adminPolicyChangeNote => 'ما الذي تغيّر';
+  String get adminPolicyChangeNote => 'شو اللي تغيّر';
 
   @override
-  String get adminPolicyChangeNoteHint => 'سطر واحد، يظهر في سجل النسخ';
+  String get adminPolicyChangeNoteHint => 'سطر واحد، بيطلع بسجل النسخ';
 
   @override
   String get adminPolicyTitleField => 'العنوان';
@@ -7757,16 +7757,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminPolicyLocaleEnglish => 'الإنجليزية (للتيسير)';
 
   @override
-  String get adminPolicySaved => 'حُفظت المسودة';
+  String get adminPolicySaved => 'انحفظت المسودة';
 
   @override
-  String get adminPolicyPublished => 'تم النشر';
+  String get adminPolicyPublished => 'انتشرت';
 
   @override
-  String get adminPolicyDraftCreated => 'فُتحت مسودة';
+  String get adminPolicyDraftCreated => 'انفتحت مسودة';
 
   @override
-  String get adminPolicyDraftDiscarded => 'حُذفت المسودة';
+  String get adminPolicyDraftDiscarded => 'انحذفت المسودة';
 
   @override
   String get adminPolicyPreview => 'معاينة';
@@ -7776,7 +7776,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminPolicyAcceptedCurrent(String count) {
-    return '$count على النسخة الحالية';
+    return '$count عالنسخة الحالية';
   }
 
   @override
@@ -7784,18 +7784,19 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'وقّعها $count حساب',
-      many: 'وقّعها $count حساباً',
-      few: 'وقّعها $count حسابات',
-      two: 'وقّعها حسابان',
+      other: 'وقّعوها $count حساب',
+      many: 'وقّعوها $count حساب',
+      few: 'وقّعوها $count حسابات',
+      two: 'وقّعوها حسابين',
       one: 'وقّعها حساب واحد',
-      zero: 'لم يوقّعها أي حساب بعد',
+      zero: 'لسّا ما وقّعها ولا حساب',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminPolicyNoDraft => 'لا مسودة مفتوحة. افتحي واحدة لتغيير النص.';
+  String get adminPolicyNoDraft =>
+      'ما في مسودة مفتوحة. افتحي وحدة لتغيّري النص.';
 
   @override
   String adminPolicyVersionsCount(int count) {
@@ -7804,51 +7805,52 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count نسخة',
       few: '$count نسخ',
-      two: 'نسختان',
-      one: 'نسخة واحدة',
+      two: 'نسختين',
+      one: 'نسخة وحدة',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminPolicyBodyTooShort => 'النص أقصر من أن يُنشر';
+  String get adminPolicyBodyTooShort => 'النص قصير كتير لينتشر';
 
   @override
   String get adminPolicyPublishConfirm =>
-      'تنشرين هذه النسخة؟ النسخة الحالية تُؤرشف ولا تُستعاد — أي تغيير بعدها يحتاج نسخة جديدة.';
+      'بدّك تنشري هالنسخة؟ النسخة الحالية بتتأرشف وما بترجع — أي تغيير بعدها محتاج نسخة جديدة.';
 
   @override
   String get policiesLinkCommissions => 'سياسة العمولات';
 
   @override
-  String get policiesLinkCustomerTerms => 'شروط استخدام العميل';
+  String get policiesLinkCustomerTerms => 'شروط استخدام الزبونة';
 
   @override
   String get composerPolicyNotice =>
-      'بالنشر أنتِ توافقين على سياسة المحتوى والحذف.';
+      'لمّا تنشري إنتِ موافقة على سياسة المحتوى والحذف.';
 
   @override
   String get sellerEarningsPolicyNotice =>
-      'كيف تُحتسب العمولة، ومتى تُصرف أرباح متجرك.';
+      'كيف بتنحسب العمولة، وأيمتى بتنصرف أرباح متجركِ.';
 
   @override
   String get orderPolicyNotice =>
       'في مشكلة بهالطلب؟ ابدئي مع البائعة، وبعدها آلية الشكاوى.';
 
   @override
-  String get closetAddPiece => 'أضيفي قطعة';
+  String get closetAddPiece => 'ضيفي قطعة';
 
   @override
-  String get closetPageLoadFailed => 'تعذّر فتح الصفحة.';
+  String get closetPageLoadFailed => 'ما قدرنا نفتح الصفحة.';
 
   @override
-  String get closetPhotoPrivate => 'صورة القطعة خاصة بكِ — لا يراها أحد غيركِ.';
+  String get closetPhotoPrivate =>
+      'صورة القطعة إلكِ لحالكِ — ما حدا بيشوفها غيركِ.';
 
   @override
   String get closetPiecePhoto => 'صورة القطعة';
 
   @override
-  String get closetPieceWhat => 'ما هي القطعة؟';
+  String get closetPieceWhat => 'شو هي القطعة؟';
 
   @override
   String get closetPieceWhatHint => 'مثلاً: جاكيت جلد أسود';
@@ -7857,57 +7859,57 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetPieceSlot => 'نوع القطعة';
 
   @override
-  String get closetPieceBrandOptional => 'الماركة (اختياري)';
+  String get closetPieceBrandOptional => 'الماركة (إذا حابّة)';
 
   @override
-  String get closetPieceSizeOptional => 'المقاس (اختياري)';
+  String get closetPieceSizeOptional => 'المقاس (إذا حابّة)';
 
   @override
-  String get closetAddToMyCloset => 'أضيفيها إلى خزانتي';
+  String get closetAddToMyCloset => 'ضيفيها لخزانتي';
 
   @override
-  String get closetAdded => 'أُضيفت إلى خزانتكِ.';
+  String get closetAdded => 'انضافت لخزانتكِ.';
 
   @override
-  String get closetAddFailed => 'تعذّرت إضافة القطعة.';
+  String get closetAddFailed => 'ما قدرنا نضيف القطعة.';
 
   @override
   String get closetGapTitle => 'القطعة الناقصة';
 
   @override
-  String get closetSuggestionsFailed => 'تعذّر تحميل الاقتراحات.';
+  String get closetSuggestionsFailed => 'ما قدرنا نحمّل الاقتراحات.';
 
   @override
-  String get closetWhySuggestion => 'لماذا هذا الاقتراح؟';
+  String get closetWhySuggestion => 'ليش هالاقتراح؟';
 
   @override
-  String get closetNotInterested => 'لا يهمّني';
+  String get closetNotInterested => 'ما بيهمّني';
 
   @override
-  String get closetNoMatchNow => 'لا توجد قطعة مناسبة الآن';
+  String get closetNoMatchNow => 'ما في قطعة مناسبة هلّق';
 
   @override
   String get closetNoMatchNowBody =>
-      'جرّبي لاحقاً — البوتيكات تضيف قطعاً جديدة كل يوم.';
+      'جرّبي بعدين — البوتيكات عم تضيف قطع جديدة كل يوم.';
 
   @override
-  String get closetPiecesThatFit => 'قطع تناسب خزانتكِ';
+  String get closetPiecesThatFit => 'قطع بتلبق لخزانتكِ';
 
   @override
-  String get closetGapDismissed => 'حسناً، لن نقترحها مجدداً.';
+  String get closetGapDismissed => 'تمام، ما رح نرجع نقترحها.';
 
   @override
-  String get closetCompletesLook => 'تُكمل إطلالة';
+  String get closetCompletesLook => 'بتكمّل إطلالة';
 
   @override
   String closetPairsWithCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تنسجم مع $count قطعة لديكِ',
-      few: 'تنسجم مع $count قطع لديكِ',
-      two: 'تنسجم مع قطعتين لديكِ',
-      one: 'تنسجم مع قطعة لديكِ',
+      other: 'بتلبق مع $count قطعة عندكِ',
+      few: 'بتلبق مع $count قطع عندكِ',
+      two: 'بتلبق مع قطعتين عندكِ',
+      one: 'بتلبق مع قطعة عندكِ',
     );
     return '$_temp0';
   }
@@ -7916,25 +7918,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetPieceTitle => 'قطعة من خزانتي';
 
   @override
-  String get closetRemoveFavourite => 'إزالة من المفضّلة';
+  String get closetRemoveFavourite => 'شيليها من المفضّلة';
 
   @override
-  String get closetAddFavourite => 'أضيفي إلى المفضّلة';
+  String get closetAddFavourite => 'ضيفيها للمفضّلة';
 
   @override
-  String get closetPieceLoadFailed => 'تعذّر فتح القطعة.';
+  String get closetPieceLoadFailed => 'ما قدرنا نفتح القطعة.';
 
   @override
-  String get closetTimesWorn => 'مرّات اللبس';
+  String get closetTimesWorn => 'كم مرة لبستيها';
 
   @override
-  String get closetCostPerWear => 'كلفة اللبسة';
+  String get closetCostPerWear => 'كلفة كل لبسة';
 
   @override
   String get closetLastWorn => 'آخر مرة';
 
   @override
-  String get closetWoreToday => 'لبستُها اليوم';
+  String get closetWoreToday => 'لبستها اليوم';
 
   @override
   String get closetDetails => 'التفاصيل';
@@ -7945,33 +7947,33 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get closetSuitsLabel => 'تناسب';
+  String get closetSuitsLabel => 'بتلبق لـ';
 
   @override
-  String get closetViewInShop => 'اعرضي القطعة في البوتيك';
+  String get closetViewInShop => 'شوفي القطعة بالبوتيك';
 
   @override
-  String get closetDeleteForever => 'احذفيها نهائياً';
+  String get closetDeleteForever => 'احذفيها للأبد';
 
   @override
-  String get closetWornNever => 'أبداً';
+  String get closetWornNever => 'ولا مرة';
 
   @override
   String get closetWornToday => 'اليوم';
 
   @override
-  String get closetWornYesterday => 'أمس';
+  String get closetWornYesterday => 'مبارح';
 
   @override
   String closetWornDaysAgo(int days) {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: 'منذ $days يوم',
-      many: 'منذ $days يوماً',
-      few: 'منذ $days أيام',
-      two: 'منذ يومين',
-      one: 'منذ يوم',
+      other: 'من $days يوم',
+      many: 'من $days يوم',
+      few: 'من $days أيام',
+      two: 'من يومين',
+      one: 'من يوم',
     );
     return '$_temp0';
   }
@@ -7981,33 +7983,33 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       months,
       locale: localeName,
-      other: 'منذ $months شهر',
-      many: 'منذ $months شهراً',
-      few: 'منذ $months أشهر',
-      two: 'منذ شهرين',
-      one: 'منذ شهر',
+      other: 'من $months شهر',
+      many: 'من $months شهر',
+      few: 'من $months شهور',
+      two: 'من شهرين',
+      one: 'من شهر',
     );
     return '$_temp0';
   }
 
   @override
-  String get closetReturnToCloset => 'أعيديها إلى الخزانة';
+  String get closetReturnToCloset => 'رجّعيها عالخزانة';
 
   @override
-  String get closetShelveForSeason => 'أبعديها لهذا الموسم';
+  String get closetShelveForSeason => 'شيليها هالموسم';
 
   @override
-  String get closetNoLongerOwn => 'لم تعد لديّ';
+  String get closetNoLongerOwn => 'ما عادت عندي';
 
   @override
   String get closetLookTitle => 'الإطلالة';
 
   @override
-  String get closetLookLoadFailed => 'تعذّر فتح الإطلالة.';
+  String get closetLookLoadFailed => 'ما قدرنا نفتح الإطلالة.';
 
   @override
   String closetLookOneShort(String slot) {
-    return 'قطعة واحدة ($slot) وتصبح جاهزة.';
+    return 'قطعة وحدة ($slot) وبتصير جاهزة.';
   }
 
   @override
@@ -8015,9 +8017,9 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تنقصها $count قطعة لتصبح جاهزة.',
-      few: 'تنقصها $count قطع لتصبح جاهزة.',
-      two: 'تنقصها قطعتان لتصبح جاهزة.',
+      other: 'ناقصها $count قطعة لتصير جاهزة.',
+      few: 'ناقصها $count قطع لتصير جاهزة.',
+      two: 'ناقصها قطعتين لتصير جاهزة.',
     );
     return '$_temp0';
   }
@@ -8027,10 +8029,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'لبستِها $count مرة.',
-      few: 'لبستِها $count مرات.',
-      two: 'لبستِها مرتين.',
-      one: 'لبستِها مرة واحدة.',
+      other: 'لبستيها $count مرة.',
+      few: 'لبستيها $count مرات.',
+      two: 'لبستيها مرتين.',
+      one: 'لبستيها مرة وحدة.',
     );
     return '$_temp0';
   }
@@ -8039,52 +8041,52 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetDeleteLook => 'احذفي الإطلالة';
 
   @override
-  String get closetNotOwnedYet => 'ليست لديكِ بعد';
+  String get closetNotOwnedYet => 'لسّا مو عندكِ';
 
   @override
-  String get closetFindThePiece => 'ابحثي عن القطعة';
+  String get closetFindThePiece => 'دوّري عالقطعة';
 
   @override
-  String get closetRemoveFromLook => 'إزالة من الإطلالة';
+  String get closetRemoveFromLook => 'شيليها من الإطلالة';
 
   @override
   String get closetMyLooks => 'إطلالاتي';
 
   @override
-  String get closetLooksLoadFailed => 'تعذّر تحميل إطلالاتكِ.';
+  String get closetLooksLoadFailed => 'ما قدرنا نحمّل إطلالاتكِ.';
 
   @override
-  String get closetNoLooksTitle => 'لا إطلالات بعد';
+  String get closetNoLooksTitle => 'ما في إطلالات لسّا';
 
   @override
   String get closetNoLooksBody =>
-      'ركّبي إطلالة من قطعكِ، وإن نقصها شيء نساعدكِ في إيجاده.';
+      'ركّبي إطلالة من قطعكِ، وإذا نقصها شي منساعدكِ تلاقيه.';
 
   @override
-  String get closetSeeWhatToWear => 'اعرفي ما يمكنكِ لبسه';
+  String get closetSeeWhatToWear => 'شوفي شو فيكِ تلبسي';
 
   @override
   String closetLookReadyWorn(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'جاهزة · لبستِها $count مرة',
-      few: 'جاهزة · لبستِها $count مرات',
-      two: 'جاهزة · لبستِها مرتين',
-      one: 'جاهزة · لبستِها مرة',
+      other: 'جاهزة · لبستيها $count مرة',
+      few: 'جاهزة · لبستيها $count مرات',
+      two: 'جاهزة · لبستيها مرتين',
+      one: 'جاهزة · لبستيها مرة',
     );
     return '$_temp0';
   }
 
   @override
-  String get closetLookReady => 'جاهزة للّبس';
+  String get closetLookReady => 'جاهزة تنلبس';
 
   @override
-  String get closetWoreIt => 'لبستُها';
+  String get closetWoreIt => 'لبستها';
 
   @override
   String closetLookShortOne(String slot) {
-    return 'تنقصها $slot وتصبح جاهزة';
+    return 'ناقصها $slot وبتصير جاهزة';
   }
 
   @override
@@ -8092,9 +8094,9 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تنقصها $count قطعة',
-      few: 'تنقصها $count قطع',
-      two: 'تنقصها قطعتان',
+      other: 'ناقصها $count قطعة',
+      few: 'ناقصها $count قطع',
+      two: 'ناقصها قطعتين',
     );
     return '$_temp0';
   }
@@ -8103,83 +8105,83 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetMissing => 'ناقصة';
 
   @override
-  String get closetWhatToWearToday => 'ماذا ألبس اليوم؟';
+  String get closetWhatToWearToday => 'شو بلبس اليوم؟';
 
   @override
-  String get closetTodayFailed => 'تعذّر اقتراح شيء الآن.';
+  String get closetTodayFailed => 'ما قدرنا نقترح شي هلّق.';
 
   @override
-  String get closetTodayLogged => 'تمّ — سجّلناها لليوم.';
+  String get closetTodayLogged => 'تمام — سجّلناها لليوم.';
 
   @override
-  String get closetSavedToLooks => 'حُفظت في إطلالاتكِ.';
+  String get closetSavedToLooks => 'انحفظت بإطلالاتكِ.';
 
   @override
-  String get closetSaveLookFailed => 'تعذّر حفظ الإطلالة.';
+  String get closetSaveLookFailed => 'ما قدرنا نحفظ الإطلالة.';
 
   @override
   String get closetAnyOccasion => 'أي مناسبة';
 
   @override
-  String get closetCannotDress => 'تعذّر تركيب إطلالة';
+  String get closetCannotDress => 'ما قدرنا نركّب إطلالة';
 
   @override
-  String get closetNothingForOccasion => 'لا شيء لهذه المناسبة';
+  String get closetNothingForOccasion => 'ما في شي لهالمناسبة';
 
   @override
   String get closetCannotDressBody =>
-      'غالباً تنقصكِ فئة كاملة — جرّبي إضافة حذاء أو قطعة سفلية إلى خزانتكِ.';
+      'غالباً ناقصكِ فئة كاملة — جرّبي ضيفي كندرة أو قطعة تحتانية لخزانتكِ.';
 
   @override
   String get closetNothingForOccasionBody =>
-      'جرّبي إزالة فلتر المناسبة، أو أضيفي قطعة تناسبها.';
+      'جرّبي شيلي فلتر المناسبة، أو ضيفي قطعة بتلبقلها.';
 
   @override
-  String get closetLoadFailed => 'تعذّر فتح خزانتكِ.';
+  String get closetLoadFailed => 'ما قدرنا نفتح خزانتكِ.';
 
   @override
-  String get closetSpectrumWant => 'أريد';
+  String get closetSpectrumWant => 'بدّي ياها';
 
   @override
-  String get closetSpectrumDeciding => 'أفكّر فيها';
+  String get closetSpectrumDeciding => 'عم فكّر فيها';
 
   @override
   String get closetSpectrumOwn => 'عندي';
 
   @override
-  String get closetEmptyTitle => 'خزانتكِ فارغة بعد';
+  String get closetEmptyTitle => 'خزانتكِ لسّا فاضية';
 
   @override
   String get closetEmptyBody =>
-      'ضعي فيها قطعكِ — ما اشتريتِه من أوهارا وما لديكِ من قبل. من هنا نعرف ما ينقصكِ وما يمكنكِ لبسه.';
+      'حطّي فيها قطعكِ — اللي اشتريتيه من أوهارا واللي كان عندكِ من قبل. من هون منعرف شو ناقصكِ وشو فيكِ تلبسي.';
 
   @override
-  String get closetBringPurchases => 'أضيفي مشترياتي';
+  String get closetBringPurchases => 'ضيفي مشترياتي';
 
   @override
-  String get closetAddWithPhoto => 'أضيفي قطعة بصورة';
+  String get closetAddWithPhoto => 'ضيفي قطعة بصورة';
 
   @override
   String closetBackfilled(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'أضفنا $count قطعة من طلباتكِ.',
-      few: 'أضفنا $count قطع من طلباتكِ.',
-      two: 'أضفنا قطعتين من طلباتكِ.',
-      one: 'أضفنا قطعة من طلباتكِ.',
+      other: 'ضفنا $count قطعة من طلباتكِ.',
+      few: 'ضفنا $count قطع من طلباتكِ.',
+      two: 'ضفنا قطعتين من طلباتكِ.',
+      one: 'ضفنا قطعة من طلباتكِ.',
     );
     return '$_temp0';
   }
 
   @override
-  String get closetNoDeliveredOrders => 'لا طلبات مُسلَّمة بعد.';
+  String get closetNoDeliveredOrders => 'ما في طلبات تسلّمت لسّا.';
 
   @override
-  String get closetBackfillFailed => 'تعذّر جلب مشترياتكِ الآن.';
+  String get closetBackfillFailed => 'ما قدرنا نجيب مشترياتكِ هلّق.';
 
   @override
-  String get closetItemsFailed => 'تعذّر عرض قطعكِ.';
+  String get closetItemsFailed => 'ما قدرنا نعرض قطعكِ.';
 
   @override
   String get closetMetricPossibleLooks => 'إطلالة ممكنة';
@@ -8191,19 +8193,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetMetricSavedLooks => 'إطلالة محفوظة';
 
   @override
-  String get closetMetricWornThisMonth => 'لبسة هذا الشهر';
+  String get closetMetricWornThisMonth => 'لبسة هالشهر';
 
   @override
   String get closetCannotDressSeason =>
-      'قطعكِ موجودة لكنها لا تكوّن إطلالة كاملة لهذا الطقس.';
+      'قطعكِ موجودة بس ما بتعمل إطلالة كاملة لهالطقس.';
 
   @override
   String closetSeasonCapacity(int total, int seasonal, String season) {
-    return 'لديكِ $total إطلالة إجمالاً، $seasonal منها تناسب $season.';
+    return 'عندكِ $total إطلالة بالمجمل، $seasonal منها بتلبق لـ $season.';
   }
 
   @override
-  String get closetWhatsMissing => 'ما ينقص خزانتكِ';
+  String get closetWhatsMissing => 'شو ناقص خزانتكِ';
 
   @override
   String get closetAll => 'الكل';
@@ -8212,7 +8214,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetReasonBase => 'الأساس';
 
   @override
-  String get closetReasonNearlyComplete => 'تنقصها قطعة واحدة';
+  String get closetReasonNearlyComplete => 'ناقصها قطعة وحدة';
 
   @override
   String get closetReasonFavouriteLook => 'إطلالة مفضّلة';
@@ -8221,10 +8223,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetReasonCoreSlot => 'قطعة أساسية للمناسبة';
 
   @override
-  String get closetReasonAlreadyChosen => 'اخترتِ القطعة من قبل';
+  String get closetReasonAlreadyChosen => 'نقّيتِ القطعة من قبل';
 
   @override
-  String get closetReasonSeasonFit => 'مناسبة للموسم';
+  String get closetReasonSeasonFit => 'بتلبق للموسم';
 
   @override
   String get closetReasonInterest => 'اهتمامكِ بالمناسبة';
@@ -8233,10 +8235,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetReasonAnchorSlot => 'القطعة الأساسية';
 
   @override
-  String get closetReasonOwnsNone => 'لا تملكين أيّاً منها';
+  String get closetReasonOwnsNone => 'ما عندكِ ولا وحدة منها';
 
   @override
-  String get closetReasonOutfitGain => 'إطلالات جديدة ممكنة';
+  String get closetReasonOutfitGain => 'إطلالات جديدة صارت ممكنة';
 
   @override
   String get closetReasonFirstOutfit => 'أول إطلالة كاملة';
@@ -8245,25 +8247,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetReasonOutfitsUnlocked => 'عدد الإطلالات الجديدة';
 
   @override
-  String get closetReasonOutfitsNow => 'إطلالاتكِ الكاملة حالياً';
+  String get closetReasonOutfitsNow => 'إطلالاتكِ الكاملة هلّق';
 
   @override
-  String get closetReasonShelved => 'قطع مُبعَدة';
+  String get closetReasonShelved => 'قطع مشالة';
 
   @override
   String get closetReasonOutOfSeason => 'قطع خارج الموسم';
 
   @override
-  String get closetReasonWear => 'كثرة اللبس';
+  String get closetReasonWear => 'لبس كتير';
 
   @override
-  String get closetReasonSoleInSlot => 'لا بديل لها';
+  String get closetReasonSoleInSlot => 'ما إلها بديل';
 
   @override
-  String get closetReasonWearCount => 'عدد مرّات اللبس';
+  String get closetReasonWearCount => 'كم مرة انلبست';
 
   @override
-  String get closetWhyWeSuggest => 'لماذا نقترح هذا؟';
+  String get closetWhyWeSuggest => 'ليش عم نقترح هاد؟';
 
   @override
   String get closetPriority => 'الأولوية';
@@ -8273,12 +8275,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String closetTileNeverWorn(String slot) {
-    return '$slot · لم تلبسيها بعد';
+    return '$slot · لسّا ما لبستيها';
   }
 
   @override
   String closetTileLongAgo(String slot) {
-    return '$slot · منذ مدة';
+    return '$slot · من زمان';
   }
 
   @override
@@ -8286,10 +8288,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$slot · لبستِها $count مرة',
-      few: '$slot · لبستِها $count مرات',
-      two: '$slot · لبستِها مرتين',
-      one: '$slot · لبستِها مرة',
+      other: '$slot · لبستيها $count مرة',
+      few: '$slot · لبستيها $count مرات',
+      two: '$slot · لبستيها مرتين',
+      one: '$slot · لبستيها مرة',
     );
     return '$_temp0';
   }
@@ -8298,17 +8300,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetFromYourCloset => 'من خزانتكِ';
 
   @override
-  String get closetOwnOneAlready => 'لديكِ واحدة منها في خزانتكِ.';
+  String get closetOwnOneAlready => 'عندكِ وحدة متلها بخزانتكِ.';
 
   @override
   String closetPanelPairs(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تنسجم مع $count قطعة لديكِ.',
-      few: 'تنسجم مع $count قطع لديكِ.',
-      two: 'تنسجم مع قطعتين لديكِ.',
-      one: 'تنسجم مع قطعة لديكِ.',
+      other: 'بتلبق مع $count قطعة عندكِ.',
+      few: 'بتلبق مع $count قطع عندكِ.',
+      two: 'بتلبق مع قطعتين عندكِ.',
+      one: 'بتلبق مع قطعة عندكِ.',
     );
     return '$_temp0';
   }
@@ -8318,10 +8320,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'وتُكمل $count إطلالة محفوظة.',
-      few: 'وتُكمل $count إطلالات محفوظة.',
-      two: 'وتُكمل إطلالتين محفوظتين.',
-      one: 'وتُكمل إطلالة محفوظة.',
+      other: 'وبتكمّل $count إطلالة محفوظة.',
+      few: 'وبتكمّل $count إطلالات محفوظة.',
+      two: 'وبتكمّل إطلالتين محفوظين.',
+      one: 'وبتكمّل إطلالة محفوظة.',
     );
     return '$_temp0';
   }
@@ -8330,7 +8332,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetOpenMyCloset => 'افتحي خزانتي';
 
   @override
-  String get closetAddPairFailed => 'تعذّرت إضافتها.';
+  String get closetAddPairFailed => 'ما قدرنا نضيفها.';
 
   @override
   String get closetSaveAsLook => 'احفظيها كإطلالة';
@@ -8339,26 +8341,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsCompareTitle => 'المقارنة';
 
   @override
-  String get roomsCompareFailed => 'تعذّر تجهيز المقارنة.';
+  String get roomsCompareFailed => 'ما قدرنا نجهّز المقارنة.';
 
   @override
-  String get roomsCompareNothing => 'لا شيء للمقارنة';
+  String get roomsCompareNothing => 'ما في شي للمقارنة';
 
   @override
-  String get roomsCompareNeedsTwo => 'تحتاج المقارنة خيارين على الأقل.';
+  String get roomsCompareNeedsTwo => 'المقارنة محتاجة خيارين عالأقل.';
 
   @override
-  String get roomsHideIdentical => 'إخفاء المتشابه';
+  String get roomsHideIdentical => 'خبّي المتشابه';
 
   @override
   String roomsIdenticalCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'متشابهان في $count شيئاً',
-      few: 'متشابهان في $count أشياء',
-      two: 'متشابهان في شيئين',
-      one: 'متشابهان في شيء واحد',
+      other: 'متشابهين بـ $count شغلة',
+      few: 'متشابهين بـ $count شغلات',
+      two: 'متشابهين بشغلتين',
+      one: 'متشابهين بشغلة وحدة',
     );
     return '$_temp0';
   }
@@ -8368,8 +8370,8 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'الآراء في الغرفة منقسمة — صوّتت $count.',
-      one: 'الآراء في الغرفة منقسمة — صوّتت واحدة.',
+      other: 'الآراء بالغرفة مقسومة — صوّتوا $count.',
+      one: 'الآراء بالغرفة مقسومة — صوّتت وحدة.',
     );
     return '$_temp0';
   }
@@ -8379,8 +8381,8 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'الغرفة تميل إلى خيار — صوّتت $count.',
-      one: 'الغرفة تميل إلى خيار — صوّتت واحدة.',
+      other: 'الغرفة مايلة لخيار — صوّتوا $count.',
+      one: 'الغرفة مايلة لخيار — صوّتت وحدة.',
     );
     return '$_temp0';
   }
@@ -8390,41 +8392,41 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count تعليقاً',
+      other: '$count تعليق',
       few: '$count تعليقات',
-      two: 'تعليقان',
+      two: 'تعليقين',
       one: 'تعليق واحد',
     );
     return '$_temp0';
   }
 
   @override
-  String get roomsChooseThis => 'اختاري هذه';
+  String get roomsChooseThis => 'نقّي هي';
 
   @override
   String get roomsPlanTitle => 'خطة الشراء';
 
   @override
-  String get roomsPlanFailed => 'تعذّر تحميل الخطة.';
+  String get roomsPlanFailed => 'ما قدرنا نحمّل الخطة.';
 
   @override
-  String get roomsNoPlanTitle => 'لا خطة بعد';
+  String get roomsNoPlanTitle => 'ما في خطة لسّا';
 
   @override
-  String get roomsNoPlanBody => 'احسمي قرارات الغرفة، وبعدها نجهّز لكِ الخطة.';
+  String get roomsNoPlanBody => 'احسمي قرارات الغرفة، وبعدين منجهّزلك الخطة.';
 
   @override
-  String get roomsPlanNow => 'الآن';
+  String get roomsPlanNow => 'هلّق';
 
   @override
-  String get roomsPlanNothingNow => 'لا شيء جاهز للشراء الآن.';
+  String get roomsPlanNothingNow => 'ما في شي جاهز للشروة هلّق.';
 
   @override
-  String get roomsPlanLater => 'لاحقاً';
+  String get roomsPlanLater => 'بعدين';
 
   @override
   String get roomsPlanLaterBody =>
-      'تبقى محفوظة في الخطة — تشترينها حين تكونين جاهزة.';
+      'بتضلّ محفوظة بالخطة — بتشتريها لمّا تكوني جاهزة.';
 
   @override
   String get roomsPlanTotal => 'المجموع';
@@ -8445,30 +8447,30 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count قطعة تعذّر تسعيرها',
-      few: '$count قطع تعذّر تسعيرها',
-      two: 'قطعتان تعذّر تسعيرهما',
-      one: 'قطعة واحدة تعذّر تسعيرها',
+      other: '$count قطعة ما قدرنا نسعّرها',
+      few: '$count قطع ما قدرنا نسعّرها',
+      two: 'قطعتين ما قدرنا نسعّرهن',
+      one: 'قطعة وحدة ما قدرنا نسعّرها',
     );
     return '$_temp0';
   }
 
   @override
-  String get roomsNoLongerAvailable => 'لم تعد متوفرة';
+  String get roomsNoLongerAvailable => 'ما عادت متوفرة';
 
   @override
   String get roomsPostpone => 'أجّليها';
 
   @override
-  String get roomsRemove => 'أزيليها';
+  String get roomsRemove => 'شيليها';
 
   @override
   String get roomsRemoveUnavailableFirst =>
-      'أزيلي القطع التي لم تعد متوفرة قبل المتابعة.';
+      'شيلي القطع اللي ما عادت متوفرة قبل ما تكمّلي.';
 
   @override
   String roomsBuyNowCount(int count) {
-    return 'اشتري ما هو جاهز الآن ($count)';
+    return 'اشتري الجاهز هلّق ($count)';
   }
 
   @override
@@ -8481,27 +8483,27 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get roomsInviteFailed =>
-      'تعذّر فتح الدعوة. ربما انتهت صلاحية الرابط — اطلبي رابطاً جديداً.';
+      'ما قدرنا نفتح الدعوة. يمكن الرابط خلص وقته — اطلبي رابط جديد.';
 
   @override
   String get roomsShareRoom => 'شاركي الغرفة';
 
   @override
-  String get roomsRoomFailed => 'تعذّر فتح الغرفة.';
+  String get roomsRoomFailed => 'ما قدرنا نفتح الغرفة.';
 
   @override
   String get roomsLinkCopied =>
-      'نسخنا الرابط — من يفتحه يمكنه النصح والتصويت، لكن لا يمكنه الشراء.';
+      'نسخنا الرابط — اللي بيفتحه فيه ينصح ويصوّت، بس ما فيه يشتري.';
 
   @override
-  String get roomsNoDecisionsTitle => 'لا قرارات بعد';
+  String get roomsNoDecisionsTitle => 'ما في قرارات لسّا';
 
   @override
   String get roomsNoDecisionsBody =>
-      'القرار سؤال — «الفستان»، «هدية لأمي». أضيفي واحداً وابدئي بجمع الخيارات له.';
+      'القرار سؤال — «الفستان»، «هدية لماما». ضيفي واحد وبلّشي جمّعيله خيارات.';
 
   @override
-  String get roomsAddDecision => 'أضيفي قراراً';
+  String get roomsAddDecision => 'ضيفي قرار';
 
   @override
   String get roomsSettled => 'محسومة';
@@ -8510,13 +8512,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsNewDecision => 'قرار جديد';
 
   @override
-  String get roomsNewDecisionHelp => 'القرار سؤال يحتاج إلى جواب — لا قطعة.';
+  String get roomsNewDecisionHelp => 'القرار سؤال محتاج جواب — مو قطعة.';
 
   @override
   String get roomsNewDecisionHint => 'مثلاً: الفستان';
 
   @override
-  String get roomsAdd => 'أضيفي';
+  String get roomsAdd => 'ضيفي';
 
   @override
   String get roomsCancel => 'إلغاء';
@@ -8530,7 +8532,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get roomsAllSettled => 'كل القرارات محسومة';
+  String get roomsAllSettled => 'كل القرارات محسومة 🎉';
 
   @override
   String roomsSettledOf(int settled, int total) {
@@ -8543,13 +8545,13 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get roomsSeePlan => 'اعرضي الخطة';
+  String get roomsSeePlan => 'شوفي الخطة';
 
   @override
   String get roomsPreparePlan => 'جهّزي الخطة';
 
   @override
-  String get roomsDecisionsStillOpen => 'ما زالت هناك قرارات مفتوحة.';
+  String get roomsDecisionsStillOpen => 'لسّا في قرارات مفتوحة.';
 
   @override
   String get roomsMyRooms => 'غرفي';
@@ -8558,35 +8560,35 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsNewRoom => 'غرفة جديدة';
 
   @override
-  String get roomsLoadFailed => 'تعذّر تحميل غرفكِ.';
+  String get roomsLoadFailed => 'ما قدرنا نحمّل غرفكِ.';
 
   @override
-  String get roomsEmptyTitle => 'لا غرف بعد';
+  String get roomsEmptyTitle => 'ما في غرف لسّا';
 
   @override
   String get roomsEmptyBody =>
-      'الغرفة مساحة لقرار شراء: عرس، هدية، موسم — تجمعين فيها الخيارات، وتسألين صديقاتكِ، وتقرّرين. ليست سلّة.';
+      'الغرفة مساحة لقرار شروة: عرس، هدية، موسم — بتجمّعي فيها الخيارات، وبتسألي صحباتكِ، وبتقرّري. مو سلّة.';
 
   @override
   String get roomsOpenFirst => 'افتحي أول غرفة';
 
   @override
-  String get roomsPurchased => 'اشتُريت';
+  String get roomsPurchased => 'انشرت';
 
   @override
-  String get roomsReadyToBuy => 'جاهزة للشراء';
+  String get roomsReadyToBuy => 'جاهزة للشروة';
 
   @override
-  String get roomsOneDecisionLeft => 'قرار واحد وتنتهين';
+  String get roomsOneDecisionLeft => 'قرار واحد وبتخلصي';
 
   @override
   String roomsOpenDecisions(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count قراراً ما زالت مفتوحة',
-      few: '$count قرارات ما زالت مفتوحة',
-      two: 'قراران ما زالا مفتوحين',
+      other: '$count قرار لسّا مفتوح',
+      few: '$count قرارات لسّا مفتوحة',
+      two: 'قرارين لسّا مفتوحين',
     );
     return '$_temp0';
   }
@@ -8596,11 +8598,11 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count اقتراحاً',
+      other: '$count اقتراح',
       few: '$count اقتراحات',
-      two: 'اقتراحان',
+      two: 'اقتراحين',
       one: 'اقتراح واحد',
-      zero: 'لا اقتراحات',
+      zero: 'ما في اقتراحات',
     );
     return '$_temp0';
   }
@@ -8624,13 +8626,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsOccasionBirthday => 'عيد ميلاد';
 
   @override
-  String get roomsOccasionWork => 'العمل';
+  String get roomsOccasionWork => 'الشغل';
 
   @override
   String get roomsOccasionDaily => 'كل يوم';
 
   @override
-  String get roomsShoppingFor => 'لأي شيء تتسوّقين؟';
+  String get roomsShoppingFor => 'لشو عم تتسوّقي؟';
 
   @override
   String get roomsRoomName => 'اسم الغرفة';
@@ -8642,14 +8644,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsRoomKind => 'نوع الغرفة';
 
   @override
-  String get roomsGiftFor => 'لمن الهدية؟';
+  String get roomsGiftFor => 'لمين الهدية؟';
 
   @override
-  String get roomsOccasionOptional => 'المناسبة (اختياري)';
+  String get roomsOccasionOptional => 'المناسبة (إذا حابّة)';
 
   @override
   String get roomsOccasionHelp =>
-      'حين تختارين مناسبة، نفتح لكِ القرارات التي تحتاجينها.';
+      'لمّا تنقّي مناسبة، منفتحلك القرارات اللي بتلزمكِ.';
 
   @override
   String get roomsOpenRoom => 'افتحي الغرفة';
@@ -8658,59 +8660,59 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsSuggestion => 'اقتراح';
 
   @override
-  String get roomsDecidedAgainst => 'قرّرتِ ألّا تأخذيها';
+  String get roomsDecidedAgainst => 'قرّرتِ ما تاخديها';
 
   @override
   String roomsNeedsPieces(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تحتاج $count قطعة',
-      few: 'تحتاج $count قطع',
-      two: 'تحتاج قطعتين',
-      one: 'تحتاج قطعة واحدة',
+      other: 'محتاجة $count قطعة',
+      few: 'محتاجة $count قطع',
+      two: 'محتاجة قطعتين',
+      one: 'محتاجة قطعة وحدة',
     );
     return '$_temp0';
   }
 
   @override
-  String get roomsOpinionsSplit => 'الآراء منقسمة';
+  String get roomsOpinionsSplit => 'الآراء مقسومة';
 
   @override
-  String get roomsMajorityLeans => 'الأغلبية تميل إلى خيار';
+  String get roomsMajorityLeans => 'الأغلبية مايلة لخيار';
 
   @override
-  String get roomsAddOption => 'أضيفي خياراً';
+  String get roomsAddOption => 'ضيفي خيار';
 
   @override
   String get roomsCompare => 'قارني';
 
   @override
-  String get roomsWantNothing => 'لا أريد شيئاً';
+  String get roomsWantNothing => 'ما بدّي شي';
 
   @override
   String get roomsStatusSettled => 'محسوم';
 
   @override
-  String get roomsStatusSkipped => 'متخطّى';
+  String get roomsStatusSkipped => 'متروك';
 
   @override
-  String get roomsStatusNotChosen => 'لم تختاري بعد';
+  String get roomsStatusNotChosen => 'لسّا ما نقّيتِ';
 
   @override
   String get roomsStatusOpen => 'مفتوح';
 
   @override
-  String get roomsNoOptions => 'لا خيارات لهذا السؤال';
+  String get roomsNoOptions => 'ما في خيارات لهالسؤال';
 
   @override
-  String get roomsFindPiece => 'ابحثي عن قطعة';
+  String get roomsFindPiece => 'دوّري على قطعة';
 
   @override
-  String get roomsDone => 'تمّ';
+  String get roomsDone => 'تمام';
 
   @override
-  String get roomsRestore => 'أعيديها';
+  String get roomsRestore => 'رجّعيها';
 
   @override
   String roomsProposedTo(String title) {
@@ -8718,7 +8720,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get roomsProposeFailed => 'تعذّر الاقتراح.';
+  String get roomsProposeFailed => 'ما قدرنا نقترحها.';
 
   @override
   String get roomsWhichRoom => 'لأي غرفة؟';
@@ -8731,18 +8733,18 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get roomsProposeHelp =>
-      'تُضاف القطعة كاقتراح — ولا تُشترى حتى تختاريها.';
+      'القطعة بتنضاف كاقتراح — وما بتنشرى لحتى تنقّيها.';
 
   @override
   String roomsLiveSuggestionCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count اقتراحاً',
+      other: '$count اقتراح',
       few: '$count اقتراحات',
-      two: 'اقتراحان',
+      two: 'اقتراحين',
       one: 'اقتراح واحد',
-      zero: 'لا اقتراحات',
+      zero: 'ما في اقتراحات',
     );
     return '$_temp0';
   }
@@ -8751,17 +8753,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsNewQuestion => 'سؤال جديد';
 
   @override
-  String get roomsNewQuestionHint => 'مثلاً: الحذاء';
+  String get roomsNewQuestionHint => 'مثلاً: الكندرة';
 
   @override
-  String get roomsNoOpenRooms => 'لا غرف مفتوحة لديكِ';
+  String get roomsNoOpenRooms => 'ما عندكِ غرف مفتوحة';
 
   @override
   String get roomsWhatIsRoom =>
-      'الغرفة مساحة لقرار شراء — تجمعين فيها الخيارات وتقرّرين.';
+      'الغرفة مساحة لقرار شروة — بتجمّعي فيها الخيارات وبتقرّري.';
 
   @override
-  String get roomsOpenAndAdd => 'افتحي غرفة وأضيفيها';
+  String get roomsOpenAndAdd => 'افتحي غرفة وضيفيها';
 
   @override
   String get roomsDefaultRoomTitle => 'تسوّق';
@@ -8770,13 +8772,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsDefaultDecisionTitle => 'الخيارات';
 
   @override
-  String get roomsCreatedWithPiece => 'فتحنا لكِ غرفة ووضعنا القطعة فيها.';
+  String get roomsCreatedWithPiece => 'فتحنالكِ غرفة وحطّينا القطعة فيها.';
 
   @override
-  String get roomsKindSolo => 'لي وحدي';
+  String get roomsKindSolo => 'إلي لحالي';
 
   @override
-  String get roomsKindGroup => 'مع صديقاتي';
+  String get roomsKindGroup => 'مع صحباتي';
 
   @override
   String get roomsKindGift => 'هدية';
@@ -8785,78 +8787,79 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomsKindOccasion => 'مناسبة';
 
   @override
-  String get roomsDecisionFallback => 'هذا القرار';
+  String get roomsDecisionFallback => 'هالقرار';
 
   @override
-  String get roomsBlockerNoDecisions => 'لا قرارات في الغرفة بعد';
+  String get roomsBlockerNoDecisions => 'ما في قرارات بالغرفة لسّا';
 
   @override
   String roomsBlockerEmpty(String title) {
-    return 'لا اقتراحات لـ$title بعد';
+    return 'ما في اقتراحات لـ$title لسّا';
   }
 
   @override
   String roomsBlockerUnresolved(String title) {
-    return 'لم تختاري لـ$title بعد';
+    return 'لسّا ما نقّيتِ لـ$title';
   }
 
   @override
   String roomsBlockerOverPick(String title) {
-    return 'اخترتِ أكثر من اللازم لـ$title';
+    return 'نقّيتِ أكتر من اللازم لـ$title';
   }
 
   @override
   String roomsBlockerUnavailable(String title) {
-    return 'القطعة المختارة لـ$title نفدت';
+    return 'القطعة اللي نقّيتيها لـ$title خلصت';
   }
 
   @override
-  String get roomsBlockerOther => 'ما زال شيء ناقصاً';
+  String get roomsBlockerOther => 'لسّا في شي ناقص';
 
   @override
-  String get valueAdminSubtitle => 'المكانة وما تفتحه — وضمان أنها لا تُشترى.';
+  String get valueAdminSubtitle =>
+      'المكانة وشو بتفتح — ومتأكّدين إنّها ما بتنشرى.';
 
   @override
-  String get valueAdminRefresh => 'تحديث';
+  String get valueAdminRefresh => 'حدّثي';
 
   @override
-  String get valueAdminSweepNow => 'اجمعي الأدلة الآن';
+  String get valueAdminSweepNow => 'جمّعي الأدلة هلّق';
 
   @override
-  String get valueAdminDistributionFailed => 'تعذّر تحميل بيانات المكانة.';
+  String get valueAdminDistributionFailed => 'ما قدرنا نحمّل بيانات المكانة.';
 
   @override
   String valueAdminSweepDone(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تم — أُعيد احتساب $count ملفاً.',
-      few: 'تم — أُعيد احتساب $count ملفات.',
-      two: 'تم — أُعيد احتساب ملفين.',
-      one: 'تم — أُعيد احتساب ملف واحد.',
-      zero: 'تم — لم يتغيّر أي ملف.',
+      other: 'تمام — انحسبوا $count ملف من جديد.',
+      few: 'تمام — انحسبوا $count ملفات من جديد.',
+      two: 'تمام — انحسبوا ملفين من جديد.',
+      one: 'تمام — انحسب ملف واحد من جديد.',
+      zero: 'تمام — ما تغيّر ولا ملف.',
     );
     return '$_temp0';
   }
 
   @override
-  String get valueAdminSweepFailed => 'تعذّر جمع الأدلة.';
+  String get valueAdminSweepFailed => 'ما قدرنا نجمّع الأدلة.';
 
   @override
-  String get valueAdminGuaranteeHolds => 'المكانة لا تُشترى';
+  String get valueAdminGuaranteeHolds => 'المكانة ما بتنشرى';
 
   @override
   String get valueAdminGuaranteeBroken =>
-      'تنبيه: الشراء وحده أصبح يصل إلى أعلى الدرجات';
+      'انتبهي: الشروة لحالها صارت توصّل لأعلى الدرجات';
 
   @override
   String valueAdminSpendingReach(int ceiling) {
-    return 'من تشتري فقط ولا تساهم بشيء آخر تصل إلى $ceiling من 1000';
+    return 'اللي بتشتري بس وما بتساهم بشي تاني بتوصل لـ $ceiling من 1000';
   }
 
   @override
   String get valueAdminGuaranteeFix =>
-      'اخفضي سقف الشراء أو ارفعي عتبة الدرجات العليا — وإلا صار البرنامج سلّم إنفاق باسم آخر.';
+      'نزّلي سقف الشراء أو علّي عتبة الدرجات العليا — وإلا البرنامج بيصير سلّم صرف باسم تاني.';
 
   @override
   String get valueAdminDistributionTitle => 'توزّع الدرجات';
@@ -8867,16 +8870,16 @@ class AppLocalizationsAr extends AppLocalizations {
       total,
       locale: localeName,
       other: '$total ملف',
-      many: '$total ملفاً',
+      many: '$total ملف',
       few: '$total ملفات',
-      two: 'ملفان',
+      two: 'ملفين',
       one: 'ملف واحد',
     );
     String _temp1 = intl.Intl.pluralLogic(
       unranked,
       locale: localeName,
-      other: 'منها $unranked بلا درجة بعد',
-      zero: 'كلها مُقيَّمة',
+      other: 'منها $unranked لسّا بلا درجة',
+      zero: 'كلها متقيّمة',
     );
     return '$_temp0 — $_temp1';
   }
@@ -8885,48 +8888,48 @@ class AppLocalizationsAr extends AppLocalizations {
   String get valueAdminCostTitle => 'الكلفة والالتزام';
 
   @override
-  String get valueAdminCostSubtitle => 'ما صُرف فعلاً، وأقصى ما يمكن أن يُصرف.';
+  String get valueAdminCostSubtitle => 'شو انصرف عن جد، وأكتر شي ممكن ينصرف.';
 
   @override
-  String get valueAdminCostFailed => 'تعذّر تحميل تقرير الكلفة.';
+  String get valueAdminCostFailed => 'ما قدرنا نحمّل تقرير الكلفة.';
 
   @override
   String valueAdminUnbounded(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count ميزة تصرف مالاً بلا سقف — حدّدي لها ميزانية.',
-      few: '$count مزايا تصرف مالاً بلا سقف — حدّدي لها ميزانية.',
-      two: 'ميزتان تصرفان مالاً بلا سقف — حدّدي لهما ميزانية.',
-      one: 'ميزة واحدة تصرف مالاً بلا سقف — حدّدي لها ميزانية.',
+      other: '$count ميزة عم تصرف مصاري بلا سقف — حطّيلها ميزانية.',
+      few: '$count مزايا عم تصرف مصاري بلا سقف — حطّيلها ميزانية.',
+      two: 'ميزتين عم يصرفوا مصاري بلا سقف — حطّيلهن ميزانية.',
+      one: 'ميزة وحدة عم تصرف مصاري بلا سقف — حطّيلها ميزانية.',
     );
     return '$_temp0';
   }
 
   @override
-  String get valueAdminSpent => 'صُرف';
+  String get valueAdminSpent => 'انصرف';
 
   @override
   String get valueAdminMaxCommitment => 'أقصى التزام';
 
   @override
-  String get valueAdminReasonSinglePillar => 'كل المكانة من جهة واحدة';
+  String get valueAdminReasonSinglePillar => 'كل المكانة من جهة وحدة';
 
   @override
-  String get valueAdminReasonBurst => 'مساهمات مكثّفة في أيام قليلة';
+  String get valueAdminReasonBurst => 'مساهمات كتيرة بكم يوم';
 
   @override
-  String get valueAdminSuspectsTitle => 'ملفات تستحق نظرة';
+  String get valueAdminSuspectsTitle => 'ملفات بتستاهل نظرة';
 
   @override
   String get valueAdminSuspectsSubtitle =>
-      'ليست اتهاماً — أنماط غير معتادة، والقرار لإنسان.';
+      'مو اتهام — أنماط مو معتادة، والقرار لإنسان.';
 
   @override
-  String get valueAdminSuspectsFailed => 'تعذّر تحميل القائمة.';
+  String get valueAdminSuspectsFailed => 'ما قدرنا نحمّل القائمة.';
 
   @override
-  String get valueAdminSuspectsNone => 'لا شيء لافت الآن.';
+  String get valueAdminSuspectsNone => 'ما في شي لافت هلّق.';
 
   @override
   String valueAdminConcentration(int percent, int days) {
@@ -8934,7 +8937,7 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: 'تركّز $percent% خلال $days يوم',
-      many: 'تركّز $percent% خلال $days يوماً',
+      many: 'تركّز $percent% خلال $days يوم',
       few: 'تركّز $percent% خلال $days أيام',
       two: 'تركّز $percent% خلال يومين',
       one: 'تركّز $percent% خلال يوم',
@@ -8943,14 +8946,14 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get valueAdminFreezeAction => 'جمّديها مؤقتاً';
+  String get valueAdminFreezeAction => 'جمّديها شوي';
 
   @override
   String get valueAdminFreezeTitle => 'تجميد مؤقت';
 
   @override
   String get valueAdminFreezeBody =>
-      'تتوقف المكانة عن الحركة وتتوقف المزايا — ولا يضيع شيء. تعود حين ترفعين التجميد.';
+      'المكانة بتوقف عن الحركة والمزايا بتوقف — وما بيضيع شي. بترجع لمّا تشيلي التجميد.';
 
   @override
   String get valueAdminFreezeReason => 'السبب';
@@ -8962,87 +8965,86 @@ class AppLocalizationsAr extends AppLocalizations {
   String get valueCancel => 'إلغاء';
 
   @override
-  String get valueTitle => 'مكانتي في أوهارا';
+  String get valueTitle => 'مكانتي بأوهارا';
 
   @override
-  String get valueLoadFailed => 'تعذّر تحميل مكانتكِ.';
+  String get valueLoadFailed => 'ما قدرنا نحمّل مكانتكِ.';
 
   @override
-  String get valueSourcesTitle => 'من أين جاءت مكانتكِ';
+  String get valueSourcesTitle => 'من وين إجت مكانتكِ';
 
   @override
   String get valueSourcesSubtitle =>
-      'مكانتكِ مبنية على ستة جوانب، لا على الإنفاق وحده.';
+      'مكانتكِ مبنية على ست جوانب، مو عالصرف لحالو.';
 
   @override
   String valueCloserTo(String tier) {
-    return 'ما يقرّبكِ من $tier';
+    return 'شو بيقرّبكِ من $tier';
   }
 
   @override
-  String get valueUnlocksTitle => 'ما تفتحه لكِ مكانتكِ';
+  String get valueUnlocksTitle => 'شو بتفتحلكِ مكانتكِ';
 
   @override
-  String get valueRecentTitle => 'آخر ما احتسبناه';
+  String get valueRecentTitle => 'آخر شي حسبناه';
 
   @override
-  String get valueJustStarting => 'في البداية';
+  String get valueJustStarting => 'لسّا بالبداية';
 
   @override
   String valueNextTier(String tier) {
-    return 'الدرجة التالية: $tier';
+    return 'الدرجة الجاية: $tier';
   }
 
   @override
-  String get valuePeakKept => 'أعلى مكانة وصلتِ إليها محفوظة لدينا.';
+  String get valuePeakKept => 'أعلى مكانة وصلتيلها محفوظة عنّا.';
 
   @override
-  String get valueTierHeld => 'درجتكِ محفوظة لكِ حتى لو هدأ نشاطكِ قليلاً.';
+  String get valueTierHeld => 'درجتكِ محفوظة إلكِ حتى لو هدي نشاطكِ شوي.';
 
   @override
-  String get valueFrozen =>
-      'مكانتكِ موقوفة مؤقتاً للمراجعة — ولم يضِع منها شيء.';
+  String get valueFrozen => 'مكانتكِ موقّفة شوي للمراجعة — وما ضاع منها شي.';
 
   @override
-  String get valueBenefitClaimed => 'أصبحت لكِ.';
+  String get valueBenefitClaimed => 'صارت إلكِ ✨';
 
   @override
-  String get valueBenefitHigherTier => 'تُفتح مع درجة أعلى';
+  String get valueBenefitHigherTier => 'بتنفتح مع درجة أعلى';
 
   @override
-  String get valueBenefitTakenThisPeriod => 'أخذتِها هذه الفترة';
+  String get valueBenefitTakenThisPeriod => 'أخدتيها هالفترة';
 
   @override
-  String get valueBenefitSoldOut => 'نفدت هذه الفترة';
+  String get valueBenefitSoldOut => 'خلصت هالفترة';
 
   @override
-  String get valueBenefitClaim => 'خذيها';
+  String get valueBenefitClaim => 'خديها';
 
   @override
   String get valueBenefitActive => 'مفعّلة';
 
   @override
-  String get valueHowBuiltTooltip => 'كيف تُبنى المكانة؟';
+  String get valueHowBuiltTooltip => 'كيف بتنبنى المكانة؟';
 
   @override
-  String get valueRulesFailed => 'تعذّر تحميل القواعد.';
+  String get valueRulesFailed => 'ما قدرنا نحمّل القواعد.';
 
   @override
-  String get valueHowBuiltTitle => 'كيف تُبنى مكانتكِ';
+  String get valueHowBuiltTitle => 'كيف بتنبنى مكانتكِ';
 
   @override
   String get valueHowBuiltBody =>
-      'مكانتكِ لا تُشترى. الشراء جانب واحد من ستة، وله سقف — فمن تشتري فقط لا تصل إلى أعلى الدرجات.';
+      'مكانتكِ ما بتنشرى. الشراء جانب واحد من ستة، وإلو سقف — فاللي بتشتري بس ما بتوصل لأعلى الدرجات.';
 
   @override
-  String get valuePillarCapped => 'وصلتِ إلى الحد';
+  String get valuePillarCapped => 'وصلتِ للحد';
 
   @override
-  String get valuePillarUnknown => 'لا نعرف بعد';
+  String get valuePillarUnknown => 'لسّا ما منعرف';
 
   @override
   String valuePillarNotEnough(String blurb) {
-    return '$blurb — لا يكفي ما لدينا بعد لنحكم.';
+    return '$blurb — اللي عنّا لسّا ما بيكفي لنحكم.';
   }
 
   @override
@@ -9050,13 +9052,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get valuePolicySubtitle =>
-      'كل تعديل يصبح نسخة جديدة — تُجرَّب على الناس قبل أن تُفعَّل.';
+      'كل تعديل بيصير نسخة جديدة — بتنجرّب عالناس قبل ما تتفعّل.';
 
   @override
   String get valuePolicyNewVersion => 'نسخة جديدة';
 
   @override
-  String get valuePolicyLoadFailed => 'تعذّر تحميل السياسات.';
+  String get valuePolicyLoadFailed => 'ما قدرنا نحمّل السياسات.';
 
   @override
   String valuePolicyRowSummary(int ceiling, int days) {
@@ -9070,16 +9072,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get valuePolicyActivate => 'فعّلي';
 
   @override
-  String get valuePolicySimulateFailed => 'تعذّرت التجربة.';
+  String get valuePolicySimulateFailed => 'ما زبطت التجربة.';
 
   @override
   String valuePolicyImpactDisruptive(int down, int sampled) {
-    return '$down من $sampled سينزلن درجة. هذا تغيير محسوس — تأكّدي أنكِ تقصدينه.';
+    return '$down من $sampled رح ينزلوا درجة. هاد تغيير محسوس — تأكّدي إنّك قاصدته.';
   }
 
   @override
   String valuePolicyImpact(int up, int down, int sampled) {
-    return '$up سيصعدن و$down سينزلن من أصل $sampled.';
+    return '$up رح يطلعوا و$down رح ينزلوا من أصل $sampled.';
   }
 
   @override
@@ -9087,14 +9089,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String valuePolicyActivateBody(String impact) {
-    return 'سيُعاد احتساب كل الملفات وفق القواعد الجديدة.\n\n$impact';
+    return 'كل الملفات رح تنحسب من جديد حسب القواعد الجديدة.\n\n$impact';
   }
 
   @override
-  String get valuePolicyActivated => 'فُعّلت السياسة وأُعيد الاحتساب.';
+  String get valuePolicyActivated => 'تفعّلت السياسة وانحسب كلشي من جديد.';
 
   @override
-  String get valuePolicyActivateFailed => 'تعذّر التفعيل.';
+  String get valuePolicyActivateFailed => 'ما قدرنا نفعّلها.';
 
   @override
   String valuePolicySimSample(int sampled) {
@@ -9133,7 +9135,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get valuePolicyWeights => 'أوزان الجوانب';
 
   @override
-  String get valuePolicyWeightsHelp => 'نسبية — ليس على مجموعها أن يكون 100.';
+  String get valuePolicyWeightsHelp => 'نسبية — مو لازم مجموعها يكون 100.';
 
   @override
   String get valuePolicyCeiling => 'سقف الشراء';
@@ -9145,8 +9147,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$points نقطة',
       few: '$points نقاط',
-      two: 'نقطتان',
-      one: 'نقطة واحدة',
+      two: 'نقطتين',
+      one: 'نقطة وحدة',
     );
     return '$_temp0';
   }
@@ -9160,44 +9162,45 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: '$days يوم',
-      many: '$days يوماً',
+      many: '$days يوم',
       few: '$days أيام',
-      two: 'يومان',
+      two: 'يومين',
       one: 'يوم واحد',
     );
     return '$_temp0';
   }
 
   @override
-  String get valuePolicyMinEvidence => 'أقل عدد من الأدلة لكل جانب';
+  String get valuePolicyMinEvidence => 'أقل عدد أدلة لكل جانب';
 
   @override
-  String get valuePolicyWhy => 'لماذا هذا التغيير؟';
+  String get valuePolicyWhy => 'ليش هالتغيير؟';
 
   @override
-  String get valuePolicyWhyHint => 'ستقرؤه بعد سنة زميلةٌ أخرى';
+  String get valuePolicyWhyHint => 'رح تقراه زميلة تانية بعد سنة';
 
   @override
   String get valuePolicySaveDraft => 'احفظيها مسوّدة';
 
   @override
-  String get valuePolicySavedDraft => 'حُفظت مسوّدة — جرّبيها قبل تفعيلها.';
+  String get valuePolicySavedDraft =>
+      'انحفظت مسوّدة — جرّبيها قبل ما تفعّليها.';
 
   @override
-  String get valuePolicySaveFailed => 'تعذّر الحفظ.';
+  String get valuePolicySaveFailed => 'ما قدرنا نحفظ.';
 
   @override
   String valuePolicyRisky(int ceiling) {
-    return 'بهذه الأوزان، من تشتري فقط تصل إلى $ceiling — أي إلى الدرجات العليا.';
+    return 'بهالأوزان، اللي بتشتري بس بتوصل لـ $ceiling — يعني للدرجات العليا.';
   }
 
   @override
   String valuePolicySafe(int ceiling) {
-    return 'من تشتري فقط تصل إلى $ceiling من 1000 — وتبقى المكانة غير قابلة للشراء.';
+    return 'اللي بتشتري بس بتوصل لـ $ceiling من 1000 — والمكانة بتضلّ ما بتنشرى.';
   }
 
   @override
-  String get valueCardTitle => 'مكانتكِ في أوهارا';
+  String get valueCardTitle => 'مكانتكِ بأوهارا';
 
   @override
   String valueCardCloseTo(String tier) {
@@ -9205,10 +9208,10 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get valueCardRising => 'في صعود';
+  String get valueCardRising => 'عم تطلع';
 
   @override
-  String get valueCardSteady => 'هادئة';
+  String get valueCardSteady => 'رايقة';
 
   @override
   String valueAdminSpendingRung(String rung) {
@@ -9224,33 +9227,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketLookTitle => 'الإطلالة';
 
   @override
-  String get marketLookFailed => 'تعذّر فتح الإطلالة.';
+  String get marketLookFailed => 'ما قدرنا نفتح الإطلالة.';
 
   @override
   String marketLookFromShops(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'القطع من $count محلاً — جمعتها أوهارا لأنها تليق ببعضها.',
-      few: 'القطع من $count محلات — جمعتها أوهارا لأنها تليق ببعضها.',
-      two: 'القطع من محلّين — جمعتها أوهارا لأنها تليق ببعضها.',
-      one: 'القطع من محل واحد — جمعتها أوهارا لأنها تليق ببعضها.',
+      other: 'القطع من $count محل — جمّعتها أوهارا لأنها لابقة لبعض.',
+      few: 'القطع من $count محلات — جمّعتها أوهارا لأنها لابقة لبعض.',
+      two: 'القطع من محلّين — جمّعتها أوهارا لأنها لابقة لبعض.',
+      one: 'القطع من محل واحد — جمّعتها أوهارا لأنها لابقة لبعض.',
     );
     return '$_temp0';
   }
 
   @override
-  String get marketCheaperOptions => 'هناك بدائل أوفر';
+  String get marketCheaperOptions => 'في بدائل أوفر';
 
   @override
   String get marketCheaperOptionsBody =>
-      'الخانة نفسها، بقطعة أخرى تراها أوهارا قريبة منها.';
+      'نفس الخانة، بقطعة تانية أوهارا شايفتها قريبة منها.';
 
   @override
   String get marketLookTotal => 'مجموع الإطلالة';
 
   @override
-  String get marketSeePieces => 'شاهدي القطع';
+  String get marketSeePieces => 'شوفي القطع';
 
   @override
   String marketFromSeller(String name) {
@@ -9264,7 +9267,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String marketInsteadOf(String title, String newPrice, String oldPrice) {
-    return 'بدلاً من $title — $newPrice بدلاً من $oldPrice';
+    return 'بدل $title — $newPrice بدل $oldPrice';
   }
 
   @override
@@ -9280,7 +9283,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketOccasionGraduation => 'تخرّج';
 
   @override
-  String get marketOccasionWork => 'عمل';
+  String get marketOccasionWork => 'شغل';
 
   @override
   String get marketOccasionDaily => 'كل يوم';
@@ -9292,46 +9295,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketAll => 'الكل';
 
   @override
-  String get marketLooksFailed => 'تعذّر تحميل الإطلالات.';
+  String get marketLooksFailed => 'ما قدرنا نحمّل الإطلالات.';
 
   @override
-  String get marketNoLooks => 'لا إطلالات جاهزة الآن';
+  String get marketNoLooks => 'ما في إطلالات جاهزة هلّق';
 
   @override
   String get marketNoLooksBody =>
-      'تُركَّب الإطلالات من قطع متوفرة تليق ببعضها. جرّبي مناسبة أخرى أو عودي لاحقاً.';
+      'الإطلالات بتتركّب من قطع متوفرة لابقة لبعض. جرّبي مناسبة تانية أو ارجعي بعدين.';
 
   @override
   String get marketDrops => 'الإطلاقات';
 
   @override
-  String get marketDropsFailed => 'تعذّر تحميل الإطلاقات.';
+  String get marketDropsFailed => 'ما قدرنا نحمّل الإطلاقات.';
 
   @override
-  String get marketNoDrops => 'لا إطلاق الآن';
+  String get marketNoDrops => 'ما في إطلاق هلّق';
 
   @override
   String get marketNoDropsBody =>
-      'حين يُطلق شيء يناسب ما ينقصكِ أو ذوقكِ، ترينه هنا قبل أن يُفتح للجميع.';
+      'لمّا ينزل شي بيلبق للي ناقصكِ أو لذوقكِ، بتشوفيه هون قبل ما ينفتح للكل.';
 
   @override
-  String get marketLiveNow => 'أُطلق الآن';
+  String get marketLiveNow => 'نزل هلّق';
 
   @override
-  String get marketMissionsTitle => 'أشياء تستحق';
+  String get marketMissionsTitle => 'شغلات بتستاهل';
 
   @override
-  String get marketMissionsFailed => 'تعذّر تحميل المهام.';
+  String get marketMissionsFailed => 'ما قدرنا نحمّل المهام.';
 
   @override
-  String get marketNoMissions => 'لا شيء مطلوب منكِ الآن';
+  String get marketNoMissions => 'ما في شي مطلوب منكِ هلّق';
 
   @override
   String get marketNoMissionsBody =>
-      'لا تطلب منكِ أوهارا شيئاً إلا حين يكون مستحقاً وفي متناولكِ.';
+      'أوهارا ما بتطلب منكِ شي إلا إذا كان بيستاهل وبإيدكِ.';
 
   @override
-  String get marketMissionDone => 'أنجزتِها';
+  String get marketMissionDone => 'خلّصتيها ✨';
 
   @override
   String marketMissionProgress(int done, int target) {
@@ -9339,7 +9342,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get marketNotNow => 'ليس الآن';
+  String get marketNotNow => 'مو هلّق';
 
   @override
   String get marketResaleTitle => 'سوق المستعمل';
@@ -9351,32 +9354,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketResaleMine => 'عروضي';
 
   @override
-  String get marketResaleFailed => 'تعذّر تحميل العروض.';
+  String get marketResaleFailed => 'ما قدرنا نحمّل العروض.';
 
   @override
-  String get marketNoOwnListings => 'لا عروض لديكِ';
+  String get marketNoOwnListings => 'ما عندكِ عروض';
 
   @override
-  String get marketNoListings => 'لا شيء معروض الآن';
+  String get marketNoListings => 'ما في شي معروض هلّق';
 
   @override
   String get marketNoOwnListingsBody =>
-      'حين تجد أوهارا قطعة لا تُلبس في خزانتكِ، تقترح عليكِ عرضها هنا.';
+      'لمّا تلاقي أوهارا قطعة ما عم تنلبس بخزانتكِ، بتقترح عليكِ تعرضيها هون.';
 
   @override
   String get marketNoListingsBody =>
-      'يمتلئ السوق من خزائن البنات. عودي لاحقاً.';
+      'السوق بيتعبّى من خزاين البنات. ارجعي بعدين.';
 
   @override
   String marketWornTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'لُبست $count مرة',
-      few: 'لُبست $count مرات',
-      two: 'لُبست مرتين',
-      one: 'لُبست مرة',
-      zero: 'لم تُلبس',
+      other: 'انلبست $count مرة',
+      few: 'انلبست $count مرات',
+      two: 'انلبست مرتين',
+      one: 'انلبست مرة',
+      zero: 'ما انلبست',
     );
     return '$_temp0';
   }
@@ -9385,13 +9388,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketListingPublish => 'انشريها';
 
   @override
-  String get marketListingRepublish => 'أعيدي نشرها';
+  String get marketListingRepublish => 'رجّعي انشريها';
 
   @override
   String get marketListingWithdraw => 'اسحبيها';
 
   @override
-  String get marketListingSold => 'بِيعت';
+  String get marketListingSold => 'انباعت';
 
   @override
   String get marketSellerTitle => 'السوق';
@@ -9401,37 +9404,35 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get marketOpportunitiesBody =>
-      'العرض مقابل الطلب في الأقسام التي تبيعين فيها.';
+      'العرض قدّام الطلب بالأقسام اللي بتبيعي فيها.';
 
   @override
-  String get marketReadFailed => 'تعذّرت قراءة السوق.';
+  String get marketReadFailed => 'ما قدرنا نقرأ السوق.';
 
   @override
   String get marketNoSignal =>
-      'لا إشارة قوية بما يكفي الآن. لا تتكلّم أوهارا إلا حين تكفي البيانات.';
+      'ما في إشارة قوية كفاية هلّق. أوهارا ما بتحكي إلا لمّا تكفي البيانات.';
 
   @override
-  String get marketWorthADrop => 'تستحق إطلاقاً';
+  String get marketWorthADrop => 'بتستاهل إطلاق';
 
   @override
-  String get marketWorthADropBody =>
-      'منتجات لديكِ يزيد الطلب عليها عن المعتاد.';
+  String get marketWorthADropBody => 'منتجات عندكِ الطلب عليها أكتر من العادة.';
 
   @override
-  String get marketProductsFailed => 'تعذّرت قراءة المنتجات.';
+  String get marketProductsFailed => 'ما قدرنا نقرأ المنتجات.';
 
   @override
-  String get marketNoDropCandidates =>
-      'لا منتج لديكِ يستحق إطلاقاً خاصاً الآن.';
+  String get marketNoDropCandidates => 'ما عندكِ منتج بيستاهل إطلاق خاص هلّق.';
 
   @override
   String get marketYourDrops => 'إطلاقاتكِ';
 
   @override
-  String get marketYourDropsFailed => 'تعذّر تحميل إطلاقاتكِ.';
+  String get marketYourDropsFailed => 'ما قدرنا نحمّل إطلاقاتكِ.';
 
   @override
-  String get marketNoOwnDrops => 'لم تُطلقي شيئاً بعد.';
+  String get marketNoOwnDrops => 'لسّا ما أطلقتِ شي.';
 
   @override
   String get marketConfidenceHigh => 'مؤكّد';
@@ -9445,7 +9446,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get marketDropAction => 'إطلاق';
+  String get marketDropAction => 'أطلقيها';
 
   @override
   String get marketDropDraft => 'مسوّدة';
@@ -9454,10 +9455,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketDropScheduled => 'مجدول';
 
   @override
-  String get marketDropLive => 'جارٍ';
+  String get marketDropLive => 'شغّال';
 
   @override
-  String get marketDropEnded => 'انتهى';
+  String get marketDropEnded => 'خلص';
 
   @override
   String get marketDropCancelled => 'ملغى';
@@ -9469,33 +9470,33 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count قطعة · $status',
       few: '$count قطع · $status',
-      two: 'قطعتان · $status',
-      one: 'قطعة واحدة · $status',
+      two: 'قطعتين · $status',
+      one: 'قطعة وحدة · $status',
     );
     return '$_temp0';
   }
 
   @override
-  String get marketCareTitle => 'خزانتكِ بعد الشراء';
+  String get marketCareTitle => 'خزانتكِ بعد الشروة';
 
   @override
-  String get marketCareFailed => 'تعذّرت قراءة خزانتكِ.';
+  String get marketCareFailed => 'ما قدرنا نقرأ خزانتكِ.';
 
   @override
-  String get marketCareAllGood => 'كل شيء في مكانه';
+  String get marketCareAllGood => 'كل شي بمحلّه';
 
   @override
   String get marketCareAllGoodBody =>
-      'لا قطعة تحتاج انتباهاً الآن. سنخبركِ حين تبقى قطعة دون لبس.';
+      'ما في قطعة محتاجة انتباه هلّق. منخبّرك لمّا تضلّ قطعة بلا لبس.';
 
   @override
-  String get marketCareNeedsAttention => 'قطع تحتاج انتباهاً';
+  String get marketCareNeedsAttention => 'قطع محتاجة انتباه';
 
   @override
   String get marketCarePieces => 'قطعة';
 
   @override
-  String get marketCareInRotation => 'قيد الاستعمال';
+  String get marketCareInRotation => 'عم تنلبس';
 
   @override
   String get marketCareCostPerWear => 'كلفة اللبسة (ل.س)';
@@ -9507,7 +9508,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String marketGoesWith(String titles) {
-    return 'تليق مع: $titles';
+    return 'بتلبق مع: $titles';
   }
 
   @override
@@ -9528,19 +9529,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get marketListDraftNote =>
-      'تُحفظ مسوّدة، ولا يراها أحد حتى تنشريها أنتِ.';
+      'بتنحفظ مسوّدة، وما حدا بيشوفها لحتى تنشريها إنتِ.';
 
   @override
   String get marketCondition => 'حالتها';
 
   @override
-  String get marketConditionNew => 'جديدة بالبطاقة';
+  String get marketConditionNew => 'جديدة بالتيكيت';
 
   @override
   String get marketConditionExcellent => 'ممتازة';
 
   @override
-  String get marketConditionGood => 'جيدة';
+  String get marketConditionGood => 'منيحة';
 
   @override
   String get marketConditionFair => 'مستعملة';
@@ -9549,27 +9550,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketSaveDraft => 'احفظيها مسوّدة';
 
   @override
-  String get marketSavedDraft => 'حُفظت مسوّدة. يمكنكِ نشرها من عروضكِ.';
+  String get marketSavedDraft => 'انحفظت مسوّدة. فيكِ تنشريها من عروضكِ.';
 
   @override
   String get marketReadyLooksBody =>
-      'قطع من محلات مختلفة، جُمعت لأنها تليق ببعضها.';
+      'قطع من محلات مختلفة، تجمّعت لأنها لابقة لبعض.';
 
   @override
-  String get marketReading => 'نقرأ السوق…';
+  String get marketReading => 'عم نقرأ السوق…';
 
   @override
-  String get marketNoSignalShort => 'لا إشارة قوية بما يكفي الآن.';
+  String get marketNoSignalShort => 'ما في إشارة قوية كفاية هلّق.';
 
   @override
   String marketOpportunityCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count فرصة في أقسامكِ، والعرض مقابل الطلب فيها.',
-      few: '$count فرص في أقسامكِ، والعرض مقابل الطلب فيها.',
-      two: 'فرصتان في أقسامكِ، والعرض مقابل الطلب فيهما.',
-      one: 'فرصة واحدة في أقسامكِ، والعرض مقابل الطلب فيها.',
+      other: '$count فرصة بأقسامكِ، والعرض قدّام الطلب فيها.',
+      few: '$count فرص بأقسامكِ، والعرض قدّام الطلب فيها.',
+      two: 'فرصتين بأقسامكِ، والعرض قدّام الطلب فيهن.',
+      one: 'فرصة وحدة بأقسامكِ، والعرض قدّام الطلب فيها.',
     );
     return '$_temp0';
   }
@@ -9579,10 +9580,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count قطعة تحتاج انتباهاً — عناية، تنسيق، أو بيع.',
-      few: '$count قطع تحتاج انتباهاً — عناية، تنسيق، أو بيع.',
-      two: 'قطعتان تحتاجان انتباهاً — عناية، تنسيق، أو بيع.',
-      one: 'قطعة واحدة تحتاج انتباهاً — عناية، تنسيق، أو بيع.',
+      other: '$count قطعة محتاجة انتباه — عناية، تنسيق، أو بيع.',
+      few: '$count قطع محتاجة انتباه — عناية، تنسيق، أو بيع.',
+      two: 'قطعتين محتاجين انتباه — عناية، تنسيق، أو بيع.',
+      one: 'قطعة وحدة محتاجة انتباه — عناية، تنسيق، أو بيع.',
     );
     return '$_temp0';
   }
@@ -9592,7 +9593,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'من $count محلاً — إطلالة كاملة',
+      other: 'من $count محل — إطلالة كاملة',
       few: 'من $count محلات — إطلالة كاملة',
       two: 'من محلّين — إطلالة كاملة',
       one: 'من محل واحد — إطلالة كاملة',
@@ -9607,8 +9608,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count قطعة',
       few: '$count قطع',
-      two: 'قطعتان',
-      one: 'قطعة واحدة',
+      two: 'قطعتين',
+      one: 'قطعة وحدة',
     );
     return '$_temp0';
   }
@@ -9617,31 +9618,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get marketEarlyAccess => 'وصول مبكر';
 
   @override
-  String get marketReasonOpenNeed => 'لأن ينقصكِ شيء من هذا النوع';
+  String get marketReasonOpenNeed => 'لأنّو ناقصكِ شي من هالنوع';
 
   @override
-  String get marketReasonSearchedFor => 'لأنكِ كنتِ تبحثين عن شيء مثله';
+  String get marketReasonSearchedFor => 'لأنّك كنتِ عم تدوّري على شي متله';
 
   @override
-  String get marketReasonOccasion => 'لأنه يناسب المناسبة التي تستعدّين لها';
+  String get marketReasonOccasion => 'لأنّو بيلبق للمناسبة اللي عم تتحضّريلها';
 
   @override
-  String get marketReasonTaste => 'لأنه قريب من ذوقكِ';
+  String get marketReasonTaste => 'لأنّو قريب من ذوقكِ';
 
   @override
-  String get marketReasonSellerCustomer => 'من محل تشترين منه';
+  String get marketReasonSellerCustomer => 'من محل بتشتري منه';
 
   @override
-  String get marketRotationActive => 'قيد الاستعمال';
+  String get marketRotationActive => 'عم تنلبس';
 
   @override
   String get marketRotationSlowing => 'قلّ لبسها';
 
   @override
-  String get marketRotationDormant => 'بقيت في الخزانة';
+  String get marketRotationDormant => 'ضلّت بالخزانة';
 
   @override
-  String get marketRotationUnworn => 'لم تُلبس ولا مرة';
+  String get marketRotationUnworn => 'ما انلبست ولا مرة';
 
   @override
   String get settingsMyAddresses => 'عناويني';
@@ -9650,46 +9651,45 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsDeliveryAddresses => 'عناوين التوصيل';
 
   @override
-  String get settingsDeliveryAddressesSubtitle => 'إلى أين نرسل طلباتكِ؟';
+  String get settingsDeliveryAddressesSubtitle => 'لوين منبعتلك طلباتكِ؟';
 
   @override
-  String get settingsAddAddress => 'أضيفي عنواناً جديداً';
+  String get settingsAddAddress => 'ضيفي عنوان جديد';
 
   @override
-  String get settingsAddressAdded => 'أُضيف العنوان';
+  String get settingsAddressAdded => 'انضاف العنوان';
 
   @override
-  String get settingsAddressUpdated => 'حُفظ التعديل';
+  String get settingsAddressUpdated => 'انحفظ التعديل';
 
   @override
-  String get settingsAddressNowDefault => 'أصبح هذا عنوانكِ الافتراضي';
+  String get settingsAddressNowDefault => 'صار هاد عنوانكِ الأساسي';
 
   @override
-  String get settingsDeleteAddressTitle => 'حذف العنوان';
+  String get settingsDeleteAddressTitle => 'احذفي العنوان';
 
   @override
   String settingsDeleteAddressBody(String label) {
-    return 'سيُحذف «$label» من عناوينكِ.';
+    return '«$label» رح ينحذف من عناوينكِ.';
   }
 
   @override
-  String get settingsDelete => 'حذف';
+  String get settingsDelete => 'احذفي';
 
   @override
-  String get settingsKeep => 'تراجع';
+  String get settingsKeep => 'لأ، رجعت';
 
   @override
-  String get settingsAddressDeleted => 'حُذف العنوان';
+  String get settingsAddressDeleted => 'انحذف العنوان';
 
   @override
-  String get settingsActionFailed => 'تعذّر تنفيذ العملية الآن';
+  String get settingsActionFailed => 'ما زبطت العملية هلّق';
 
   @override
-  String get settingsNoAddresses => 'لا عناوين محفوظة بعد';
+  String get settingsNoAddresses => 'ما في عناوين محفوظة لسّا';
 
   @override
-  String get settingsNoAddressesBody =>
-      'احفظي عنواناً الآن ليكون جاهزاً عند أول طلب';
+  String get settingsNoAddressesBody => 'احفظي عنوان هلّق ليكون جاهز بأول طلب';
 
   @override
   String get settingsCoupons => 'الكوبونات';
@@ -9713,168 +9713,169 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String settingsCouponMinimum(String amount) {
-    return 'حد أدنى $amount';
+    return 'الحد الأدنى $amount';
   }
 
   @override
-  String get settingsCouponEndsToday => 'ينتهي اليوم';
+  String get settingsCouponEndsToday => 'بيخلص اليوم';
 
   @override
   String settingsCouponDaysLeft(int days) {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: 'تبقّى $days يوماً',
-      few: 'تبقّى $days أيام',
-      two: 'يبقى يومان',
-      one: 'يبقى يوم واحد',
+      other: 'باقي $days يوم',
+      few: 'باقي $days أيام',
+      two: 'باقي يومين',
+      one: 'باقي يوم واحد',
     );
     return '$_temp0';
   }
 
   @override
-  String get settingsCouponLastUse => 'استخدام أخير';
+  String get settingsCouponLastUse => 'آخر استعمال';
 
   @override
   String settingsCouponUsesLeft(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'يبقى $count استخداماً',
-      few: 'يبقى $count استخدامات',
-      two: 'يبقى استخدامان',
+      other: 'باقي $count استعمال',
+      few: 'باقي $count استعمالات',
+      two: 'باقي استعمالين',
     );
     return '$_temp0';
   }
 
   @override
   String settingsCouponApplied(String code, String amount) {
-    return 'طُبّق $code — وفّرتِ $amount';
+    return 'انطبّق $code — وفّرتِ $amount 🎉';
   }
 
   @override
   String get settingsCouponEmptyBag =>
-      'سلّتكِ فارغة — أضيفي منتجاً ثم طبّقي العرض';
+      'سلّتكِ فاضية — ضيفي منتج وبعدين طبّقي العرض';
 
   @override
   String get settingsCouponTwoCurrencies =>
-      'في سلّتكِ عملتان، طبّقي العرض عند الدفع';
+      'بسلّتكِ عملتين، طبّقي العرض وقت الدفع';
 
   @override
-  String get settingsCouponApplyFailed => 'تعذّر تطبيق الكوبون';
+  String get settingsCouponApplyFailed => 'ما قدرنا نطبّق الكوبون';
 
   @override
-  String get settingsCouponJustForYou => 'خاص بكِ';
+  String get settingsCouponJustForYou => 'إلكِ لحالكِ';
 
   @override
   String get settingsCouponCopyCode => 'انسخي الرمز';
 
   @override
   String settingsCouponCopied(String code) {
-    return 'نُسخ الرمز $code';
+    return 'انتسخ الرمز $code';
   }
 
   @override
-  String get settingsCouponAppliedBadge => 'مُطبَّق';
+  String get settingsCouponAppliedBadge => 'مطبّق';
 
   @override
   String get settingsCouponApplyToBag => 'طبّقيه على سلّتي';
 
   @override
   String settingsCouponAppliedSaving(String code, String discount) {
-    return '$code مُطبَّق — توفير $discount';
+    return '$code مطبّق — وفّرتِ $discount';
   }
 
   @override
-  String get settingsRemove => 'إزالة';
+  String get settingsRemove => 'شيلي';
 
   @override
-  String get settingsContinueToCheckout => 'تابعي إلى الدفع';
+  String get settingsContinueToCheckout => 'كمّلي عالدفع';
 
   @override
   String settingsBagNow(String subtotal) {
-    return 'سلّتكِ الآن: $subtotal';
+    return 'سلّتكِ هلّق: $subtotal';
   }
 
   @override
-  String get settingsNoCoupons => 'لا كوبونات متاحة الآن';
+  String get settingsNoCoupons => 'ما في كوبونات متاحة هلّق';
 
   @override
-  String get settingsNoCouponsBody => 'سنُعلمكِ حين يصلكِ عرض جديد';
+  String get settingsNoCouponsBody => 'منخبّرك لمّا يوصلكِ عرض جديد';
 
   @override
-  String get settingsCouponsFailed => 'تعذّر تحميل الكوبونات';
+  String get settingsCouponsFailed => 'ما قدرنا نحمّل الكوبونات';
 
   @override
   String get settingsPaymentMethods => 'طرق الدفع';
 
   @override
-  String get settingsPayAtOrder => 'الدفع عند الطلب';
+  String get settingsPayAtOrder => 'الدفع وقت الطلب';
 
   @override
-  String get settingsPayAtOrderSubtitle => 'تختارين الطريقة عند إتمام الشراء';
+  String get settingsPayAtOrderSubtitle => 'بتنقّي الطريقة وقت تكمّلي الشروة';
 
   @override
   String get settingsAvailableMethods => 'الطرق المتاحة';
 
   @override
   String get settingsNoCardsStored =>
-      'لا نحفظ بيانات بطاقات. تُدفع كل عملية عند إتمامها بالطريقة التي تختارينها.';
+      'ما منحفظ بيانات بطاقات. كل عملية بتندفع وقتها بالطريقة اللي بتنقّيها.';
 
   @override
   String get settingsOharaWallet => 'محفظة أوهارا';
 
   @override
-  String get settingsHintCod => 'تدفعين نقداً للمندوبة عند الاستلام';
+  String get settingsHintCod => 'بتدفعي كاش للمندوبة وقت الاستلام';
 
   @override
-  String get settingsHintCourierCollect => 'تحصيل عبر شركة التوصيل';
+  String get settingsHintCourierCollect => 'تحصيل عن طريق شركة التوصيل';
 
   @override
-  String get settingsHintWallet => 'يُخصم من رصيدكِ فوراً';
+  String get settingsHintWallet => 'بينخصم من رصيدكِ فوراً';
 
   @override
-  String get settingsHintMobileWallet => 'نفتح لكِ صفحة الدفع بعد تأكيد الطلب';
+  String get settingsHintMobileWallet =>
+      'منفتحلك صفحة الدفع بعد ما يتأكّد الطلب';
 
   @override
-  String get settingsHintCard => 'صفحة دفع آمنة — لا نحفظ بيانات بطاقتكِ';
+  String get settingsHintCard => 'صفحة دفع آمنة — ما منحفظ بيانات بطاقتكِ';
 
   @override
   String get settingsHintBankTransfer =>
-      'تحوّلين المبلغ ثم ترسلين رقم الحوالة من صفحة الطلب';
+      'بتحوّلي المبلغ وبعدين بتبعتي رقم الحوالة من صفحة الطلب';
 
   @override
   String get settingsHintHawala =>
-      'حوالة داخلية، ثم ترسلين رقم الإشعار من صفحة الطلب';
+      'حوالة داخلية، وبعدين بتبعتي رقم الإشعار من صفحة الطلب';
 
   @override
-  String get settingsHintConfirmedFirst => 'يُؤكَّد الدفع قبل تجهيز الطلب';
+  String get settingsHintConfirmedFirst => 'الدفع بيتأكّد قبل ما يتجهّز الطلب';
 
   @override
-  String get settingsNoPaymentMethods => 'لا طرق دفع متاحة حالياً';
+  String get settingsNoPaymentMethods => 'ما في طرق دفع متاحة هلّق';
 
   @override
-  String get settingsPaymentMethodsFailed => 'تعذّر تحميل طرق الدفع';
+  String get settingsPaymentMethodsFailed => 'ما قدرنا نحمّل طرق الدفع';
 
   @override
-  String get settingsAddressDefault => 'الافتراضي';
+  String get settingsAddressDefault => 'الأساسي';
 
   @override
   String settingsAddressNear(String landmark) {
-    return 'قرب $landmark';
+    return 'جنب $landmark';
   }
 
   @override
-  String get settingsMakeDefault => 'اجعليه الافتراضي';
+  String get settingsMakeDefault => 'خلّيه الأساسي';
 
   @override
-  String get settingsEdit => 'تعديل';
+  String get settingsEdit => 'عدّلي';
 
   @override
-  String get settingsAddressHome => 'المنزل';
+  String get settingsAddressHome => 'البيت';
 
   @override
-  String get settingsEditAddress => 'تعديل العنوان';
+  String get settingsEditAddress => 'عدّلي العنوان';
 
   @override
   String get settingsNewAddress => 'عنوان جديد';
@@ -9883,19 +9884,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsAddressName => 'اسم العنوان';
 
   @override
-  String get settingsAddressNameHint => 'المنزل، العمل، بيت أهلي';
+  String get settingsAddressNameHint => 'البيت، الشغل، بيت أهلي';
 
   @override
   String get settingsRecipientName => 'اسم المستلِمة';
 
   @override
-  String get settingsRecipientNameHint => 'من تستلم الطلب';
+  String get settingsRecipientNameHint => 'مين رح تستلم الطلب';
 
   @override
-  String get settingsPhoneNumber => 'رقم الهاتف';
+  String get settingsPhoneNumber => 'رقم الموبايل';
 
   @override
-  String get settingsCity => 'المدينة أو البلدة';
+  String get settingsCity => 'المدينة أو الضيعة';
 
   @override
   String get settingsCityHint => 'المزة، جرمانا، ...';
@@ -9904,25 +9905,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsAddressLine => 'العنوان';
 
   @override
-  String get settingsAddressLineHint => 'الشارع، البناء، الطابق، رقم الشقة';
+  String get settingsAddressLineHint => 'الشارع، البناية، الطابق، رقم الشقة';
 
   @override
-  String get settingsLandmark => 'علامة مميزة (اختياري)';
+  String get settingsLandmark => 'علامة مميزة (إذا حابّة)';
 
   @override
-  String get settingsLandmarkHint => 'قرب صيدلية النور';
+  String get settingsLandmarkHint => 'جنب صيدلية النور';
 
   @override
-  String get settingsDeliveryNotes => 'تعليمات للتوصيل (اختياري)';
+  String get settingsDeliveryNotes => 'تعليمات للتوصيل (إذا حابّة)';
 
   @override
-  String get settingsDeliveryNotesHint => 'اتصلي قبل الوصول';
+  String get settingsDeliveryNotesHint => 'اتصلي قبل ما توصلي';
 
   @override
-  String get settingsMakeMyDefault => 'اجعليه عنواني الافتراضي';
+  String get settingsMakeMyDefault => 'خلّيه عنواني الأساسي';
 
   @override
-  String get settingsMakeMyDefaultHint => 'تُفتح عليه صفحة الدفع';
+  String get settingsMakeMyDefaultHint => 'صفحة الدفع بتنفتح عليه';
 
   @override
   String get settingsSaveChanges => 'احفظي التعديل';
@@ -9934,13 +9935,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsGovernorate => 'المحافظة';
 
   @override
-  String get settingsChooseGovernorate => 'اختاري المحافظة';
+  String get settingsChooseGovernorate => 'نقّي المحافظة';
 
   @override
   String get settingsDistrict => 'المنطقة';
 
   @override
-  String get settingsChooseDistrict => 'اختاري المنطقة (اختياري)';
+  String get settingsChooseDistrict => 'نقّي المنطقة (إذا حابّة)';
 
   @override
   String settingsDistrictRural(String name) {
@@ -9948,35 +9949,35 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get settingsGovernoratesFailed => 'تعذّر تحميل قائمة المحافظات';
+  String get settingsGovernoratesFailed => 'ما قدرنا نحمّل قائمة المحافظات';
 
   @override
-  String get settingsFieldRequired => 'هذا الحقل مطلوب';
+  String get settingsFieldRequired => 'هالخانة لازم تنعبّى';
 
   @override
-  String get settingsFieldTooShort => 'أقصر من اللازم';
+  String get settingsFieldTooShort => 'قصير شوي';
 
   @override
   String get siDemandRadar => 'رادار الطلب';
 
   @override
-  String get siRadarFailed => 'تعذّر تحميل بيانات الرادار.';
+  String get siRadarFailed => 'ما قدرنا نحمّل بيانات الرادار.';
 
   @override
-  String get siNoProducts => 'لا منتجات بعد';
+  String get siNoProducts => 'ما في منتجات لسّا';
 
   @override
-  String get siNoProductsRadarBody => 'أضيفي أول منتج ونبدأ بقراءة السوق لكِ.';
+  String get siNoProductsRadarBody => 'ضيفي أول منتج ومنبلّش نقرألك السوق.';
 
   @override
-  String get siStillGathering => 'ما زلنا نجمع البيانات';
+  String get siStillGathering => 'لسّا عم نجمّع البيانات';
 
   @override
   String get siStillGatheringBody =>
-      'يقرأ الرادار حركة السوق كل ليلة. عودي غداً.';
+      'الرادار بيقرأ حركة السوق كل ليلة. ارجعي بكرا.';
 
   @override
-  String get siWhatToDoNow => 'ماذا أفعل الآن';
+  String get siWhatToDoNow => 'شو بعمل هلّق';
 
   @override
   String get siWhatToDoNowSubtitle => 'مرتّبة حسب الأهم لمتجركِ';
@@ -9985,35 +9986,35 @@ class AppLocalizationsAr extends AppLocalizations {
   String get siStockBelowDemand => 'المخزون أقل من الطلب';
 
   @override
-  String get siStockBelowDemandSubtitle => 'قطع تُطلب جيداً وكميتها تنفد';
+  String get siStockBelowDemandSubtitle => 'قطع عليها طلب منيح وكميتها عم تخلص';
 
   @override
-  String get siRisingCategories => 'فئات صاعدة';
+  String get siRisingCategories => 'فئات عم تطلع';
 
   @override
-  String get siRisingCategoriesSubtitle => 'الطلب عليها يزداد';
+  String get siRisingCategoriesSubtitle => 'الطلب عليها عم يزيد';
 
   @override
   String get siUnmetDemand => 'طلب بلا جواب';
 
   @override
-  String get siUnmetDemandSubtitle => 'بحثت نساء ولم يجدن ما يناسبهن';
+  String get siUnmetDemandSubtitle => 'في صبايا دوّروا وما لقوا شي بيلبقلهن';
 
   @override
   String get siPriceMovement => 'حركة الأسعار';
 
   @override
-  String get siOutOfStock => 'لم تبقَ ولا قطعة';
+  String get siOutOfStock => 'ما ضلّ ولا قطعة';
 
   @override
   String siUnitsLeft(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'بقيت $count قطعة',
-      few: 'بقيت $count قطع',
-      two: 'بقيت قطعتان',
-      one: 'بقيت قطعة واحدة',
+      other: 'باقي $count قطعة',
+      few: 'باقي $count قطع',
+      two: 'باقي قطعتين',
+      one: 'باقي قطعة وحدة',
     );
     return '$_temp0';
   }
@@ -10023,36 +10024,36 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: 'تكفي $days يوماً',
-      few: 'تكفي $days أيام',
-      two: 'تكفي يومين',
-      one: 'تكفي يوماً واحداً',
+      other: 'بتكفي $days يوم',
+      few: 'بتكفي $days أيام',
+      two: 'بتكفي يومين',
+      one: 'بتكفي يوم واحد',
     );
     return '$_temp0';
   }
 
   @override
-  String get siYouSellHere => 'تبيعين فيها';
+  String get siYouSellHere => 'بتبيعي فيها';
 
   @override
-  String get siYouDontSellHere => 'لا تبيعين فيها';
+  String get siYouDontSellHere => 'ما بتبيعي فيها';
 
   @override
   String siSearchMiss(int searches, int percent) {
-    return '$searches بحث · $percent% لم يجدن شيئاً';
+    return '$searches بحث · $percent% ما لقوا شي';
   }
 
   @override
-  String get siInYourCategory => 'في فئتكِ';
+  String get siInYourCategory => 'بفئتكِ';
 
   @override
   String get siProductIntelligence => 'ذكاء المنتجات';
 
   @override
-  String get siProductsFailed => 'تعذّر تقييم منتجاتكِ.';
+  String get siProductsFailed => 'ما قدرنا نقيّم منتجاتكِ.';
 
   @override
-  String get siNoProductsBody => 'أضيفي أول منتج ونخبركِ بما ينقصه.';
+  String get siNoProductsBody => 'ضيفي أول منتج ومنخبّرك شو ناقصه.';
 
   @override
   String get siAverage => 'المتوسط';
@@ -10062,26 +10063,26 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count منتجاً',
+      other: '$count منتج',
       few: '$count منتجات',
-      two: 'منتجان',
+      two: 'منتجين',
       one: 'منتج واحد',
     );
     return '$_temp0';
   }
 
   @override
-  String get siNothingUrgent => 'لا شيء مستعجل. مرتّبة من الأضعف إلى الأقوى.';
+  String get siNothingUrgent => 'ما في شي مستعجل. مرتّبة من الأضعف للأقوى.';
 
   @override
   String siUrgentCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count منها تحتاج انتباهاً الآن.',
-      few: '$count منها تحتاج انتباهاً الآن.',
-      two: 'اثنان منها يحتاجان انتباهاً الآن.',
-      one: 'واحد منها يحتاج انتباهاً الآن.',
+      other: '$count منهن محتاجين انتباه هلّق.',
+      few: '$count منهن محتاجين انتباه هلّق.',
+      two: 'تنين منهن محتاجين انتباه هلّق.',
+      one: 'واحد منهن محتاج انتباه هلّق.',
     );
     return '$_temp0';
   }
@@ -10092,7 +10093,7 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: 'محسوبة على آخر $days يوم',
-      many: 'محسوبة على آخر $days يوماً',
+      many: 'محسوبة على آخر $days يوم',
       few: 'محسوبة على آخر $days أيام',
       two: 'محسوبة على آخر يومين',
       one: 'محسوبة على آخر يوم',
@@ -10106,40 +10107,40 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get siSoldOut => 'نفدت';
+  String get siSoldOut => 'خلصت';
 
   @override
   String siMoreAdvice(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'و$count اقتراحاً آخر',
-      few: 'و$count اقتراحات أخرى',
-      two: 'واقتراحان آخران',
-      one: 'واقتراح آخر',
+      other: 'و$count اقتراح كمان',
+      few: 'و$count اقتراحات كمان',
+      two: 'واقتراحين كمان',
+      one: 'واقتراح كمان',
     );
     return '$_temp0';
   }
 
   @override
-  String get siDetailsFailed => 'تعذّر تحميل التفاصيل.';
+  String get siDetailsFailed => 'ما قدرنا نحمّل التفاصيل.';
 
   @override
-  String get siNoDataYet => 'لا بيانات بعد';
+  String get siNoDataYet => 'ما في بيانات لسّا';
 
   @override
-  String get siTooFewYet => 'ما زالت قليلة';
+  String get siTooFewYet => 'لسّا قليلة';
 
   @override
   String siComparedWith(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'مقارنة بـ$count منتج مشابه',
-      many: 'مقارنة بـ$count منتجاً مشابهاً',
-      few: 'مقارنة بـ$count منتجات مشابهة',
-      two: 'مقارنة بمنتجين مشابهين',
-      one: 'مقارنة بمنتج واحد مشابه',
+      other: 'قدّام $count منتج متله',
+      many: 'قدّام $count منتج متله',
+      few: 'قدّام $count منتجات متلها',
+      two: 'قدّام منتجين متلهن',
+      one: 'قدّام منتج واحد متله',
     );
     return '$_temp0';
   }
@@ -10159,17 +10160,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String siConversion(String yours, String median) {
-    return 'تحويلكِ $yours% مقابل $median% في الفئة.';
+    return 'تحويلكِ $yours% قدّام $median% بالفئة.';
   }
 
   @override
   String get siShopHealth => 'صحّة المتجر';
 
   @override
-  String get siHealthFailed => 'تعذّر حساب صحّة المتجر.';
+  String get siHealthFailed => 'ما قدرنا نحسب صحّة المتجر.';
 
   @override
-  String get siWhatRaisesHealth => 'ما يرفع صحّة متجركِ';
+  String get siWhatRaisesHealth => 'شو بيرفع صحّة متجركِ';
 
   @override
   String get siWhatRaisesHealthSubtitle => 'مرتّبة حسب الأثر الأكبر';
@@ -10178,25 +10179,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get siMetrics => 'المقاييس';
 
   @override
-  String get siNotEnoughYet => 'لا يكفي ما لدينا بعد';
+  String get siNotEnoughYet => 'اللي عنّا لسّا ما بيكفي';
 
   @override
   String get siNotEnoughYetBody =>
-      'هذه المقاييس لا تؤثّر في صحّة متجركِ حتى تتوفر بيانات كافية';
+      'هالمقاييس ما بتأثّر بصحّة متجركِ لحتى يصير في بيانات كفاية';
 
   @override
-  String get siWhatSlipped => 'ما الذي تراجع';
+  String get siWhatSlipped => 'شو اللي نزل';
 
   @override
-  String get siSlippedFailed => 'تعذّرت قراءة المنتجات المتراجعة الآن.';
+  String get siSlippedFailed => 'ما قدرنا نقرأ المنتجات اللي نزلت هلّق.';
 
   @override
   String get siWhatSlippedSubtitle =>
-      'كانت تبيع ثم خفّت — مع سبب واحد لكل منها';
+      'كانت عم تنباع وبعدين خفّت — مع سبب واحد لكل وحدة';
 
   @override
   String get siHealthTooFewOrders =>
-      'لا طلبات كافية بعد لنحكم. كل طلب تنجزينه يوضّح الصورة.';
+      'لسّا ما في طلبات كفاية لنحكم. كل طلب بتخلّصيه بيوضّح الصورة.';
 
   @override
   String siHealthWindow(int days) {
@@ -10204,7 +10205,7 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: 'محسوبة على آخر $days يوم من طلباتكِ.',
-      many: 'محسوبة على آخر $days يوماً من طلباتكِ.',
+      many: 'محسوبة على آخر $days يوم من طلباتكِ.',
       few: 'محسوبة على آخر $days أيام من طلباتكِ.',
       two: 'محسوبة على آخر يومين من طلباتكِ.',
       one: 'محسوبة على آخر يوم من طلباتكِ.',
@@ -10219,20 +10220,20 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$points نقطة عن الشهر الماضي',
       few: '$points نقاط عن الشهر الماضي',
-      two: 'نقطتان عن الشهر الماضي',
-      one: 'نقطة واحدة عن الشهر الماضي',
+      two: 'نقطتين عن الشهر الماضي',
+      one: 'نقطة وحدة عن الشهر الماضي',
     );
     return '$_temp0';
   }
 
   @override
   String siDimensionUnmeasured(String blurb) {
-    return '$blurb — لا شيء نقيسه بعد.';
+    return '$blurb — لسّا ما في شي نقيسه.';
   }
 
   @override
   String siDimensionTooFew(String blurb, int sample) {
-    return '$blurb — قسناها على $sample، لكنها ما زالت قليلة لتُحتسب.';
+    return '$blurb — قسناها على $sample، بس لسّا قليلة لتنحسب.';
   }
 
   @override
@@ -10241,9 +10242,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count يوم',
-      many: '$count يوماً',
+      many: '$count يوم',
       few: '$count أيام',
-      two: 'يومان',
+      two: 'يومين',
       one: 'يوم واحد',
     );
     return '$_temp0';
@@ -10256,8 +10257,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count ساعة',
       few: '$count ساعات',
-      two: 'ساعتان',
-      one: 'ساعة واحدة',
+      two: 'ساعتين',
+      one: 'ساعة وحدة',
     );
     return '$_temp0';
   }
@@ -10268,19 +10269,19 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get siFactAccepted => 'طلبات قبلتِها وأنجزتِها';
+  String get siFactAccepted => 'طلبات قبلتيها وخلّصتيها';
 
   @override
   String get siFactDelivered => 'طلبات وصلت';
 
   @override
-  String get siFactCancelledBySeller => 'ألغيتِها';
+  String get siFactCancelledBySeller => 'إنتِ لغيتيها';
 
   @override
-  String get siFactCancelledByOthers => 'ألغتها الزبونة';
+  String get siFactCancelledByOthers => 'الزبونة لغتها';
 
   @override
-  String get siFactReturned => 'أُرجعت';
+  String get siFactReturned => 'رجعت';
 
   @override
   String get siFactPrepHours => 'متوسط التجهيز (ساعة)';
@@ -10298,31 +10299,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get siFactReviewCount => 'عدد التقييمات';
 
   @override
-  String get siHideNumbers => 'أخفي الأرقام';
+  String get siHideNumbers => 'خبّي الأرقام';
 
   @override
-  String get siShowNumbers => 'اعرضي الأرقام التي احتُسبت';
+  String get siShowNumbers => 'ورجيني الأرقام اللي انحسبت';
 
   @override
   String get siShopIntelligence => 'ذكاء المتجر';
 
   @override
-  String get siCalculating => 'نحسب…';
+  String get siCalculating => 'عم نحسب…';
 
   @override
-  String get siEightMetrics => 'ثمانية مقاييس لمتجركِ';
+  String get siEightMetrics => 'تمان مقاييس لمتجركِ';
 
   @override
-  String get siGettingToKnow => 'ما زلنا نتعرّف على متجركِ';
+  String get siGettingToKnow => 'لسّا عم نتعرّف على متجركِ';
 
   @override
-  String get siDemandRadarSubtitle => 'ما الذي يزداد الطلب عليه';
+  String get siDemandRadarSubtitle => 'شو اللي عم يزيد الطلب عليه';
 
   @override
-  String get siProductIntelligenceSubtitle => 'ما الذي ينقص صفحات منتجاتكِ';
+  String get siProductIntelligenceSubtitle => 'شو ناقص صفحات منتجاتكِ';
 
   @override
-  String get siNotMeasuredYet => 'لم نقِسها بعد';
+  String get siNotMeasuredYet => 'لسّا ما قسناها';
 
   @override
   String siWeightOfHealth(int percent) {
@@ -10336,42 +10337,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stylistMyPreferences => 'تفضيلاتي';
 
   @override
-  String get stylistPreferencesFailed => 'تعذّر تحميل تفضيلاتكِ.';
+  String get stylistPreferencesFailed => 'ما قدرنا نحمّل تفضيلاتكِ.';
 
   @override
   String get stylistModesty => 'درجة الاحتشام';
 
   @override
-  String get stylistModestyHelp => 'تحدّد ما تعرضه عليكِ المنصّة من قطع.';
+  String get stylistModestyHelp =>
+      'بتحدّد شو القطع اللي بتعرضها عليكِ المنصّة.';
 
   @override
-  String get stylistFavouriteColours => 'الألوان المفضّلة';
+  String get stylistFavouriteColours => 'الألوان اللي بتحبّيها';
 
   @override
   String get stylistFavouriteColoursHelp =>
-      'نرفع ترتيب القطع بهذه الألوان، ولا نخفي غيرها.';
+      'منطلّع القطع بهالألوان لفوق، وما منخبّي غيرها.';
 
   @override
   String get stylistMySizes => 'مقاساتي';
 
   @override
   String get stylistMySizesHelp =>
-      'حين نعرفها، نعرض فقط القطع المتوفرة فعلاً بمقاسكِ.';
+      'لمّا نعرفها، منعرضلك بس القطع المتوفرة عن جد بمقاسكِ.';
 
   @override
   String get stylistBudget => 'الميزانية';
 
   @override
-  String get stylistBudgetHelp => 'الرقم الذي ترتاحين إليه عادةً.';
+  String get stylistBudgetHelp => 'الرقم اللي بترتاحي فيه عادةً.';
 
   @override
-  String get stylistInferred => 'ما استنتجناه من تسوّقكِ';
+  String get stylistInferred => 'شو فهمنا من تسوّقكِ';
 
   @override
-  String get stylistInferredHelp => 'هذا ما تقوله اختياراتكِ، لا ما كتبتِه.';
+  String get stylistInferredHelp =>
+      'هاد اللي بتقوله اختياراتكِ، مو اللي كتبتيه.';
 
   @override
-  String get stylistModestyUnspecified => 'لا أحدّد';
+  String get stylistModestyUnspecified => 'ما بدّي حدّد';
 
   @override
   String get stylistModestyFull => 'تغطية كاملة';
@@ -10389,52 +10392,52 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stylistClothing => 'الملابس';
 
   @override
-  String get stylistShoes => 'الأحذية';
+  String get stylistShoes => 'الكنادر';
 
   @override
   String stylistBudgetStated(String amount) {
-    return 'حدّدتِ حتى $amount';
+    return 'حدّدتِ لحد $amount';
   }
 
   @override
   String stylistBudgetTypical(String min, String max) {
-    return 'وعادةً تشترين بين $min و$max';
+    return 'وعادةً بتشتري بين $min و$max';
   }
 
   @override
   String get stylistNoSignalYet =>
-      'لا إشارات كافية بعد. تصفّحي وشاهدي المنتجات، وسنتعلّم ذوقكِ.';
+      'لسّا ما في إشارات كفاية. اتفرّجي وشوفي المنتجات، ونحنا منتعلّم ذوقكِ.';
 
   @override
-  String get stylistViewed => 'منتجات شاهدتِها';
+  String get stylistViewed => 'منتجات شفتيها';
 
   @override
-  String get stylistSaved => 'منتجات حفظتِها';
+  String get stylistSaved => 'منتجات حفظتيها';
 
   @override
-  String get stylistPurchased => 'منتجات اشتريتِها';
+  String get stylistPurchased => 'منتجات اشتريتيها';
 
   @override
-  String get stylistDismissed => 'منتجات لم تعجبكِ';
+  String get stylistDismissed => 'منتجات ما عجبتكِ';
 
   @override
-  String get stylistTasteRefreshed => 'حدّثنا قراءتنا لذوقكِ.';
+  String get stylistTasteRefreshed => 'حدّثنا قراءتنا لذوقكِ ✨';
 
   @override
-  String get stylistTasteRefreshFailed => 'تعذّر التحديث، جرّبي بعد قليل.';
+  String get stylistTasteRefreshFailed => 'ما زبط التحديث، جرّبي بعد شوي.';
 
   @override
   String get stylistRefresh => 'حدّثي';
 
   @override
-  String get stylistLookFailed => 'تعذّر فتح الإطلالة.';
+  String get stylistLookFailed => 'ما قدرنا نفتح الإطلالة.';
 
   @override
   String get stylistLookPartlyUnavailable =>
-      'قطعة أو أكثر لم تعد متوفرة. يمكنكِ طلب الباقي، أو سؤالي عن بديل.';
+      'في قطعة أو أكتر ما عادت متوفرة. فيكِ تطلبي الباقي، أو تسأليني عن بديل.';
 
   @override
-  String get stylistNoLongerAvailable => 'لم تعد متوفرة';
+  String get stylistNoLongerAvailable => 'ما عادت متوفرة';
 
   @override
   String get stylistTotal => 'المجموع';
@@ -10446,19 +10449,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stylistSaveLook => 'احفظي الإطلالة';
 
   @override
-  String get stylistLookSavedToCloset => 'حُفظت الإطلالة في خزانتكِ.';
+  String get stylistLookSavedToCloset => 'انحفظت الإطلالة بخزانتكِ.';
 
   @override
-  String get stylistLookSaveFailed => 'تعذّر حفظ الإطلالة، جرّبي مرة أخرى.';
+  String get stylistLookSaveFailed =>
+      'ما قدرنا نحفظ الإطلالة، جرّبي مرة تانية.';
 
   @override
-  String get stylistComposerHint => 'أخبريني عمّا تبحثين…';
+  String get stylistComposerHint => 'احكيلي شو عم تدوّري…';
 
   @override
-  String get stylistSend => 'إرسال';
+  String get stylistSend => 'ابعتي';
 
   @override
-  String get stylistMessageFailed => 'لم تصل الرسالة';
+  String get stylistMessageFailed => 'ما وصلت الرسالة';
 
   @override
   String get stylistOpenLook => 'افتحي الإطلالة';
@@ -10467,29 +10471,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stylistLookTotal => 'مجموع الإطلالة';
 
   @override
-  String get stylistSoldOut => 'نفدت الكمية';
+  String get stylistSoldOut => 'خلصت الكمية';
 
   @override
-  String get stylistLike => 'يعجبني';
+  String get stylistLike => 'بتعجبني';
 
   @override
-  String get stylistNotForMe => 'ليس لي';
+  String get stylistNotForMe => 'مو إلي';
 
   @override
   String get stylistWelcomeTitle => 'مساعدة أوهارا الشخصية';
 
   @override
   String get stylistWelcomeBody =>
-      'أخبريني عن المناسبة، أو القطعة، أو الميزانية — وأرتّب لكِ خيارات متوفرة فعلاً لدى بائعات أوهارا، وأخبركِ لماذا اخترت كل قطعة.';
+      'احكيلي عن المناسبة، أو القطعة، أو الميزانية — وأنا برتّبلك خيارات متوفرة عن جد عند بائعات أوهارا، وبقلّك ليش نقّيت كل قطعة.';
 
   @override
-  String get stylistTryAsking => 'جرّبي أن تسأليني:';
+  String get stylistTryAsking => 'جرّبي اسأليني:';
 
   @override
   String get stylistCapLookTitle => 'إطلالة كاملة';
 
   @override
-  String get stylistCapLookBody => 'فستان وحقيبة وحذاء منسّقة معاً';
+  String get stylistCapLookBody => 'فستان وجزدان وكندرة منسّقين مع بعض';
 
   @override
   String get stylistCapGiftsTitle => 'هدايا';
@@ -10498,66 +10502,66 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stylistCapGiftsBody => 'حسب العمر والذوق والميزانية';
 
   @override
-  String get stylistCapInStockTitle => 'متوفر فعلاً';
+  String get stylistCapInStockTitle => 'متوفر عن جد';
 
   @override
-  String get stylistCapInStockBody => 'كل القطع من مخزون البائعات الحالي';
+  String get stylistCapInStockBody => 'كل القطع من مخزون البائعات هلّق';
 
   @override
   String get visualNewSearch => 'بحث جديد';
 
   @override
-  String get visualPickPhoto => 'اختاري صورة';
+  String get visualPickPhoto => 'نقّي صورة';
 
   @override
-  String get visualPreparing => 'ما زلنا نجهّز البحث بالصورة';
+  String get visualPreparing => 'لسّا عم نجهّز البحث بالصورة';
 
   @override
   String get visualPreparingBody =>
-      'نحلّل صور المنتجات لنتمكّن من مقارنتها بصورتكِ. جرّبي بعد قليل.';
+      'عم نحلّل صور المنتجات لنقدر نقارنها بصورتكِ. جرّبي بعد شوي.';
 
   @override
   String get visualRefresh => 'حدّثي';
 
   @override
-  String get visualSawSomething => 'رأيتِ شيئاً أعجبكِ؟';
+  String get visualSawSomething => 'شفتِ شي عجبكِ؟';
 
   @override
   String get visualSawSomethingBody =>
-      'ارفعي صورة القطعة — لقطة شاشة من إنستغرام أو تيك توك أو بنترست، أو صورة من الاستوديو — ونجد لكِ أقرب ما يوجد في أوهارا.';
+      'ارفعي صورة القطعة — سكرين شوت من إنستغرام أو تيك توك أو بنترست، أو صورة من الاستوديو — ومنلاقيلك أقرب شي موجود بأوهارا.';
 
   @override
-  String get visualPastSearches => 'بحوثكِ السابقة';
+  String get visualPastSearches => 'بحوثكِ القديمة';
 
   @override
   String get visualPhotoSearch => 'بحث بصورة';
 
   @override
   String get visualPhotoDeletedResultsKept =>
-      'حُذفت الصورة — لكن النتائج ما زالت موجودة';
+      'انحذفت الصورة — بس النتايج لسّا موجودة';
 
   @override
-  String get visualTapToOpen => 'اضغطي لفتحه';
+  String get visualTapToOpen => 'كبسي لتفتحيه';
 
   @override
-  String get visualUploading => 'نرفع الصورة…';
+  String get visualUploading => 'عم نرفع الصورة…';
 
   @override
-  String get visualAnalysing => 'نحلّل الصورة ونبحث…';
+  String get visualAnalysing => 'عم نحلّل الصورة وندوّر…';
 
   @override
   String get visualComparing =>
-      'نقارن الصورة بصور المنتجات الموجودة فعلاً في أوهارا.';
+      'عم نقارن صورتكِ بصور المنتجات الموجودة عن جد بأوهارا.';
 
   @override
-  String get visualNothingClose => 'لم أجد شيئاً قريباً';
+  String get visualNothingClose => 'ما لقيت شي قريب';
 
   @override
   String get visualNothingCloseBody =>
-      'جرّبي صورة أوضح، أو اكتبي لي ما تريدينه بالضبط.';
+      'جرّبي صورة أوضح، أو اكتبيلي شو بدّك بالزبط.';
 
   @override
-  String get visualAnotherPhoto => 'صورة أخرى';
+  String get visualAnotherPhoto => 'صورة تانية';
 
   @override
   String visualClosestCount(int count) {
@@ -10573,20 +10577,20 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get visualNoOffer => 'لا عرض متوفر لهذه القطعة حالياً.';
+  String get visualNoOffer => 'ما في عرض متوفر لهالقطعة هلّق.';
 
   @override
-  String get visualAddedToBag => 'أُضيفت إلى السلة';
+  String get visualAddedToBag => 'انضافت للسلّة';
 
   @override
-  String get visualAddToBagFailed => 'تعذّرت إضافتها إلى السلة.';
+  String get visualAddToBagFailed => 'ما قدرنا نضيفها للسلّة.';
 
   @override
-  String get visualDeleteTitle => 'حذف البحث؟';
+  String get visualDeleteTitle => 'بدّك تحذفي البحث؟';
 
   @override
   String get visualDeleteBody =>
-      'ستُحذف الصورة والنتائج نهائياً، ولا يمكن استعادتها.';
+      'الصورة والنتايج رح ينحذفوا للأبد، وما في رجعة.';
 
   @override
   String get visualDelete => 'احذفي';
@@ -10595,24 +10599,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get visualBack => 'رجوع';
 
   @override
-  String get visualDeleted => 'حُذفت الصورة والبحث.';
+  String get visualDeleted => 'انحذفت الصورة والبحث.';
 
   @override
-  String get visualWhatISaw => 'ما فهمته من الصورة';
+  String get visualWhatISaw => 'شو فهمت من الصورة';
 
   @override
   String get visualCouldntDescribe =>
-      'لم أستطع وصف الصورة بالكلمات، لكني أبحث عنها بصرياً.';
+      'ما قدرت وصّف الصورة بالكلام، بس عم دوّر عليها بالشكل.';
 
   @override
   String get visualDeletePhotoAndSearch => 'احذفي الصورة والبحث';
 
   @override
-  String get visualPhotoDeleted => 'حُذفت الصورة';
+  String get visualPhotoDeleted => 'انحذفت الصورة';
 
   @override
   String get visualInferredFromMatches =>
-      'استنتجته من المنتجات الأقرب، لا من الصورة نفسها';
+      'استنتجته من أقرب المنتجات، مو من الصورة نفسها';
 
   @override
   String visualClosestCategory(String label) {
@@ -10620,21 +10624,20 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get visualLowConfidence =>
-      'الصورة غير واضحة تماماً — النتائج تقريبية.';
+  String get visualLowConfidence => 'الصورة مو واضحة كتير — النتايج تقريبية.';
 
   @override
-  String get visualRefineHint => 'صفي لي ما تريدين تغييره…';
+  String get visualRefineHint => 'احكيلي شو بدّك تغيّري…';
 
   @override
   String get visualRefine => 'عدّلي البحث';
 
   @override
-  String get visualSeveralPieces => 'رأيتُ أكثر من قطعة في الصورة';
+  String get visualSeveralPieces => 'شفت أكتر من قطعة بالصورة';
 
   @override
   String get visualRegionGuessed =>
-      'استنتجتُ هذه القطعة من ترتيب الصورة، ولستُ متأكدة تماماً.';
+      'استنتجت هالقطعة من ترتيب الصورة، ومو متأكدة مية بالمية.';
 
   @override
   String visualSimilaritySemantics(int percent) {
@@ -10647,51 +10650,51 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get visualSearchByPhoto => 'ابحثي بالصورة';
+  String get visualSearchByPhoto => 'دوّري بالصورة';
 
   @override
   String get visualSourceBody =>
-      'صوّري القطعة، أو اختاري لقطة شاشة من إنستغرام أو تيك توك أو بنترست.';
+      'صوّري القطعة، أو نقّي سكرين شوت من إنستغرام أو تيك توك أو بنترست.';
 
   @override
   String get visualTakePhoto => 'صوّري القطعة';
 
   @override
-  String get visualTakePhotoHint => 'بإضاءة جيدة وخلفية بسيطة';
+  String get visualTakePhotoHint => 'بضو منيح وخلفية بسيطة';
 
   @override
   String get visualFromGallery => 'من الاستوديو';
 
   @override
-  String get visualFromGalleryHint => 'لقطة شاشة أو صورة محفوظة';
+  String get visualFromGalleryHint => 'سكرين شوت أو صورة محفوظة';
 
   @override
   String get visualPrivacy =>
-      'تُحفظ صورتكِ بشكل خاص وتُمسح تلقائياً بعد انتهاء البحث، ولا يراها أحد غيركِ.';
+      'صورتكِ بتنحفظ بشكل خاص وبتنمسح لحالها بعد ما يخلص البحث، وما حدا بيشوفها غيركِ.';
 
   @override
-  String get visualSimilarRail => 'قطع شبيهة بصرياً';
+  String get visualSimilarRail => 'قطع بتشبهها بالشكل';
 
   @override
-  String get visualSearchWithYourPhoto => 'ابحثي بصورتكِ';
+  String get visualSearchWithYourPhoto => 'دوّري بصورتكِ';
 
   @override
   String checkoutCouponApplied(String amount) {
-    return 'طُبّق الكوبون — توفير $amount';
+    return 'انطبّق الكوبون — وفّرتِ $amount';
   }
 
   @override
-  String get checkoutEtaToday => 'يصلكِ اليوم بإذن الله';
+  String get checkoutEtaToday => 'بيوصلكِ اليوم إن شاء الله';
 
   @override
   String checkoutEtaDays(int days) {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: 'يصلكِ خلال $days يوماً',
-      few: 'يصلكِ خلال $days أيام',
-      two: 'يصلكِ خلال يومين',
-      one: 'يصلكِ خلال يوم',
+      other: 'بيوصلكِ خلال $days يوم',
+      few: 'بيوصلكِ خلال $days أيام',
+      two: 'بيوصلكِ خلال يومين',
+      one: 'بيوصلكِ خلال يوم',
     );
     return '$_temp0';
   }
@@ -10703,7 +10706,7 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count شحنة من $count بائعة',
       few: '$count شحنات من $count بائعات',
-      two: 'شحنتان من بائعتين',
+      two: 'شحنتين من بائعتين',
     );
     return '$_temp0';
   }
@@ -10735,39 +10738,39 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutTracking => 'التتبّع';
 
   @override
-  String get checkoutCancelOrder => 'إلغاء الطلب';
+  String get checkoutCancelOrder => 'ألغي الطلب';
 
   @override
   String get chatClearSearch => 'امسحي البحث';
 
   @override
-  String get chatPause => 'إيقاف مؤقت';
+  String get chatPause => 'وقّفي';
 
   @override
-  String get chatPlay => 'تشغيل';
+  String get chatPlay => 'شغّلي';
 
   @override
-  String get productAddToRoom => 'أضيفيها إلى غرفة';
+  String get productAddToRoom => 'ضيفيها لغرفة';
 
   @override
-  String get decreaseQuantity => 'إنقاص الكمية';
+  String get decreaseQuantity => 'نقّصي الكمية';
 
   @override
-  String get increaseQuantity => 'زيادة الكمية';
+  String get increaseQuantity => 'زيدي الكمية';
 
   @override
-  String get profileShare => 'مشاركة';
+  String get profileShare => 'شاركي';
 
   @override
   String get homeAskStylist => 'اسألي مساعِدة أوهارا';
 
   @override
   String get homeAskStylistBody =>
-      'أخبريني عن المناسبة وميزانيتكِ، وأرتّب لكِ خيارات متوفرة';
+      'احكيلي عن المناسبة وميزانيتكِ، وأنا برتّبلك خيارات متوفرة';
 
   @override
   String createProductPriceStock(String price, int stock) {
-    return '$price · $stock في المخزون';
+    return '$price · $stock بالمخزون';
   }
 
   @override
@@ -10782,88 +10785,88 @@ class AppLocalizationsAr extends AppLocalizations {
   String get orderStateDraft => 'مسودّة';
 
   @override
-  String get orderStatePendingPayment => 'بانتظار الدفع';
+  String get orderStatePendingPayment => 'ناطر الدفع';
 
   @override
   String get orderStateConfirmed => 'مؤكّد';
 
   @override
-  String get orderStatePartiallyShipped => 'شُحن جزئياً';
+  String get orderStatePartiallyShipped => 'انشحن جزء منه';
 
   @override
-  String get orderStateShipped => 'شُحن';
+  String get orderStateShipped => 'انشحن';
 
   @override
-  String get orderStatePartiallyDelivered => 'سُلّم جزئياً';
+  String get orderStatePartiallyDelivered => 'تسلّم جزء منه';
 
   @override
-  String get orderStateDelivered => 'سُلّم';
+  String get orderStateDelivered => 'تسلّم';
 
   @override
-  String get orderStatePartiallyCancelled => 'أُلغي جزئياً';
+  String get orderStatePartiallyCancelled => 'انلغى جزء منه';
 
   @override
   String get orderStateCancelled => 'ملغى';
 
   @override
-  String get orderStateClosed => 'مغلق';
+  String get orderStateClosed => 'مسكّر';
 
   @override
   String get parcelStateNew => 'طلب جديد';
 
   @override
-  String get parcelStateAwaitingSeller => 'بانتظار تأكيد البائعة';
+  String get parcelStateAwaitingSeller => 'ناطر تأكيد البائعة';
 
   @override
-  String get parcelStatePreparing => 'قيد التجهيز';
+  String get parcelStatePreparing => 'عم يتجهّز';
 
   @override
   String get parcelStateReadyToShip => 'جاهز للشحن';
 
   @override
-  String get parcelStateHandedToCourier => 'سُلّم للمندوب';
+  String get parcelStateHandedToCourier => 'صار مع المندوب';
 
   @override
-  String get parcelStateInTransit => 'في الطريق';
+  String get parcelStateInTransit => 'بالطريق';
 
   @override
-  String get parcelStateDelivered => 'سُلّم';
+  String get parcelStateDelivered => 'تسلّم';
 
   @override
-  String get parcelStateDeliveryFailed => 'تعذّر التسليم';
+  String get parcelStateDeliveryFailed => 'ما قدرنا نسلّمه';
 
   @override
-  String get parcelStateCancelledByYou => 'ألغيتِ الطلب';
+  String get parcelStateCancelledByYou => 'إنتِ لغيتِ الطلب';
 
   @override
-  String get parcelStateCancelledBySeller => 'ألغته البائعة';
+  String get parcelStateCancelledBySeller => 'البائعة لغته';
 
   @override
-  String get parcelStateRejectedOnDelivery => 'رُفض عند الاستلام';
+  String get parcelStateRejectedOnDelivery => 'انرفض وقت الاستلام';
 
   @override
   String get parcelStateReturnRequested => 'طلب إرجاع';
 
   @override
-  String get parcelStateReturnInTransit => 'قيد الإرجاع';
+  String get parcelStateReturnInTransit => 'عم يرجع';
 
   @override
-  String get parcelStateReturned => 'أُرجع';
+  String get parcelStateReturned => 'رجع';
 
   @override
-  String get parcelStateExchangeInProgress => 'قيد الاستبدال';
+  String get parcelStateExchangeInProgress => 'عم يتبدّل';
 
   @override
-  String get parcelStateExchanged => 'استُبدل';
+  String get parcelStateExchanged => 'تبدّل';
 
   @override
-  String get parcelStateRefundPending => 'قيد الاسترداد المالي';
+  String get parcelStateRefundPending => 'المبلغ عم يرجع';
 
   @override
-  String get parcelStateRefunded => 'استُرد المبلغ';
+  String get parcelStateRefunded => 'رجع المبلغ';
 
   @override
-  String get parcelStateDisputed => 'قيد النزاع';
+  String get parcelStateDisputed => 'عليه نزاع';
 
   @override
   String get payMethodCod => 'الدفع عند الاستلام';
@@ -10893,40 +10896,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payMethodWallet => 'محفظة أوهارا';
 
   @override
-  String get rawStatePending => 'قيد الانتظار';
+  String get rawStatePending => 'ناطر';
 
   @override
   String get rawStatePaid => 'مدفوع';
 
   @override
-  String get rawStateFailed => 'لم ينجح';
+  String get rawStateFailed => 'ما زبط';
 
   @override
-  String get rawStateRefunded => 'مُسترد';
+  String get rawStateRefunded => 'رجع';
 
   @override
-  String get rawStateCreated => 'أُنشئ';
+  String get rawStateCreated => 'انعمل';
 
   @override
-  String get rawStateAssigned => 'أُسند لمندوب';
+  String get rawStateAssigned => 'انعطى لمندوب';
 
   @override
-  String get rawStatePickedUp => 'استُلم';
+  String get rawStatePickedUp => 'انستلم';
 
   @override
-  String get rawStateInTransit => 'في الطريق';
+  String get rawStateInTransit => 'بالطريق';
 
   @override
-  String get rawStateOutForDelivery => 'خرج للتسليم';
+  String get rawStateOutForDelivery => 'طلع للتسليم';
 
   @override
-  String get rawStateDelivered => 'سُلّم';
+  String get rawStateDelivered => 'تسلّم';
 
   @override
-  String get rawStateReturning => 'قيد الإرجاع';
+  String get rawStateReturning => 'عم يرجع';
 
   @override
-  String get rawStateReturned => 'أُرجع';
+  String get rawStateReturned => 'رجع';
 
   @override
   String get rawStateCancelled => 'ملغى';
@@ -10935,47 +10938,47 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productStateDraft => 'مسودّة';
 
   @override
-  String get productStatePendingReview => 'قيد المراجعة';
+  String get productStatePendingReview => 'عم ينراجع';
 
   @override
   String get productStateActive => 'معروض';
 
   @override
-  String get productStateOutOfStock => 'نفد المخزون';
+  String get productStateOutOfStock => 'خلص المخزون';
 
   @override
-  String get productStatePaused => 'موقوف مؤقتاً';
+  String get productStatePaused => 'موقّف شوي';
 
   @override
   String get productStateArchived => 'مؤرشف';
 
   @override
-  String get passwordShow => 'إظهار كلمة المرور';
+  String get passwordShow => 'بيّني كلمة السر';
 
   @override
-  String get passwordHide => 'إخفاء كلمة المرور';
+  String get passwordHide => 'خبّي كلمة السر';
 
   @override
   String marketDropOpensIn(String when) {
-    return 'يُفتح بعد $when';
+    return 'بينفتح بعد $when';
   }
 
   @override
   String marketDropEndsIn(String when) {
-    return 'مفتوح · ينتهي بعد $when';
+    return 'مفتوح · بيخلص بعد $when';
   }
 
   @override
-  String get marketDropOpenNow => 'مفتوح الآن';
+  String get marketDropOpenNow => 'مفتوح هلّق';
 
   @override
   String marketDropEarlyBy(String when) {
-    return 'لكِ قبل الجميع بـ$when';
+    return 'إلكِ قبل الكل بـ$when';
   }
 
   @override
   String marketPriceFrom(String price) {
-    return 'ابتداءً من $price';
+    return 'من $price وطالع';
   }
 
   @override
@@ -10984,7 +10987,7 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count دقيقة',
-      few: '$count دقائق',
+      few: '$count دقايق',
       two: 'دقيقتين',
       one: 'دقيقة',
     );
@@ -11009,7 +11012,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count يوماً',
+      other: '$count يوم',
       few: '$count أيام',
       two: 'يومين',
       one: 'يوم',
@@ -11018,24 +11021,24 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get errorRetryLater => 'لم يكتمل ذلك. جرّبي مرة أخرى بعد قليل.';
+  String get errorRetryLater => 'ما زبطت هالمرة. جرّبي مرة تانية بعد شوي.';
 
   @override
-  String get experienceTaglineBuyer => 'بوتيك ناعم يتشكّل حول ذوقكِ.';
+  String get experienceTaglineBuyer => 'بوتيك ناعم بيتشكّل على ذوقكِ.';
 
   @override
   String get experienceTaglineSeller =>
-      'المخزون والطلبات والعميلات والنمو في مساحة عمل واحدة سريعة.';
+      'المخزون والطلبات والزبونات والنمو بمساحة شغل وحدة وسريعة.';
 
   @override
   String get experienceTaglineAdmin =>
-      'التحكّم والحوكمة والتحليلات وصحة التشغيل في مكان واحد.';
+      'التحكّم والحوكمة والتحليلات وصحة التشغيل بمحلّ واحد.';
 
   @override
   String get loyaltyTierRose => 'وردية';
 
   @override
-  String get loyaltyTierGold => 'ذهبية';
+  String get loyaltyTierGold => 'دهبية';
 
   @override
   String get loyaltyTierPlatinum => 'بلاتينية';
@@ -11048,11 +11051,11 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count كوبوناً',
+      other: '$count كوبون',
       few: '$count كوبونات',
-      two: 'كوبونان',
+      two: 'كوبونين',
       one: 'كوبون واحد',
-      zero: 'لا كوبونات',
+      zero: 'ما في كوبونات',
     );
     return '$_temp0';
   }
@@ -11062,11 +11065,11 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'طُلبت $count مرة',
-      few: 'طُلبت $count مرات',
-      two: 'طُلبت مرتين',
-      one: 'طُلبت مرة',
-      zero: 'لم تُطلب بعد',
+      other: 'انطلبت $count مرة',
+      few: 'انطلبت $count مرات',
+      two: 'انطلبت مرتين',
+      one: 'انطلبت مرة',
+      zero: 'لسّا ما انطلبت',
     );
     return '$_temp0';
   }
@@ -11076,10 +11079,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count جديداً',
-      few: '$count جديدة',
-      two: 'جديدان',
-      one: 'جديد واحد',
+      other: '$count جديد',
+      few: '$count جداد',
+      two: 'تنين جداد',
+      one: 'واحد جديد',
     );
     return '$_temp0';
   }
@@ -11089,11 +11092,11 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count بوتيكاً',
+      other: '$count بوتيك',
       few: '$count بوتيكات',
-      two: 'بوتيكان',
+      two: 'بوتيكين',
       one: 'بوتيك واحد',
-      zero: 'لا بوتيكات',
+      zero: 'ما في بوتيكات',
     );
     return '$_temp0';
   }
@@ -11103,34 +11106,34 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'بقيت $count قطعة',
-      few: 'بقيت $count قطع',
-      two: 'بقيت قطعتان',
-      one: 'بقيت قطعة',
+      other: 'باقي $count قطعة',
+      few: 'باقي $count قطع',
+      two: 'باقي قطعتين',
+      one: 'باقي قطعة',
     );
     return '$_temp0';
   }
 
   @override
-  String get orderTimelineCreated => 'أُنشئ الطلب';
+  String get orderTimelineCreated => 'انعمل الطلب';
 
   @override
   String get orderTimelineConfirmed => 'تأكّد الطلب';
 
   @override
-  String get orderTimelineConfirmedBody => 'أُرسل إلى البائعات للتجهيز.';
+  String get orderTimelineConfirmedBody => 'انبعت للبائعات ليجهّزوه.';
 
   @override
-  String get orderTimelineCancelled => 'أُلغي الطلب';
+  String get orderTimelineCancelled => 'انلغى الطلب';
 
   @override
-  String get orderTimelinePaymentExpired => 'انتهت مهلة الدفع.';
+  String get orderTimelinePaymentExpired => 'خلصت مهلة الدفع.';
 
   @override
-  String get roomsBlockerNothingChosen => 'لم تختاري أي قطعة بعد';
+  String get roomsBlockerNothingChosen => 'لسّا ما نقّيتِ ولا قطعة';
 
   @override
-  String get sellerAllTimeTotals => 'منذ افتتاح متجركِ';
+  String get sellerAllTimeTotals => 'من أول ما فتحتِ متجركِ';
 
   @override
   String get sellerPlanBasic => 'الباقة الأساسية';
@@ -11143,7 +11146,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String sellerOrderPlatformDiscountNote(String amount) {
-    return 'حسم بقيمة $amount تحمّلته أوهارا عنكِ، ولا يُخصم من أرباحكِ.';
+    return 'حسم بقيمة $amount تحمّلته أوهارا عنكِ، وما بينخصم من أرباحكِ.';
   }
 
   @override
@@ -11174,7 +11177,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get studioFormatLiveStreams => 'بث مباشر';
 
   @override
-  String get studioFormatOther => 'محتوى آخر';
+  String get studioFormatOther => 'محتوى تاني';
 
   @override
   String get adminStatusInfo => 'معلومة';
@@ -11186,28 +11189,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminStatusCritical => 'حرج';
 
   @override
-  String get adminStatusQueued => 'بانتظار الإرسال';
+  String get adminStatusQueued => 'ناطر الإرسال';
 
   @override
-  String get adminStatusSent => 'أُرسل';
+  String get adminStatusSent => 'انبعت';
 
   @override
-  String get adminStatusFailed => 'فشل';
+  String get adminStatusFailed => 'ما زبط';
 
   @override
-  String get adminStatusSkipped => 'تُخطّي';
+  String get adminStatusSkipped => 'انترك';
 
   @override
   String get adminStatusScheduled => 'مجدولة';
 
   @override
-  String get adminStatusRunning => 'قيد التنفيذ';
+  String get adminStatusRunning => 'عم يشتغل';
 
   @override
-  String get adminStatusCompleted => 'اكتملت';
+  String get adminStatusCompleted => 'خلصت';
 
   @override
-  String get adminStatusRefunded => 'مُستردّ';
+  String get adminStatusRefunded => 'رجع';
 
   @override
   String get adminAuditLogin => 'تسجيل دخول';
@@ -11216,25 +11219,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminAuditLogout => 'تسجيل خروج';
 
   @override
-  String get adminAuditLogoutAll => 'خروج من كل الأجهزة';
+  String get adminAuditLogoutAll => 'طلعة من كل الأجهزة';
 
   @override
   String get adminAuditRegister => 'إنشاء حساب';
 
   @override
-  String get adminAuditPhoneChangeStarted => 'بدء تغيير رقم الهاتف';
+  String get adminAuditPhoneChangeStarted => 'بلّش تغيير رقم الموبايل';
 
   @override
-  String get adminAuditPhoneChangeCompleted => 'اكتمل تغيير رقم الهاتف';
+  String get adminAuditPhoneChangeCompleted => 'خلص تغيير رقم الموبايل';
 
   @override
-  String get adminAuditPhoneChanged => 'تغيّر رقم الهاتف';
+  String get adminAuditPhoneChanged => 'تغيّر رقم الموبايل';
 
   @override
-  String get adminAuditRecoveryOpened => 'فُتح طلب استرداد حساب';
+  String get adminAuditRecoveryOpened => 'انفتح طلب استرداد حساب';
 
   @override
-  String get adminAuditRecoverySubmitted => 'قُدِّم طلب استرداد حساب';
+  String get adminAuditRecoverySubmitted => 'انبعت طلب استرداد حساب';
 
   @override
   String get adminAuditRecoveryFirstApproval => 'موافقة أولى على استرداد حساب';
@@ -11244,64 +11247,64 @@ class AppLocalizationsAr extends AppLocalizations {
       'موافقة ثانية على استرداد حساب';
 
   @override
-  String get adminAuditRecoveryCoolingOff => 'استرداد حساب في فترة الانتظار';
+  String get adminAuditRecoveryCoolingOff => 'استرداد حساب بفترة الانتظار';
 
   @override
-  String get adminAuditRecoveryCompleted => 'اكتمل استرداد حساب';
+  String get adminAuditRecoveryCompleted => 'خلص استرداد حساب';
 
   @override
-  String get adminAuditRecoveryRejected => 'رُفض طلب استرداد حساب';
+  String get adminAuditRecoveryRejected => 'انرفض طلب استرداد حساب';
 
   @override
-  String get adminAuditRecoveryCancelled => 'أُلغي طلب استرداد حساب';
+  String get adminAuditRecoveryCancelled => 'انلغى طلب استرداد حساب';
 
   @override
-  String get adminAuditPasswordResetRequested => 'طلب إعادة تعيين كلمة المرور';
+  String get adminAuditPasswordResetRequested => 'انطلب تغيير كلمة السر';
 
   @override
-  String get adminAuditPasswordResetCompleted => 'أُعيد تعيين كلمة المرور';
+  String get adminAuditPasswordResetCompleted => 'تغيّرت كلمة السر';
 
   @override
-  String get adminAuditPasswordDisabled => 'أُوقفت كلمة المرور';
+  String get adminAuditPasswordDisabled => 'توقّفت كلمة السر';
 
   @override
-  String get adminAuditTotpConfirmed => 'فُعّل التحقق بخطوتين';
+  String get adminAuditTotpConfirmed => 'تفعّل التحقق بخطوتين';
 
   @override
-  String get adminAuditRecoveryCodesGenerated => 'أُنشئت رموز الاسترداد';
+  String get adminAuditRecoveryCodesGenerated => 'طلعت رموز الاسترداد';
 
   @override
-  String get adminAuditRecoveryCodeRedeemed => 'استُخدم رمز استرداد';
+  String get adminAuditRecoveryCodeRedeemed => 'استُعمل رمز استرداد';
 
   @override
-  String get adminAuditOtpCodesRevealed => 'عُرضت رموز الدخول';
+  String get adminAuditOtpCodesRevealed => 'انعرضت رموز الدخول';
 
   @override
-  String get adminAuditSellerVerificationApproved => 'اعتُمد توثيق بائعة';
+  String get adminAuditSellerVerificationApproved => 'انعتمد توثيق بائعة';
 
   @override
-  String get adminAuditSellerVerificationRejected => 'رُفض توثيق بائعة';
+  String get adminAuditSellerVerificationRejected => 'انرفض توثيق بائعة';
 
   @override
-  String get adminAuditContentRemoved => 'حُذف محتوى';
+  String get adminAuditContentRemoved => 'انحذف محتوى';
 
   @override
-  String get adminAuditContentReinstated => 'أُعيد محتوى';
+  String get adminAuditContentReinstated => 'رجع محتوى';
 
   @override
-  String get adminAuditCommentRemoved => 'حُذف تعليق';
+  String get adminAuditCommentRemoved => 'انحذف تعليق';
 
   @override
-  String get adminAuditWalletCredited => 'أُضيف رصيد إلى محفظة';
+  String get adminAuditWalletCredited => 'انضاف رصيد لمحفظة';
 
   @override
-  String get adminAuditWalletFrozen => 'جُمّدت محفظة';
+  String get adminAuditWalletFrozen => 'تجمّدت محفظة';
 
   @override
-  String get adminAuditRevokeSessions => 'أُنهيت جلسات حساب';
+  String get adminAuditRevokeSessions => 'انسكّرت جلسات حساب';
 
   @override
-  String get adminAuditCoolOffStarted => 'بدأت فترة التهدئة';
+  String get adminAuditCoolOffStarted => 'بلّشت فترة التهدئة';
 
   @override
   String get adminAuditAreaAuth => 'الدخول والأمان';
@@ -11351,19 +11354,19 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get homeAuraGuest => 'أهلاً بكِ،';
+  String get homeAuraGuest => 'يا هلا فيكِ،';
 
   @override
-  String get homeAuraQuestionMorning => 'ما إطلالة اليوم؟';
+  String get homeAuraQuestionMorning => 'شو إطلالة اليوم؟';
 
   @override
-  String get homeAuraQuestionMidday => 'قطعة تُبهج نهاركِ؟';
+  String get homeAuraQuestionMidday => 'قطعة بتفرّح نهاركِ؟';
 
   @override
-  String get homeAuraQuestionEvening => 'ماذا تلبسين الليلة؟';
+  String get homeAuraQuestionEvening => 'شو رح تلبسي الليلة؟';
 
   @override
-  String get homeAuraQuestionNight => 'لحظة هادئة لكِ وحدكِ';
+  String get homeAuraQuestionNight => 'لحظة رايقة إلكِ لحالكِ';
 
   @override
   String get homeAskOhara => 'اسألي أوهارا';
@@ -11375,31 +11378,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeAskExample2 => 'إطلالة دوام مريحة وأنيقة';
 
   @override
-  String get homeAskExample3 => 'هدية لأختي في عيد ميلادها';
+  String get homeAskExample3 => 'هدية لأختي بعيد ميلادها';
 
   @override
-  String get homeAskExample4 => 'ماذا ألبس مع حذاء بيج؟';
+  String get homeAskExample4 => 'شو بلبس مع كندرة بيج؟';
 
   @override
-  String get homeAskPhoto => 'ابحثي بصورة';
+  String get homeAskPhoto => 'دوّري بصورة';
 
   @override
   String homeBriefStories(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count بوتيك نشرت اليوم',
-      many: '$count بوتيكاً نشرت اليوم',
-      few: '$count بوتيكات نشرت اليوم',
-      two: 'بوتيكان نشرا اليوم',
-      one: 'بوتيك نشر اليوم',
+      other: '$count بوتيك نزّلوا اليوم',
+      many: '$count بوتيك نزّلوا اليوم',
+      few: '$count بوتيكات نزّلوا اليوم',
+      two: 'بوتيكين نزّلوا اليوم',
+      one: 'بوتيك نزّل اليوم',
     );
     return '$_temp0';
   }
 
   @override
   String homeBriefDealEnds(String time) {
-    return 'عرض ينتهي خلال $time';
+    return 'عرض بيخلص خلال $time';
   }
 
   @override
@@ -11408,9 +11411,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count إشعار جديد',
-      many: '$count إشعاراً جديداً',
+      many: '$count إشعار جديد',
       few: '$count إشعارات جديدة',
-      two: 'إشعاران جديدان',
+      two: 'إشعارين جداد',
       one: 'إشعار جديد',
     );
     return '$_temp0';
@@ -11421,37 +11424,37 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count قطعة في حقيبتكِ',
-      few: '$count قطع في حقيبتكِ',
-      two: 'قطعتان في حقيبتكِ',
-      one: 'قطعة في حقيبتكِ',
+      other: '$count قطعة بسلّتكِ',
+      few: '$count قطع بسلّتكِ',
+      two: 'قطعتين بسلّتكِ',
+      one: 'قطعة بسلّتكِ',
     );
     return '$_temp0';
   }
 
   @override
-  String get homePulseLive => 'الآن';
+  String get homePulseLive => 'هلّق';
 
   @override
   String homePulseDeal(String title, String time) {
-    return '$title — ينتهي خلال $time';
+    return '$title — بيخلص خلال $time';
   }
 
   @override
   String homePulseTrending(String title) {
-    return 'الأكثر طلباً الآن: $title';
+    return 'الأكتر طلب هلّق: $title';
   }
 
   @override
   String homePulseNew(String title) {
-    return 'وصل للتو: $title';
+    return 'لسّا واصل: $title';
   }
 
   @override
-  String get homeMoodTitle => 'على أي مزاج اليوم؟';
+  String get homeMoodTitle => 'شو مزاجكِ اليوم؟';
 
   @override
-  String get homeMoodSubtitle => 'اختاري، وأوهارا تقترح الإطلالة كاملة';
+  String get homeMoodSubtitle => 'نقّي، وأوهارا بتقترحلك الإطلالة كاملة';
 
   @override
   String get homeMoodEvening => 'سهرة';
@@ -11472,40 +11475,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeMoodTravel => 'سفر';
 
   @override
-  String get homeMoodPromptEvening => 'أريد إطلالة سهرة أنيقة';
+  String get homeMoodPromptEvening => 'بدّي إطلالة سهرة أنيقة';
 
   @override
-  String get homeMoodPromptWedding => 'أبحث عن إطلالة لحضور عرس';
+  String get homeMoodPromptWedding => 'عم دوّر على إطلالة لعرس';
 
   @override
   String get homeMoodPromptWork => 'إطلالة دوام مريحة وأنيقة';
 
   @override
-  String get homeMoodPromptCasual => 'إطلالة كاجوال لنهاية الأسبوع';
+  String get homeMoodPromptCasual => 'إطلالة كاجوال لآخر الجمعة';
 
   @override
-  String get homeMoodPromptGift => 'أبحث عن هدية مميزة';
+  String get homeMoodPromptGift => 'عم دوّر على هدية مميزة';
 
   @override
-  String get homeMoodPromptTravel => 'ملابس مريحة وأنيقة للسفر';
+  String get homeMoodPromptTravel => 'تياب مريحة وأنيقة للسفر';
 
   @override
-  String get homeDeckEyebrow => 'اختارتها أوهارا لكِ';
+  String get homeDeckEyebrow => 'نقّتها أوهارا إلكِ';
 
   @override
   String get homeDeckTitle => 'ذوقكِ، قطعة قطعة';
 
   @override
-  String get homeDeckHint => 'مرّري يميناً لما يعجبكِ، ويساراً للتخطي';
+  String get homeDeckHint => 'سحبي يمين للي بيعجبكِ، وشمال لتتخطّي';
 
   @override
-  String get homeDeckLike => 'أعجبني';
+  String get homeDeckLike => 'عجبني';
 
   @override
-  String get homeDeckPass => 'تخطٍّ';
+  String get homeDeckPass => 'تخطّي';
 
   @override
-  String get homeDeckOpen => 'عرض القطعة';
+  String get homeDeckOpen => 'شوفي القطعة';
 
   @override
   String homeDeckProgress(int current, int total) {
@@ -11513,18 +11516,18 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get homeDeckDoneTitle => 'أكملتِ مختارات اليوم';
+  String get homeDeckDoneTitle => 'خلّصتِ مختارات اليوم ✨';
 
   @override
   String homeDeckDoneBody(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'أعجبتكِ $count قطعة، وحفظناها في إعجاباتكِ.',
-      few: 'أعجبتكِ $count قطع، وحفظناها في إعجاباتكِ.',
-      two: 'أعجبتكِ قطعتان، وحفظناهما في إعجاباتكِ.',
-      one: 'أعجبتكِ قطعة واحدة، وحفظناها في إعجاباتكِ.',
-      zero: 'لم يعجبكِ شيء اليوم؟ ستتعلّم أوهارا من ذلك.',
+      other: 'عجبتكِ $count قطعة، وحفظناها بإعجاباتكِ.',
+      few: 'عجبوكِ $count قطع، وحفظناها بإعجاباتكِ.',
+      two: 'عجبوكِ قطعتين، وحفظناهن بإعجاباتكِ.',
+      one: 'عجبتكِ قطعة وحدة، وحفظناها بإعجاباتكِ.',
+      zero: 'ما عجبكِ شي اليوم؟ أوهارا رح تتعلّم من هالشي.',
     );
     return '$_temp0';
   }
@@ -11539,7 +11542,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeBentoEyebrow => 'عالم أوهارا';
 
   @override
-  String get homeBentoTitle => 'تجوّلي بين الأقسام';
+  String get homeBentoTitle => 'لفّي بين الأقسام';
 
   @override
   String homeBentoCount(int count) {
@@ -11548,73 +11551,72 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count قطعة',
       few: '$count قطع',
-      two: 'قطعتان',
-      one: 'قطعة واحدة',
+      two: 'قطعتين',
+      one: 'قطعة وحدة',
       zero: 'قريباً',
     );
     return '$_temp0';
   }
 
   @override
-  String get postOpenPiece => 'عرض القطعة';
+  String get postOpenPiece => 'شوفي القطعة';
 
   @override
   String paymentReferenceRejected(String reason) {
-    return 'لم يتمكّن فريق المالية من مطابقة الرقم: $reason. تأكّدي منه وأرسليه مجدداً.';
+    return 'فريق المالية ما قدر يطابق الرقم: $reason. تأكّدي منه وابعتيه من جديد.';
   }
 
   @override
-  String get financePendingTransfers => 'تحويلات بانتظار التأكيد';
+  String get financePendingTransfers => 'تحويلات ناطرة تأكيد';
 
   @override
-  String get financePendingTransfersEmpty =>
-      'لا توجد تحويلات بانتظار المطابقة.';
+  String get financePendingTransfersEmpty => 'ما في تحويلات ناطرة مطابقة.';
 
   @override
   String get financePendingTransfersError =>
-      'تعذّر تحميل التحويلات. حدّثي الصفحة للمحاولة مجدداً.';
+      'ما قدرنا نحمّل التحويلات. حدّثي الصفحة لتجرّبي مرة تانية.';
 
   @override
-  String get financeTransferConfirm => 'تأكيد الاستلام';
+  String get financeTransferConfirm => 'أكّدي الاستلام';
 
   @override
-  String get financeTransferReject => 'غير مطابق';
+  String get financeTransferReject => 'مو مطابق';
 
   @override
-  String get financeTransferConfirmTitle => 'تأكيد هذا التحويل؟';
+  String get financeTransferConfirmTitle => 'بدّك تأكّدي هالتحويل؟';
 
   @override
   String financeTransferConfirmBody(String amount, String order) {
-    return 'أنتِ تؤكّدين وصول $amount للطلب $order. سيُرسَل الطلب إلى البائعات فوراً.';
+    return 'إنتِ عم تأكّدي إنّو وصل $amount للطلب $order. الطلب رح ينبعت للبائعات فوراً.';
   }
 
   @override
   String get financeTransferConfirmed =>
-      'تم تأكيد الدفع — الطلب الآن لدى البائعات';
+      'تأكّد الدفع — الطلب هلّق عند البائعات';
 
   @override
-  String get financeTransferRejected => 'أُعيد الرقم إلى الزبونة';
+  String get financeTransferRejected => 'رجع الرقم للزبونة';
 
   @override
-  String get financeTransferRejectTitle => 'لماذا لم تتم المطابقة؟';
+  String get financeTransferRejectTitle => 'ليش ما زبطت المطابقة؟';
 
   @override
-  String get financeTransferRejectReason => 'السبب (يظهر للزبونة)';
+  String get financeTransferRejectReason => 'السبب (بيبيّن للزبونة)';
 
   @override
-  String get financeTransferNoReference => 'لم يُرسَل رقم بعد';
+  String get financeTransferNoReference => 'لسّا ما انبعت رقم';
 
   @override
   String financeTransferExpires(String date) {
-    return 'المخزون محجوز حتى $date';
+    return 'المخزون محجوز لـ $date';
   }
 
   @override
-  String get reverseSmsTitle => 'تحقّقي برسالة واحدة';
+  String get reverseSmsTitle => 'تحقّقي برسالة وحدة';
 
   @override
   String get reverseSmsExplainer =>
-      'أرسلي الرسالة التالية من هذا الرقم. لن يصلك أي رمز، فلا يمكن لأحد أن يطلب منكِ قراءته.';
+      'ابعتي الرسالة اللي تحت من هالرقم. ما رح يوصلكِ أي رمز، فما حدا بيقدر يطلب منكِ تقريه.';
 
   @override
   String reverseSmsSendTo(String number) {
@@ -11625,60 +11627,60 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reverseSmsBodyLabel => 'نص الرسالة';
 
   @override
-  String get reverseSmsOpenMessages => 'فتح تطبيق الرسائل';
+  String get reverseSmsOpenMessages => 'افتحي تطبيق الرسايل';
 
   @override
-  String get reverseSmsIveSent => 'أرسلتُ الرسالة';
+  String get reverseSmsIveSent => 'بعتت الرسالة';
 
   @override
-  String get reverseSmsWaiting => 'في انتظار رسالتك…';
+  String get reverseSmsWaiting => 'ناطرين رسالتكِ…';
 
   @override
-  String get reverseSmsCost => 'تُحتسب الرسالة بحسب تسعيرة مشغّلك العادية.';
+  String get reverseSmsCost => 'الرسالة بتنحسب حسب تسعيرة شركتكِ العادية.';
 
   @override
   String get reverseSmsNotYet =>
-      'لم تصل رسالتك بعد. انتظري لحظة ثم أعيدي المحاولة.';
+      'رسالتكِ لسّا ما وصلت. استنّي لحظة وجرّبي مرة تانية.';
 
   @override
   String get reverseSmsCouldNotOpen =>
-      'لم نتمكّن من فتح تطبيق الرسائل. أرسلي الرسالة أعلاه يدويًا.';
+      'ما قدرنا نفتح تطبيق الرسايل. ابعتي الرسالة اللي فوق بإيدكِ.';
 
   @override
-  String get authEyebrow => 'مساحة خاصة بالنساء';
+  String get authEyebrow => 'مساحة للصبايا بس';
 
   @override
   String get authOr => 'أو';
 
   @override
-  String get authTrustNote => 'رقمكِ محميّ، ولن نشاركه مع أحد.';
+  String get authTrustNote => 'رقمكِ بأمان، وما رح نشاركه مع حدا.';
 
   @override
-  String get authGuestCaption => 'تصفّحي المتاجر دون حساب';
+  String get authGuestCaption => 'اتفرّجي عالمتاجر بلا حساب';
 
   @override
-  String get authPasswordCaption => 'على جهاز استخدمتِه من قبل';
+  String get authPasswordCaption => 'على جهاز استعملتيه قبل';
 
   @override
-  String get authCodeHint => 'أدخلي الرمز المكوّن من ٦ أرقام';
+  String get authCodeHint => 'حطّي الرمز اللي من ٦ أرقام';
 
   @override
-  String get authLostSimCaption => 'استعيدي حسابكِ برقم آخر';
+  String get authLostSimCaption => 'رجّعي حسابكِ برقم تاني';
 
   @override
-  String get authSectionJoinAs => 'كيف ستنضمّين إلى أوهارا؟';
+  String get authSectionJoinAs => 'كيف حابّة تنضمّي لأوهارا؟';
 
   @override
   String get authRoleBuyerHint => 'تسوّقي وتابعي وشاركي';
 
   @override
-  String get authRoleSellerHint => 'افتحي متجركِ وابدئي البيع';
+  String get authRoleSellerHint => 'افتحي متجركِ وبلّشي بيع';
 
   @override
   String get authSectionAboutYou => 'عنكِ';
 
   @override
-  String get authSectionWhere => 'أين تقيمين؟';
+  String get authSectionWhere => 'وين ساكنة؟';
 
   @override
   String get authSectionSecurity => 'الأمان';
@@ -11687,17 +11689,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authSectionPromise => 'تعهّدكِ';
 
   @override
-  String get authBenefitCheckout => 'أتمّي طلباتكِ بسهولة وأمان';
+  String get authBenefitCheckout => 'كمّلي طلباتكِ بسهولة وأمان';
 
   @override
   String get authBenefitChat => 'راسلي البائعات مباشرة';
 
   @override
-  String get authBenefitSaved => 'احفظي كل ما تحبّينه';
+  String get authBenefitSaved => 'احفظي كل شي بتحبّيه';
 
   @override
   String get authForgotSubtitle =>
-      'أدخلي رقمكِ وسنرسل لكِ رمزًا لتعيين كلمة مرور جديدة.';
+      'حطّي رقمكِ ومنبعتلكِ رمز لتحطّي كلمة سر جديدة.';
 
   @override
   String get salonCategoryHair => 'الشعر';
@@ -11724,55 +11726,55 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonCategoryBridal => 'خدمات العرائس';
 
   @override
-  String get salonCategoryOther => 'خدمات أخرى';
+  String get salonCategoryOther => 'خدمات تانية';
 
   @override
-  String get salonStatusPending => 'قيد الانتظار';
+  String get salonStatusPending => 'ناطر';
 
   @override
   String get salonStatusConfirmed => 'مؤكّد';
 
   @override
-  String get salonStatusCompleted => 'مكتمل';
+  String get salonStatusCompleted => 'خلص';
 
   @override
   String get salonStatusCancelled => 'ملغى';
 
   @override
-  String get salonStatusNoShow => 'لم تحضري';
+  String get salonStatusNoShow => 'ما إجيتي';
 
   @override
-  String get salonStatusHintPending => 'بانتظار تأكيد الصالون';
+  String get salonStatusHintPending => 'ناطرين تأكيد الصالون';
 
   @override
   String get salonStatusHintConfirmed => 'موعدكِ محجوز';
 
   @override
-  String get salonStatusHintCompleted => 'تمّت الزيارة';
+  String get salonStatusHintCompleted => 'صارت الزيارة';
 
   @override
-  String get salonStatusHintCancelled => 'أُلغي هذا الموعد';
+  String get salonStatusHintCancelled => 'انلغى هالموعد';
 
   @override
-  String get salonStatusHintNoShow => 'سجّل الصالون عدم الحضور';
+  String get salonStatusHintNoShow => 'الصالون سجّل إنّك ما إجيتي';
 
   @override
-  String get salonLocationInSalon => 'في الصالون';
+  String get salonLocationInSalon => 'بالصالون';
 
   @override
-  String get salonLocationAtHome => 'في المنزل';
+  String get salonLocationAtHome => 'بالبيت';
 
   @override
-  String get salonLocationBoth => 'في الصالون أو المنزل';
+  String get salonLocationBoth => 'بالصالون أو بالبيت';
 
   @override
-  String get salonCancelledByCustomer => 'ألغيتِ هذا الموعد';
+  String get salonCancelledByCustomer => 'إنتِ لغيتِ هالموعد';
 
   @override
-  String get salonCancelledBySalon => 'ألغى الصالون هذا الموعد';
+  String get salonCancelledBySalon => 'الصالون لغى هالموعد';
 
   @override
-  String get salonCancelledBySystem => 'أُلغي تلقائياً لعدم تأكيده قبل موعده';
+  String get salonCancelledBySystem => 'انلغى لحالو لأنّو ما تأكّد قبل وقته';
 
   @override
   String salonDurationMinutes(int minutes) {
@@ -11783,7 +11785,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonDurationOneHour => 'ساعة';
 
   @override
-  String get salonDurationTwoHours => 'ساعتان';
+  String get salonDurationTwoHours => 'ساعتين';
 
   @override
   String salonDurationHours(int hours) {
@@ -11792,7 +11794,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salonDurationAndHalf(String hours) {
-    return '$hours ونصف';
+    return '$hours ونص';
   }
 
   @override
@@ -11867,10 +11869,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonToday => 'اليوم';
 
   @override
-  String get salonTomorrow => 'غداً';
+  String get salonTomorrow => 'بكرا';
 
   @override
-  String get salonDayAfterTomorrow => 'بعد غد';
+  String get salonDayAfterTomorrow => 'بعد بكرا';
 
   @override
   String salonInDays(int days) {
@@ -11881,7 +11883,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonEditorTitle => 'بيانات الصالون';
 
   @override
-  String get salonEditorLoadError => 'ما قدرنا نفتح بياناتك.';
+  String get salonEditorLoadError => 'ما قدرنا نفتح بياناتكِ.';
 
   @override
   String get salonEditorSectionProfile => 'التعريف';
@@ -11917,7 +11919,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonEditorLandmark => 'علامة مميزة';
 
   @override
-  String get salonEditorLandmarkHint => 'مثلاً: جانب صيدلية النور';
+  String get salonEditorLandmarkHint => 'مثلاً: جنب صيدلية النور';
 
   @override
   String get salonEditorLatitude => 'خط العرض';
@@ -11927,13 +11929,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get salonEditorCoordsHelp =>
-      'الإحداثيات اختيارية، بس بوجودها بيقدر الزبون يفتح موقعك على الخريطة مباشرة.';
+      'الإحداثيات مو ضرورية، بس إذا حطّيتيها الزبونة بتقدر تفتح موقعكِ عالخريطة دغري.';
 
   @override
   String get salonEditorSectionContact => 'التواصل';
 
   @override
-  String get salonEditorPhone => 'رقم الهاتف';
+  String get salonEditorPhone => 'رقم الموبايل';
 
   @override
   String get salonEditorWhatsapp => 'واتساب';
@@ -11985,7 +11987,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'الإلغاء قبل الموعد بأقل من هيك بينسجل كإلغاء متأخر.';
 
   @override
-  String get salonEditorSectionHome => 'الخدمة المنزلية';
+  String get salonEditorSectionHome => 'الخدمة بالبيت';
 
   @override
   String get salonEditorHomeVisits => 'بتطلعي لبيت الزبونة';
@@ -12003,13 +12005,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonEditorSavePublish => 'احفظي وانشري';
 
   @override
-  String get salonEditorHide => 'أخفي من الدليل';
+  String get salonEditorHide => 'خبّيه من الدليل';
 
   @override
   String get salonFieldRequired => 'لازم تعبّي هالحقل';
 
   @override
-  String get salonInvalidNumber => 'رقم غير صحيح';
+  String get salonInvalidNumber => 'الرقم مو صحيح';
 
   @override
   String get salonEditorSaved => 'انحفظت البيانات';
@@ -12039,13 +12041,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonBookingNumber => 'رقم الحجز';
 
   @override
-  String get salonCustomer => 'العميلة';
+  String get salonCustomer => 'الزبونة';
 
   @override
   String get salonHomeService => 'خدمة منزلية';
 
   @override
-  String get salonCustomerNote => 'ملاحظة العميلة';
+  String get salonCustomerNote => 'ملاحظة الزبونة';
 
   @override
   String get salonSalonNote => 'ملاحظة الصالون';
@@ -12057,22 +12059,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonPage => 'صفحة الصالون';
 
   @override
-  String get salonMessageCustomer => 'راسلي العميلة';
+  String get salonMessageCustomer => 'راسلي الزبونة';
 
   @override
   String get salonConfirmBooking => 'أكّدي الحجز';
 
   @override
-  String get salonAppointmentConfirmed => 'تم تأكيد الموعد';
+  String get salonAppointmentConfirmed => 'تأكّد الموعد';
 
   @override
-  String get salonVisitRecorded => 'تم تسجيل الزيارة';
+  String get salonVisitRecorded => 'انسجّلت الزيارة';
 
   @override
-  String get salonMarkNoShow => 'لم تحضر';
+  String get salonMarkNoShow => 'ما إجت';
 
   @override
-  String get salonRecorded => 'تم التسجيل';
+  String get salonRecorded => 'انسجّل';
 
   @override
   String get salonCancelAppointmentAction => 'ألغي الموعد';
@@ -12084,90 +12086,90 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonCancelAppointmentTitle => 'إلغاء الموعد';
 
   @override
-  String get salonCancelConfirm => 'متأكدة إنك بدك تلغي هالموعد؟';
+  String get salonCancelConfirm => 'متأكدة إنّك بدّك تلغي هالموعد؟';
 
   @override
-  String get salonAppointmentCancelled => 'تم إلغاء الموعد';
+  String get salonAppointmentCancelled => 'انلغى الموعد';
 
   @override
-  String get salonThanksForReview => 'شكراً لتقييمك';
+  String get salonThanksForReview => 'تسلمي على تقييمكِ 💕';
 
   @override
   String get salonActionFailed => 'ما قدرنا نكمّل. جرّبي مرة تانية.';
 
   @override
-  String get salonHowWasVisit => 'كيف كانت زيارتك؟';
+  String get salonHowWasVisit => 'كيف كانت زيارتكِ؟';
 
   @override
-  String get salonLater => 'لاحقاً';
+  String get salonLater => 'بعدين';
 
   @override
-  String get salonSend => 'أرسلي';
+  String get salonSend => 'ابعتي';
 
   @override
   String get salonMyBookings => 'حجوزاتي';
 
   @override
-  String get salonUpcoming => 'القادمة';
+  String get salonUpcoming => 'الجاية';
 
   @override
-  String get salonPast => 'السابقة';
+  String get salonPast => 'اللي مضت';
 
   @override
-  String get salonBookingsLoadError => 'ما قدرنا نجيب حجوزاتك.';
+  String get salonBookingsLoadError => 'ما قدرنا نجيب حجوزاتكِ.';
 
   @override
-  String get salonNoAppointmentsYou => 'ما عندك مواعيد';
+  String get salonNoAppointmentsYou => 'ما عندكِ مواعيد';
 
   @override
-  String get salonNoPastAppointments => 'ما في مواعيد سابقة';
+  String get salonNoPastAppointments => 'ما في مواعيد قديمة';
 
   @override
-  String get salonFindAndBook => 'دوّري على صالون واحجزي موعدك بضغطة.';
+  String get salonFindAndBook => 'دوّري على صالون واحجزي موعدكِ بكبسة.';
 
   @override
-  String get salonPastHere => 'هون بتلاقي المواعيد يلي خلصت.';
+  String get salonPastHere => 'هون بتلاقي المواعيد اللي خلصت.';
 
   @override
-  String get salonBrowseSalons => 'تصفّحي الصالونات';
+  String get salonBrowseSalons => 'اتفرّجي عالصالونات';
 
   @override
-  String get salonBookYourAppointment => 'احجزي موعدك';
+  String get salonBookYourAppointment => 'احجزي موعدكِ';
 
   @override
   String get salonCalendarLoadError => 'ما قدرنا نفتح التقويم.';
 
   @override
-  String get salonServiceUnavailable => 'ما عادت هالخدمة متاحة';
+  String get salonServiceUnavailable => 'هالخدمة ما عادت متاحة';
 
   @override
-  String get salonPickAnotherService => 'اختاري خدمة تانية من صفحة الصالون.';
+  String get salonPickAnotherService => 'نقّي خدمة تانية من صفحة الصالون.';
 
   @override
-  String get salonSignInToBook => 'سجّلي الدخول لتحجزي';
+  String get salonSignInToBook => 'سجّلي دخولكِ لتحجزي';
 
   @override
   String get salonSignInToBookBody =>
-      'الحجز بيحتاج حساب لنقدر نأكّدلك الموعد ونذكّرك فيه.';
+      'الحجز محتاج حساب لنقدر نأكّدلك الموعد ونذكّرك فيه.';
 
   @override
-  String get salonPickAddress => 'اختاري العنوان يلي بدك الخدمة فيه.';
+  String get salonPickAddress => 'نقّي العنوان اللي بدّك الخدمة فيه.';
 
   @override
   String get salonBookingFailed =>
       'ما قدرنا نثبّت الموعد. يمكن حدا حجزه قبل شوي — جرّبي وقت تاني.';
 
   @override
-  String get salonPickDay => 'اختاري اليوم';
+  String get salonPickDay => 'نقّي اليوم';
 
   @override
   String get salonDaysLoadError => 'ما قدرنا نجيب الأيام المتاحة.';
 
   @override
-  String get salonPickTime => 'اختاري الساعة';
+  String get salonPickTime => 'نقّي الساعة';
 
   @override
-  String get salonNoteForSalon => 'ملاحظة للصالون (اختياري)';
+  String get salonNoteForSalon => 'ملاحظة للصالون (إذا حابّة)';
 
   @override
   String get salonNoteForSalonHint =>
@@ -12178,7 +12180,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'ما في أوقات فاضية بهالأسبوع. جرّبي تراسلي الصالون.';
 
   @override
-  String get salonClosed => 'مغلق';
+  String get salonClosed => 'مسكّر';
 
   @override
   String get salonSlotsLoadError => 'ما قدرنا نجيب الأوقات.';
@@ -12187,41 +12189,42 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonNoSlotsDay => 'ما في أوقات فاضية بهاليوم.';
 
   @override
-  String get salonWantHomeService => 'بدي الخدمة عالبيت';
+  String get salonWantHomeService => 'بدّي الخدمة عالبيت';
 
   @override
-  String get salonAddAddress => 'أضيفي عنواناً';
+  String get salonAddAddress => 'ضيفي عنوان';
 
   @override
-  String get salonPickATime => 'اختاري وقتاً';
+  String get salonPickATime => 'نقّي وقت';
 
   @override
   String get salonWorkingHours => 'أوقات الدوام';
 
   @override
-  String get salonHoursLoadError => 'ما قدرنا نفتح دوامك.';
+  String get salonHoursLoadError => 'ما قدرنا نفتح دوامكِ.';
 
   @override
-  String get salonNoSalonYet => 'ما في صالون بعد';
+  String get salonNoSalonYet => 'ما في صالون لسّا';
 
   @override
-  String get salonOpenFirstHours => 'افتحي صالونك أول شي، بعدين حدّدي دوامك.';
+  String get salonOpenFirstHours =>
+      'افتحي صالونكِ أول شي، وبعدين حدّدي دوامكِ.';
 
   @override
   String get salonSaveHours => 'احفظي الدوام';
 
   @override
-  String get salonClosedDays => 'أيام الإغلاق';
+  String get salonClosedDays => 'أيام التسكير';
 
   @override
   String get salonClosedDaysHelp =>
-      'أعياد أو إجازات — بينسكّر الحجز بهالتواريخ بغضّ النظر عن الدوام.';
+      'أعياد أو إجازات — الحجز بيتسكّر بهالتواريخ مهما كان الدوام.';
 
   @override
-  String get salonNoClosedDays => 'ما في أيام إغلاق.';
+  String get salonNoClosedDays => 'ما في أيام تسكير.';
 
   @override
-  String get salonAddClosedDay => 'أضيفي يوم إغلاق';
+  String get salonAddClosedDay => 'ضيفي يوم تسكير';
 
   @override
   String get salonHoursSaved => 'انحفظ الدوام';
@@ -12230,13 +12233,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonHoursSaveFailed => 'ما قدرنا نحفظ الدوام.';
 
   @override
-  String get salonClosedDayAdded => 'انضاف يوم الإغلاق';
+  String get salonClosedDayAdded => 'انضاف يوم التسكير';
 
   @override
   String get salonClosedDayAddFailed => 'ما قدرنا نضيف اليوم.';
 
   @override
-  String get salonClosedDayRemoved => 'انشال يوم الإغلاق';
+  String get salonClosedDayRemoved => 'انشال يوم التسكير';
 
   @override
   String get salonClosedDayRemoveFailed => 'ما قدرنا نشيل اليوم.';
@@ -12251,10 +12254,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonFrom => 'من';
 
   @override
-  String get salonTo => 'إلى';
+  String get salonTo => 'لـ';
 
   @override
-  String get salonAddBreak => 'أضيفي استراحة';
+  String get salonAddBreak => 'ضيفي استراحة';
 
   @override
   String get salonBreakFrom => 'استراحة من';
@@ -12269,26 +12272,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonAppointments => 'المواعيد';
 
   @override
-  String get salonAwaitingConfirmation => 'بانتظار التأكيد';
+  String get salonAwaitingConfirmation => 'ناطرة تأكيد';
 
   @override
-  String get salonQueueOpenError => 'ما قدرنا نفتح مواعيدك.';
+  String get salonQueueOpenError => 'ما قدرنا نفتح مواعيدكِ.';
 
   @override
   String get salonOpenFirstBookings =>
-      'افتحي صالونك أول شي، وبتبلّش تجيك الحجوزات.';
+      'افتحي صالونكِ أول شي، وبتبلّش توصلكِ الحجوزات.';
 
   @override
   String get salonQueueLoadError => 'ما قدرنا نجيب المواعيد.';
 
   @override
-  String get salonNothingPending => 'ما في شي بانتظارك';
+  String get salonNothingPending => 'ما في شي ناطركِ';
 
   @override
-  String get salonNoUpcoming => 'ما في مواعيد قادمة';
+  String get salonNoUpcoming => 'ما في مواعيد جاية';
 
   @override
-  String get salonAllConfirmed => 'كل الحجوزات مأكّدة.';
+  String get salonAllConfirmed => 'كل الحجوزات متأكّدة.';
 
   @override
   String get salonFirstBookingHere => 'أول ما تحجز زبونة بتشوفيها هون.';
@@ -12300,7 +12303,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonNotFound => 'ما لقينا هالصالون';
 
   @override
-  String get salonNotFoundBody => 'يمكن يكون أُغلق أو ما عاد متاح.';
+  String get salonNotFoundBody => 'يمكن تسكّر أو ما عاد متاح.';
 
   @override
   String get salonServices => 'الخدمات';
@@ -12312,29 +12315,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonMessageToAsk => 'راسليه لتعرفي شو بيقدّم.';
 
   @override
-  String get salonOpeningHours => 'أوقات العمل';
+  String get salonOpeningHours => 'أوقات الشغل';
 
   @override
   String get salonReviews => 'التقييمات';
 
   @override
   String get salonNoReviews =>
-      'لسّا ما في تقييمات. كوني أول وحدة تجرّبي وتقيّمي.';
+      'لسّا ما في تقييمات. خليكِ أول وحدة بتجرّب وبتقيّم.';
 
   @override
   String get salonCall => 'اتصلي';
 
   @override
-  String get salonShare => 'مشاركة';
+  String get salonShare => 'شاركي';
 
   @override
   String get salonOpenMap => 'افتحي على الخريطة';
 
   @override
-  String get salonNoHoursYet => 'ما حدّد الصالون أوقات عمله بعد.';
+  String get salonNoHoursYet => 'الصالون لسّا ما حدّد أوقات شغله.';
 
   @override
-  String get salonCustomerFallback => 'عميلة';
+  String get salonCustomerFallback => 'زبونة';
 
   @override
   String get salonVerifiedVisit => 'زيارة مؤكّدة';
@@ -12346,11 +12349,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonServicesAndPrices => 'الخدمات والأسعار';
 
   @override
-  String get salonServicesLoadError => 'ما قدرنا نفتح خدماتك.';
+  String get salonServicesLoadError => 'ما قدرنا نفتح خدماتكِ.';
 
   @override
   String get salonOpenFirstServices =>
-      'افتحي صالونك أول شي، بعدين ضيفي خدماتك.';
+      'افتحي صالونكِ أول شي، وبعدين ضيفي خدماتكِ.';
 
   @override
   String get salonNoServices => 'ما في خدمات';
@@ -12360,7 +12363,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'ضيفي أول خدمة بسعرها ومدّتها، وبيصير الحجز شغّال.';
 
   @override
-  String get salonAddService => 'أضيفي خدمة';
+  String get salonAddService => 'ضيفي خدمة';
 
   @override
   String get salonServiceSaved => 'انحفظت الخدمة';
@@ -12378,7 +12381,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonServiceToggleFailed => 'ما قدرنا نغيّر حالة الخدمة.';
 
   @override
-  String get salonPausedBadge => 'موقوفة';
+  String get salonPausedBadge => 'موقّفة';
 
   @override
   String get salonPackage => 'باقة';
@@ -12393,7 +12396,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonNewService => 'خدمة جديدة';
 
   @override
-  String get salonEditService => 'تعديل الخدمة';
+  String get salonEditService => 'عدّلي الخدمة';
 
   @override
   String get salonServiceName => 'اسم الخدمة';
@@ -12405,7 +12408,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonType => 'النوع';
 
   @override
-  String get salonInvalidPrice => 'سعر غير صحيح';
+  String get salonInvalidPrice => 'السعر مو صحيح';
 
   @override
   String get salonBeforeDiscount => 'قبل الخصم';
@@ -12420,23 +12423,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonIsPackage => 'هاي باقة (كذا خدمة سوا)';
 
   @override
-  String get salonNone => 'بدون';
+  String get salonNone => 'بلا';
 
   @override
   String get salonMySalon => 'صالوني';
 
   @override
-  String get salonWorkspaceLoadError => 'ما قدرنا نفتح صالونك.';
+  String get salonWorkspaceLoadError => 'ما قدرنا نفتح صالونكِ.';
 
   @override
-  String get salonOpenOnOhara => 'افتحي صالونك على أوهارا';
+  String get salonOpenOnOhara => 'افتحي صالونكِ على أوهارا';
 
   @override
   String get salonOpenOnOharaBody =>
-      'عرّفي عن صالونك وخدماتك وأوقات عملك، وخلّي الزبونات يحجزن مواعيدهن مباشرة من التطبيق.';
+      'عرّفي عن صالونكِ وخدماتكِ وأوقات شغلكِ، وخلّي الزبونات يحجزوا مواعيدهن دغري من التطبيق.';
 
   @override
-  String get salonStart => 'ابدئي';
+  String get salonStart => 'يلّا نبلّش';
 
   @override
   String get salonPublished => 'منشور';
@@ -12445,7 +12448,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonDraft => 'مسودة';
 
   @override
-  String get salonSuspended => 'موقوف';
+  String get salonSuspended => 'موقّف';
 
   @override
   String get salonRating => 'التقييم';
@@ -12469,27 +12472,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonDetailsSubtitle => 'الاسم والعنوان والتواصل وإعدادات الحجز';
 
   @override
-  String get salonPreviewAsCustomer => 'شوفي صفحتك كما تراها الزبونة';
+  String get salonPreviewAsCustomer => 'شوفي صفحتكِ متل ما بتشوفها الزبونة';
 
   @override
   String get salonNoActiveServices =>
       'ما في خدمات فعّالة — ما حدا فيه يحجز لَحتى تضيفي وحدة.';
 
   @override
-  String get salonNoHoursSet => 'ما حدّدتي أوقات دوام — الأيام كلها مسكّرة.';
+  String get salonNoHoursSet => 'ما حدّدتِ أوقات دوام — كل الأيام مسكّرة.';
 
   @override
   String get salonSetHours => 'حدّدي الدوام';
 
   @override
   String get salonNotPublished =>
-      'صالونك لسا مو منشور — انشريه لَيظهر بالدليل.';
+      'صالونكِ لسّا مو منشور — انشريه ليطلع بالدليل.';
 
   @override
   String get salonPublish => 'انشري الصالون';
 
   @override
-  String get salonPublishedDone => 'صار صالونك منشور';
+  String get salonPublishedDone => 'صار صالونكِ منشور 🎉';
 
   @override
   String get salonPublishFailed => 'ما قدرنا ننشر الصالون.';
@@ -12498,7 +12501,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonsTitle => 'الصالونات والجمال';
 
   @override
-  String get salonFilter => 'تصفية';
+  String get salonFilter => 'فلترة';
 
   @override
   String get salonsLoadError => 'ما قدرنا نجيب الصالونات.';
@@ -12511,13 +12514,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get salonsComingSoon =>
-      'قريباً بتلاقي هون صالونات ومزيّنات تقدري تحجزي عندهن مباشرة.';
+      'قريباً بتلاقي هون صالونات ومزيّنات فيكِ تحجزي عندهن دغري.';
 
   @override
-  String get salonsWidenFilters => 'جرّبي توسّعي التصفية أو تغيّري المنطقة.';
+  String get salonsWidenFilters => 'جرّبي وسّعي الفلترة أو غيّري المنطقة.';
 
   @override
-  String get salonsSearchHint => 'ابحثي عن صالون أو خدمة';
+  String get salonsSearchHint => 'دوّري على صالون أو خدمة';
 
   @override
   String get salonAll => 'الكل';
@@ -12527,16 +12530,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get salonsRailSubtitle =>
-      'قصّ وصبغة وعناية — احجزي من التطبيق واختاري ساعتك.';
+      'قص وصبغة وعناية — احجزي من التطبيق ونقّي ساعتكِ.';
 
   @override
   String get salonNew => 'جديد';
 
   @override
-  String get salonFeatured => 'مختار';
+  String get salonFeatured => 'منقّى';
 
   @override
-  String get salonsFilterTitle => 'تصفية الصالونات';
+  String get salonsFilterTitle => 'فلترة الصالونات';
 
   @override
   String get salonAllAreas => 'كل المناطق';
@@ -12545,13 +12548,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salonAnyRating => 'أي تقييم';
 
   @override
-  String get salonClearAll => 'مسح الكل';
+  String get salonClearAll => 'امسحي الكل';
 
   @override
-  String get salonShowResults => 'اعرضي النتائج';
+  String get salonShowResults => 'ورجيني النتايج';
 
   @override
-  String get salonHomeOnly => 'الخدمات المنزلية فقط';
+  String get salonHomeOnly => 'الخدمات بالبيت بس';
 
   @override
   String get salonHomeOnlyHint => 'صالونات بتجي لعندكِ عالبيت';
@@ -12561,12 +12564,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salonPricePaidAtSalon(String price) {
-    return '$price — تُدفع بالصالون';
+    return '$price — بتندفع بالصالون';
   }
 
   @override
   String salonYourRating(String rating) {
-    return 'تقييمك: $rating ★';
+    return 'تقييمكِ: $rating ★';
   }
 
   @override
@@ -12581,7 +12584,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salonTravelFeeValue(String fee) {
-    return 'أجرة التنقّل $fee';
+    return 'أجرة المشوار $fee';
   }
 
   @override
@@ -12591,7 +12594,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salonHoursCloseAfterOpen(String day) {
-    return 'دوام $day: وقت الإغلاق لازم يكون بعد الافتتاح.';
+    return 'دوام $day: وقت التسكير لازم يكون بعد الفتح.';
   }
 
   @override
@@ -12616,7 +12619,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salonRatingAtLeast(String rating) {
-    return '$rating ★ فأعلى';
+    return '$rating ★ وطالع';
   }
 
   @override
@@ -12629,70 +12632,70 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salonPriceUpTo(String amount) {
-    return 'حتى $amount';
+    return 'لحد $amount';
   }
 
   @override
   String salonPriceOver(String amount) {
-    return 'أكثر من $amount';
+    return 'أكتر من $amount';
   }
 
   @override
   String salonPriceRange(String min, String max) {
-    return 'من $min إلى $max';
+    return 'من $min لـ $max';
   }
 
   @override
-  String get deleteAccount => 'حذف الحساب';
+  String get deleteAccount => 'احذفي الحساب';
 
   @override
-  String get deleteAccountSubtitle => 'إزالة حسابكِ وبياناتكِ الشخصية نهائياً';
+  String get deleteAccountSubtitle => 'شيلي حسابكِ وبياناتكِ الشخصية للأبد';
 
   @override
-  String get deleteAccountConfirmTitle => 'حذف حسابكِ نهائياً؟';
+  String get deleteAccountConfirmTitle => 'بدّك تحذفي حسابكِ للأبد؟';
 
   @override
   String get deleteAccountConfirmBody =>
-      'سيُمحى اسمكِ ورقمكِ وصورتكِ وعناوينكِ وبطاقاتكِ المحفوظة وسلّتكِ وقوائم أمنياتكِ ومتابعاتكِ وإشعاراتكِ، وتُزال منشوراتكِ وتعليقاتكِ. تبقى الطلبات والفواتير وسجلات الدفع دون اسمكِ لأن القانون يُلزمنا بها، وتبقى التقييمات التي كتبتِها باسم «حساب محذوف». لا يمكن التراجع عن ذلك.';
+      'رح ينمسح اسمكِ ورقمكِ وصورتكِ وعناوينكِ وبطاقاتكِ المحفوظة وسلّتكِ وقوايم أمنياتكِ ومتابعاتكِ وإشعاراتكِ، ورح تنشال منشوراتكِ وتعليقاتكِ. الطلبات والفواتير وسجلات الدفع بتضلّ بلا اسمكِ لأنّو القانون بيلزمنا فيها، والتقييمات اللي كتبتيها بتضلّ باسم «حساب محذوف». وما في رجعة بعدها.';
 
   @override
-  String get deleteAccountConfirmButton => 'احذفي الحساب نهائياً';
+  String get deleteAccountConfirmButton => 'احذفي الحساب للأبد';
 
   @override
-  String get deleteAccountBlockedTitle => 'لا يمكن حذف حسابكِ الآن';
+  String get deleteAccountBlockedTitle => 'ما فيكِ تحذفي حسابكِ هلّق';
 
   @override
   String get deleteAccountBlockedHint =>
-      'أنهي هذه الأمور أولاً ثم حاولي مجدداً.';
+      'خلّصي هالشغلات بالأول وبعدين جرّبي مرة تانية.';
 
   @override
-  String get deletionBlockerStaff => 'حسابات فريق العمل يغلقها المسؤول.';
+  String get deletionBlockerStaff => 'حسابات فريق العمل بيسكّرها المسؤول.';
 
   @override
   String deletionBlockerOpenOrders(int count) {
-    return 'لديكِ $count من الطلبات ما زالت قيد التنفيذ.';
+    return 'عندكِ $count من الطلبات لسّا عم تتنفّذ.';
   }
 
   @override
   String deletionBlockerOpenSales(int count) {
-    return 'لدى متجركِ $count من الطلبات ما زالت قيد التنفيذ.';
+    return 'متجركِ عنده $count من الطلبات لسّا عم تتنفّذ.';
   }
 
   @override
-  String get deletionBlockerWallet => 'ما زال في محفظتكِ رصيد.';
+  String get deletionBlockerWallet => 'لسّا في رصيد بمحفظتكِ.';
 
   @override
   String deletionBlockerPayouts(int count) {
-    return 'لديكِ $count من الدفعات المستحقة لم تُصرف بعد.';
+    return 'عندكِ $count من الدفعات المستحقة لسّا ما انصرفت.';
   }
 
   @override
   String deletionBlockerAppointments(int count) {
-    return 'لديكِ $count من المواعيد القادمة.';
+    return 'عندكِ $count من المواعيد الجاية.';
   }
 
   @override
-  String get accountDeleted => 'حُذف حسابكِ.';
+  String get accountDeleted => 'انحذف حسابكِ.';
 
   @override
   String cartBoutiquesCount(int count) {
@@ -12700,9 +12703,9 @@ class AppLocalizationsAr extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count بوتيك',
-      many: '$count بوتيكاً',
+      many: '$count بوتيك',
       few: '$count بوتيكات',
-      two: 'بوتيكان',
+      two: 'بوتيكين',
       one: 'بوتيك واحد',
     );
     return '$_temp0';
@@ -12712,31 +12715,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkoutStepPrivacy => 'خصوصيتكِ';
 
   @override
-  String get composerAudiencePublicHint => 'يراه الجميع';
+  String get composerAudiencePublicHint => 'الكل بيشوفه';
 
   @override
-  String get composerAudienceFollowersHint => 'متابِعاتكِ فقط';
+  String get composerAudienceFollowersHint => 'متابِعاتكِ بس';
 
   @override
-  String get chatsOnlineRail => 'متّصلات الآن';
+  String get chatsOnlineRail => 'متّصلات هلّق';
 
   @override
   String get chatsSectionNew => 'جديدة';
 
   @override
-  String get chatsSectionEarlier => 'سابقة';
+  String get chatsSectionEarlier => 'قبل';
 
   @override
-  String get chatSuggestTitle => 'اسألي بلمسة';
+  String get chatSuggestTitle => 'اسألي بكبسة';
 
   @override
-  String get chatSuggestAvailable => 'هل القطعة متوفرة؟';
+  String get chatSuggestAvailable => 'القطعة متوفرة؟';
 
   @override
-  String get chatSuggestSizes => 'ما المقاسات المتاحة؟';
+  String get chatSuggestSizes => 'شو المقاسات المتاحة؟';
 
   @override
-  String get chatSuggestDelivery => 'كم يستغرق التوصيل؟';
+  String get chatSuggestDelivery => 'قدّيش بياخد التوصيل؟';
 
   @override
   String get actionOccasions => 'مناسباتي';
@@ -12745,7 +12748,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionsTitle => 'مناسباتي';
 
   @override
-  String get occasionsUpcoming => 'القادمة';
+  String get occasionsUpcoming => 'الجاية';
 
   @override
   String get occasionsPast => 'اللي مضت';
@@ -12754,7 +12757,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionsLoadError => 'ما قدرنا نحمّل مناسباتكِ';
 
   @override
-  String get occasionsEmptyTitle => 'ما في مناسبات بعد';
+  String get occasionsEmptyTitle => 'ما في مناسبات لسّا';
 
   @override
   String get occasionsEmptyBody =>
@@ -12768,13 +12771,13 @@ class AppLocalizationsAr extends AppLocalizations {
       'سجّلي شو لبستِ بالمناسبات اللي مضت، ومنقلّكِ قبل ما يشوفوه نفس الناس مرتين.';
 
   @override
-  String get occasionAdd => 'أضيفي مناسبة';
+  String get occasionAdd => 'ضيفي مناسبة';
 
   @override
   String get occasionNew => 'مناسبة جديدة';
 
   @override
-  String get occasionEdit => 'تعديل المناسبة';
+  String get occasionEdit => 'عدّلي المناسبة';
 
   @override
   String get occasionLoadError => 'ما قدرنا نحمّل المناسبة';
@@ -12807,13 +12810,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionKindFamilyVisit => 'زيارة عائلية';
 
   @override
-  String get occasionKindWork => 'مناسبة عمل';
+  String get occasionKindWork => 'مناسبة شغل';
 
   @override
   String get occasionKindTravel => 'سفر';
 
   @override
-  String get occasionKindOther => 'غير ذلك';
+  String get occasionKindOther => 'شي تاني';
 
   @override
   String get occasionTitleLabel => 'اسم المناسبة';
@@ -12825,16 +12828,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionDateLabel => 'التاريخ';
 
   @override
-  String get occasionDatePick => 'اختاري اليوم';
+  String get occasionDatePick => 'نقّي اليوم';
 
   @override
   String get occasionTimeLabel => 'الوقت';
 
   @override
-  String get occasionOptional => 'اختياري';
+  String get occasionOptional => 'إذا حابّة';
 
   @override
-  String get occasionClear => 'مسح';
+  String get occasionClear => 'امسحي';
 
   @override
   String get occasionCircleLabel => 'مين رح يكون موجود؟';
@@ -12846,7 +12849,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionCircleHelper => 'حتى نقلّكِ إذا شافوا إطلالتكِ من قبل';
 
   @override
-  String get occasionLocationLabel => 'المكان (اختياري)';
+  String get occasionLocationLabel => 'المكان (إذا حابّة)';
 
   @override
   String get occasionNoteLabel => 'ملاحظات';
@@ -12859,10 +12862,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'قبل أسبوع، وقبل ٣ أيام، وقبل يوم — بالنهار بس';
 
   @override
-  String get occasionCreate => 'أضيفي المناسبة';
+  String get occasionCreate => 'ضيفي المناسبة';
 
   @override
-  String get occasionSave => 'حفظ';
+  String get occasionSave => 'احفظي';
 
   @override
   String get occasionSaved => 'انحفظت';
@@ -12872,10 +12875,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'ما انحفظت — تأكّدي من الاتصال وجرّبي مرة تانية';
 
   @override
-  String get occasionDelete => 'حذف';
+  String get occasionDelete => 'احذفي';
 
   @override
-  String get occasionDeleteTitle => 'حذف المناسبة؟';
+  String get occasionDeleteTitle => 'بدّك تحذفي المناسبة؟';
 
   @override
   String get occasionDeleteBody => 'إطلالتكِ وحجز الصالون بيضلّوا متل ما هنّي.';
@@ -12895,7 +12898,7 @@ class AppLocalizationsAr extends AppLocalizations {
       days,
       locale: localeName,
       other: 'بعد $days يوم',
-      many: 'بعد $days يوماً',
+      many: 'بعد $days يوم',
       few: 'بعد $days أيام',
       two: 'بعد يومين',
       one: 'بعد يوم',
@@ -12912,7 +12915,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionAllReady => 'كل شي جاهز ✨';
 
   @override
-  String get occasionNextLook => 'الخطوة الجاية: اختاري إطلالتكِ';
+  String get occasionNextLook => 'الخطوة الجاية: نقّي إطلالتكِ';
 
   @override
   String get occasionNextPieces => 'الخطوة الجاية: اطلبي القطع الناقصة';
@@ -12924,7 +12927,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionNextGift => 'الخطوة الجاية: الهدية';
 
   @override
-  String get occasionNextWaiting => 'بانتظار تأكيد الصالون';
+  String get occasionNextWaiting => 'ناطرين تأكيد الصالون';
 
   @override
   String occasionWore(String look) {
@@ -12935,7 +12938,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionPlanTitle => 'التحضيرات';
 
   @override
-  String get occasionStepLook => 'اختاري إطلالتكِ';
+  String get occasionStepLook => 'نقّي إطلالتكِ';
 
   @override
   String get occasionStepLookDone => 'إطلالتكِ';
@@ -12979,7 +12982,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionStepSalonUrgent => 'باقي كم يوم بس — احجزي هلّق';
 
   @override
-  String get occasionStepSalonWaitingHint => 'بانتظار تأكيد الصالون';
+  String get occasionStepSalonWaitingHint => 'ناطرين تأكيد الصالون';
 
   @override
   String get occasionStepGift => 'الهدية';
@@ -12988,19 +12991,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionStepGiftDone => 'الهدية جاهزة';
 
   @override
-  String get occasionChooseLook => 'اختاري إطلالة';
+  String get occasionChooseLook => 'نقّي إطلالة';
 
   @override
-  String get occasionChangeLook => 'تغيير';
+  String get occasionChangeLook => 'غيّري';
 
   @override
-  String get occasionRemoveLook => 'إزالة';
+  String get occasionRemoveLook => 'شيليها';
 
   @override
   String get occasionCompleteLook => 'كمّلي الإطلالة';
 
   @override
-  String get occasionNoLooksBody => 'ركّبي إطلالة بخزانتكِ، وارجعي اختاريها.';
+  String get occasionNoLooksBody => 'ركّبي إطلالة بخزانتكِ، وارجعي نقّيها.';
 
   @override
   String get occasionFindSalon => 'دوّري على صالون';
@@ -13009,7 +13012,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get occasionLinkBooking => 'اربطي حجز';
 
   @override
-  String get occasionUnlinkBooking => 'فكّ ربط الحجز';
+  String get occasionUnlinkBooking => 'فكّي ربط الحجز';
 
   @override
   String occasionSalonCancelled(String salon) {
@@ -13040,7 +13043,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get occasionRepeatHint => 'بدّكِ تغيّري قطعة، ولا ما في مشكلة؟';
+  String get occasionRepeatHint => 'بدّك تغيّري قطعة، ولا ما في مشكلة؟';
 
   @override
   String get occasionListSeparator => '، ';
@@ -13053,13 +13056,13 @@ class AppLocalizationsAr extends AppLocalizations {
       'ما سجّلتِ إطلالة لهاليوم. ضيفيها حتى ننبّهكِ قبل ما تتكرّر.';
 
   @override
-  String get postMenuEdit => 'تعديل';
+  String get postMenuEdit => 'عدّلي';
 
   @override
-  String get contentEditTitle => 'تعديل';
+  String get contentEditTitle => 'عدّلي';
 
   @override
-  String get contentEditSave => 'حفظ التعديلات';
+  String get contentEditSave => 'احفظي التعديلات';
 
   @override
   String get contentEdited => 'انحفظت التعديلات';
@@ -13093,19 +13096,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportDetailLabel => 'شو المشكلة فيه؟';
 
   @override
-  String get reportDetailHint => 'اختياري — كلمتين بيساعدوا فريقنا يتصرّف أسرع';
+  String get reportDetailHint =>
+      'إذا حابّة — كلمتين بيساعدوا فريقنا يتصرّف أسرع';
 
   @override
-  String get reportSend => 'إرسال البلاغ';
+  String get reportSend => 'ابعتي البلاغ';
 
   @override
-  String get storyMenuDelete => 'حذف الستوري';
+  String get storyMenuDelete => 'احذفي الستوري';
 
   @override
-  String get storyMenuReport => 'الإبلاغ عن الستوري';
+  String get storyMenuReport => 'بلّغي عن الستوري';
 
   @override
-  String get storyDeleteTitle => 'بدك تحذفي هالستوري؟';
+  String get storyDeleteTitle => 'بدّك تحذفي هالستوري؟';
 
   @override
   String get storyDeleteBody =>
@@ -13176,7 +13180,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get fitLikeYouNone => 'لسا ما في بنات بمقاسكِ قالوا رأيهن';
+  String get fitLikeYouNone => 'لسّا ما في بنات بمقاسكِ قالوا رأيهن';
 
   @override
   String fitSuggestedSize(String size) {
@@ -13200,11 +13204,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fitQuestion => 'كيف كان المقاس؟';
 
   @override
-  String get fitPhotosLabel => 'صور للقطعة (اختياري)';
+  String get fitPhotosLabel => 'صور للقطعة (إذا حابّة)';
 
   @override
   String get fitPhotosHelper =>
-      'صوّري القطعة نفسها، ما في داعي تظهري فيها. الصور بتظهر للجميع بعد الموافقة على تقييمكِ.';
+      'صوّري القطعة نفسها، ما في داعي تبيّني فيها. الصور بتبيّن للكل بعد ما ينقبل تقييمكِ.';
 
   @override
   String get fitShareOnReview => 'استعملي طولي ومقاسي لمطابقة هالتقييم';
@@ -13255,13 +13259,13 @@ class AppLocalizationsAr extends AppLocalizations {
       'حتى البنات اللي بمقاسكِ يلاقوا تقييماتكِ. ما بيظهر شي، وفيكِ تطفيها لأي تقييم لحاله.';
 
   @override
-  String get fitProfileSave => 'حفظ';
+  String get fitProfileSave => 'احفظي';
 
   @override
   String get fitProfileSaved => 'انحفظت';
 
   @override
-  String get reviewsFilterNearMe => 'من بمقاسي';
+  String get reviewsFilterNearMe => 'اللي بمقاسي';
 
   @override
   String get reviewsFilterPhotos => 'مع صور';
@@ -13274,34 +13278,34 @@ class AppLocalizationsAr extends AppLocalizations {
       'ضيفي طولكِ ومقاسكِ ومنوريكِ تقييمات البنات اللي متلكِ.';
 
   @override
-  String get reviewsNearMeNoneTitle => 'لسا ما في تقييمات من بنات بمقاسكِ';
+  String get reviewsNearMeNoneTitle => 'لسّا ما في تقييمات من بنات بمقاسكِ';
 
   @override
   String get reviewsNearMeNoneBody =>
-      'كوني الأولى: تقييمكِ رح يفيد البنت الجاية اللي بمقاسكِ.';
+      'خليكِ الأولى: تقييمكِ رح يفيد البنت الجاية اللي بمقاسكِ.';
 
   @override
-  String get reviewsPhotosNoneTitle => 'لسا ما في صور';
+  String get reviewsPhotosNoneTitle => 'لسّا ما في صور';
 
   @override
   String get reviewsPhotosNoneBody =>
       'التقييمات اللي فيها صور للقطعة ملبوسة بتظهر هون.';
 
   @override
-  String get forYouRemove => 'إزالة من المختارة لكِ';
+  String get forYouRemove => 'شيليها من المنقّاية إلكِ';
 
   @override
   String get forYouRemoved =>
-      'أزلناها من المختارة لكِ، ولن تظهر لكِ فيها مجدداً.';
+      'شلناها من المنقّاية إلكِ، وما رح ترجع تطلعلكِ فيها.';
 
   @override
-  String get chatProductInquiry => 'استفسار عن هذه القطعة';
+  String get chatProductInquiry => 'سؤال عن هالقطعة';
 
   @override
-  String get chatAskingAbout => 'تسألين عن';
+  String get chatAskingAbout => 'عم تسألي عن';
 
   @override
-  String get chatAskingAboutClear => 'إزالة القطعة من الرسالة';
+  String get chatAskingAboutClear => 'شيلي القطعة من الرسالة';
 
   @override
   String get productAskBoutique => 'اسألي المتجر';
@@ -13313,8 +13317,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$label مشاهدة',
       few: '$label مشاهدات',
-      two: 'مشاهدتان',
-      one: 'مشاهدة واحدة',
+      two: 'مشاهدتين',
+      one: 'مشاهدة وحدة',
     );
     return '$_temp0';
   }
@@ -13324,10 +13328,10 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'في $label مفضّلة',
-      few: 'في $label مفضّلات',
-      two: 'في مفضّلتين',
-      one: 'في مفضّلة واحدة',
+      other: 'بـ $label مفضّلة',
+      few: 'بـ $label مفضّلات',
+      two: 'بمفضّلتين',
+      one: 'بمفضّلة وحدة',
     );
     return '$_temp0';
   }
@@ -13337,25 +13341,25 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'بيعت $label قطعة',
-      few: 'بيعت $label قطع',
-      two: 'بيعت قطعتان',
-      one: 'بيعت قطعة واحدة',
+      other: 'انباعت $label قطعة',
+      few: 'انباعت $label قطع',
+      two: 'انباعت قطعتين',
+      one: 'انباعت قطعة وحدة',
     );
     return '$_temp0';
   }
 
   @override
-  String get reviewsRatePrompt => 'اضغطي على النجوم لتقييم القطعة';
+  String get reviewsRatePrompt => 'كبسي عالنجوم لتقيّمي القطعة';
 
   @override
   String reviewsRatingMeaning(String stars) {
     String _temp0 = intl.Intl.selectLogic(stars, {
-      '1': 'سيئة',
+      '1': 'مو حلوة',
       '2': 'مقبولة',
-      '3': 'جيدة',
-      '4': 'جيدة جداً',
-      '5': 'ممتازة',
+      '3': 'منيحة',
+      '4': 'كتير منيحة',
+      '5': 'بتجنّن',
       'other': '',
     });
     return '$_temp0';
@@ -13363,14 +13367,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String reviewsRatedOutOfFive(int stars) {
-    return 'قيّمتها بـ $stars من ٥';
+    return 'قيّمتيها $stars من ٥';
   }
 
   @override
   String get mapPickerTitle => 'حدّدي موقعكِ';
 
   @override
-  String get mapPickerSearchHint => 'ابحثي عن حي، شارع أو معلم…';
+  String get mapPickerSearchHint => 'دوّري على حي، شارع أو معلم…';
 
   @override
   String get mapPickerMoveHint => 'حرّكي الخريطة ليصير الدبوس عند بابكِ';
@@ -13385,7 +13389,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mapPickerDeliveryHere => 'موقع التوصيل';
 
   @override
-  String get mapPickerConfirm => 'تأكيد هذا الموقع';
+  String get mapPickerConfirm => 'أكّدي هالموقع';
 
   @override
   String get mapPickerUnknownPlace => 'مكان بلا اسم على الخريطة';
@@ -13411,13 +13415,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mapPickerSatellite => 'قمر صناعي';
 
   @override
-  String get mapPickerResetNorth => 'توجيه للشمال';
+  String get mapPickerResetNorth => 'وجّهيها للشمال';
 
   @override
-  String get mapPickerZoomIn => 'تكبير';
+  String get mapPickerZoomIn => 'كبّري';
 
   @override
-  String get mapPickerZoomOut => 'تصغير';
+  String get mapPickerZoomOut => 'صغّري';
 
   @override
   String get mapPickerRural => 'منطقة ريفية';
@@ -13453,10 +13457,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get locationFieldOr => 'أو اكتبي العنوان بنفسكِ';
 
   @override
-  String get locationFieldChange => 'تغيير';
+  String get locationFieldChange => 'غيّري';
 
   @override
-  String get locationFieldRemove => 'إزالة الموقع';
+  String get locationFieldRemove => 'شيلي الموقع';
 
   @override
   String get locationFieldPinned => 'محدّد على الخريطة';
@@ -13466,17 +13470,17 @@ class AppLocalizationsAr extends AppLocalizations {
       'عبّينا العنوان من الخريطة، اطّلعي عليه بسرعة';
 
   @override
-  String get locationFieldEditDetails => 'تعديل تفاصيل العنوان';
+  String get locationFieldEditDetails => 'عدّلي تفاصيل العنوان';
 
   @override
-  String get locationFieldHideDetails => 'إخفاء التفاصيل';
+  String get locationFieldHideDetails => 'خبّي التفاصيل';
 
   @override
   String get locationFieldGovernorateUnmatched =>
-      'ما قدرنا نعرف المحافظة من الخريطة، اختاريها من تحت';
+      'ما قدرنا نعرف المحافظة من الخريطة، نقّيها من تحت';
 
   @override
-  String get locationFieldOpenInMaps => 'فتح بالخرائط';
+  String get locationFieldOpenInMaps => 'افتحي بالخرائط';
 
   @override
   String get shopLocationTitle => 'حدّدي مكانكِ على الخريطة';
@@ -13495,55 +13499,55 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mapPickerZoomCloser => 'قرّبي لتحددي الباب بالضبط';
 
   @override
-  String get closetActionAdd => 'أضيفي قطعة';
+  String get closetActionAdd => 'ضيفي قطعة';
 
   @override
   String get closetActionToday => 'لبسة اليوم';
 
   @override
-  String get closetAddExtras => 'تفاصيل إضافية';
+  String get closetAddExtras => 'تفاصيل زيادة';
 
   @override
-  String get closetAddNeeds => 'اكتبي اسم القطعة واختاري نوعها لتحفظيها.';
+  String get closetAddNeeds => 'اكتبي اسم القطعة ونقّي نوعها لتحفظيها.';
 
   @override
-  String get closetAddUploading => 'نرفع الصورة…';
+  String get closetAddUploading => 'عم نرفع الصورة…';
 
   @override
-  String get closetAlreadyWornToday => 'سجّلتِ لبسها اليوم من قبل.';
+  String get closetAlreadyWornToday => 'سجّلتِ إنّك لبستيها اليوم من قبل.';
 
   @override
   String closetBudgetRange(String min, String max) {
-    return 'من $min إلى $max';
+    return 'من $min لـ $max';
   }
 
   @override
   String closetBudgetUpTo(String max) {
-    return 'حتى $max';
+    return 'لحد $max';
   }
 
   @override
-  String get closetClearFilters => 'مسح التصفية';
+  String get closetClearFilters => 'امسحي الفلترة';
 
   @override
-  String get closetDeleteConfirmTitle => 'حذف القطعة نهائياً؟';
+  String get closetDeleteConfirmTitle => 'بدّك تحذفي القطعة للأبد؟';
 
   @override
   String get closetDeleteConfirmBody =>
-      'ستُحذف القطعة وسجلّ لبسها كله، ولن تظهر في إطلالاتكِ. إن لم تعودي تملكينها فاختاري «لم تعد لديّ» لتحتفظي بسجلّها.';
+      'القطعة وكل سجلّ لبسها رح ينحذفوا، وما رح تبيّن بإطلالاتكِ. إذا ما عادت عندكِ نقّي «ما عادت عندي» لتحتفظي بسجلّها.';
 
   @override
-  String get closetDeleteHint => 'تُمحى القطعة وسجلّها كله';
+  String get closetDeleteHint => 'القطعة بتنمسح مع كل سجلّها';
 
   @override
-  String get closetDeleted => 'حُذفت القطعة.';
+  String get closetDeleted => 'انحذفت القطعة.';
 
   @override
-  String get closetDeleteLookConfirmTitle => 'حذف هذه الإطلالة؟';
+  String get closetDeleteLookConfirmTitle => 'بدّك تحذفي هالإطلالة؟';
 
   @override
   String get closetDeleteLookConfirmBody =>
-      'تُحذف الإطلالة وحدها، وتبقى قطعها في خزانتكِ.';
+      'الإطلالة لحالها بتنحذف، وقطعها بتضلّ بخزانتكِ.';
 
   @override
   String get closetDetailColours => 'الألوان';
@@ -13561,21 +13565,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetDetailSize => 'المقاس';
 
   @override
-  String get closetDismissConfirmTitle => 'إخفاء هذا الاقتراح؟';
+  String get closetDismissConfirmTitle => 'بدّك تخبّي هالاقتراح؟';
 
   @override
   String get closetDismissConfirmBody =>
-      'لن نقترح هذا النقص عليكِ مرة أخرى، حتى لو تغيّرت خزانتكِ.';
+      'ما رح نقترح عليكِ هالنقص مرة تانية، حتى لو تغيّرت خزانتكِ.';
 
   @override
   String get closetFavouriteTag => 'مفضّلة';
 
   @override
-  String get closetFilterEmptyTitle => 'لا قطع تطابق بحثكِ';
+  String get closetFilterEmptyTitle => 'ما في قطع بتطابق بحثكِ';
 
   @override
   String get closetFilterEmptyBody =>
-      'جرّبي كلمة أخرى أو امسحي التصفية لرؤية خزانتكِ كاملة.';
+      'جرّبي كلمة تانية أو امسحي الفلترة لتشوفي خزانتكِ كاملة.';
 
   @override
   String get closetFilterFavourites => 'المفضّلة';
@@ -13584,16 +13588,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetFilterShelved => 'على الرف';
 
   @override
-  String get closetFitWithWardrobe => 'انسجامها مع خزانتكِ';
+  String get closetFitWithWardrobe => 'كيف بتلبق مع خزانتكِ';
 
   @override
   String get closetFromStylist => 'من منسّقتكِ';
 
   @override
-  String get closetGapKindCoverage => 'تفتح إطلالات جديدة';
+  String get closetGapKindCoverage => 'بتفتح إطلالات جديدة';
 
   @override
-  String get closetGapKindLook => 'تُكمل إطلالة';
+  String get closetGapKindLook => 'بتكمّل إطلالة';
 
   @override
   String get closetGapKindOccasion => 'لمناسبة';
@@ -13611,42 +13615,42 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '+$count إطلالة',
       few: '+$count إطلالات',
-      two: '+إطلالتان',
+      two: '+إطلالتين',
       one: '+إطلالة',
     );
     return '$_temp0';
   }
 
   @override
-  String get closetGapsEyebrow => 'ما يستحق الشراء';
+  String get closetGapsEyebrow => 'شو بيستاهل ينشرى';
 
   @override
-  String get closetHowItWorks => 'كيف تعمل خزانتكِ';
+  String get closetHowItWorks => 'كيف بتشتغل خزانتكِ';
 
   @override
   String get closetInsightCostFalls =>
-      'كل مرة تلبسينها تنخفض تكلفة اللبسة الواحدة.';
+      'كل مرة بتلبسيها، كلفة اللبسة الوحدة بتنزل.';
 
   @override
   String get closetInsightForgotten =>
-      'مرّت أكثر من ثلاثة أشهر — ربما حان وقت إطلالة جديدة بها.';
+      'صار أكتر من تلات شهور — يمكن آن الأوان لإطلالة جديدة فيها.';
 
   @override
   String get closetInsightNeverWorn =>
-      'لم تلبسيها بعد. جرّبي تنسيقها هذا الأسبوع.';
+      'لسّا ما لبستيها. جرّبي نسّقيها هالأسبوع.';
 
   @override
   String closetInsightStaple(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'قطعة أساسية لديكِ — لبستِها $count مرة.',
+      other: 'قطعة أساسية عندكِ — لبستيها $count مرة.',
     );
     return '$_temp0';
   }
 
   @override
-  String get closetLookNotWornYet => 'لم تلبسيها بعد';
+  String get closetLookNotWornYet => 'لسّا ما لبستيها';
 
   @override
   String get closetLookPalette => 'ألوانها';
@@ -13658,8 +13662,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count قطعة',
       few: '$count قطع',
-      two: 'قطعتان',
-      one: 'قطعة واحدة',
+      two: 'قطعتين',
+      one: 'قطعة وحدة',
       zero: 'بلا قطع',
     );
     return '$_temp0';
@@ -13672,7 +13676,7 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: 'قطعها الـ$count',
       few: 'قطعها الـ$count',
-      two: 'قطعتاها',
+      two: 'قطعتيها',
       one: 'قطعتها',
       zero: 'قطعها',
     );
@@ -13680,30 +13684,30 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get closetLooksFilterEmpty => 'لا إطلالات هنا بعد';
+  String get closetLooksFilterEmpty => 'ما في إطلالات هون لسّا';
 
   @override
   String get closetLooksFilterReady => 'جاهزة';
 
   @override
-  String get closetLooksFilterShort => 'تنقصها قطع';
+  String get closetLooksFilterShort => 'ناقصها قطع';
 
   @override
   String closetLooksOneAway(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count إطلالة تنقص كلاً منها قطعة فقط',
-      few: '$count إطلالات تنقص كلاً منها قطعة فقط',
-      two: 'إطلالتان تنقص كلاً منهما قطعة فقط',
-      one: 'إطلالة واحدة تنقصها قطعة فقط',
+      other: '$count إطلالة كل وحدة ناقصها قطعة بس',
+      few: '$count إطلالات كل وحدة ناقصها قطعة بس',
+      two: 'إطلالتين كل وحدة ناقصها قطعة بس',
+      one: 'إطلالة وحدة ناقصها قطعة بس',
     );
     return '$_temp0';
   }
 
   @override
   String closetLooksReadyOf(int ready, int total) {
-    return '$ready من $total جاهزة للّبس الآن';
+    return '$ready من $total جاهزين تنلبس هلّق';
   }
 
   @override
@@ -13714,16 +13718,16 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count فكرة أخرى',
-      few: '$count أفكار أخرى',
-      two: 'فكرتان أخريان',
-      one: 'فكرة أخرى',
+      other: '$count فكرة كمان',
+      few: '$count أفكار كمان',
+      two: 'فكرتين كمان',
+      one: 'فكرة تانية',
     );
     return '$_temp0';
   }
 
   @override
-  String get closetOptional => 'اختياري';
+  String get closetOptional => 'إذا حابّة';
 
   @override
   String get closetOriginComposed => 'نسّقناها لكِ';
@@ -13737,61 +13741,61 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get closetPulseAllSeason => 'كل إطلالاتكِ تناسب الطقس الآن.';
+  String get closetPulseAllSeason => 'كل إطلالاتكِ بتلبق للطقس هلّق.';
 
   @override
   String closetPulseEyebrow(String season) {
-    return 'خزانتكِ في $season';
+    return 'خزانتكِ بـ $season';
   }
 
   @override
-  String get closetPulseHeadline => 'إطلالة يمكنكِ لبسها الآن من قطعكِ';
+  String get closetPulseHeadline => 'إطلالة فيكِ تلبسيها هلّق من قطعكِ';
 
   @override
   String closetPulseReadiness(int percent) {
-    return '$percent٪ من إطلالاتكِ تناسب الموسم';
+    return '$percent٪ من إطلالاتكِ بتلبق للموسم';
   }
 
   @override
   String get closetPulseReadyLooks => 'إطلالة جاهزة';
 
   @override
-  String get closetPulseSeasonReady => 'تناسب الموسم';
+  String get closetPulseSeasonReady => 'بتلبق للموسم';
 
   @override
   String get closetRediscoverBody =>
-      'قطع لديكِ لم تلبسيها منذ مدة أو لم تلبسيها أبداً. لبسة واحدة تعيدها إلى خزانتكِ.';
+      'قطع عندكِ ما لبستيها من زمان أو ما لبستيها أبداً. لبسة وحدة بترجّعها لخزانتكِ.';
 
   @override
-  String get closetRediscoverEyebrow => 'أعيدي اكتشافها';
+  String get closetRediscoverEyebrow => 'رجّعي اكتشفيها';
 
   @override
-  String get closetRediscoverTitle => 'قطع تنتظركِ';
+  String get closetRediscoverTitle => 'قطع ناطرتكِ';
 
   @override
-  String get closetReleaseConfirmTitle => 'لم تعد هذه القطعة لديكِ؟';
+  String get closetReleaseConfirmTitle => 'هالقطعة ما عادت عندكِ؟';
 
   @override
   String get closetReleaseConfirmBody =>
-      'ستخرج من خزانتكِ وإطلالاتكِ، ونحتفظ بسجلّ لبسها لنقترح لكِ بديلاً حين تحتاجين.';
+      'رح تطلع من خزانتكِ وإطلالاتكِ، ومنحتفظ بسجلّ لبسها لنقترحلك بديل لمّا تحتاجي.';
 
   @override
-  String get closetReleaseHint => 'بعتِها أو أهديتِها — نحتفظ بسجلّها';
+  String get closetReleaseHint => 'بعتيها أو هديتيها — منحتفظ بسجلّها';
 
   @override
-  String get closetReleased => 'أخرجناها من خزانتكِ.';
+  String get closetReleased => 'طلّعناها من خزانتكِ.';
 
   @override
-  String get closetReturnHint => 'أعيديها إلى الخزانة والاقتراحات';
+  String get closetReturnHint => 'رجّعيها عالخزانة والاقتراحات';
 
   @override
-  String get closetReturned => 'عادت القطعة إلى خزانتكِ.';
+  String get closetReturned => 'رجعت القطعة لخزانتكِ.';
 
   @override
   String get closetRotationTitle => 'حياتها في خزانتكِ';
 
   @override
-  String get closetSearchHint => 'ابحثي باسم القطعة أو الماركة أو ملاحظتكِ';
+  String get closetSearchHint => 'دوّري باسم القطعة أو الماركة أو ملاحظتكِ';
 
   @override
   String closetSeasonNow(String season) {
@@ -13799,75 +13803,74 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get closetShelveHint => 'لا تناسب هذا الموسم — نخفيها من الاقتراحات';
+  String get closetShelveHint => 'ما بتلبق لهالموسم — منخبّيها من الاقتراحات';
 
   @override
-  String get closetShelved => 'وضعناها على الرف لموسم آخر.';
+  String get closetShelved => 'حطّيناها عالرف لموسم تاني.';
 
   @override
-  String get closetShelvedBanner =>
-      'هذه القطعة على الرف ولا تدخل في اقتراحات اليوم.';
+  String get closetShelvedBanner => 'هالقطعة عالرف وما بتدخل باقتراحات اليوم.';
 
   @override
-  String get closetShelvedEmpty => 'لا قطع على الرف';
+  String get closetShelvedEmpty => 'ما في قطع عالرف';
 
   @override
   String closetShortBy(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'تنقصها $count قطعة',
-      few: 'تنقصها $count قطع',
-      two: 'تنقصها قطعتان',
-      one: 'تنقصها قطعة',
+      other: 'ناقصها $count قطعة',
+      few: 'ناقصها $count قطع',
+      two: 'ناقصها قطعتين',
+      one: 'ناقصها قطعة',
     );
     return '$_temp0';
   }
 
   @override
-  String get closetShowAll => 'عرض الكل';
+  String get closetShowAll => 'شوفي الكل';
 
   @override
-  String get closetSortLeastWorn => 'الأقل لبساً';
+  String get closetSortLeastWorn => 'الأقل لبس';
 
   @override
-  String get closetSortMostWorn => 'الأكثر لبساً';
+  String get closetSortMostWorn => 'الأكتر لبس';
 
   @override
-  String get closetSortRecent => 'الأحدث';
+  String get closetSortRecent => 'الأجدد';
 
   @override
   String get closetSortTooltip => 'ترتيب القطع';
 
   @override
-  String get closetStepAddTitle => 'أضيفي قطعكِ';
+  String get closetStepAddTitle => 'ضيفي قطعكِ';
 
   @override
   String get closetStepAddBody =>
-      'اجلبي مشترياتكِ من أوهارا بلمسة، أو صوّري ما لديكِ.';
+      'جيبي مشترياتكِ من أوهارا بكبسة، أو صوّري اللي عندكِ.';
 
   @override
-  String get closetStepLooksTitle => 'نكوّن لكِ إطلالات';
+  String get closetStepLooksTitle => 'منركّبلك إطلالات';
 
   @override
   String get closetStepLooksBody =>
-      'كل صباح نقترح ما يمكنكِ لبسه من قطعكِ أنتِ، حسب الطقس والمناسبة.';
+      'كل صبح منقترح شو فيكِ تلبسي من قطعكِ إنتِ، حسب الطقس والمناسبة.';
 
   @override
-  String get closetStepGapsTitle => 'نخبركِ بما ينقص';
+  String get closetStepGapsTitle => 'منخبّرك شو ناقص';
 
   @override
   String get closetStepGapsBody =>
-      'قطعة واحدة قد تفتح إطلالات كثيرة — ونشرح لكِ لماذا.';
+      'قطعة وحدة ممكن تفتح إطلالات كتير — ومنشرحلك ليش.';
 
   @override
   String closetSuggestionsEyebrow(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count اقتراحاً',
+      other: '$count اقتراح',
       few: '$count اقتراحات',
-      two: 'اقتراحان',
+      two: 'اقتراحين',
       one: 'اقتراح واحد',
     );
     return '$_temp0';
@@ -13877,22 +13880,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetTagForgotten => 'منسية';
 
   @override
-  String get closetTagUnworn => 'لم تُلبس';
+  String get closetTagUnworn => 'ما انلبست';
 
   @override
-  String get closetTapToEnlarge => 'تكبير';
+  String get closetTapToEnlarge => 'كبّري';
 
   @override
-  String get closetTodayBestMatch => 'الأنسب لكِ اليوم';
+  String get closetTodayBestMatch => 'الأنسب إلكِ اليوم';
 
   @override
   String get closetTodayEyebrow => 'اقتراح اليوم';
 
   @override
-  String get closetTodayFromYours => 'كلها من قطعكِ أنتِ';
+  String get closetTodayFromYours => 'كلها من قطعكِ إنتِ';
 
   @override
-  String get closetTodayHello => 'صباح الأناقة';
+  String get closetTodayHello => 'صباح الأناقة ☀️';
 
   @override
   String closetTodayIdea(int number) {
@@ -13901,17 +13904,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String closetTodaySeason(String season) {
-    return 'من قطعكِ أنتِ، لطقس $season';
+    return 'من قطعكِ إنتِ، لطقس $season';
   }
 
   @override
-  String get closetUndo => 'تراجع';
+  String get closetUndo => 'رجّعي';
 
   @override
-  String get closetUpdateFailed => 'تعذّر الحفظ الآن. حاولي مرة أخرى.';
+  String get closetUpdateFailed => 'ما قدرنا نحفظ هلّق. جرّبي مرة تانية.';
 
   @override
-  String get closetViewCompact => 'عرض مصغّر';
+  String get closetViewCompact => 'عرض زغير';
 
   @override
   String get closetViewLarge => 'عرض كبير';
@@ -13923,9 +13926,9 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count قطعة',
       few: '$count قطع',
-      two: 'قطعتان',
-      one: 'قطعة واحدة',
-      zero: 'لا قطع',
+      two: 'قطعتين',
+      one: 'قطعة وحدة',
+      zero: 'ما في قطع',
     );
     return '$_temp0';
   }
@@ -13934,34 +13937,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get closetWardrobeTitle => 'قطعي';
 
   @override
-  String get closetWearFailed => 'تعذّر تسجيل اللبسة. حاولي مرة أخرى.';
+  String get closetWearFailed => 'ما قدرنا نسجّل اللبسة. جرّبي مرة تانية.';
 
   @override
   String closetWearLogged(String title) {
-    return 'سجّلنا لبسة «$title» اليوم.';
+    return 'سجّلنا إنّك لبستِ «$title» اليوم.';
   }
 
   @override
-  String get closetWearUndone => 'ألغينا اللبسة.';
+  String get closetWearUndone => 'لغينا اللبسة.';
 
   @override
-  String get closetWornTodayDone => 'لبستِها اليوم';
+  String get closetWornTodayDone => 'لبستيها اليوم';
 
   @override
-  String get closetWornNeverShort => 'لم تلبسيها بعد';
+  String get closetWornNeverShort => 'لسّا ما لبستيها';
 
   @override
-  String get closetWornLongAgoShort => 'لم تلبسيها منذ مدة';
+  String get closetWornLongAgoShort => 'ما لبستيها من زمان';
 
   @override
   String closetWornTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'لبستِها $count مرة',
-      few: 'لبستِها $count مرات',
-      two: 'لبستِها مرتين',
-      one: 'لبستِها مرة',
+      other: 'لبستيها $count مرة',
+      few: 'لبستيها $count مرات',
+      two: 'لبستيها مرتين',
+      one: 'لبستيها مرة',
     );
     return '$_temp0';
   }
@@ -13987,7 +13990,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adPlacementSearch => 'أعلى نتائج البحث';
 
   @override
-  String get adPlacementCategory => 'صدارة صفحة الفئة';
+  String get adPlacementCategory => 'أول رف الفئة';
 
   @override
   String get adPlacementFeedTop => 'أعلى المنشورات';
@@ -13997,35 +14000,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adPlacementSearchHint =>
-      'فوق النتائج حين تبحث الزبونات عن قطع مثل قطعتكِ';
+      'فوق النتايج لمّا تدوّر الزبونات على قطع متل قطعتكِ';
 
   @override
-  String get adPlacementCategoryHint =>
-      'في صدارة رفّ الفئة التي تنتمي إليها قطعتكِ';
+  String get adPlacementCategoryHint => 'بأول رف الفئة اللي منها قطعتكِ';
 
   @override
   String get adPlacementFeedTopHint =>
-      'منشوركِ مثبّت فوق كل المنشورات في المجتمع';
+      'منشوركِ مثبّت فوق كل المنشورات بالمجتمع';
 
   @override
   String get adPlacementHomeSpotlightHint =>
-      'أول ما تراه الزبونات حين يفتحن التطبيق';
+      'أول شي بتشوفه الزبونات لمّا يفتحوا التطبيق';
 
   @override
   String get adsCenterTitle => 'مركز الإعلانات';
 
   @override
-  String get adsCenterSubtitle => 'وسّعي وصولكِ، وادفعي فقط لما تختارينه';
+  String get adsCenterSubtitle => 'وسّعي وصولكِ، وادفعي بس عاللي بتنقّيه';
 
   @override
-  String get adsEntryBody => 'ضعي أجمل قطعكِ أمام زبونات أكثر';
+  String get adsEntryBody => 'حطّي أحلى قطعكِ قدّام زبونات أكتر';
 
   @override
   String get adsYourPlan => 'باقتكِ';
 
   @override
   String adsActiveOf(int active, int max) {
-    return '$active من $max حملات تعمل الآن';
+    return '$active من $max حملات شغّالة هلّق';
   }
 
   @override
@@ -14033,30 +14035,30 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: 'تنتهي بعد $days يوماً',
-      few: 'تنتهي بعد $days أيام',
-      two: 'تنتهي بعد يومين',
-      one: 'تنتهي غداً',
-      zero: 'تنتهي اليوم',
+      other: 'بتخلص بعد $days يوم',
+      few: 'بتخلص بعد $days أيام',
+      two: 'بتخلص بعد يومين',
+      one: 'بتخلص بكرا',
+      zero: 'بتخلص اليوم',
     );
     return '$_temp0';
   }
 
   @override
   String adsCreditLeft(String amount) {
-    return 'الرصيد الإعلاني المتبقي: $amount';
+    return 'الرصيد الإعلاني الباقي: $amount';
   }
 
   @override
   String adsRecommendSaving(String tier, String amount) {
-    return 'كانت باقة $tier ستوفّر عليكِ $amount الشهر الماضي';
+    return 'باقة $tier كانت وفّرتلك $amount الشهر الماضي';
   }
 
   @override
   String get adsUpgrade => 'رقّي باقتكِ';
 
   @override
-  String get adsSeePlans => 'استعرضي الباقات';
+  String get adsSeePlans => 'شوفي الباقات';
 
   @override
   String get adsNewCampaign => 'حملة جديدة';
@@ -14071,7 +14073,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsMetricSpend => 'الإنفاق';
 
   @override
-  String get adsMetricReach => 'زبونات وصلن';
+  String get adsMetricReach => 'زبونات وصلولها';
 
   @override
   String get adsMetricClicks => 'نقرات';
@@ -14083,7 +14085,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsMetricRevenue => 'مبيعات من الإعلانات';
 
   @override
-  String get adsMetricRoas => 'العائد لكل ليرة';
+  String get adsMetricRoas => 'الرجعة لكل ليرة';
 
   @override
   String adsRoasValue(String value) {
@@ -14091,36 +14093,37 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adsNotYet => 'ليس بعد';
+  String get adsNotYet => 'لسّا';
 
   @override
-  String get adsInsightAbove => 'إعلاناتكِ تُنقر أكثر من المتوسط — استمري';
+  String get adsInsightAbove =>
+      'إعلاناتكِ عم تنكبس أكتر من المتوسط — كمّلي هيك';
 
   @override
   String get adsInsightAverage => 'أداء إعلاناتكِ قريب من المتوسط';
 
   @override
   String get adsInsightBelow =>
-      'نقرات أقل من المتوسط — جرّبي صورة أقوى أو جمهوراً محدداً';
+      'نقرات أقل من المتوسط — جرّبي صورة أقوى أو جمهور محدّد';
 
   @override
-  String get adsInsightNoData => 'تظهر النتائج بعد أن تُشاهَد إعلاناتكِ';
+  String get adsInsightNoData => 'النتايج بتطلع بعد ما تنشاف إعلاناتكِ';
 
   @override
   String get adsSuggestionsTitle => 'اقتراحات ذكية للترويج';
 
   @override
   String get adsSuggestionsCaption =>
-      'مختارة من مشاهدات قطعكِ وإعجاباتها ومبيعاتها';
+      'منقّاية من مشاهدات قطعكِ وإعجاباتها ومبيعاتها';
 
   @override
-  String get adsReasonLoved => 'تُعجبهن ولم تُشترَ بعد';
+  String get adsReasonLoved => 'عاجبتهن ولسّا ما انشرت';
 
   @override
-  String get adsReasonBest => 'الأكثر مبيعاً';
+  String get adsReasonBest => 'الأكتر مبيع';
 
   @override
-  String get adsReasonHidden => 'جديدة ولم تُرَ بعد';
+  String get adsReasonHidden => 'جديدة ولسّا ما حدا شافها';
 
   @override
   String get adsReasonFresh => 'اختيار جديد';
@@ -14129,32 +14132,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsCampaignsTitle => 'حملاتكِ';
 
   @override
-  String get adsNoCampaigns => 'لا حملات بعد';
+  String get adsNoCampaigns => 'ما في حملات لسّا';
 
   @override
   String get adsNoCampaignsBody =>
-      'ابدئي بأحد الاقتراحات أعلاه — لن يستغرق أكثر من دقيقة.';
+      'بلّشي بشي اقتراح من اللي فوق — ما بياخد أكتر من دقيقة.';
 
   @override
-  String get adsStatusLive => 'تعمل';
+  String get adsStatusLive => 'شغّالة';
 
   @override
-  String get adsStatusPaused => 'متوقفة';
+  String get adsStatusPaused => 'موقّفة';
 
   @override
-  String get adsStatusEnded => 'انتهت';
+  String get adsStatusEnded => 'خلصت';
 
   @override
   String get adsStatusScheduled => 'مجدولة';
 
   @override
-  String get adsStatusUnpaid => 'غير مدفوعة';
+  String get adsStatusUnpaid => 'مو مدفوعة';
 
   @override
-  String get adsPause => 'إيقاف مؤقت';
+  String get adsPause => 'وقّفي شوي';
 
   @override
-  String get adsResume => 'استئناف';
+  String get adsResume => 'كمّلي';
 
   @override
   String adsCampaignWhere(String placement, String audience) {
@@ -14173,7 +14176,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adsCampaignRevenue(String amount) {
-    return 'مبيعات من هذا الإعلان: $amount';
+    return 'مبيعات من هالإعلان: $amount';
   }
 
   @override
@@ -14183,36 +14186,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsAudienceTargeted => 'جمهور محدد';
 
   @override
-  String get adsAudienceEveryoneHint => 'كل الزبونات، مسجّلات أو زائرات';
+  String get adsAudienceEveryoneHint => 'كل الزبونات، مسجّلات أو زايرات';
 
   @override
-  String get adsAudienceTargetedHint => 'فقط من تختارينهن — بسعر أقل بـ 20%';
+  String get adsAudienceTargetedHint => 'بس اللي بتنقّيهن — بسعر أقل بـ 20%';
 
   @override
-  String get adsFailed => 'تعذّر تحميل إعلاناتكِ';
+  String get adsFailed => 'ما قدرنا نحمّل إعلاناتكِ';
 
   @override
   String get adsPlansTitle => 'باقات الإعلان';
 
   @override
-  String get adsPlansSubtitle => 'كلما استثمرتِ أكثر، وصلتِ أبعد';
+  String get adsPlansSubtitle => 'كل ما استثمرتِ أكتر، وصلتِ أبعد';
 
   @override
   String adsPlanPerMonth(String price) {
-    return '$price شهرياً';
+    return '$price بالشهر';
   }
 
   @override
-  String get adsPlanFreeLabel => 'مجاناً';
+  String get adsPlanFreeLabel => 'ببلاش';
 
   @override
   String adsPlanCredit(String amount) {
-    return 'رصيد إعلاني بقيمة $amount مشمول';
+    return 'معها رصيد إعلاني بقيمة $amount';
   }
 
   @override
   String adsPlanBonus(String amount) {
-    return 'رصيد يزيد على ما تدفعين بـ $amount';
+    return 'رصيد بيزيد عاللي بتدفعيه بـ $amount';
   }
 
   @override
@@ -14225,21 +14228,21 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count حملة في الوقت نفسه',
-      few: '$count حملات في الوقت نفسه',
-      two: 'حملتان في الوقت نفسه',
-      one: 'حملة واحدة في الوقت نفسه',
+      other: '$count حملة بنفس الوقت',
+      few: '$count حملات بنفس الوقت',
+      two: 'حملتين بنفس الوقت',
+      one: 'حملة وحدة بنفس الوقت',
     );
     return '$_temp0';
   }
 
   @override
   String adsPlanWeight(int weight) {
-    return 'ظهور أكثر بـ $weight أضعاف من المتاجر العادية';
+    return 'بتبيّني $weight أضعاف أكتر من المتاجر العادية';
   }
 
   @override
-  String get adsPlanTargetingNone => 'الإعلان يظهر للجميع';
+  String get adsPlanTargetingNone => 'الإعلان بيبيّن للكل';
 
   @override
   String get adsPlanTargetingLocation => 'استهداف حسب المحافظة';
@@ -14249,10 +14252,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'استهداف المتابِعات والمشتريات السابقات والمهتمات والجديدات';
 
   @override
-  String get adsPlanFollowers => 'تنبيه متابِعاتكِ عند إطلاق كل حملة';
+  String get adsPlanFollowers => 'تنبيه لمتابِعاتكِ مع كل حملة جديدة';
 
   @override
-  String get adsPlanFeatured => 'الصدارة في «متاجر مميزة» مع شارتكِ';
+  String get adsPlanFeatured => 'بأول «متاجر مميزة» مع شارتكِ';
 
   @override
   String adsPlanPlacements(String list) {
@@ -14270,15 +14273,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adsPlanSaving(String amount) {
-    return 'كانت ستوفّر عليكِ $amount الشهر الماضي';
+    return 'كانت وفّرتلك $amount الشهر الماضي';
   }
 
   @override
-  String get adsPlanStartHint => 'ابدئي بالفضية: رصيدها الإعلاني أكبر من سعرها';
+  String get adsPlanStartHint => 'بلّشي بالفضية: رصيدها الإعلاني أكبر من سعرها';
 
   @override
   String adsPlanChoose(String tier) {
-    return 'اختاري $tier';
+    return 'نقّي $tier';
   }
 
   @override
@@ -14286,43 +14289,43 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adsPlanQueued(String tier, String date) {
-    return 'تبدأ باقة $tier في $date';
+    return 'باقة $tier بتبلّش بـ $date';
   }
 
   @override
   String adsPlanConfirmTitle(String tier) {
-    return 'الاشتراك في باقة $tier؟';
+    return 'بدّك تشتركي بباقة $tier؟';
   }
 
   @override
   String adsPlanConfirmBody(String price) {
-    return '$price لمدة 30 يوماً، ولا تتجدد تلقائياً.';
+    return '$price لمدة 30 يوم، وما بتتجدّد لحالها.';
   }
 
   @override
   String get adsPlanConfirmUpgradeNote =>
-      'رصيدكِ غير المستخدم في باقتكِ الحالية ينتقل معكِ.';
+      'رصيدكِ اللي ما استعملتيه بباقتكِ الحالية بينتقل معكِ.';
 
   @override
   String adsPlanSubscribed(String tier) {
-    return 'أهلاً بكِ في باقة $tier!';
+    return 'يا هلا فيكِ بباقة $tier! ✨';
   }
 
   @override
-  String get adsConfirm => 'تأكيد';
+  String get adsConfirm => 'أكّدي';
 
   @override
-  String get adsErrorBalance => 'رصيد أرباحكِ لا يغطي هذا بعد.';
+  String get adsErrorBalance => 'رصيد أرباحكِ لسّا ما بيغطّي هالشي.';
 
   @override
   String get adsErrorLimit =>
-      'بلغتِ حدّ الحملات في باقتكِ — أوقفي حملة أو رقّي الباقة.';
+      'وصلتِ لحدّ الحملات بباقتكِ — وقّفي حملة أو رقّي الباقة.';
 
   @override
-  String get adsErrorFeedPost => 'انشري منشوراً عاماً لهذه القطعة أولاً.';
+  String get adsErrorFeedPost => 'انشري منشور عام لهالقطعة بالأول.';
 
   @override
-  String get adsErrorLocked => 'هذا يحتاج باقة أعلى.';
+  String get adsErrorLocked => 'هالشي محتاج باقة أعلى.';
 
   @override
   String get adsComposerTitle => 'حملة جديدة';
@@ -14331,22 +14334,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsStepProduct => 'القطعة';
 
   @override
-  String get adsChooseProduct => 'اختاري قطعة للترويج';
+  String get adsChooseProduct => 'نقّي قطعة للترويج';
 
   @override
-  String get adsChangeProduct => 'تغيير';
+  String get adsChangeProduct => 'غيّري';
 
   @override
   String get adsPickProductTitle => 'أي قطعة؟';
 
   @override
-  String get adsNoProducts => 'لا قطع متاحة للترويج';
+  String get adsNoProducts => 'ما في قطع متاحة للترويج';
 
   @override
   String get adsStepPlacement => 'مكان الظهور';
 
   @override
-  String get adsStepAudience => 'من يراه';
+  String get adsStepAudience => 'مين بيشوفه';
 
   @override
   String get adsStepDuration => 'المدة';
@@ -14356,9 +14359,9 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count يوماً',
+      other: '$count يوم',
       few: '$count أيام',
-      two: 'يومان',
+      two: 'يومين',
       one: 'يوم واحد',
     );
     return '$_temp0';
@@ -14366,7 +14369,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adsLockedNeeds(String tier) {
-    return 'تحتاج $tier';
+    return 'محتاجة $tier';
   }
 
   @override
@@ -14379,10 +14382,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsTargetFollowers => 'متابِعاتي';
 
   @override
-  String get adsTargetPastBuyers => 'اشترين مني';
+  String get adsTargetPastBuyers => 'اشتروا مني';
 
   @override
-  String get adsTargetInterested => 'مهتمات بهذا النوع';
+  String get adsTargetInterested => 'مهتمّات بهالنوع';
 
   @override
   String get adsTargetNewShoppers => 'زبونات جديدات';
@@ -14397,8 +14400,8 @@ class AppLocalizationsAr extends AppLocalizations {
       locale: localeName,
       other: '$count زبونة',
       few: '$count زبونات',
-      two: 'زبونتان',
-      one: 'زبونة واحدة',
+      two: 'زبونتين',
+      one: 'زبونة وحدة',
     );
     return '$_temp0';
   }
@@ -14416,16 +14419,16 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'مقابل $count حملة منافسة',
-      few: 'مقابل $count حملات منافسة',
-      two: 'مقابل حملتين منافستين',
-      one: 'مقابل حملة منافسة واحدة',
+      other: 'قدّام $count حملة منافسة',
+      few: 'قدّام $count حملات منافسة',
+      two: 'قدّام حملتين منافسين',
+      one: 'قدّام حملة منافسة وحدة',
     );
     return '$_temp0';
   }
 
   @override
-  String get adsShareAlone => 'لا منافسة الآن';
+  String get adsShareAlone => 'ما في منافسة هلّق';
 
   @override
   String adsPercent(int value) {
@@ -14454,14 +14457,14 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adsFeedPostPinned => 'سيُثبَّت هذا المنشور:';
+  String get adsFeedPostPinned => 'هالمنشور رح يتثبّت:';
 
   @override
   String get adsFeedPostMissing =>
-      'هذا المكان يثبّت أحد منشوراتكِ. انشري منشوراً لهذه القطعة أولاً.';
+      'هالمكان بيثبّت شي منشور إلكِ. انشري منشور لهالقطعة بالأول.';
 
   @override
-  String get adsCreatePost => 'إنشاء منشور';
+  String get adsCreatePost => 'اعملي منشور';
 
   @override
   String adsUnlockWith(String tier) {
@@ -14477,10 +14480,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsLaunchFree => 'أطلقيها برصيدكِ الإعلاني';
 
   @override
-  String get adsLaunched => 'حملتكِ تعمل الآن ✨';
+  String get adsLaunched => 'حملتكِ شغّالة هلّق ✨';
 
   @override
-  String get adsQuoteFailed => 'تعذّر تسعير الحملة';
+  String get adsQuoteFailed => 'ما قدرنا نسعّر الحملة';
 
   @override
   String get homeSpotlightTitle => 'مختارات مميزة';
@@ -14494,7 +14497,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adsPayHow => 'كيف تدفعين؟';
+  String get adsPayHow => 'كيف بدّك تدفعي؟';
 
   @override
   String get adsPayFromEarnings => 'من رصيد أرباحي';
@@ -14506,31 +14509,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adsPayEarningsShort(String amount) {
-    return 'الرصيد $amount — لا يكفي بعد';
+    return 'الرصيد $amount — لسّا ما بيكفي';
   }
 
   @override
   String get adsPayInstant => 'فوري';
 
   @override
-  String get adsPayTransferHint => 'حوّلي المبلغ ثم أدخلي رقم العملية';
+  String get adsPayTransferHint => 'حوّلي المبلغ وبعدين حطّي رقم العملية';
 
   @override
-  String get adsPayNoMethods => 'الدفع بالتحويل غير متاح بعد — تواصلي مع الدعم';
+  String get adsPayNoMethods => 'الدفع بالتحويل لسّا مو متاح — احكي مع الدعم';
 
   @override
   String adsPaymentBannerAwaiting(String tier) {
-    return 'باقتكِ $tier بانتظار دفعتكِ — اضغطي لإكمال الدفع';
+    return 'باقتكِ $tier ناطرة دفعتكِ — كبسي لتكمّلي الدفع';
   }
 
   @override
   String adsPaymentBannerReview(String tier) {
-    return 'وصلنا رقم دفعة باقة $tier ونراجعه الآن';
+    return 'وصلنا رقم دفعة باقة $tier وعم نراجعه هلّق';
   }
 
   @override
   String adsPaymentBannerRejected(String tier) {
-    return 'لم نتمكن من مطابقة دفعة باقة $tier — اضغطي لمعرفة السبب';
+    return 'ما قدرنا نطابق دفعة باقة $tier — كبسي لتعرفي ليش';
   }
 
   @override
@@ -14538,66 +14541,66 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adsPaymentPlan(String tier) {
-    return 'باقة $tier · 30 يوماً';
+    return 'باقة $tier · 30 يوم';
   }
 
   @override
   String adsPaymentStepSend(String amount, String method) {
-    return 'حوّلي $amount عبر $method';
+    return 'حوّلي $amount عن طريق $method';
   }
 
   @override
-  String get adsPaymentStepReference => 'أدخلي رقم العملية الذي وصلكِ';
+  String get adsPaymentStepReference => 'حطّي رقم العملية اللي وصلكِ';
 
   @override
-  String get adsPaymentStepChange => 'أرسلتِ رقماً خاطئاً؟ أعيدي إرساله';
+  String get adsPaymentStepChange => 'بعتِ رقم غلط؟ ابعتيه من جديد';
 
   @override
   String get adsPaymentReferenceField => 'رقم العملية';
 
   @override
-  String get adsPaymentSend => 'أرسلي للمراجعة';
+  String get adsPaymentSend => 'ابعتيها للمراجعة';
 
   @override
-  String get adsPaymentSent => 'وصلنا — نفعّل باقتكِ فور مطابقة الدفعة';
+  String get adsPaymentSent => 'وصلتنا — منفعّل باقتكِ أول ما نطابق الدفعة';
 
   @override
-  String get adsPaymentReviewTitle => 'قيد المراجعة';
+  String get adsPaymentReviewTitle => 'عم تنراجع';
 
   @override
   String adsPaymentReviewBody(String reference) {
-    return 'العملية $reference لدى فريق المالية. سيصلكِ إشعار فور تفعيل باقتكِ.';
+    return 'العملية $reference عند فريق المالية. رح يوصلكِ إشعار أول ما تتفعّل باقتكِ.';
   }
 
   @override
-  String get adsPaymentRejectedTitle => 'لم نتمكن من مطابقة هذه الدفعة';
+  String get adsPaymentRejectedTitle => 'ما قدرنا نطابق هالدفعة';
 
   @override
-  String get adsPaymentHowLong => 'تُطابَق الدفعات عادةً خلال ساعات عمل قليلة.';
+  String get adsPaymentHowLong => 'الدفعات عادةً بتتطابق خلال كم ساعة شغل.';
 
   @override
-  String get adsPaymentCancel => 'إلغاء هذه الدفعة';
+  String get adsPaymentCancel => 'ألغي هالدفعة';
 
   @override
-  String get adsPaymentCopy => 'نسخ بيانات الدفع';
+  String get adsPaymentCopy => 'انسخي بيانات الدفع';
 
   @override
-  String get adsPaymentCopied => 'تم النسخ';
+  String get adsPaymentCopied => 'انتسخ';
 
   @override
-  String get adsPaymentNothingOpen => 'لا دفعة معلّقة';
+  String get adsPaymentNothingOpen => 'ما في دفعة معلّقة';
 
   @override
-  String get adsErrorMethodUnavailable => 'طريقة الدفع هذه غير متاحة حالياً.';
+  String get adsErrorMethodUnavailable => 'طريقة الدفع هي مو متاحة هلّق.';
 
   @override
-  String get adsErrorPurchaseInProgress => 'لديكِ دفعة باقة قيد الإتمام.';
+  String get adsErrorPurchaseInProgress => 'عندكِ دفعة باقة لسّا عم تكمل.';
 
   @override
-  String get adsErrorPurchaseClosed => 'تمّ البتّ في هذه الدفعة.';
+  String get adsErrorPurchaseClosed => 'هالدفعة انحسمت.';
 
   @override
-  String get adsErrorReferenceRequired => 'أدخلي رقم العملية الذي وصلكِ.';
+  String get adsErrorReferenceRequired => 'حطّي رقم العملية اللي وصلكِ.';
 
   @override
   String get adminAdsTitle => 'باقات الإعلان';
@@ -14608,7 +14611,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get adminAdsNoPending => 'لا دفعات باقات بانتظار المطابقة.';
+  String get adminAdsNoPending => 'ما في دفعات باقات ناطرة مطابقة.';
 
   @override
   String adminAdsReference(String reference) {
@@ -14617,42 +14620,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String adminAdsConfirmBody(String amount, String seller, String tier) {
-    return 'تأكيد وصول $amount من $seller؟ تُفعَّل باقة $tier فوراً.';
+    return 'بدّك تأكّدي وصول $amount من $seller؟ باقة $tier بتتفعّل فوراً.';
   }
 
   @override
-  String get adminAdsConfirmed => 'فُعّلت الباقة وأُبلغ المتجر';
+  String get adminAdsConfirmed => 'تفعّلت الباقة وتخبّر المتجر';
 
   @override
-  String get adminAdsInstructionsTitle => 'أين تُرسل المتاجر دفعات الباقات';
+  String get adminAdsInstructionsTitle => 'لوين بتبعت المتاجر دفعات الباقات';
 
   @override
-  String get adminAdsInstructionsHint => 'الطريقة الفارغة لا تُعرض على المتاجر';
+  String get adminAdsInstructionsHint => 'الطريقة الفاضية ما بتبيّن للمتاجر';
 
   @override
-  String get adminAdsInstructionsSave => 'حفظ بيانات الدفع';
+  String get adminAdsInstructionsSave => 'احفظي بيانات الدفع';
 
   @override
-  String get adminAdsInstructionsSaved => 'تم الحفظ';
+  String get adminAdsInstructionsSaved => 'انحفظت';
 
   @override
-  String get adsNotVerifiedTitle => 'يحتاج متجركِ إلى الاعتماد ليعلن';
+  String get adsNotVerifiedTitle => 'متجركِ لازم ينعتمد ليقدر يعلن';
 
   @override
   String get adsNotVerifiedBody =>
-      'قبل اعتماد المتجر تكون صفحته مغلقة أمام الزبونات، فلن يصلهن الإعلان. أكملي التوثيق وتُفتح لكِ كل الباقات.';
+      'قبل ما ينعتمد المتجر بتكون صفحته مسكّرة قدّام الزبونات، فالإعلان ما رح يوصلهن. كمّلي التوثيق وبتنفتحلك كل الباقات.';
 
   @override
-  String get adsNotVerifiedAction => 'أكملي التوثيق';
+  String get adsNotVerifiedAction => 'كمّلي التوثيق';
 
   @override
-  String get adsErrorNotVerified => 'يجب اعتماد متجركِ قبل أن يعلن.';
+  String get adsErrorNotVerified => 'لازم ينعتمد متجركِ قبل ما يعلن.';
 
   @override
-  String get feedReasonForYou => 'مقترح لكِ';
+  String get feedReasonForYou => 'مقترح إلكِ';
 
   @override
-  String get feedReasonTrending => 'رائج الآن';
+  String get feedReasonTrending => 'رائج هلّق';
 
   @override
   String get feedReasonNewVoice => 'صوت جديد';

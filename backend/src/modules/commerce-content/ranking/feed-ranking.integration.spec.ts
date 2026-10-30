@@ -130,10 +130,19 @@ dbTest('a boutique she follows comes before a like one she does not', async (db,
   await db.follow.create({ data: { followerId: shopper, followingId: a.authorId } });
 
   const session = await ranking.rank('feed', shopper, 'test');
-  const ia = session.ids.indexOf(a.id);
-  const ib = session.ids.indexOf(b.id);
-  assert.ok(ia >= 0 && ib >= 0, 'both posts are candidates');
-  assert.ok(ia < ib, `followed at ${ia}, other at ${ib}`);
+  assert.ok(session.ids.includes(a.id) && session.ids.includes(b.id), 'both posts are candidates');
+  // Compare where each boutique first appears, not these two posts. Following
+  // lifts every post of hers, so another of them can lead and this one then
+  // gives way to the same-author spacing — which is the feed working.
+  const authors = await db.commerceContent.findMany({
+    where: { id: { in: session.ids } },
+    select: { id: true, authorId: true },
+  });
+  const authorOf = new Map(authors.map((row) => [row.id, row.authorId]));
+  const firstOf = (authorId: string) => session.ids.findIndex((id) => authorOf.get(id) === authorId);
+  const ia = firstOf(a.authorId);
+  const ib = firstOf(b.authorId);
+  assert.ok(ia < ib, `followed first at ${ia}, other first at ${ib}`);
   assert.equal(session.reasons[a.id], 'following');
 });
 
