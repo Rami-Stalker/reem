@@ -85,7 +85,7 @@ class _Panel extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     context.l10n.closetOwnOneAlready,
-                    style: context.dsText.body.tint(colors.warning),
+                    style: context.dsText.body.tint(colors.warningInk),
                   ),
                 ),
               ],

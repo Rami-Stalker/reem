@@ -365,7 +365,7 @@ class _Cell extends StatelessWidget {
         style: muted
             ? context.dsText.micro.tint(colors.outline)
             : best
-            ? context.dsText.captionStrong.tint(colors.success)
+            ? context.dsText.captionStrong.tint(colors.successInk)
             : context.dsText.caption,
       ),
     );

@@ -24,6 +24,10 @@ class UserProfile extends Equatable {
   final bool profileIsPublic;
   final SellerStats? sellerStats;
 
+  /// A boutique's advertising plan — `silver`, `gold`, `diamond` — shown as
+  /// a badge on her page. Null for free.
+  final String? adTier;
+
   const UserProfile({
     required this.user,
     this.isMe = false,
@@ -34,6 +38,7 @@ class UserProfile extends Equatable {
     this.hasStory = false,
     this.profileIsPublic = false,
     this.sellerStats,
+    this.adTier,
   });
 
   bool get isSeller => user.isSeller;
@@ -63,6 +68,7 @@ class UserProfile extends Equatable {
       hasStory: hasStory ?? this.hasStory,
       profileIsPublic: profileIsPublic ?? this.profileIsPublic,
       sellerStats: sellerStats ?? this.sellerStats,
+      adTier: adTier,
     );
   }
 
@@ -77,5 +83,6 @@ class UserProfile extends Equatable {
     hasStory,
     profileIsPublic,
     sellerStats,
+    adTier,
   ];
 }

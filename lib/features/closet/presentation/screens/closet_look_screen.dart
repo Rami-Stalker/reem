@@ -182,7 +182,7 @@ class _Body extends ConsumerWidget {
             icon: Icon(Icons.delete_outline_rounded, color: colors.error),
             label: Text(
               l10n.closetDeleteLook,
-              style: text.button.tint(colors.error),
+              style: text.button.tint(colors.errorInk),
             ),
           ),
         ),

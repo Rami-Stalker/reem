@@ -18,6 +18,7 @@ import { Money } from '../../common/money';
 import {
   CreatePromotionDto,
   SetPromotionStatusDto,
+  toAudience,
 } from './dto/promotions.dto';
 import { PromotionsService } from './promotions.service';
 
@@ -55,9 +56,11 @@ export class PromotionsController {
     return this.promotions.create({
       offerId: dto.offer_id,
       placement: dto.placement,
-      fee: Money.of(dto.fee, Currency.SYP),
+      fee: dto.fee !== undefined ? Money.of(dto.fee, Currency.SYP) : undefined,
       startsAt: new Date(dto.starts_at),
       endsAt: new Date(dto.ends_at),
+      audience: toAudience(dto.audience),
+      contentId: dto.content_id,
       actorId: user.id,
       actorRole: user.role,
     });

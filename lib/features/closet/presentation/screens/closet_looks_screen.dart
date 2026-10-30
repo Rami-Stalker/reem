@@ -251,7 +251,7 @@ class _Summary extends StatelessWidget {
                   DsGaps.vXxs,
                   Text(
                     context.l10n.closetLooksOneAway(short),
-                    style: text.caption.tint(palette.caution),
+                    style: text.caption.tint(palette.cautionInk),
                   ),
                 ],
               ],

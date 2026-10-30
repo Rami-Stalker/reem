@@ -324,6 +324,31 @@ abstract final class ApiEndpoints {
   /// A tap on a paid slot, credited to the offer that paid for it.
   static const sponsoredClicks = '/sponsored/clicks';
 
+  // «مركز الإعلانات» — a boutique's own advertising.
+  static const adsPlans = '/ads/plans';
+  static const adsSubscribe = '/ads/plans/subscribe';
+  static const adsQuote = '/ads/quote';
+  static const adsSuggestions = '/ads/suggestions';
+  static const adsOverview = '/ads/overview';
+  static const adsGovernorates = '/ads/audience/governorates';
+  static const adsCampaigns = '/ads/campaigns';
+  static String adsCampaignStatus(String id) => '/ads/campaigns/$id/status';
+  static const adsPaymentOptions = '/ads/plans/payment-options';
+  static const adsPurchases = '/ads/plans/purchases';
+  static String adsPurchaseReference(String id) =>
+      '/ads/plans/purchases/$id/reference';
+  static String adsPurchaseCancel(String id) =>
+      '/ads/plans/purchases/$id/cancel';
+
+  // Finance's half of plan payments.
+  static const adminAdsSummary = '/ads/admin/summary';
+  static const adminAdsPurchases = '/ads/admin/purchases';
+  static String adminAdsPurchaseConfirm(String id) =>
+      '/ads/admin/purchases/$id/confirm';
+  static String adminAdsPurchaseReject(String id) =>
+      '/ads/admin/purchases/$id/reject';
+  static const adminAdsPaymentInstructions = '/ads/admin/payment-instructions';
+
   // Cart
   static const cart = '/cart';
   static const cartItems = '/cart/items';

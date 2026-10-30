@@ -109,7 +109,7 @@ class ReviewCard extends StatelessWidget {
                   ),
                   child: Text(
                     context.l10n.reviewPending,
-                    style: context.dsText.body.semibold.tint(colors.warning),
+                    style: context.dsText.body.semibold.tint(colors.warningInk),
                   ),
                 )
               else if (review.verifiedPurchase)
@@ -124,7 +124,7 @@ class ReviewCard extends StatelessWidget {
                   ),
                   child: Text(
                     context.l10n.reviewsVerified,
-                    style: context.dsText.body.semibold.tint(colors.success),
+                    style: context.dsText.body.semibold.tint(colors.successInk),
                   ),
                 ),
             ],

@@ -95,6 +95,14 @@ class Post extends Equatable {
 
   final DateTime createdAt;
 
+  /// Set when this row is a boutique's paid placement: the offer that paid,
+  /// so a tap is credited to it, and her plan for the badge. An advert must be
+  /// shown as one.
+  final String? sponsoredOfferId;
+  final String? sponsoredStoreTier;
+
+  bool get isSponsored => sponsoredOfferId != null;
+
   const Post({
     required this.id,
     required this.author,
@@ -109,6 +117,8 @@ class Post extends Equatable {
     this.isSaved = false,
     this.isReshared = false,
     required this.createdAt,
+    this.sponsoredOfferId,
+    this.sponsoredStoreTier,
   });
 
   /// True when there is something to shop behind this post.
@@ -134,5 +144,7 @@ class Post extends Equatable {
         isSaved,
         isReshared,
         createdAt,
+        sponsoredOfferId,
+        sponsoredStoreTier,
       ];
 }

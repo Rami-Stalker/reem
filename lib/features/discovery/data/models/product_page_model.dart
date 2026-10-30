@@ -38,6 +38,7 @@ class ProductPageModel extends ProductPage {
           product: ProductModel.fromJson(json),
           offerId: offerId,
           placement: json['sponsored_placement']?.toString() ?? 'search',
+          storeTier: json['sponsored_store_tier']?.toString(),
         ),
       );
     }

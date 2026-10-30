@@ -242,7 +242,7 @@ class _DecliningTile extends StatelessWidget {
                 ),
                 child: Text(
                   '${row.ordersBefore} ← ${row.ordersNow}',
-                  style: context.dsText.micro.tint(palette.critical),
+                  style: context.dsText.micro.tint(palette.criticalInk),
                 ),
               ),
             ],

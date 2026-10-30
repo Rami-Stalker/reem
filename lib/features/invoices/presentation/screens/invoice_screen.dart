@@ -291,7 +291,7 @@ class _Line extends StatelessWidget {
               if (line.isDiscounted)
                 Text(
                   '−${line.unitDiscount.format()}',
-                  style: context.dsText.caption.semibold.tint(colors.success),
+                  style: context.dsText.caption.semibold.tint(colors.successInk),
                 ),
             ],
           ),

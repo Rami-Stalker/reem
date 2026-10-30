@@ -25,9 +25,9 @@ class HomeBento extends ConsumerWidget {
 
   static const List<List<Color>> _washes = [
     [DsColors.primary700, DsColors.primary400],
-    [DsColors.mauve700, DsColors.lavender400],
+    [DsColors.secondary700, DsColors.secondary400],
     [DsColors.gold600, DsColors.gold300],
-    [DsColors.mauve800, DsColors.coral400],
+    [DsColors.secondary800, DsColors.rosewood],
   ];
 
   @override

@@ -99,7 +99,7 @@ class _Explained extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: DsTypography.fontFamily,
                   fontSize: DsTypography.bodySmall,
-                  color: Color(0xFF7A6470),
+                  color: DsColors.textSecondary,
                 ),
               ),
             ],

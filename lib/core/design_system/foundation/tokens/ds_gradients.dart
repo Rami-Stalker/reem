@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 
-/// Feminine gradient presets for Ohara — blush rose, mauve and champagne gold.
+/// Feminine gradient presets for Ohara — rose, mauve, cream and a touch of gold.
 ///
 /// Prefer the theme-resolved accessors on `context` (`context.primaryGradient`
 /// etc.) so dark variants are picked automatically.
@@ -13,19 +13,19 @@ abstract final class DsGradients {
   static const LinearGradient primary = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFF7AAC5), Color(0xFFE85A8A)],
+    colors: [DsColors.primary300, DsColors.primary500],
   );
 
   static const LinearGradient primarySoft = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFF98FB6), Color(0xFFD43E73)],
+    colors: [DsColors.primary400, DsColors.primary600],
   );
 
   static const LinearGradient primaryDark = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFFF9DBE), Color(0xFFE85A8A)],
+    colors: [DsColors.primary300, DsColors.primary500],
   );
 
   static LinearGradient primaryFor({required bool isDark}) =>
@@ -37,7 +37,7 @@ abstract final class DsGradients {
   static const LinearGradient mauve = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFC8A1CD), Color(0xFF8F5C99)],
+    colors: [DsColors.secondary300, DsColors.secondary600],
   );
 
   // ---------------------------------------------------------------------------
@@ -46,13 +46,32 @@ abstract final class DsGradients {
   static const LinearGradient champagne = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFFCF1D8), Color(0xFFE6C277), Color(0xFFD9A94F)],
+    colors: [DsColors.gold50, DsColors.softGold, DsColors.champagneGold],
   );
 
   static const LinearGradient gold = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFE6C277), Color(0xFFC28E36)],
+    colors: [DsColors.softGold, DsColors.champagneGold],
+  );
+
+  // ---------------------------------------------------------------------------
+  // «باقات الإعلان» — the boutique plan a badge carries. Silver is cool
+  // pewter, gold is the brand's own gold, diamond is an iced violet that
+  // still sits inside the plum family rather than reading as a stranger.
+  // ---------------------------------------------------------------------------
+  static const LinearGradient tierSilver = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFF4F3F7), Color(0xFFCFCBD8), Color(0xFFA9A4B6)],
+  );
+
+  static const LinearGradient tierGold = gold;
+
+  static const LinearGradient tierDiamond = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFB7A3F2), Color(0xFF7C5AD8), Color(0xFF4E2FA8)],
   );
 
   // ---------------------------------------------------------------------------
@@ -61,25 +80,25 @@ abstract final class DsGradients {
   static const LinearGradient sunset = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFFFC1A0), Color(0xFFF06DA0), Color(0xFFB98BE8)],
+    colors: [DsColors.peachCream, DsColors.primary400, DsColors.secondary400],
   );
 
-  static const LinearGradient lavenderBlush = LinearGradient(
+  static const LinearGradient roseMauveBlush = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFEAD7F2), Color(0xFFFAC9DC), Color(0xFFFFF1F6)],
+    colors: [DsColors.secondary100, DsColors.primary200, DsColors.primary50],
   );
 
   static const LinearGradient soft = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [DsColors.primary50, DsColors.lavender50],
+    colors: [DsColors.backgroundPink, DsColors.backgroundSecondary],
   );
 
   static const LinearGradient accent = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [DsColors.lavender100, DsColors.mauve400],
+    colors: [DsColors.secondary100, DsColors.secondary400],
   );
 
   // ---------------------------------------------------------------------------
@@ -88,13 +107,21 @@ abstract final class DsGradients {
   static const LinearGradient background = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [Color(0xFFFFF8FB), Color(0xFFFEEFF5), Color(0xFFFAF3FF)],
+    colors: [
+      DsColors.backgroundSecondary,
+      DsColors.backgroundPink,
+      DsColors.secondary50,
+    ],
   );
 
   static const LinearGradient backgroundDark = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF150F1A), Color(0xFF1E1426), Color(0xFF18101D)],
+    colors: [
+      DsColors.backgroundDark,
+      DsColors.surfaceDark,
+      DsColors.backgroundDark,
+    ],
   );
 
   static LinearGradient meshBackground({required bool isDark}) =>
@@ -106,13 +133,17 @@ abstract final class DsGradients {
   static const LinearGradient storyRing = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFE85A8A), Color(0xFFB98BE8), Color(0xFFE6C277)],
+    colors: [
+      DsColors.primary500,
+      DsColors.secondary400,
+      DsColors.champagneGold,
+    ],
   );
 
   static const LinearGradient storyRingDark = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFFF87B0), Color(0xFFC9A0E0), Color(0xFFE6C277)],
+    colors: [DsColors.primary300, DsColors.secondary300, DsColors.softGold],
   );
 
   static LinearGradient storyRingFor({required bool isDark}) =>
@@ -142,13 +173,13 @@ abstract final class DsGradients {
   static const LinearGradient rewards = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [Color(0xFFE85A8A), Color(0xFF9D5FD8)],
+    colors: [DsColors.primary500, DsColors.secondary600],
   );
 
   static const LinearGradient rewardsDark = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [Color(0xFFFF87B0), Color(0xFFB98BE8)],
+    colors: [DsColors.primary300, DsColors.secondary300],
   );
 
   static LinearGradient rewardsFor({required bool isDark}) =>
@@ -174,10 +205,14 @@ abstract final class DsGradients {
   // Shimmer (loading) — resolved by theme brightness.
   // ---------------------------------------------------------------------------
   static LinearGradient shimmer({bool isDark = false}) => LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        colors: isDark
-            ? const [Color(0xFF2A2032), Color(0xFF3A2E44), Color(0xFF2A2032)]
-            : const [Color(0xFFF3E3EA), Color(0xFFFFF7FB), Color(0xFFF3E3EA)],
-      );
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: isDark
+        ? const [Color(0xFF2B222E), Color(0xFF3A2F3E), Color(0xFF2B222E)]
+        : const [
+            DsColors.surfaceVariantLight,
+            DsColors.backgroundPink,
+            DsColors.surfaceVariantLight,
+          ],
+  );
 }

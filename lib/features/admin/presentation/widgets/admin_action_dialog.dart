@@ -107,7 +107,7 @@ class _AdminActionDialogState extends State<_AdminActionDialog> {
                   const SizedBox(height: DsSpacing.md),
                 ],
               if (_error != null)
-                Text(_error!, style: context.dsText.body.tint(colors.error)),
+                Text(_error!, style: context.dsText.body.tint(colors.errorInk)),
             ],
           ),
         ),

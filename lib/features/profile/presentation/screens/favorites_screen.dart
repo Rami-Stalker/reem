@@ -297,7 +297,7 @@ class _ErrorBanner extends StatelessWidget {
           Icon(Icons.error_outline_rounded, color: colors.error),
           const SizedBox(width: DsSpacing.sm),
           Expanded(
-            child: Text(message, style: context.dsText.body.tint(colors.error)),
+            child: Text(message, style: context.dsText.body.tint(colors.errorInk)),
           ),
           IconButton(
             tooltip: context.l10n.retry,

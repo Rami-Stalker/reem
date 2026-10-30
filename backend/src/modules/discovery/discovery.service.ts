@@ -118,7 +118,7 @@ export class DiscoveryService {
     try {
       const candidates = await this.promotions.candidatesFor(
         PromotionPlacement.CATEGORY,
-        { categoryIds },
+        { categoryIds, viewerId },
       );
       if (candidates.length === 0) return [];
 
@@ -151,6 +151,7 @@ export class DiscoveryService {
         .recordImpressions(
           cards.map((card) => card.offerId),
           PromotionPlacement.CATEGORY,
+          viewerId,
         )
         .catch(() => undefined);
 
@@ -167,6 +168,7 @@ export class DiscoveryService {
         is_sponsored: true,
         sponsored_offer_id: card.offerId,
         sponsored_placement: 'category',
+        sponsored_store_tier: card.tier.toLowerCase(),
       }));
     } catch (error) {
       this.logger.warn(`Sponsored category slots not served: ${String(error)}`);

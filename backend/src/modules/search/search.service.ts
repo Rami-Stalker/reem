@@ -139,6 +139,7 @@ export class SearchService {
       // answer.
       const candidates = await this.promotions.candidatesFor(
         PromotionPlacement.SEARCH,
+        { viewerId },
       );
       if (candidates.length === 0) return [];
 
@@ -157,6 +158,7 @@ export class SearchService {
         .slice(0, MAX_SLOTS)
         .map((candidate) => ({
           offerId: candidate.offerId,
+          tier: candidate.tier,
           product: byId.get(candidate.productId)!,
         }));
       if (cards.length === 0) return [];
@@ -170,16 +172,18 @@ export class SearchService {
         .recordImpressions(
           cards.map((card) => card.offerId),
           PromotionPlacement.SEARCH,
+          viewerId,
         )
         .catch(() => undefined);
 
       // Each card carries the offer that paid for it, so a tap is credited
       // to that offer and not to whichever seller happens to list it too.
-      return cards.map(({ offerId, product }) => ({
+      return cards.map(({ offerId, tier, product }) => ({
         ...serializeProduct(product, { isLiked: favSet.has(product.id) }),
         is_sponsored: true,
         sponsored_offer_id: offerId,
         sponsored_placement: 'search',
+        sponsored_store_tier: tier.toLowerCase(),
       }));
     } catch (error) {
       this.logger.warn(`Sponsored slots not served: ${String(error)}`);

@@ -313,7 +313,7 @@ class _CommentTile extends StatelessWidget {
                           child: Text(
                             context.l10n.delete,
                             style: context.dsText.caption.copyWith(
-                              color: c.error,
+                              color: c.errorInk,
                               fontWeight: DsTypography.semiBold,
                             ),
                           ),

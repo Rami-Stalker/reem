@@ -258,7 +258,7 @@ class _ModerationRow extends StatelessWidget {
             // one is refused before it reaches the database.
             Text(
               context.l10n.adminContentRemovedFor(content.removalReason!),
-              style: context.dsText.caption.tint(console.critical),
+              style: context.dsText.caption.tint(console.criticalInk),
             ),
           ],
           DsGaps.vSm,
@@ -380,7 +380,7 @@ class _ReasonDialogState extends State<_ReasonDialog> {
             DsGaps.vXs,
             Text(
               context.l10n.adminContentReasonTooShort,
-              style: context.dsText.micro.tint(context.dsColors.error),
+              style: context.dsText.micro.tint(context.dsColors.errorInk),
             ),
           ],
         ],

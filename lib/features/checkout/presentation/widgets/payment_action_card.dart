@@ -196,7 +196,7 @@ class _PaymentActionCardState extends ConsumerState<PaymentActionCard> {
             const SizedBox(height: DsSpacing.sm),
             Text(
               l10n.paymentReferenceRejected(payment.failureReason!),
-              style: context.dsText.bodySmall.tint(colors.error),
+              style: context.dsText.bodySmall.tint(colors.errorInk),
             ),
           ],
           const SizedBox(height: DsSpacing.md),

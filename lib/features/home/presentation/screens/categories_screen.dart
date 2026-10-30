@@ -90,7 +90,7 @@ class CategoriesScreen extends ConsumerWidget {
 /// Colour and icon by position, cycled so the grid never runs out.
 const _palette = <Gradient>[
   DsGradients.primarySoft,
-  DsGradients.lavenderBlush,
+  DsGradients.roseMauveBlush,
   DsGradients.sunset,
   DsGradients.champagne,
   DsGradients.rewards,

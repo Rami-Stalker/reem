@@ -74,7 +74,7 @@ class FinancePositionGrid extends StatelessWidget {
                       child: Text(
                         l10n.financeCoverageShort,
                         style: context.dsText.caption.semibold.tint(
-                          palette.critical,
+                          palette.criticalInk,
                         ),
                       ),
                     ),

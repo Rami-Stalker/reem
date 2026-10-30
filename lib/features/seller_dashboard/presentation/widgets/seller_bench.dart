@@ -102,7 +102,7 @@ class BenchHero extends ConsumerWidget {
                         ? Icons.north_east_rounded
                         : Icons.south_east_rounded,
                     size: DsSizes.iconXxs,
-                    color: rising ? DsColors.gold200 : DsColors.coral300,
+                    color: rising ? DsColors.gold200 : DsColors.primary200,
                   ),
                   DsGaps.hXxs,
                   Text(
@@ -289,7 +289,7 @@ class BenchFirstThing extends ConsumerWidget {
 
     final first = tasks.first;
     final rest = tasks.skip(1).take(4).toList(growable: false);
-    final accent = context.toneColor(first.tone);
+    final accent = context.toneInk(first.tone);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

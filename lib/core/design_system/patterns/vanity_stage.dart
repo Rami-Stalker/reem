@@ -63,7 +63,7 @@ class VanityMirror extends StatelessWidget {
         painter: _MirrorPainter(
           lit: lit,
           bulbs: bulbs,
-          glass: isDark ? DsColors.mauve900 : DsColors.primary50,
+          glass: isDark ? DsColors.secondary900 : DsColors.primary50,
           blush: palette.primary,
           frame: palette.gold,
         ),

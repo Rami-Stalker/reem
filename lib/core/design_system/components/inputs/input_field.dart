@@ -449,7 +449,7 @@ class _DsInputFieldState extends State<DsInputField> {
                           child: Text(
                             message,
                             style: theme.textTheme.labelMedium?.copyWith(
-                              color: c.error,
+                              color: c.errorInk,
                             ),
                           ),
                         ),

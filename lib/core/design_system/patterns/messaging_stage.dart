@@ -150,7 +150,7 @@ class _Face extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [DsColors.primary300, DsColors.primary600, DsColors.mauve600],
+          colors: [DsColors.primary300, DsColors.primary600, DsColors.secondary600],
         ),
       ),
       child: Align(

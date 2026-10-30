@@ -1,3 +1,5 @@
+import { FeedRankingService } from './ranking/feed-ranking.service';
+import { PromotionsModule } from '../promotions/promotions.module';
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { AdminCommerceContentController } from './admin-commerce-content.controller';
@@ -23,7 +25,7 @@ import { SellerCommerceContentController } from './seller-commerce-content.contr
 @Module({
   // For `AuditService`: a takedown that is not written to the audit log is
   // the silent removal this feature exists to prevent.
-  imports: [AuthModule],
+  imports: [AuthModule, PromotionsModule],
   controllers: [
     AdminCommerceContentController,
     AdminContentController,
@@ -46,6 +48,7 @@ import { SellerCommerceContentController } from './seller-commerce-content.contr
     ContentFeedService,
     ContentFeedControlsService,
     ContentAnalyticsService,
+    FeedRankingService,
   ],
   exports: [
     CommerceContentService,
@@ -56,6 +59,7 @@ import { SellerCommerceContentController } from './seller-commerce-content.contr
     ContentModerationService,
     ContentFeedService,
     ContentAnalyticsService,
+    FeedRankingService,
   ],
 })
 export class CommerceContentModule {}

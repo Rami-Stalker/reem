@@ -130,7 +130,7 @@ class _AdminSellerApplicationsScreenState
                       children: [
                         Text(
                           state.error!,
-                          style: context.dsText.body.tint(context.dsColors.error),
+                          style: context.dsText.body.tint(context.dsColors.errorInk),
                         ),
                         const SizedBox(height: DsSpacing.md),
                         SecondaryButton(
@@ -252,7 +252,7 @@ class _ApplicationTile extends StatelessWidget {
     final palette = context.console;
     final status = record.status.toUpperCase();
 
-    final tone = context.toneColor(adminStatusTone(status));
+    final tone = context.toneInk(adminStatusTone(status));
     final subtitle = [
       record.field('legal_name'),
       record.field('contact_phone') ?? record.field('contact_email'),
@@ -450,7 +450,7 @@ class _ApplicationSheetState extends State<_ApplicationSheet> {
               ),
               if (_error != null) ...[
                 const SizedBox(height: DsSpacing.sm),
-                Text(_error!, style: context.dsText.body.tint(colors.error)),
+                Text(_error!, style: context.dsText.body.tint(colors.errorInk)),
               ],
               const SizedBox(height: DsSpacing.md),
               PrimaryButton(

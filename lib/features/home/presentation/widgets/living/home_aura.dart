@@ -840,7 +840,7 @@ class _Polaroid extends StatelessWidget {
           height: _FloatingCollageState._cardHeight,
           padding: const EdgeInsets.all(DsSpacing.xxs),
           decoration: BoxDecoration(
-            color: palette.isDeep ? DsColors.mauve800 : DsColors.white,
+            color: palette.isDeep ? DsColors.secondary800 : DsColors.white,
             borderRadius: DsRadius.borderMd,
             boxShadow: context.shadowMedium,
           ),
