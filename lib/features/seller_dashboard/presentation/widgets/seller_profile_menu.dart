@@ -104,10 +104,16 @@ class SellerProfileMenu extends ConsumerWidget {
             onTap: () => _comingSoon(context, l10n.sellerTeamManagement),
           ),
           _Row(
+            icon: Icons.campaign_outlined,
+            label: l10n.adsCenterTitle,
+            color: tint(5),
+            onTap: () => context.push(RoutePaths.sellerAds),
+          ),
+          _Row(
             icon: Icons.workspace_premium_outlined,
             label: l10n.sellerSubscriptionPlan,
             color: tint(4),
-            onTap: () => _comingSoon(context, l10n.sellerSubscriptionPlan),
+            onTap: () => context.push(RoutePaths.sellerAdsPlans),
           ),
         ],
       ),

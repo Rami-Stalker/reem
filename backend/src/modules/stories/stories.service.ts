@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { CommerceContentStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
@@ -8,6 +8,7 @@ import {
 } from '../../common/serializers';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import { contentVisibilityWhere } from '../commerce-content/feed/content-feed.service';
+import { FeedRankingService } from '../commerce-content/ranking/feed-ranking.service';
 
 /**
  * `GET /stories` and the two engagement routes — the same contract, over the
@@ -29,6 +30,7 @@ export class StoriesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly signals: TrendSignalService,
+    @Optional() private readonly ranking?: FeedRankingService,
   ) {}
 
   /** `userId` is absent for a signed-out visitor — see the controller. */
@@ -66,9 +68,10 @@ export class StoriesService {
       stories.map((story) => story.id),
       userId,
     );
+    const ordered = await this.trayOrder(stories, viewer, userId);
     // `product_id` is additive: the story it tags, for the viewer's
     // «تسوّقي القطعة». Older clients ignore the key.
-    return stories.map(({ productTags, ...story }) => ({
+    return ordered.map(({ productTags, ...story }) => ({
       ...serializeLegacyStory(story, viewer),
       product_id: productTags[0]?.productId ?? null,
     }));
@@ -186,6 +189,41 @@ export class StoriesService {
       }),
     ]);
     return { message: 'Reaction removed' };
+  }
+
+  /**
+   * The rail groups by shop in the order each shop first appears, so the
+   * flat list is laid out shop by shop in the tray's order — her own, then
+   * the shops with something new, closest first, then the ones she finished.
+   * Each shop's frames keep their order. Without the ranker: newest first.
+   */
+  private async trayOrder<T extends { id: string; authorId: string; createdAt: Date }>(
+    stories: T[],
+    viewer: LegacyViewerState,
+    userId?: string,
+  ): Promise<T[]> {
+    if (!this.ranking) return stories;
+    const byShop = new Map<string, T[]>();
+    for (const story of stories) {
+      const frames = byShop.get(story.authorId);
+      if (frames) frames.push(story);
+      else byShop.set(story.authorId, [story]);
+    }
+    try {
+      const groups = await this.ranking.orderTray(
+        userId,
+        [...byShop.entries()].map(([authorId, frames]) => ({
+          authorId,
+          frames,
+          allSeen: frames.every((frame) => viewer.viewed.has(frame.id)),
+          // Newest first, so the first frame is the newest.
+          newestAt: frames[0].createdAt,
+        })),
+      );
+      return groups.flatMap((group) => group.frames);
+    } catch {
+      return stories;
+    }
   }
 
   private async viewerState(

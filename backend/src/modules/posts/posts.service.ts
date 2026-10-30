@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import {
   CommerceContentCommentStatus,
   CommerceContentStatus,
   Prisma,
+  PromotionPlacement,
 } from '@prisma/client';
+import {
+  MAX_FEED_SLOTS,
+  PromotionsService,
+  ServedSlot,
+} from '../promotions/promotions.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PRODUCT_CARD_INCLUDE as PRODUCT_INCLUDE } from '../../common/catalog/product-include';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
@@ -16,6 +22,7 @@ import {
   serializeLegacyPost,
 } from '../../common/serializers';
 import { ContentInteractionsService } from '../commerce-content/interactions/content-interactions.service';
+import { FeedRankingService } from '../commerce-content/ranking/feed-ranking.service';
 
 /**
  * `/posts/*` — the same contract, over the content platform.
@@ -42,6 +49,8 @@ export class PostsService {
     private readonly prisma: PrismaService,
     private readonly signals: TrendSignalService,
     private readonly interactions: ContentInteractionsService,
+    @Optional() private readonly promotions?: PromotionsService,
+    @Optional() private readonly ranking?: FeedRankingService,
   ) {}
 
   /**
@@ -80,21 +89,143 @@ export class PostsService {
           author: { mutesReceived: { none: { muterId: userId } } },
         }
       : this.legacyPostWhere;
-    const [posts, total] = await Promise.all([
-      this.prisma.commerceContent.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: page.skip,
-        take: page.limit,
-        include: this.legacyInclude,
-      }),
-      this.prisma.commerceContent.count({ where }),
-    ]);
-    const viewer = await this.viewerState(posts.map((p) => p.id), userId);
+    const { posts, total, reasons } = await this.orderedPage(where, userId, page);
+    // The home page's feed leads with the boutique's paid FEED_TOP post, the
+    // same one the community feed pins, on the first page only.
+    const sponsored = page.page === 1 ? await this.sponsoredHead(where, userId) : [];
+    const pinned = new Set(sponsored.map((s) => s.post.id));
+    const rows = [
+      ...sponsored.map((s) => s.post),
+      ...posts.filter((p) => !pinned.has(p.id)),
+    ];
+    const viewer = await this.viewerState(rows.map((p) => p.id), userId);
+    const slotOf = new Map(sponsored.map((s) => [s.post.id, s.slot]));
     return {
-      data: posts.map((p) => serializeLegacyPost(p, viewer)),
+      data: rows.map((p, index) => {
+        const post = serializeLegacyPost(p, viewer);
+        const slot = index < sponsored.length ? slotOf.get(p.id) : undefined;
+        const reason = reasons[p.id];
+        if (!slot && reason) return { ...post, rank_reason: reason };
+        return slot
+          ? {
+              ...post,
+              sponsored: {
+                promotion_id: slot.promotionId,
+                offer_id: slot.offerId,
+                placement: 'feed_top',
+                store_tier: slot.tier.toLowerCase(),
+              },
+            }
+          : post;
+      }),
       pagination: buildMeta(page.page, page.limit, total, posts.length),
     };
+  }
+
+  /**
+   * One page of the home page's posts: her ranked order first — the same
+   * ranking the community feed uses, kept for the visit so page two agrees
+   * with page one — then everything else newest-first, so the list never
+   * stops. With ranking switched off, or the ranker failing, it is the plain
+   * newest-first list it always was.
+   */
+  private async orderedPage(
+    where: Prisma.CommerceContentWhereInput,
+    userId: string | undefined,
+    page: PaginationDto,
+  ) {
+    const order = this.ranking
+      ? await this.ranking.homeOrder(userId, page.page === 1).catch(() => null)
+      : null;
+    if (!order || order.ids.length === 0) {
+      const [posts, total] = await Promise.all([
+        this.prisma.commerceContent.findMany({
+          where,
+          orderBy: { createdAt: 'desc' },
+          skip: page.skip,
+          take: page.limit,
+          include: this.legacyInclude,
+        }),
+        this.prisma.commerceContent.count({ where }),
+      ]);
+      return { posts, total, reasons: {} as Record<string, string> };
+    }
+
+    const ids = order.ids;
+    const ranked = ids.slice(page.skip, page.skip + page.limit);
+    const tailWhere: Prisma.CommerceContentWhereInput = {
+      AND: [where, { id: { notIn: ids } }],
+    };
+    const [found, tail, tailTotal] = await Promise.all([
+      ranked.length > 0
+        ? this.prisma.commerceContent.findMany({
+            where: { AND: [where, { id: { in: ranked } }] },
+            include: this.legacyInclude,
+          })
+        : Promise.resolve([]),
+      ranked.length < page.limit
+        ? this.prisma.commerceContent.findMany({
+            where: tailWhere,
+            orderBy: { createdAt: 'desc' },
+            skip: Math.max(0, page.skip - ids.length),
+            take: page.limit - ranked.length,
+            include: this.legacyInclude,
+          })
+        : Promise.resolve([]),
+      this.prisma.commerceContent.count({ where: tailWhere }),
+    ]);
+    const byId = new Map(found.map((row) => [row.id, row]));
+    const posts = [
+      ...ranked.map((id) => byId.get(id)).filter((row) => row !== undefined),
+      ...tail,
+    ];
+    if (userId && posts.length > 0) {
+      void this.ranking!.markServed(userId, posts.map((row) => row.id)).catch(() => undefined);
+    }
+    return { posts, total: ids.length + tailTotal, reasons: order.reasons };
+  }
+
+  /**
+   * The paid FEED_TOP post for this viewer, under the feed's own rules — her
+   * mutes and «غير مهتمة» included. Never throws: a broken ad system must
+   * not take the home feed down with it.
+   */
+  private async sponsoredHead(
+    where: Prisma.CommerceContentWhereInput,
+    userId?: string,
+  ) {
+    if (!this.promotions) return [];
+    try {
+      const slots = await this.promotions.serve(PromotionPlacement.FEED_TOP, {
+        viewerId: userId,
+        limit: MAX_FEED_SLOTS + 2,
+      });
+      const withPost = slots.filter((slot) => slot.contentId);
+      if (withPost.length === 0) return [];
+      const found = await this.prisma.commerceContent.findMany({
+        where: { AND: [where, { id: { in: withPost.map((s) => s.contentId!) } }] },
+        include: this.legacyInclude,
+      });
+      const byId = new Map(found.map((row) => [row.id, row]));
+      const served: { post: (typeof found)[number]; slot: ServedSlot }[] = [];
+      for (const slot of withPost) {
+        const post = byId.get(slot.contentId!);
+        if (post) served.push({ post, slot });
+        if (served.length >= MAX_FEED_SLOTS) break;
+      }
+      if (served.length > 0) {
+        void this.promotions
+          .recordImpressions(
+            served.map((s) => s.slot.offerId),
+            PromotionPlacement.FEED_TOP,
+            userId,
+          )
+          .catch(() => undefined);
+      }
+      return served;
+    } catch {
+      return [];
+    }
   }
 
   async bySeller(
@@ -103,16 +234,7 @@ export class PostsService {
     page: PaginationDto,
   ) {
     const where = { ...this.legacyPostWhere, authorId: sellerId };
-    const [posts, total] = await Promise.all([
-      this.prisma.commerceContent.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: page.skip,
-        take: page.limit,
-        include: this.legacyInclude,
-      }),
-      this.prisma.commerceContent.count({ where }),
-    ]);
+    const { posts, total, reasons } = await this.orderedPage(where, userId, page);
     const viewer = await this.viewerState(posts.map((p) => p.id), userId);
     return {
       data: posts.map((p) => serializeLegacyPost(p, viewer)),
@@ -125,16 +247,7 @@ export class PostsService {
       ...this.legacyPostWhere,
       saves: { some: { userId } },
     };
-    const [posts, total] = await Promise.all([
-      this.prisma.commerceContent.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: page.skip,
-        take: page.limit,
-        include: this.legacyInclude,
-      }),
-      this.prisma.commerceContent.count({ where }),
-    ]);
+    const { posts, total, reasons } = await this.orderedPage(where, userId, page);
     const viewer = await this.viewerState(posts.map((p) => p.id), userId);
     return {
       data: posts.map((p) => serializeLegacyPost(p, viewer)),

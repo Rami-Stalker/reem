@@ -107,6 +107,10 @@ const _sellerToolRoutes = <String>{
   RoutePaths.sellerOrders,
   RoutePaths.sellerReturns,
   RoutePaths.sellerReviews,
+  RoutePaths.sellerAds,
+  RoutePaths.sellerAdsPlans,
+  RoutePaths.sellerAdsNew,
+  RoutePaths.sellerAdsPayment,
 };
 
 /// Redirect logic for persistent login + role-based authorization.

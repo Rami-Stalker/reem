@@ -15732,5 +15732,996 @@
   "closetWornLongAgoShort": "Not worn in a while",
   "@closetWornLongAgoShort": {"description": ""},
   "closetWornTimes": "{count, plural, =1{Worn once} other{Worn {count} times}}",
-  "@closetWornTimes": {"description": "", "placeholders": {"count": {"type": "int"}}}
+  "@closetWornTimes": {"description": "", "placeholders": {"count": {"type": "int"}}},
+  "adTierFree": "Free",
+  "@adTierFree": {
+    "description": "Advertising plan name: free"
+  },
+  "adTierSilver": "Silver",
+  "@adTierSilver": {
+    "description": "Advertising plan name"
+  },
+  "adTierGold": "Gold",
+  "@adTierGold": {
+    "description": "Advertising plan name"
+  },
+  "adTierDiamond": "Diamond",
+  "@adTierDiamond": {
+    "description": "Advertising plan name"
+  },
+  "storeTierBadge": "{tier} store",
+  "@storeTierBadge": {
+    "description": "Badge on a boutique that pays for an advertising plan",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adPlacementSearch": "Top of search",
+  "@adPlacementSearch": {
+    "description": "Ad placement"
+  },
+  "adPlacementCategory": "Category page",
+  "@adPlacementCategory": {
+    "description": "Ad placement"
+  },
+  "adPlacementFeedTop": "Top of the feed",
+  "@adPlacementFeedTop": {
+    "description": "Ad placement"
+  },
+  "adPlacementHomeSpotlight": "Home spotlight",
+  "@adPlacementHomeSpotlight": {
+    "description": "Ad placement"
+  },
+  "adPlacementSearchHint": "Above the results when shoppers search for pieces like yours",
+  "@adPlacementSearchHint": {
+    "description": "adPlacementSearchHint"
+  },
+  "adPlacementCategoryHint": "At the top of the shelf your piece belongs to",
+  "@adPlacementCategoryHint": {
+    "description": "adPlacementCategoryHint"
+  },
+  "adPlacementFeedTopHint": "Your post pinned above every post in the community",
+  "@adPlacementFeedTopHint": {
+    "description": "adPlacementFeedTopHint"
+  },
+  "adPlacementHomeSpotlightHint": "The first thing shoppers see when they open the app",
+  "@adPlacementHomeSpotlightHint": {
+    "description": "adPlacementHomeSpotlightHint"
+  },
+  "adsCenterTitle": "Ads Center",
+  "@adsCenterTitle": {
+    "description": "adsCenterTitle"
+  },
+  "adsCenterSubtitle": "Reach more women, and pay only for what you choose",
+  "@adsCenterSubtitle": {
+    "description": "adsCenterSubtitle"
+  },
+  "adsEntryBody": "Put your best pieces in front of more women",
+  "@adsEntryBody": {
+    "description": "adsEntryBody"
+  },
+  "adsYourPlan": "Your plan",
+  "@adsYourPlan": {
+    "description": "adsYourPlan"
+  },
+  "adsActiveOf": "{active} of {max} campaigns running",
+  "@adsActiveOf": {
+    "description": "adsActiveOf",
+    "placeholders": {
+      "active": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "adsPlanEndsIn": "{days, plural, =0{Ends today} =1{Ends tomorrow} other{Ends in {days} days}}",
+  "@adsPlanEndsIn": {
+    "description": "adsPlanEndsIn",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "adsCreditLeft": "{amount} ad credit left",
+  "@adsCreditLeft": {
+    "description": "adsCreditLeft",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsRecommendSaving": "{tier} would have saved you {amount} last month",
+  "@adsRecommendSaving": {
+    "description": "adsRecommendSaving",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsUpgrade": "Upgrade your plan",
+  "@adsUpgrade": {
+    "description": "adsUpgrade"
+  },
+  "adsSeePlans": "See plans",
+  "@adsSeePlans": {
+    "description": "adsSeePlans"
+  },
+  "adsNewCampaign": "New campaign",
+  "@adsNewCampaign": {
+    "description": "adsNewCampaign"
+  },
+  "adsPerformance": "Performance",
+  "@adsPerformance": {
+    "description": "adsPerformance"
+  },
+  "adsPerformanceCaption": "Across all your campaigns",
+  "@adsPerformanceCaption": {
+    "description": "adsPerformanceCaption"
+  },
+  "adsMetricSpend": "Spent",
+  "@adsMetricSpend": {
+    "description": "adsMetricSpend"
+  },
+  "adsMetricReach": "Women reached",
+  "@adsMetricReach": {
+    "description": "adsMetricReach"
+  },
+  "adsMetricClicks": "Taps",
+  "@adsMetricClicks": {
+    "description": "adsMetricClicks"
+  },
+  "adsMetricOrders": "Orders from ads",
+  "@adsMetricOrders": {
+    "description": "adsMetricOrders"
+  },
+  "adsMetricRevenue": "Sales from ads",
+  "@adsMetricRevenue": {
+    "description": "adsMetricRevenue"
+  },
+  "adsMetricRoas": "Return per lira spent",
+  "@adsMetricRoas": {
+    "description": "adsMetricRoas"
+  },
+  "adsRoasValue": "{value}×",
+  "@adsRoasValue": {
+    "description": "Return on ad spend multiplier",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "adsNotYet": "Not yet",
+  "@adsNotYet": {
+    "description": "adsNotYet"
+  },
+  "adsInsightAbove": "Your ads are tapped more than average — keep going",
+  "@adsInsightAbove": {
+    "description": "adsInsightAbove"
+  },
+  "adsInsightAverage": "Your ads perform about average",
+  "@adsInsightAverage": {
+    "description": "adsInsightAverage"
+  },
+  "adsInsightBelow": "Fewer taps than average — try a stronger photo or a targeted audience",
+  "@adsInsightBelow": {
+    "description": "adsInsightBelow"
+  },
+  "adsInsightNoData": "Results appear once your ads have been seen",
+  "@adsInsightNoData": {
+    "description": "adsInsightNoData"
+  },
+  "adsSuggestionsTitle": "Smart picks to promote",
+  "@adsSuggestionsTitle": {
+    "description": "adsSuggestionsTitle"
+  },
+  "adsSuggestionsCaption": "Chosen from your own views, favourites and sales",
+  "@adsSuggestionsCaption": {
+    "description": "adsSuggestionsCaption"
+  },
+  "adsReasonLoved": "Loved, not yet bought",
+  "@adsReasonLoved": {
+    "description": "adsReasonLoved"
+  },
+  "adsReasonBest": "Your best seller",
+  "@adsReasonBest": {
+    "description": "adsReasonBest"
+  },
+  "adsReasonHidden": "New and barely seen",
+  "@adsReasonHidden": {
+    "description": "adsReasonHidden"
+  },
+  "adsReasonFresh": "Fresh pick",
+  "@adsReasonFresh": {
+    "description": "adsReasonFresh"
+  },
+  "adsCampaignsTitle": "Your campaigns",
+  "@adsCampaignsTitle": {
+    "description": "adsCampaignsTitle"
+  },
+  "adsNoCampaigns": "No campaigns yet",
+  "@adsNoCampaigns": {
+    "description": "adsNoCampaigns"
+  },
+  "adsNoCampaignsBody": "Start with one of the smart picks above — it takes a minute.",
+  "@adsNoCampaignsBody": {
+    "description": "adsNoCampaignsBody"
+  },
+  "adsStatusLive": "Live",
+  "@adsStatusLive": {
+    "description": "adsStatusLive"
+  },
+  "adsStatusPaused": "Paused",
+  "@adsStatusPaused": {
+    "description": "adsStatusPaused"
+  },
+  "adsStatusEnded": "Ended",
+  "@adsStatusEnded": {
+    "description": "adsStatusEnded"
+  },
+  "adsStatusScheduled": "Scheduled",
+  "@adsStatusScheduled": {
+    "description": "adsStatusScheduled"
+  },
+  "adsStatusUnpaid": "Unpaid",
+  "@adsStatusUnpaid": {
+    "description": "adsStatusUnpaid"
+  },
+  "adsPause": "Pause",
+  "@adsPause": {
+    "description": "adsPause"
+  },
+  "adsResume": "Resume",
+  "@adsResume": {
+    "description": "adsResume"
+  },
+  "adsCampaignWhere": "{placement} · {audience}",
+  "@adsCampaignWhere": {
+    "description": "adsCampaignWhere",
+    "placeholders": {
+      "placement": {
+        "type": "String"
+      },
+      "audience": {
+        "type": "String"
+      }
+    }
+  },
+  "adsCampaignStats": "{impressions} views · {clicks} taps",
+  "@adsCampaignStats": {
+    "description": "adsCampaignStats",
+    "placeholders": {
+      "impressions": {
+        "type": "String"
+      },
+      "clicks": {
+        "type": "String"
+      }
+    }
+  },
+  "adsCampaignReachOrders": "{reach} women · {orders} orders",
+  "@adsCampaignReachOrders": {
+    "description": "adsCampaignReachOrders",
+    "placeholders": {
+      "reach": {
+        "type": "String"
+      },
+      "orders": {
+        "type": "String"
+      }
+    }
+  },
+  "adsCampaignRevenue": "{amount} in sales from this ad",
+  "@adsCampaignRevenue": {
+    "description": "adsCampaignRevenue",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsAudienceEveryone": "Everyone",
+  "@adsAudienceEveryone": {
+    "description": "adsAudienceEveryone"
+  },
+  "adsAudienceTargeted": "Targeted",
+  "@adsAudienceTargeted": {
+    "description": "adsAudienceTargeted"
+  },
+  "adsAudienceEveryoneHint": "Every shopper, signed in or not",
+  "@adsAudienceEveryoneHint": {
+    "description": "adsAudienceEveryoneHint"
+  },
+  "adsAudienceTargetedHint": "Only the women you choose — 20% cheaper",
+  "@adsAudienceTargetedHint": {
+    "description": "adsAudienceTargetedHint"
+  },
+  "adsFailed": "Couldn't load your ads",
+  "@adsFailed": {
+    "description": "adsFailed"
+  },
+  "adsPlansTitle": "Advertising plans",
+  "@adsPlansTitle": {
+    "description": "adsPlansTitle"
+  },
+  "adsPlansSubtitle": "The more you invest, the further you reach",
+  "@adsPlansSubtitle": {
+    "description": "adsPlansSubtitle"
+  },
+  "adsPlanPerMonth": "{price} / month",
+  "@adsPlanPerMonth": {
+    "description": "adsPlanPerMonth",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanFreeLabel": "Free",
+  "@adsPlanFreeLabel": {
+    "description": "adsPlanFreeLabel"
+  },
+  "adsPlanCredit": "{amount} of ad credit included",
+  "@adsPlanCredit": {
+    "description": "adsPlanCredit",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanBonus": "{amount} more credit than you pay",
+  "@adsPlanBonus": {
+    "description": "adsPlanBonus",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanDiscount": "{percent}% off every campaign",
+  "@adsPlanDiscount": {
+    "description": "adsPlanDiscount",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "adsPlanCampaigns": "{count, plural, =1{1 campaign at a time} other{{count} campaigns at once}}",
+  "@adsPlanCampaigns": {
+    "description": "adsPlanCampaigns",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adsPlanWeight": "Shown {weight}× more often than free stores",
+  "@adsPlanWeight": {
+    "description": "adsPlanWeight",
+    "placeholders": {
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "adsPlanTargetingNone": "Ads shown to everyone",
+  "@adsPlanTargetingNone": {
+    "description": "adsPlanTargetingNone"
+  },
+  "adsPlanTargetingLocation": "Target by governorate",
+  "@adsPlanTargetingLocation": {
+    "description": "adsPlanTargetingLocation"
+  },
+  "adsPlanTargetingFull": "Target followers, past buyers, interests and new shoppers",
+  "@adsPlanTargetingFull": {
+    "description": "adsPlanTargetingFull"
+  },
+  "adsPlanFollowers": "Your followers hear about every new campaign",
+  "@adsPlanFollowers": {
+    "description": "adsPlanFollowers"
+  },
+  "adsPlanFeatured": "First in «Featured stores», with your badge",
+  "@adsPlanFeatured": {
+    "description": "adsPlanFeatured"
+  },
+  "adsPlanPlacements": "Placements: {list}",
+  "@adsPlanPlacements": {
+    "description": "adsPlanPlacements",
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "adsListSeparator": ", ",
+  "@adsListSeparator": {
+    "description": "Separator between items in an inline list"
+  },
+  "adsPlanCurrent": "Your plan",
+  "@adsPlanCurrent": {
+    "description": "adsPlanCurrent"
+  },
+  "adsPlanRecommendedChip": "Best for you",
+  "@adsPlanRecommendedChip": {
+    "description": "adsPlanRecommendedChip"
+  },
+  "adsPlanSaving": "Would have saved you {amount} last month",
+  "@adsPlanSaving": {
+    "description": "adsPlanSaving",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanStartHint": "Start with Silver: its credit is worth more than its price",
+  "@adsPlanStartHint": {
+    "description": "adsPlanStartHint"
+  },
+  "adsPlanChoose": "Choose {tier}",
+  "@adsPlanChoose": {
+    "description": "adsPlanChoose",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanRenew": "Renew",
+  "@adsPlanRenew": {
+    "description": "adsPlanRenew"
+  },
+  "adsPlanQueued": "{tier} starts on {date}",
+  "@adsPlanQueued": {
+    "description": "adsPlanQueued",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanConfirmTitle": "Subscribe to {tier}?",
+  "@adsPlanConfirmTitle": {
+    "description": "adsPlanConfirmTitle",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanConfirmBody": "{price} for 30 days. The plan does not renew by itself.",
+  "@adsPlanConfirmBody": {
+    "description": "adsPlanConfirmBody",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPlanConfirmUpgradeNote": "Unused credit from your current plan carries over.",
+  "@adsPlanConfirmUpgradeNote": {
+    "description": "adsPlanConfirmUpgradeNote"
+  },
+  "adsPlanSubscribed": "Welcome to {tier}!",
+  "@adsPlanSubscribed": {
+    "description": "adsPlanSubscribed",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsConfirm": "Confirm",
+  "@adsConfirm": {
+    "description": "adsConfirm"
+  },
+  "adsErrorBalance": "Your earnings balance doesn't cover this yet.",
+  "@adsErrorBalance": {
+    "description": "adsErrorBalance"
+  },
+  "adsErrorLimit": "Your plan’s campaign limit is reached — pause one or upgrade.",
+  "@adsErrorLimit": {
+    "description": "adsErrorLimit"
+  },
+  "adsErrorFeedPost": "Publish a public post featuring this piece first.",
+  "@adsErrorFeedPost": {
+    "description": "adsErrorFeedPost"
+  },
+  "adsErrorLocked": "This needs a higher plan.",
+  "@adsErrorLocked": {
+    "description": "adsErrorLocked"
+  },
+  "adsComposerTitle": "New campaign",
+  "@adsComposerTitle": {
+    "description": "adsComposerTitle"
+  },
+  "adsStepProduct": "The piece",
+  "@adsStepProduct": {
+    "description": "adsStepProduct"
+  },
+  "adsChooseProduct": "Choose a piece to promote",
+  "@adsChooseProduct": {
+    "description": "adsChooseProduct"
+  },
+  "adsChangeProduct": "Change",
+  "@adsChangeProduct": {
+    "description": "adsChangeProduct"
+  },
+  "adsPickProductTitle": "Which piece?",
+  "@adsPickProductTitle": {
+    "description": "adsPickProductTitle"
+  },
+  "adsNoProducts": "You have no live pieces to promote",
+  "@adsNoProducts": {
+    "description": "adsNoProducts"
+  },
+  "adsStepPlacement": "Where it appears",
+  "@adsStepPlacement": {
+    "description": "adsStepPlacement"
+  },
+  "adsStepAudience": "Who sees it",
+  "@adsStepAudience": {
+    "description": "adsStepAudience"
+  },
+  "adsStepDuration": "For how long",
+  "@adsStepDuration": {
+    "description": "adsStepDuration"
+  },
+  "adsDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@adsDays": {
+    "description": "adsDays",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adsLockedNeeds": "Needs {tier}",
+  "@adsLockedNeeds": {
+    "description": "adsLockedNeeds",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsTargetGroups": "Groups",
+  "@adsTargetGroups": {
+    "description": "adsTargetGroups"
+  },
+  "adsTargetGovernorates": "Governorates",
+  "@adsTargetGovernorates": {
+    "description": "adsTargetGovernorates"
+  },
+  "adsTargetFollowers": "My followers",
+  "@adsTargetFollowers": {
+    "description": "adsTargetFollowers"
+  },
+  "adsTargetPastBuyers": "Bought from me",
+  "@adsTargetPastBuyers": {
+    "description": "adsTargetPastBuyers"
+  },
+  "adsTargetInterested": "Interested in this kind of piece",
+  "@adsTargetInterested": {
+    "description": "adsTargetInterested"
+  },
+  "adsTargetNewShoppers": "New shoppers",
+  "@adsTargetNewShoppers": {
+    "description": "adsTargetNewShoppers"
+  },
+  "adsReachTitle": "Estimated reach",
+  "@adsReachTitle": {
+    "description": "adsReachTitle"
+  },
+  "adsReachValue": "{count, plural, =1{1 woman} other{{count} women}}",
+  "@adsReachValue": {
+    "description": "adsReachValue",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adsReachShare": "{percent}% of all shoppers",
+  "@adsReachShare": {
+    "description": "adsReachShare",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "adsShareOfVoice": "Your share of the slot",
+  "@adsShareOfVoice": {
+    "description": "adsShareOfVoice"
+  },
+  "adsShareOfVoiceHint": "{count, plural, =1{Against 1 live campaign} other{Against {count} live campaigns}}",
+  "@adsShareOfVoiceHint": {
+    "description": "adsShareOfVoiceHint",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adsShareAlone": "No competition right now",
+  "@adsShareAlone": {
+    "description": "adsShareAlone"
+  },
+  "adsPercent": "{value}%",
+  "@adsPercent": {
+    "description": "adsPercent",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "adsPriceLine": "Placement for {duration}",
+  "@adsPriceLine": {
+    "description": "adsPriceLine",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPriceDiscount": "{tier} plan discount",
+  "@adsPriceDiscount": {
+    "description": "adsPriceDiscount",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPriceCredit": "Paid from ad credit",
+  "@adsPriceCredit": {
+    "description": "adsPriceCredit"
+  },
+  "adsPriceToPay": "From your earnings",
+  "@adsPriceToPay": {
+    "description": "adsPriceToPay"
+  },
+  "adsMinus": "−{amount}",
+  "@adsMinus": {
+    "description": "adsMinus",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsFeedPostPinned": "This post will be pinned:",
+  "@adsFeedPostPinned": {
+    "description": "adsFeedPostPinned"
+  },
+  "adsFeedPostMissing": "This placement pins one of your posts. Publish a post featuring this piece first.",
+  "@adsFeedPostMissing": {
+    "description": "adsFeedPostMissing"
+  },
+  "adsCreatePost": "Create a post",
+  "@adsCreatePost": {
+    "description": "adsCreatePost"
+  },
+  "adsUnlockWith": "Unlock with {tier}",
+  "@adsUnlockWith": {
+    "description": "adsUnlockWith",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsLaunch": "Launch · {amount}",
+  "@adsLaunch": {
+    "description": "adsLaunch",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsLaunchFree": "Launch with your credit",
+  "@adsLaunchFree": {
+    "description": "adsLaunchFree"
+  },
+  "adsLaunched": "Your campaign is live ✨",
+  "@adsLaunched": {
+    "description": "adsLaunched"
+  },
+  "adsQuoteFailed": "Couldn't price this campaign",
+  "@adsQuoteFailed": {
+    "description": "adsQuoteFailed"
+  },
+  "homeSpotlightTitle": "Featured picks",
+  "@homeSpotlightTitle": {
+    "description": "Home section of boutiques' paid spotlight slots"
+  },
+  "homeSpotlightShop": "Shop",
+  "@homeSpotlightShop": {
+    "description": "homeSpotlightShop"
+  },
+  "homeSpotlightCardLabel": "Sponsored: {product}, from {store}",
+  "@homeSpotlightCardLabel": {
+    "description": "homeSpotlightCardLabel",
+    "placeholders": {
+      "product": {
+        "type": "String"
+      },
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPayHow": "How would you like to pay?",
+  "@adsPayHow": {
+    "description": "adsPayHow"
+  },
+  "adsPayFromEarnings": "From my earnings",
+  "@adsPayFromEarnings": {
+    "description": "adsPayFromEarnings"
+  },
+  "adsPayEarningsBalance": "Balance: {amount}",
+  "@adsPayEarningsBalance": {
+    "description": "adsPayEarningsBalance",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPayEarningsShort": "Balance {amount} — not enough yet",
+  "@adsPayEarningsShort": {
+    "description": "adsPayEarningsShort",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPayInstant": "Instant",
+  "@adsPayInstant": {
+    "description": "adsPayInstant"
+  },
+  "adsPayTransferHint": "Send the amount, then enter the transaction number",
+  "@adsPayTransferHint": {
+    "description": "adsPayTransferHint"
+  },
+  "adsPayNoMethods": "Payment by transfer is not set up yet — contact support",
+  "@adsPayNoMethods": {
+    "description": "adsPayNoMethods"
+  },
+  "adsPaymentBannerAwaiting": "Your {tier} plan is waiting for your payment — tap to finish",
+  "@adsPaymentBannerAwaiting": {
+    "description": "adsPaymentBannerAwaiting",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentBannerReview": "We received your {tier} payment number and are checking it",
+  "@adsPaymentBannerReview": {
+    "description": "adsPaymentBannerReview",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentBannerRejected": "We couldn’t match your {tier} payment — tap to see why",
+  "@adsPaymentBannerRejected": {
+    "description": "adsPaymentBannerRejected",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentTitle": "Pay for your plan",
+  "@adsPaymentTitle": {
+    "description": "adsPaymentTitle"
+  },
+  "adsPaymentPlan": "{tier} plan · 30 days",
+  "@adsPaymentPlan": {
+    "description": "adsPaymentPlan",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentStepSend": "Send {amount} by {method}",
+  "@adsPaymentStepSend": {
+    "description": "adsPaymentStepSend",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentStepReference": "Enter the transaction number you received",
+  "@adsPaymentStepReference": {
+    "description": "adsPaymentStepReference"
+  },
+  "adsPaymentStepChange": "Sent the wrong number? Send it again",
+  "@adsPaymentStepChange": {
+    "description": "adsPaymentStepChange"
+  },
+  "adsPaymentReferenceField": "Transaction number",
+  "@adsPaymentReferenceField": {
+    "description": "adsPaymentReferenceField"
+  },
+  "adsPaymentSend": "Send for review",
+  "@adsPaymentSend": {
+    "description": "adsPaymentSend"
+  },
+  "adsPaymentSent": "Received — we’ll turn your plan on as soon as it’s matched",
+  "@adsPaymentSent": {
+    "description": "adsPaymentSent"
+  },
+  "adsPaymentReviewTitle": "Being checked",
+  "@adsPaymentReviewTitle": {
+    "description": "adsPaymentReviewTitle"
+  },
+  "adsPaymentReviewBody": "Transaction {reference} is with our finance team. You’ll get a notification the moment your plan is on.",
+  "@adsPaymentReviewBody": {
+    "description": "adsPaymentReviewBody",
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "adsPaymentRejectedTitle": "We couldn’t match this payment",
+  "@adsPaymentRejectedTitle": {
+    "description": "adsPaymentRejectedTitle"
+  },
+  "adsPaymentHowLong": "Payments are usually matched within a few working hours.",
+  "@adsPaymentHowLong": {
+    "description": "adsPaymentHowLong"
+  },
+  "adsPaymentCancel": "Cancel this payment",
+  "@adsPaymentCancel": {
+    "description": "adsPaymentCancel"
+  },
+  "adsPaymentCopy": "Copy payment details",
+  "@adsPaymentCopy": {
+    "description": "adsPaymentCopy"
+  },
+  "adsPaymentCopied": "Copied",
+  "@adsPaymentCopied": {
+    "description": "adsPaymentCopied"
+  },
+  "adsPaymentNothingOpen": "No payment is waiting",
+  "@adsPaymentNothingOpen": {
+    "description": "adsPaymentNothingOpen"
+  },
+  "adsErrorMethodUnavailable": "This payment method isn’t available right now.",
+  "@adsErrorMethodUnavailable": {
+    "description": "adsErrorMethodUnavailable"
+  },
+  "adsErrorPurchaseInProgress": "You already have a plan payment in progress.",
+  "@adsErrorPurchaseInProgress": {
+    "description": "adsErrorPurchaseInProgress"
+  },
+  "adsErrorPurchaseClosed": "This payment has already been decided.",
+  "@adsErrorPurchaseClosed": {
+    "description": "adsErrorPurchaseClosed"
+  },
+  "adsErrorReferenceRequired": "Enter the transaction number you received.",
+  "@adsErrorReferenceRequired": {
+    "description": "adsErrorReferenceRequired"
+  },
+  "adminAdsTitle": "Advertising plans",
+  "@adminAdsTitle": {
+    "description": "adminAdsTitle"
+  },
+  "adminAdsSummary": "{plans} active plans · {revenue} ad revenue this month",
+  "@adminAdsSummary": {
+    "description": "adminAdsSummary",
+    "placeholders": {
+      "plans": {
+        "type": "int"
+      },
+      "revenue": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdsNoPending": "No plan payments waiting to be matched.",
+  "@adminAdsNoPending": {
+    "description": "adminAdsNoPending"
+  },
+  "adminAdsReference": "Transaction number: {reference}",
+  "@adminAdsReference": {
+    "description": "adminAdsReference",
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdsConfirmBody": "Confirm that {amount} arrived from {seller}? Their {tier} plan turns on at once.",
+  "@adminAdsConfirmBody": {
+    "description": "adminAdsConfirmBody",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "seller": {
+        "type": "String"
+      },
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdsConfirmed": "Plan turned on, and the boutique was told",
+  "@adminAdsConfirmed": {
+    "description": "adminAdsConfirmed"
+  },
+  "adminAdsInstructionsTitle": "Where boutiques send plan payments",
+  "@adminAdsInstructionsTitle": {
+    "description": "adminAdsInstructionsTitle"
+  },
+  "adminAdsInstructionsHint": "A method left empty is not offered",
+  "@adminAdsInstructionsHint": {
+    "description": "adminAdsInstructionsHint"
+  },
+  "adminAdsInstructionsSave": "Save payment details",
+  "@adminAdsInstructionsSave": {
+    "description": "adminAdsInstructionsSave"
+  },
+  "adminAdsInstructionsSaved": "Saved",
+  "@adminAdsInstructionsSaved": {
+    "description": "adminAdsInstructionsSaved"
+  },
+  "adsNotVerifiedTitle": "Your store needs approval to advertise",
+  "@adsNotVerifiedTitle": {
+    "description": "adsNotVerifiedTitle"
+  },
+  "adsNotVerifiedBody": "Until your store is approved its page is closed to shoppers, so ads couldn’t reach them. Complete verification and every plan opens up.",
+  "@adsNotVerifiedBody": {
+    "description": "adsNotVerifiedBody"
+  },
+  "adsNotVerifiedAction": "Complete verification",
+  "@adsNotVerifiedAction": {
+    "description": "adsNotVerifiedAction"
+  },
+  "adsErrorNotVerified": "Your store must be approved before it can advertise.",
+  "@adsErrorNotVerified": {
+    "description": "adsErrorNotVerified"
+  },
+  "feedReasonForYou": "For you",
+  "@feedReasonForYou": {
+    "description": "Chip on a ranked feed card: chosen from what she likes and shops"
+  },
+  "feedReasonTrending": "Trending now",
+  "@feedReasonTrending": {
+    "description": "Chip on a ranked feed card: doing unusually well right now"
+  },
+  "feedReasonNewVoice": "New voice",
+  "@feedReasonNewVoice": {
+    "description": "Chip on a ranked feed card: a good account she has not met yet"
+  }
 }

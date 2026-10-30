@@ -69,6 +69,60 @@ Map<String, dynamic> _content({
 };
 
 void main() {
+  group('ContentModel sponsorship', () {
+    test('a pinned paid post carries the offer that paid for it', () {
+      final content = ContentModel.fromJson({
+        ..._content(authorKind: 'seller'),
+        'sponsored': {
+          'promotion_id': 'p1',
+          'offer_id': 'o1',
+          'placement': 'feed_top',
+          'store_tier': 'gold',
+        },
+      });
+      expect(content.isSponsored, isTrue);
+      expect(content.sponsorship!.offerId, 'o1');
+      expect(content.sponsorship!.storeTier, 'gold');
+    });
+
+    test('an organic post is not sponsored, and a broken block is ignored', () {
+      expect(ContentModel.fromJson(_content()).isSponsored, isFalse);
+      expect(
+        ContentModel.fromJson({
+          ..._content(),
+          'sponsored': {'offer_id': ''},
+        }).isSponsored,
+        isFalse,
+      );
+    });
+  });
+
+  group('ContentModel rank reason', () {
+    test('a ranked row says why it is there', () {
+      for (final (wire, reason) in const [
+        ('following', ContentRankReason.following),
+        ('for_you', ContentRankReason.forYou),
+        ('trending', ContentRankReason.trending),
+        ('new_voice', ContentRankReason.newVoice),
+        ('popular', ContentRankReason.popular),
+      ]) {
+        expect(
+          ContentModel.fromJson({..._content(), 'rank_reason': wire}).rankReason,
+          reason,
+        );
+      }
+    });
+
+    test('a newest-first row, or an unknown reason, carries none', () {
+      expect(ContentModel.fromJson(_content()).rankReason, isNull);
+      expect(
+        ContentModel.fromJson({..._content(), 'rank_reason': 'mystery'})
+            .rankReason,
+        isNull,
+      );
+    });
+  });
+
   group('ContentModel', () {
     test('decodes a bare content-only post', () {
       // No media, no products, no viewer block, no analytics. Every one of

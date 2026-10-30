@@ -56,6 +56,25 @@ abstract final class DsGradients {
   );
 
   // ---------------------------------------------------------------------------
+  // «باقات الإعلان» — the boutique plan a badge carries. Silver is cool
+  // pewter, gold is the brand's own gold, diamond is an iced violet that
+  // still sits inside the plum family rather than reading as a stranger.
+  // ---------------------------------------------------------------------------
+  static const LinearGradient tierSilver = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFF4F3F7), Color(0xFFCFCBD8), Color(0xFFA9A4B6)],
+  );
+
+  static const LinearGradient tierGold = gold;
+
+  static const LinearGradient tierDiamond = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFB7A3F2), Color(0xFF7C5AD8), Color(0xFF4E2FA8)],
+  );
+
+  // ---------------------------------------------------------------------------
   // Expressive blends.
   // ---------------------------------------------------------------------------
   static const LinearGradient sunset = LinearGradient(
