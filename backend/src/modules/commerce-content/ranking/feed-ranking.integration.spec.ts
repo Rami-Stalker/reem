@@ -113,6 +113,15 @@ async function twoLikePosts(db: PrismaService) {
     where: { muterId: shopper.id, mutedId: { in: posts.map((p) => p.authorId) } },
   });
   await db.$executeRaw`DELETE FROM "feed_seen" WHERE "user_id" = ${shopper.id}::uuid`;
+  // The seed has her liking and saving posts. One she already liked is sunk
+  // on purpose, which would decide the order for a reason no case here is about.
+  const ids = posts.map((p) => p.id);
+  await db.commerceContentReaction.deleteMany({
+    where: { userId: shopper.id, contentId: { in: ids } },
+  });
+  await db.commerceContentSave.deleteMany({
+    where: { userId: shopper.id, contentId: { in: ids } },
+  });
   return { a: posts[0], b: posts[1], shopper: shopper.id };
 }
 
