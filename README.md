@@ -291,12 +291,13 @@ judge the size from them. To see what takes the space in a release:
 flutter build apk --release --target-platform android-arm64 --analyze-size
 ```
 
-Launcher icons are painted from the design-system tokens rather than exported
-from a checked-in artwork file. Regenerating rewrites every Android density,
-every iOS slot, the web icons, and the store artwork under `docs/brand/`:
+Launcher icons are generated from one artwork file,
+`docs/brand/app-icon-source.png`. Regenerating rewrites every Android density,
+every iOS and macOS slot, the Windows `.ico`, the web icons, and the store
+artwork under `docs/brand/` (needs Pillow and numpy):
 
 ```bash
-flutter test tools/icons/generate_app_icons.dart
+python3 tools/icons/generate_app_icons.py
 ```
 
 ## Documentation
