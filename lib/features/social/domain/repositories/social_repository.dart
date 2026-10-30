@@ -104,9 +104,9 @@ abstract interface class SocialRepository {
   /// Her own deletion — never confused with a moderator's removal.
   Future<Result<void>> deleteOwn(String contentId);
 
-  /// Her own edit — the caption and who may see it. An edit that trips the
-  /// word screen sends the piece back to a moderator; the returned `Content`
-  /// says so in its moderation state.
+  /// Her own edit — the caption and who may see it. It stays live; an edit
+  /// that trips the word screen is put in front of a moderator afterwards.
+  /// The returned `Content` carries its moderation state either way.
   Future<Result<Content>> edit(
     String contentId, {
     String? caption,

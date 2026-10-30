@@ -104,7 +104,7 @@ function build(tx: Tx): World {
     db,
     attribution,
     interactions: new ContentInteractionsService(db, events, attribution),
-    moderation: new ContentModerationService(db, new AuditService(db), events),
+    moderation: new ContentModerationService(db, new AuditService(db), events, new CacheService()),
     feed: new ContentFeedService(db, new CacheService()),
   };
 }

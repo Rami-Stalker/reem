@@ -212,6 +212,8 @@ abstract final class ApiEndpoints {
   static String adminContentRemove(String id) => '/admin/content/$id/remove';
   static String adminContentReinstate(String id) =>
       '/admin/content/$id/reinstate';
+  static String adminContentDismissReports(String id) =>
+      '/admin/content/$id/dismiss-reports';
   static String adminContentCommentRemove(String commentId) =>
       '/admin/content/comments/$commentId/remove';
 
