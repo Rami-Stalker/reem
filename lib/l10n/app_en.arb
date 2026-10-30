@@ -8231,6 +8231,40 @@
   "adminContentReasonLabel": "Reason",
   "adminContentReasonHint": "e.g. The photo does not meet our content policy…",
   "adminContentReasonTooShort": "Write a clear reason (at least 10 characters)",
+  "adminContentFilterPosts": "Posts",
+  "adminContentFilterReels": "Reels",
+  "adminContentFilterStories": "Stories",
+  "adminContentFormatPost": "Post",
+  "adminContentFormatReel": "Reel",
+  "adminContentFormatStory": "Story",
+  "adminContentFormatOther": "Content",
+  "adminContentReportsCount": "{count, plural, =1{1 report} other{{count} reports}}",
+  "@adminContentReportsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminContentAutoFlagged": "Auto-flagged: restricted words",
+  "adminContentKeep": "Keep",
+  "adminContentKeepTitle": "Keep this content",
+  "adminContentKeepBody": "Every open report on it will be closed and it stays up. You can add a note for the record.",
+  "adminContentNoteLabel": "Note (optional)",
+  "adminContentRemovedToast": "Removed. The author has been told why.",
+  "adminContentReinstatedToast": "Restored to where it was.",
+  "adminContentKeptToast": "Reports closed. It stays up.",
+  "adminContentQuickReasons": "Common reasons",
+  "adminContentPresetImmodest": "The image does not follow the modesty policy for content.",
+  "adminContentPresetOffPlatform": "It shares contact details to deal outside the app.",
+  "adminContentPresetSpam": "Repeated or misleading promotional content.",
+  "adminContentPresetStolen": "Photos taken from another store or person without permission.",
+  "adminContentPresetHarassment": "It insults or harasses other people.",
+  "adminContentPresetCounterfeit": "It promotes a counterfeit or misdescribed product.",
+  "adminContentLoadMore": "Load more",
+  "adminContentOpenMedia": "Open media",
+  "adminContentRemoveHeading": "Remove content",
+  "adminContentReinstateHeading": "Restore content",
   "@adminContentReported": {
     "placeholders": {
       "count": {

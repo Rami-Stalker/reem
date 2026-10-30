@@ -652,15 +652,6 @@ export default () => ({
     enforceTagPolicy:
       process.env.CONTENT_ENFORCE_TAG_POLICY === 'true' ||
       process.env.NODE_ENV === 'test',
-
-    /**
-     * How many approved pieces a shopper publishes under review before she is
-     * trusted to publish straight to the feed.
-     *
-     * A `SystemSetting` would be better still and is the next step; this is the
-     * floor, so the number is never a literal buried in a service.
-     */
-    reviewFreeAfter: Number(process.env.CONTENT_REVIEW_FREE_AFTER ?? 3),
   },
   /**
    * Routes that refuse a request arriving without an `Idempotency-Key`.

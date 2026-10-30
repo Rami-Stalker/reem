@@ -76,32 +76,22 @@ export function maxMedia(definition: CommerceContentTypeDefinition): number | nu
 /**
  * Whether this piece has to be looked at before anybody else sees it.
  *
- * The owner's decision, and the compromise that lets customer content exist at
- * all on a platform whose imagery policy (Q105) was written for catalogue
- * photography. A woman's first few posts are reviewed; after that she publishes
- * straight to the feed and moderation is reactive — reports, word filtering,
- * takedowns.
- *
- * `approvedCount` is how many of her pieces have already been through it, so
- * the gate lifts itself rather than needing anybody to remember to lift it.
+ * Posts, reels and stories publish straight to the feed for sellers and
+ * customers alike: moderation is reactive — reports, the word screen below
+ * and takedowns from the console. Only a format whose registry row says
+ * `moderation_required` (a scheduled live stream, today) waits for a human.
  */
 export function needsPrePublishReview(input: {
   definition: CommerceContentTypeDefinition;
-  role: UserRole;
-  approvedCount: number;
-  reviewFreeAfter: number;
 }): boolean {
-  if (capabilities(input.definition).moderation_required === true) return true;
-
-  // A boutique is a verified business with a bank account and an ID on file.
-  // The trust question has already been asked of her, at onboarding.
-  if (input.role !== UserRole.CUSTOMER) return false;
-
-  return input.approvedCount < input.reviewFreeAfter;
+  return capabilities(input.definition).moderation_required === true;
 }
 
 /**
- * Words that get a piece flagged for a human rather than refused.
+ * Words that put a piece in front of a moderator — after it is published.
+ *
+ * The piece goes live either way; a match only opens an automatic case in the
+ * console's queue so a moderator can look at it and take it down if needed.
  *
  * Q103 asks for automatic banned-word filtering. Flagging rather than refusing
  * is deliberate: a list of forbidden strings applied to Arabic will catch

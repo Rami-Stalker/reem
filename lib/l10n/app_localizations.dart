@@ -12674,6 +12674,168 @@ abstract class AppLocalizations {
   /// **'Write a clear reason (at least 10 characters)'**
   String get adminContentReasonTooShort;
 
+  /// No description provided for @adminContentFilterPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts'**
+  String get adminContentFilterPosts;
+
+  /// No description provided for @adminContentFilterReels.
+  ///
+  /// In en, this message translates to:
+  /// **'Reels'**
+  String get adminContentFilterReels;
+
+  /// No description provided for @adminContentFilterStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Stories'**
+  String get adminContentFilterStories;
+
+  /// No description provided for @adminContentFormatPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get adminContentFormatPost;
+
+  /// No description provided for @adminContentFormatReel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reel'**
+  String get adminContentFormatReel;
+
+  /// No description provided for @adminContentFormatStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get adminContentFormatStory;
+
+  /// No description provided for @adminContentFormatOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get adminContentFormatOther;
+
+  /// No description provided for @adminContentReportsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 report} other{{count} reports}}'**
+  String adminContentReportsCount(int count);
+
+  /// No description provided for @adminContentAutoFlagged.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-flagged: restricted words'**
+  String get adminContentAutoFlagged;
+
+  /// No description provided for @adminContentKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get adminContentKeep;
+
+  /// No description provided for @adminContentKeepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this content'**
+  String get adminContentKeepTitle;
+
+  /// No description provided for @adminContentKeepBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every open report on it will be closed and it stays up. You can add a note for the record.'**
+  String get adminContentKeepBody;
+
+  /// No description provided for @adminContentNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get adminContentNoteLabel;
+
+  /// No description provided for @adminContentRemovedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed. The author has been told why.'**
+  String get adminContentRemovedToast;
+
+  /// No description provided for @adminContentReinstatedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored to where it was.'**
+  String get adminContentReinstatedToast;
+
+  /// No description provided for @adminContentKeptToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports closed. It stays up.'**
+  String get adminContentKeptToast;
+
+  /// No description provided for @adminContentQuickReasons.
+  ///
+  /// In en, this message translates to:
+  /// **'Common reasons'**
+  String get adminContentQuickReasons;
+
+  /// No description provided for @adminContentPresetImmodest.
+  ///
+  /// In en, this message translates to:
+  /// **'The image does not follow the modesty policy for content.'**
+  String get adminContentPresetImmodest;
+
+  /// No description provided for @adminContentPresetOffPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'It shares contact details to deal outside the app.'**
+  String get adminContentPresetOffPlatform;
+
+  /// No description provided for @adminContentPresetSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeated or misleading promotional content.'**
+  String get adminContentPresetSpam;
+
+  /// No description provided for @adminContentPresetStolen.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos taken from another store or person without permission.'**
+  String get adminContentPresetStolen;
+
+  /// No description provided for @adminContentPresetHarassment.
+  ///
+  /// In en, this message translates to:
+  /// **'It insults or harasses other people.'**
+  String get adminContentPresetHarassment;
+
+  /// No description provided for @adminContentPresetCounterfeit.
+  ///
+  /// In en, this message translates to:
+  /// **'It promotes a counterfeit or misdescribed product.'**
+  String get adminContentPresetCounterfeit;
+
+  /// No description provided for @adminContentLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get adminContentLoadMore;
+
+  /// No description provided for @adminContentOpenMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Open media'**
+  String get adminContentOpenMedia;
+
+  /// No description provided for @adminContentRemoveHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove content'**
+  String get adminContentRemoveHeading;
+
+  /// No description provided for @adminContentReinstateHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore content'**
+  String get adminContentReinstateHeading;
+
   /// Title of the confirmation shown when a back gesture would abandon a half-filled form
   ///
   /// In en, this message translates to:

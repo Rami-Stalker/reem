@@ -20,6 +20,7 @@ import { AuthUser } from '../../../common/decorators/current-user.decorator';
 import { buildMeta, PaginationDto } from '../../../common/dto/pagination.dto';
 import { AppEvent } from '../../../common/events/app-events';
 import { AuditService } from '../../auth/audit.service';
+import { CacheService } from '../../../common/cache/cache.service';
 import { commerceContentInclude } from '../commerce-content.repository';
 
 const MODERATOR_ROLES: UserRole[] = [
@@ -41,6 +42,14 @@ export const CONTENT_REPORT_REASONS = [
 ] as const;
 
 export type ContentReportReason = (typeof CONTENT_REPORT_REASONS)[number];
+
+/** Same prefix as the anonymous feed cache in `ContentFeedService`. */
+const FEED_CACHE_PREFIX = 'commerce-content:feed';
+
+/** The `reason` prefix of a case the word screen opened, not a person. */
+export const AUTO_FLAG_REASON_PREFIX = 'auto_flag';
+
+const DEFAULT_DISMISS_NOTE = 'Reviewed by a moderator: no violation found';
 
 /**
  * Taking content down, and the trail that proves who did it and why.
@@ -66,7 +75,17 @@ export class ContentModerationService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly events: EventEmitter2,
+    private readonly cache: CacheService,
   ) {}
+
+  /**
+   * A takedown has to leave every surface at once. The signed-out home feed is
+   * cached for a few seconds, and a removed post must not outlive the decision
+   * there either.
+   */
+  private invalidateFeeds() {
+    this.cache.invalidate(FEED_CACHE_PREFIX);
+  }
 
   private assertModerator(user: AuthUser) {
     if (!MODERATOR_ROLES.includes(user.role)) {
@@ -100,6 +119,12 @@ export class ContentModerationService {
     if (!content) throw new NotFoundException('Content not found');
     if (content.status === CommerceContentStatus.REMOVED) {
       throw new BadRequestException('ALREADY_REMOVED');
+    }
+    // She already deleted it, so nobody can see it. Removing it on top would
+    // record `DELETED` as the status to go back to, and a later reinstate
+    // would publish a piece its author chose to take down.
+    if (content.status === CommerceContentStatus.DELETED) {
+      throw new BadRequestException('ALREADY_DELETED_BY_AUTHOR');
     }
 
     const action = await this.prisma.$transaction(async (tx) => {
@@ -149,6 +174,8 @@ export class ContentModerationService {
       },
     });
 
+    this.invalidateFeeds();
+
     this.events.emit(AppEvent.ContentRemoved, {
       authorId: content.authorId,
       contentId,
@@ -187,7 +214,14 @@ export class ContentModerationService {
           removedAt: null,
           removedById: null,
           removalReason: null,
+          // The reports were answered — wrongly — by the removal. Leaving the
+          // count would put the piece straight back at the top of the queue.
+          reportsCount: 0,
         },
+      });
+      await tx.moderationCase.updateMany({
+        where: { targetType: 'commerce_content', targetId: contentId, status: ModerationStatus.OPEN },
+        data: { status: ModerationStatus.REJECTED, resolution: trimmed, assignedTo: user.id },
       });
       return tx.commerceContentModerationAction.create({
         data: {
@@ -215,6 +249,8 @@ export class ContentModerationService {
       },
     });
 
+    this.invalidateFeeds();
+
     this.events.emit(AppEvent.ContentReinstated, {
       authorId: content.authorId,
       contentId,
@@ -224,6 +260,108 @@ export class ContentModerationService {
     });
 
     return { reinstated: true, status: restored };
+  }
+
+  /**
+   * Keep it: the reports against a piece were looked at and it stays up.
+   *
+   * Without this decision a reported post could only leave the queue by being
+   * removed, so a moderator who disagreed with a report had no way to say so
+   * and the "reported" list only ever grew.
+   */
+  async dismissReports(user: AuthUser, contentId: string, note?: string) {
+    this.assertModerator(user);
+    const trimmed = note?.trim() || DEFAULT_DISMISS_NOTE;
+    if (trimmed.length < 10) {
+      throw new BadRequestException('DISMISS_NOTE_TOO_SHORT');
+    }
+
+    const content = await this.prisma.commerceContent.findUnique({
+      where: { id: contentId },
+      select: { id: true, authorId: true, status: true, moderationStatus: true, reportsCount: true },
+    });
+    if (!content) throw new NotFoundException('Content not found');
+    if (content.status === CommerceContentStatus.REMOVED) {
+      throw new BadRequestException('ALREADY_REMOVED');
+    }
+
+    const closed = await this.prisma.$transaction(async (tx) => {
+      const cases = await tx.moderationCase.updateMany({
+        where: { targetType: 'commerce_content', targetId: contentId, status: ModerationStatus.OPEN },
+        data: { status: ModerationStatus.REJECTED, resolution: trimmed, assignedTo: user.id },
+      });
+      await tx.commerceContent.update({
+        where: { id: contentId },
+        data: { reportsCount: 0 },
+      });
+      await tx.commerceContentModerationAction.create({
+        data: {
+          contentId,
+          moderatorId: user.id,
+          fromStatus: content.moderationStatus,
+          toStatus: content.moderationStatus,
+          reason: trimmed,
+          metadata: {
+            decision: 'reports_dismissed',
+            reports_count: content.reportsCount,
+          } as Prisma.InputJsonValue,
+        },
+      });
+      return cases.count;
+    });
+
+    await this.audit.record({
+      actorId: user.id,
+      action: 'content_reports_dismissed',
+      category: 'admin',
+      outcome: 'success',
+      severity: AuditSeverity.INFO,
+      metadata: {
+        content_id: contentId,
+        author_id: content.authorId,
+        cases_closed: closed,
+        reason: trimmed,
+      },
+    });
+
+    return { dismissed: true, cases_closed: closed };
+  }
+
+  /**
+   * The word screen's report: the piece is already live, and this puts it in
+   * front of a moderator rather than holding it back.
+   *
+   * One open automatic case per piece — an author editing the same caption
+   * three times is one thing to look at, not three.
+   */
+  async autoFlag(contentId: string, terms: string[]) {
+    if (terms.length === 0) return;
+    const existing = await this.prisma.moderationCase.findFirst({
+      where: {
+        targetType: 'commerce_content',
+        targetId: contentId,
+        reporterId: null,
+        status: ModerationStatus.OPEN,
+        reason: { startsWith: AUTO_FLAG_REASON_PREFIX },
+      },
+      select: { id: true },
+    });
+    if (existing) return;
+
+    await this.prisma.$transaction([
+      this.prisma.moderationCase.create({
+        data: {
+          targetType: 'commerce_content',
+          targetId: contentId,
+          reporterId: null,
+          reason: `${AUTO_FLAG_REASON_PREFIX}: ${terms.join(', ')}`,
+        },
+      }),
+      this.prisma.commerceContent.update({
+        where: { id: contentId },
+        data: { reportsCount: { increment: 1 } },
+      }),
+    ]);
   }
 
   /**
@@ -405,7 +543,15 @@ export class ContentModerationService {
     const where: Prisma.CommerceContentWhereInput = {
       ...(query.content_type ? { contentType: query.content_type } : {}),
       ...(query.author_kind ? { authorKind: query.author_kind } : {}),
-      ...(query.status ? { status: query.status } : {}),
+      // Her own deletions are hers: nobody can see them, there is nothing to
+      // moderate, and listing them only puts a «remove» button on a ghost.
+      // The reported queue is what is still waiting on a decision, so a piece
+      // already taken down leaves it.
+      ...(query.status
+        ? { status: query.status }
+        : query.reported
+          ? { status: { notIn: [CommerceContentStatus.REMOVED, CommerceContentStatus.DELETED] } }
+          : { status: { not: CommerceContentStatus.DELETED } }),
       ...(query.reported ? { reportsCount: { gt: 0 } } : {}),
       ...(query.q
         ? {
@@ -430,12 +576,39 @@ export class ContentModerationService {
       }),
       this.prisma.commerceContent.count({ where }),
       this.prisma.commerceContent.count({
-        where: { reportsCount: { gt: 0 }, status: { not: CommerceContentStatus.REMOVED } },
+        where: {
+          reportsCount: { gt: 0 },
+          status: { notIn: [CommerceContentStatus.REMOVED, CommerceContentStatus.DELETED] },
+        },
       }),
     ]);
 
+    // What each row is in the queue for, in one query for the page: the open
+    // reports' reasons, newest first, and whether the word screen opened one.
+    const openCases = items.length
+      ? await this.prisma.moderationCase.findMany({
+          where: {
+            targetType: 'commerce_content',
+            targetId: { in: items.map((item) => item.id) },
+            status: ModerationStatus.OPEN,
+          },
+          orderBy: { createdAt: 'desc' },
+          select: { targetId: true, reason: true, reporterId: true },
+        })
+      : [];
+    const reports = new Map<string, { reasons: string[]; autoFlagged: boolean }>();
+    for (const row of openCases) {
+      const entry = reports.get(row.targetId) ?? { reasons: [], autoFlagged: false };
+      if (row.reporterId === null && row.reason.startsWith(AUTO_FLAG_REASON_PREFIX)) {
+        entry.autoFlagged = true;
+      }
+      if (entry.reasons.length < 5) entry.reasons.push(row.reason);
+      reports.set(row.targetId, entry);
+    }
+
     return {
       items,
+      reports,
       total,
       pending,
       meta: buildMeta(query.page, query.limit, total, items.length),

@@ -75,8 +75,14 @@ interface World {
 function build(tx: Tx): World {
   const db = asPrisma(tx);
   const events = new EventEmitter2();
-  const config = new ConfigService({ content: { reviewFreeAfter: 3 } });
+  const config = new ConfigService({});
   const repo = new CommerceContentRepository(db);
+  const moderation = new ContentModerationService(
+    db,
+    new AuditService(db),
+    events,
+    new CacheService(),
+  );
   return {
     db,
     content: new CommerceContentService(
@@ -85,14 +91,14 @@ function build(tx: Tx): World {
       events,
       new CacheService(),
       new ProductTagPolicyService(db, config),
-      config,
+      moderation,
     ),
     interactions: new ContentInteractionsService(
       db,
       events,
       new ContentAttributionService(db),
     ),
-    moderation: new ContentModerationService(db, new AuditService(db), events),
+    moderation,
   };
 }
 
@@ -238,20 +244,50 @@ dbTest('a reel cannot be edited into having no video', async (world) => {
   );
 });
 
-dbTest('a clean caption edited into a phone number goes back to review', async (world) => {
+/** Open automatic (word-screen) cases against one piece. */
+function autoCases(world: World, contentId: string) {
+  return world.db.moderationCase.count({
+    where: {
+      targetType: 'commerce_content',
+      targetId: contentId,
+      reporterId: null,
+      status: 'OPEN',
+      reason: { startsWith: 'auto_flag' },
+    },
+  });
+}
+
+dbTest('a clean caption edited into a phone number stays live and is flagged once', async (world) => {
   const { seller } = await cast(world.db);
   const id = await aPublishedReel(world, seller);
 
   await world.content.update(seller, id, {
     body: 'للطلب راسلوني على واتساب',
   } as never);
+  await world.content.update(seller, id, {
+    body: 'للطلب راسلوني على واتساب الآن',
+  } as never);
 
   const row = await world.db.commerceContent.findUnique({
     where: { id },
-    select: { status: true, moderationStatus: true },
+    select: { status: true, moderationStatus: true, reportsCount: true },
   });
-  assert.equal(row?.status, CommerceContentStatus.IN_REVIEW);
-  assert.equal(row?.moderationStatus, CommerceContentModerationStatus.PENDING);
+  assert.equal(row?.status, CommerceContentStatus.PUBLISHED);
+  assert.equal(row?.moderationStatus, CommerceContentModerationStatus.APPROVED);
+  assert.equal(row?.reportsCount, 1);
+  assert.equal(await autoCases(world, id), 1);
+});
+
+dbTest("a shopper's very first post goes straight to the feed", async (world) => {
+  const { shopper } = await cast(world.db);
+  const draft = await world.content.create(shopper, {
+    content_type: 'reel',
+    body: 'أول إطلالة لي',
+    payload: { caption: 'أول إطلالة لي' },
+    media: REEL_MEDIA,
+  } as never);
+  const published = await world.content.publish(shopper, draft.id);
+  assert.equal(String(published.status).toUpperCase(), CommerceContentStatus.PUBLISHED);
 });
 
 dbTest('a story can be shortened but never stretched past its day', async (world) => {
@@ -418,7 +454,7 @@ dbTest('the owner sees who watched her story, and nobody else may', async (world
   await assert.rejects(() => world.interactions.audience(shopper, draft.id));
 });
 
-dbTest('a flagged caption edited clean can be published, and a second tap does not resubmit', async (world) => {
+dbTest('a flagged caption is published at once and put in front of a moderator', async (world) => {
   const { seller } = await cast(world.db);
   const draft = await world.content.create(seller, {
     content_type: 'reel',
@@ -427,19 +463,55 @@ dbTest('a flagged caption edited clean can be published, and a second tap does n
     media: REEL_MEDIA,
   } as never);
 
-  const first = await world.content.publish(seller, draft.id);
-  assert.equal(String(first.status).toUpperCase(), CommerceContentStatus.IN_REVIEW);
-  // Tapping again while it waits is the same submission.
-  const again = await world.content.publish(seller, draft.id);
-  assert.equal(String(again.status).toUpperCase(), CommerceContentStatus.IN_REVIEW);
-
-  await world.content.update(seller, draft.id, {
-    body: 'للطلب من صفحة البوتيك',
-    payload: { caption: 'للطلب من صفحة البوتيك' },
-  } as never);
   const published = await world.content.publish(seller, draft.id);
-  assert.equal(
-    String(published.status).toUpperCase(),
-    CommerceContentStatus.PUBLISHED,
+  assert.equal(String(published.status).toUpperCase(), CommerceContentStatus.PUBLISHED);
+  // A second tap is not a second flag.
+  await world.content.publish(seller, draft.id);
+  assert.equal(await autoCases(world, draft.id), 1);
+});
+
+dbTest('keeping a reported piece clears it from the queue and leaves a trail', async (world) => {
+  const { seller, shopper, admin } = await cast(world.db);
+  const id = await aPublishedReel(world, seller);
+  await world.moderation.report(shopper, id, 'spam');
+
+  const result = await world.moderation.dismissReports(admin, id);
+  assert.equal(result.cases_closed, 1);
+
+  const row = await world.db.commerceContent.findUnique({
+    where: { id },
+    select: { status: true, reportsCount: true },
+  });
+  assert.equal(row?.status, CommerceContentStatus.PUBLISHED);
+  assert.equal(row?.reportsCount, 0);
+  const history = await world.moderation.history(admin, id);
+  assert.equal(history.length, 1);
+});
+
+dbTest('a reinstated piece leaves the reported queue', async (world) => {
+  const { seller, shopper, admin } = await cast(world.db);
+  const id = await aPublishedReel(world, seller);
+  await world.moderation.report(shopper, id, 'spam');
+  await world.moderation.remove(admin, id, REASON);
+  await world.moderation.reinstate(admin, id, REASON);
+
+  const row = await world.db.commerceContent.findUnique({
+    where: { id },
+    select: { status: true, reportsCount: true },
+  });
+  assert.equal(row?.status, CommerceContentStatus.PUBLISHED);
+  assert.equal(row?.reportsCount, 0);
+});
+
+dbTest('a piece its author deleted cannot be removed and so never reinstated', async (world) => {
+  const { seller, admin } = await cast(world.db);
+  const id = await aPublishedReel(world, seller);
+  await world.db.commerceContent.update({
+    where: { id },
+    data: { status: CommerceContentStatus.DELETED },
+  });
+  await assert.rejects(
+    () => world.moderation.remove(admin, id, REASON),
+    /ALREADY_DELETED_BY_AUTHOR/,
   );
 });

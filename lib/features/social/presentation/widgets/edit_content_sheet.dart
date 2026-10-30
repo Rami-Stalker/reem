@@ -14,9 +14,10 @@ import 'package:ohara/features/social/presentation/providers/social_providers.da
 /// every one of those women endorsed. A new clip is a new reel.
 ///
 /// Returns the piece as the server now has it, or null if she backed out.
-/// An edit that trips the word screen goes back to a moderator, and the
-/// snackbar says so rather than letting the reel vanish from her feed
-/// without a word.
+/// An edit stays live; one that trips the word screen is shown to a
+/// moderator afterwards, who can take it down from the console. Should the
+/// server ever hold it, the snackbar says so rather than letting the reel
+/// vanish from her feed without a word.
 Future<Content?> showEditContentSheet(
   BuildContext context, {
   required Content content,
