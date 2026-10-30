@@ -374,7 +374,7 @@ class _LineTile extends StatelessWidget {
                   if (!allowed && blocker != null)
                     Text(
                       blocker,
-                      style: context.dsText.bodySmall.tint(colors.error),
+                      style: context.dsText.bodySmall.tint(colors.errorInk),
                     ),
                 ],
               ),

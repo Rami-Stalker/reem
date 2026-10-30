@@ -296,7 +296,7 @@ class _ProfilePortraitState extends State<ProfilePortrait>
 
   static const _shopperThread = [
     DsColors.primary500,
-    DsColors.lavender400,
+    DsColors.secondary400,
     DsColors.gold300,
     DsColors.primary300,
     DsColors.primary500,
@@ -367,7 +367,7 @@ class _PortraitImage extends StatelessWidget {
               : const [
                   DsColors.primary300,
                   DsColors.primary600,
-                  DsColors.mauve600,
+                  DsColors.secondary600,
                 ],
         ),
       ),
@@ -1058,7 +1058,7 @@ class _AwningPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0x26FFFFFF), Color(0x00FFFFFF), Color(0x1A79551F)],
+          colors: [Color(0x26FFFFFF), Color(0x00FFFFFF), Color(0x1A6A5232)] // gold700 @ 10%,
         ).createShader(Offset.zero & size),
     );
     canvas.restore();

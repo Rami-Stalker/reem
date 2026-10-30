@@ -111,7 +111,7 @@ abstract final class DsShadows {
 
   /// Theme-aware hero/floating shadow.
   static List<BoxShadow> floatingForTheme({required bool isDark, Color? color}) {
-    if (isDark) return glow(color ?? DsColors.mauve400, blur: 30, alpha: 0.28);
+    if (isDark) return glow(color ?? DsColors.secondary400, blur: 30, alpha: 0.28);
     return luxury(color ?? DsColors.primary500);
   }
 }

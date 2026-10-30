@@ -23599,6 +23599,1098 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{Worn once} other{Worn {count} times}}'**
   String closetWornTimes(int count);
+
+  /// Advertising plan name: free
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get adTierFree;
+
+  /// Advertising plan name
+  ///
+  /// In en, this message translates to:
+  /// **'Silver'**
+  String get adTierSilver;
+
+  /// Advertising plan name
+  ///
+  /// In en, this message translates to:
+  /// **'Gold'**
+  String get adTierGold;
+
+  /// Advertising plan name
+  ///
+  /// In en, this message translates to:
+  /// **'Diamond'**
+  String get adTierDiamond;
+
+  /// Badge on a boutique that pays for an advertising plan
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} store'**
+  String storeTierBadge(String tier);
+
+  /// Ad placement
+  ///
+  /// In en, this message translates to:
+  /// **'Top of search'**
+  String get adPlacementSearch;
+
+  /// Ad placement
+  ///
+  /// In en, this message translates to:
+  /// **'Category page'**
+  String get adPlacementCategory;
+
+  /// Ad placement
+  ///
+  /// In en, this message translates to:
+  /// **'Top of the feed'**
+  String get adPlacementFeedTop;
+
+  /// Ad placement
+  ///
+  /// In en, this message translates to:
+  /// **'Home spotlight'**
+  String get adPlacementHomeSpotlight;
+
+  /// adPlacementSearchHint
+  ///
+  /// In en, this message translates to:
+  /// **'Above the results when shoppers search for pieces like yours'**
+  String get adPlacementSearchHint;
+
+  /// adPlacementCategoryHint
+  ///
+  /// In en, this message translates to:
+  /// **'At the top of the shelf your piece belongs to'**
+  String get adPlacementCategoryHint;
+
+  /// adPlacementFeedTopHint
+  ///
+  /// In en, this message translates to:
+  /// **'Your post pinned above every post in the community'**
+  String get adPlacementFeedTopHint;
+
+  /// adPlacementHomeSpotlightHint
+  ///
+  /// In en, this message translates to:
+  /// **'The first thing shoppers see when they open the app'**
+  String get adPlacementHomeSpotlightHint;
+
+  /// adsCenterTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Ads Center'**
+  String get adsCenterTitle;
+
+  /// adsCenterSubtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Reach more women, and pay only for what you choose'**
+  String get adsCenterSubtitle;
+
+  /// adsEntryBody
+  ///
+  /// In en, this message translates to:
+  /// **'Put your best pieces in front of more women'**
+  String get adsEntryBody;
+
+  /// adsYourPlan
+  ///
+  /// In en, this message translates to:
+  /// **'Your plan'**
+  String get adsYourPlan;
+
+  /// adsActiveOf
+  ///
+  /// In en, this message translates to:
+  /// **'{active} of {max} campaigns running'**
+  String adsActiveOf(int active, int max);
+
+  /// adsPlanEndsIn
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =0{Ends today} =1{Ends tomorrow} other{Ends in {days} days}}'**
+  String adsPlanEndsIn(int days);
+
+  /// adsCreditLeft
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} ad credit left'**
+  String adsCreditLeft(String amount);
+
+  /// adsRecommendSaving
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} would have saved you {amount} last month'**
+  String adsRecommendSaving(String tier, String amount);
+
+  /// adsUpgrade
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade your plan'**
+  String get adsUpgrade;
+
+  /// adsSeePlans
+  ///
+  /// In en, this message translates to:
+  /// **'See plans'**
+  String get adsSeePlans;
+
+  /// adsNewCampaign
+  ///
+  /// In en, this message translates to:
+  /// **'New campaign'**
+  String get adsNewCampaign;
+
+  /// adsPerformance
+  ///
+  /// In en, this message translates to:
+  /// **'Performance'**
+  String get adsPerformance;
+
+  /// adsPerformanceCaption
+  ///
+  /// In en, this message translates to:
+  /// **'Across all your campaigns'**
+  String get adsPerformanceCaption;
+
+  /// adsMetricSpend
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get adsMetricSpend;
+
+  /// adsMetricReach
+  ///
+  /// In en, this message translates to:
+  /// **'Women reached'**
+  String get adsMetricReach;
+
+  /// adsMetricClicks
+  ///
+  /// In en, this message translates to:
+  /// **'Taps'**
+  String get adsMetricClicks;
+
+  /// adsMetricOrders
+  ///
+  /// In en, this message translates to:
+  /// **'Orders from ads'**
+  String get adsMetricOrders;
+
+  /// adsMetricRevenue
+  ///
+  /// In en, this message translates to:
+  /// **'Sales from ads'**
+  String get adsMetricRevenue;
+
+  /// adsMetricRoas
+  ///
+  /// In en, this message translates to:
+  /// **'Return per lira spent'**
+  String get adsMetricRoas;
+
+  /// Return on ad spend multiplier
+  ///
+  /// In en, this message translates to:
+  /// **'{value}×'**
+  String adsRoasValue(String value);
+
+  /// adsNotYet
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get adsNotYet;
+
+  /// adsInsightAbove
+  ///
+  /// In en, this message translates to:
+  /// **'Your ads are tapped more than average — keep going'**
+  String get adsInsightAbove;
+
+  /// adsInsightAverage
+  ///
+  /// In en, this message translates to:
+  /// **'Your ads perform about average'**
+  String get adsInsightAverage;
+
+  /// adsInsightBelow
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer taps than average — try a stronger photo or a targeted audience'**
+  String get adsInsightBelow;
+
+  /// adsInsightNoData
+  ///
+  /// In en, this message translates to:
+  /// **'Results appear once your ads have been seen'**
+  String get adsInsightNoData;
+
+  /// adsSuggestionsTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Smart picks to promote'**
+  String get adsSuggestionsTitle;
+
+  /// adsSuggestionsCaption
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen from your own views, favourites and sales'**
+  String get adsSuggestionsCaption;
+
+  /// adsReasonLoved
+  ///
+  /// In en, this message translates to:
+  /// **'Loved, not yet bought'**
+  String get adsReasonLoved;
+
+  /// adsReasonBest
+  ///
+  /// In en, this message translates to:
+  /// **'Your best seller'**
+  String get adsReasonBest;
+
+  /// adsReasonHidden
+  ///
+  /// In en, this message translates to:
+  /// **'New and barely seen'**
+  String get adsReasonHidden;
+
+  /// adsReasonFresh
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh pick'**
+  String get adsReasonFresh;
+
+  /// adsCampaignsTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Your campaigns'**
+  String get adsCampaignsTitle;
+
+  /// adsNoCampaigns
+  ///
+  /// In en, this message translates to:
+  /// **'No campaigns yet'**
+  String get adsNoCampaigns;
+
+  /// adsNoCampaignsBody
+  ///
+  /// In en, this message translates to:
+  /// **'Start with one of the smart picks above — it takes a minute.'**
+  String get adsNoCampaignsBody;
+
+  /// adsStatusLive
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get adsStatusLive;
+
+  /// adsStatusPaused
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get adsStatusPaused;
+
+  /// adsStatusEnded
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get adsStatusEnded;
+
+  /// adsStatusScheduled
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get adsStatusScheduled;
+
+  /// adsStatusUnpaid
+  ///
+  /// In en, this message translates to:
+  /// **'Unpaid'**
+  String get adsStatusUnpaid;
+
+  /// adsPause
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get adsPause;
+
+  /// adsResume
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get adsResume;
+
+  /// adsCampaignWhere
+  ///
+  /// In en, this message translates to:
+  /// **'{placement} · {audience}'**
+  String adsCampaignWhere(String placement, String audience);
+
+  /// adsCampaignStats
+  ///
+  /// In en, this message translates to:
+  /// **'{impressions} views · {clicks} taps'**
+  String adsCampaignStats(String impressions, String clicks);
+
+  /// adsCampaignReachOrders
+  ///
+  /// In en, this message translates to:
+  /// **'{reach} women · {orders} orders'**
+  String adsCampaignReachOrders(String reach, String orders);
+
+  /// adsCampaignRevenue
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} in sales from this ad'**
+  String adsCampaignRevenue(String amount);
+
+  /// adsAudienceEveryone
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get adsAudienceEveryone;
+
+  /// adsAudienceTargeted
+  ///
+  /// In en, this message translates to:
+  /// **'Targeted'**
+  String get adsAudienceTargeted;
+
+  /// adsAudienceEveryoneHint
+  ///
+  /// In en, this message translates to:
+  /// **'Every shopper, signed in or not'**
+  String get adsAudienceEveryoneHint;
+
+  /// adsAudienceTargetedHint
+  ///
+  /// In en, this message translates to:
+  /// **'Only the women you choose — 20% cheaper'**
+  String get adsAudienceTargetedHint;
+
+  /// adsFailed
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your ads'**
+  String get adsFailed;
+
+  /// adsPlansTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Advertising plans'**
+  String get adsPlansTitle;
+
+  /// adsPlansSubtitle
+  ///
+  /// In en, this message translates to:
+  /// **'The more you invest, the further you reach'**
+  String get adsPlansSubtitle;
+
+  /// adsPlanPerMonth
+  ///
+  /// In en, this message translates to:
+  /// **'{price} / month'**
+  String adsPlanPerMonth(String price);
+
+  /// adsPlanFreeLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get adsPlanFreeLabel;
+
+  /// adsPlanCredit
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of ad credit included'**
+  String adsPlanCredit(String amount);
+
+  /// adsPlanBonus
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more credit than you pay'**
+  String adsPlanBonus(String amount);
+
+  /// adsPlanDiscount
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% off every campaign'**
+  String adsPlanDiscount(int percent);
+
+  /// adsPlanCampaigns
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 campaign at a time} other{{count} campaigns at once}}'**
+  String adsPlanCampaigns(int count);
+
+  /// adsPlanWeight
+  ///
+  /// In en, this message translates to:
+  /// **'Shown {weight}× more often than free stores'**
+  String adsPlanWeight(int weight);
+
+  /// adsPlanTargetingNone
+  ///
+  /// In en, this message translates to:
+  /// **'Ads shown to everyone'**
+  String get adsPlanTargetingNone;
+
+  /// adsPlanTargetingLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Target by governorate'**
+  String get adsPlanTargetingLocation;
+
+  /// adsPlanTargetingFull
+  ///
+  /// In en, this message translates to:
+  /// **'Target followers, past buyers, interests and new shoppers'**
+  String get adsPlanTargetingFull;
+
+  /// adsPlanFollowers
+  ///
+  /// In en, this message translates to:
+  /// **'Your followers hear about every new campaign'**
+  String get adsPlanFollowers;
+
+  /// adsPlanFeatured
+  ///
+  /// In en, this message translates to:
+  /// **'First in «Featured stores», with your badge'**
+  String get adsPlanFeatured;
+
+  /// adsPlanPlacements
+  ///
+  /// In en, this message translates to:
+  /// **'Placements: {list}'**
+  String adsPlanPlacements(String list);
+
+  /// Separator between items in an inline list
+  ///
+  /// In en, this message translates to:
+  /// **', '**
+  String get adsListSeparator;
+
+  /// adsPlanCurrent
+  ///
+  /// In en, this message translates to:
+  /// **'Your plan'**
+  String get adsPlanCurrent;
+
+  /// adsPlanRecommendedChip
+  ///
+  /// In en, this message translates to:
+  /// **'Best for you'**
+  String get adsPlanRecommendedChip;
+
+  /// adsPlanSaving
+  ///
+  /// In en, this message translates to:
+  /// **'Would have saved you {amount} last month'**
+  String adsPlanSaving(String amount);
+
+  /// adsPlanStartHint
+  ///
+  /// In en, this message translates to:
+  /// **'Start with Silver: its credit is worth more than its price'**
+  String get adsPlanStartHint;
+
+  /// adsPlanChoose
+  ///
+  /// In en, this message translates to:
+  /// **'Choose {tier}'**
+  String adsPlanChoose(String tier);
+
+  /// adsPlanRenew
+  ///
+  /// In en, this message translates to:
+  /// **'Renew'**
+  String get adsPlanRenew;
+
+  /// adsPlanQueued
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} starts on {date}'**
+  String adsPlanQueued(String tier, String date);
+
+  /// adsPlanConfirmTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to {tier}?'**
+  String adsPlanConfirmTitle(String tier);
+
+  /// adsPlanConfirmBody
+  ///
+  /// In en, this message translates to:
+  /// **'{price} for 30 days. The plan does not renew by itself.'**
+  String adsPlanConfirmBody(String price);
+
+  /// adsPlanConfirmUpgradeNote
+  ///
+  /// In en, this message translates to:
+  /// **'Unused credit from your current plan carries over.'**
+  String get adsPlanConfirmUpgradeNote;
+
+  /// adsPlanSubscribed
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to {tier}!'**
+  String adsPlanSubscribed(String tier);
+
+  /// adsConfirm
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get adsConfirm;
+
+  /// adsErrorBalance
+  ///
+  /// In en, this message translates to:
+  /// **'Your earnings balance doesn\'t cover this yet.'**
+  String get adsErrorBalance;
+
+  /// adsErrorLimit
+  ///
+  /// In en, this message translates to:
+  /// **'Your plan’s campaign limit is reached — pause one or upgrade.'**
+  String get adsErrorLimit;
+
+  /// adsErrorFeedPost
+  ///
+  /// In en, this message translates to:
+  /// **'Publish a public post featuring this piece first.'**
+  String get adsErrorFeedPost;
+
+  /// adsErrorLocked
+  ///
+  /// In en, this message translates to:
+  /// **'This needs a higher plan.'**
+  String get adsErrorLocked;
+
+  /// adsComposerTitle
+  ///
+  /// In en, this message translates to:
+  /// **'New campaign'**
+  String get adsComposerTitle;
+
+  /// adsStepProduct
+  ///
+  /// In en, this message translates to:
+  /// **'The piece'**
+  String get adsStepProduct;
+
+  /// adsChooseProduct
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a piece to promote'**
+  String get adsChooseProduct;
+
+  /// adsChangeProduct
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get adsChangeProduct;
+
+  /// adsPickProductTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Which piece?'**
+  String get adsPickProductTitle;
+
+  /// adsNoProducts
+  ///
+  /// In en, this message translates to:
+  /// **'You have no live pieces to promote'**
+  String get adsNoProducts;
+
+  /// adsStepPlacement
+  ///
+  /// In en, this message translates to:
+  /// **'Where it appears'**
+  String get adsStepPlacement;
+
+  /// adsStepAudience
+  ///
+  /// In en, this message translates to:
+  /// **'Who sees it'**
+  String get adsStepAudience;
+
+  /// adsStepDuration
+  ///
+  /// In en, this message translates to:
+  /// **'For how long'**
+  String get adsStepDuration;
+
+  /// adsDays
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String adsDays(int count);
+
+  /// adsLockedNeeds
+  ///
+  /// In en, this message translates to:
+  /// **'Needs {tier}'**
+  String adsLockedNeeds(String tier);
+
+  /// adsTargetGroups
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
+  String get adsTargetGroups;
+
+  /// adsTargetGovernorates
+  ///
+  /// In en, this message translates to:
+  /// **'Governorates'**
+  String get adsTargetGovernorates;
+
+  /// adsTargetFollowers
+  ///
+  /// In en, this message translates to:
+  /// **'My followers'**
+  String get adsTargetFollowers;
+
+  /// adsTargetPastBuyers
+  ///
+  /// In en, this message translates to:
+  /// **'Bought from me'**
+  String get adsTargetPastBuyers;
+
+  /// adsTargetInterested
+  ///
+  /// In en, this message translates to:
+  /// **'Interested in this kind of piece'**
+  String get adsTargetInterested;
+
+  /// adsTargetNewShoppers
+  ///
+  /// In en, this message translates to:
+  /// **'New shoppers'**
+  String get adsTargetNewShoppers;
+
+  /// adsReachTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated reach'**
+  String get adsReachTitle;
+
+  /// adsReachValue
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 woman} other{{count} women}}'**
+  String adsReachValue(int count);
+
+  /// adsReachShare
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of all shoppers'**
+  String adsReachShare(int percent);
+
+  /// adsShareOfVoice
+  ///
+  /// In en, this message translates to:
+  /// **'Your share of the slot'**
+  String get adsShareOfVoice;
+
+  /// adsShareOfVoiceHint
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Against 1 live campaign} other{Against {count} live campaigns}}'**
+  String adsShareOfVoiceHint(int count);
+
+  /// adsShareAlone
+  ///
+  /// In en, this message translates to:
+  /// **'No competition right now'**
+  String get adsShareAlone;
+
+  /// adsPercent
+  ///
+  /// In en, this message translates to:
+  /// **'{value}%'**
+  String adsPercent(int value);
+
+  /// adsPriceLine
+  ///
+  /// In en, this message translates to:
+  /// **'Placement for {duration}'**
+  String adsPriceLine(String duration);
+
+  /// adsPriceDiscount
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} plan discount'**
+  String adsPriceDiscount(String tier);
+
+  /// adsPriceCredit
+  ///
+  /// In en, this message translates to:
+  /// **'Paid from ad credit'**
+  String get adsPriceCredit;
+
+  /// adsPriceToPay
+  ///
+  /// In en, this message translates to:
+  /// **'From your earnings'**
+  String get adsPriceToPay;
+
+  /// adsMinus
+  ///
+  /// In en, this message translates to:
+  /// **'−{amount}'**
+  String adsMinus(String amount);
+
+  /// adsFeedPostPinned
+  ///
+  /// In en, this message translates to:
+  /// **'This post will be pinned:'**
+  String get adsFeedPostPinned;
+
+  /// adsFeedPostMissing
+  ///
+  /// In en, this message translates to:
+  /// **'This placement pins one of your posts. Publish a post featuring this piece first.'**
+  String get adsFeedPostMissing;
+
+  /// adsCreatePost
+  ///
+  /// In en, this message translates to:
+  /// **'Create a post'**
+  String get adsCreatePost;
+
+  /// adsUnlockWith
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock with {tier}'**
+  String adsUnlockWith(String tier);
+
+  /// adsLaunch
+  ///
+  /// In en, this message translates to:
+  /// **'Launch · {amount}'**
+  String adsLaunch(String amount);
+
+  /// adsLaunchFree
+  ///
+  /// In en, this message translates to:
+  /// **'Launch with your credit'**
+  String get adsLaunchFree;
+
+  /// adsLaunched
+  ///
+  /// In en, this message translates to:
+  /// **'Your campaign is live ✨'**
+  String get adsLaunched;
+
+  /// adsQuoteFailed
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t price this campaign'**
+  String get adsQuoteFailed;
+
+  /// Home section of boutiques' paid spotlight slots
+  ///
+  /// In en, this message translates to:
+  /// **'Featured picks'**
+  String get homeSpotlightTitle;
+
+  /// homeSpotlightShop
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get homeSpotlightShop;
+
+  /// homeSpotlightCardLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsored: {product}, from {store}'**
+  String homeSpotlightCardLabel(String product, String store);
+
+  /// adsPayHow
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to pay?'**
+  String get adsPayHow;
+
+  /// adsPayFromEarnings
+  ///
+  /// In en, this message translates to:
+  /// **'From my earnings'**
+  String get adsPayFromEarnings;
+
+  /// adsPayEarningsBalance
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: {amount}'**
+  String adsPayEarningsBalance(String amount);
+
+  /// adsPayEarningsShort
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount} — not enough yet'**
+  String adsPayEarningsShort(String amount);
+
+  /// adsPayInstant
+  ///
+  /// In en, this message translates to:
+  /// **'Instant'**
+  String get adsPayInstant;
+
+  /// adsPayTransferHint
+  ///
+  /// In en, this message translates to:
+  /// **'Send the amount, then enter the transaction number'**
+  String get adsPayTransferHint;
+
+  /// adsPayNoMethods
+  ///
+  /// In en, this message translates to:
+  /// **'Payment by transfer is not set up yet — contact support'**
+  String get adsPayNoMethods;
+
+  /// adsPaymentBannerAwaiting
+  ///
+  /// In en, this message translates to:
+  /// **'Your {tier} plan is waiting for your payment — tap to finish'**
+  String adsPaymentBannerAwaiting(String tier);
+
+  /// adsPaymentBannerReview
+  ///
+  /// In en, this message translates to:
+  /// **'We received your {tier} payment number and are checking it'**
+  String adsPaymentBannerReview(String tier);
+
+  /// adsPaymentBannerRejected
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t match your {tier} payment — tap to see why'**
+  String adsPaymentBannerRejected(String tier);
+
+  /// adsPaymentTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Pay for your plan'**
+  String get adsPaymentTitle;
+
+  /// adsPaymentPlan
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} plan · 30 days'**
+  String adsPaymentPlan(String tier);
+
+  /// adsPaymentStepSend
+  ///
+  /// In en, this message translates to:
+  /// **'Send {amount} by {method}'**
+  String adsPaymentStepSend(String amount, String method);
+
+  /// adsPaymentStepReference
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the transaction number you received'**
+  String get adsPaymentStepReference;
+
+  /// adsPaymentStepChange
+  ///
+  /// In en, this message translates to:
+  /// **'Sent the wrong number? Send it again'**
+  String get adsPaymentStepChange;
+
+  /// adsPaymentReferenceField
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction number'**
+  String get adsPaymentReferenceField;
+
+  /// adsPaymentSend
+  ///
+  /// In en, this message translates to:
+  /// **'Send for review'**
+  String get adsPaymentSend;
+
+  /// adsPaymentSent
+  ///
+  /// In en, this message translates to:
+  /// **'Received — we’ll turn your plan on as soon as it’s matched'**
+  String get adsPaymentSent;
+
+  /// adsPaymentReviewTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Being checked'**
+  String get adsPaymentReviewTitle;
+
+  /// adsPaymentReviewBody
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction {reference} is with our finance team. You’ll get a notification the moment your plan is on.'**
+  String adsPaymentReviewBody(String reference);
+
+  /// adsPaymentRejectedTitle
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t match this payment'**
+  String get adsPaymentRejectedTitle;
+
+  /// adsPaymentHowLong
+  ///
+  /// In en, this message translates to:
+  /// **'Payments are usually matched within a few working hours.'**
+  String get adsPaymentHowLong;
+
+  /// adsPaymentCancel
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this payment'**
+  String get adsPaymentCancel;
+
+  /// adsPaymentCopy
+  ///
+  /// In en, this message translates to:
+  /// **'Copy payment details'**
+  String get adsPaymentCopy;
+
+  /// adsPaymentCopied
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get adsPaymentCopied;
+
+  /// adsPaymentNothingOpen
+  ///
+  /// In en, this message translates to:
+  /// **'No payment is waiting'**
+  String get adsPaymentNothingOpen;
+
+  /// adsErrorMethodUnavailable
+  ///
+  /// In en, this message translates to:
+  /// **'This payment method isn’t available right now.'**
+  String get adsErrorMethodUnavailable;
+
+  /// adsErrorPurchaseInProgress
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a plan payment in progress.'**
+  String get adsErrorPurchaseInProgress;
+
+  /// adsErrorPurchaseClosed
+  ///
+  /// In en, this message translates to:
+  /// **'This payment has already been decided.'**
+  String get adsErrorPurchaseClosed;
+
+  /// adsErrorReferenceRequired
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the transaction number you received.'**
+  String get adsErrorReferenceRequired;
+
+  /// adminAdsTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Advertising plans'**
+  String get adminAdsTitle;
+
+  /// adminAdsSummary
+  ///
+  /// In en, this message translates to:
+  /// **'{plans} active plans · {revenue} ad revenue this month'**
+  String adminAdsSummary(int plans, String revenue);
+
+  /// adminAdsNoPending
+  ///
+  /// In en, this message translates to:
+  /// **'No plan payments waiting to be matched.'**
+  String get adminAdsNoPending;
+
+  /// adminAdsReference
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction number: {reference}'**
+  String adminAdsReference(String reference);
+
+  /// adminAdsConfirmBody
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm that {amount} arrived from {seller}? Their {tier} plan turns on at once.'**
+  String adminAdsConfirmBody(String amount, String seller, String tier);
+
+  /// adminAdsConfirmed
+  ///
+  /// In en, this message translates to:
+  /// **'Plan turned on, and the boutique was told'**
+  String get adminAdsConfirmed;
+
+  /// adminAdsInstructionsTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Where boutiques send plan payments'**
+  String get adminAdsInstructionsTitle;
+
+  /// adminAdsInstructionsHint
+  ///
+  /// In en, this message translates to:
+  /// **'A method left empty is not offered'**
+  String get adminAdsInstructionsHint;
+
+  /// adminAdsInstructionsSave
+  ///
+  /// In en, this message translates to:
+  /// **'Save payment details'**
+  String get adminAdsInstructionsSave;
+
+  /// adminAdsInstructionsSaved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get adminAdsInstructionsSaved;
+
+  /// adsNotVerifiedTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Your store needs approval to advertise'**
+  String get adsNotVerifiedTitle;
+
+  /// adsNotVerifiedBody
+  ///
+  /// In en, this message translates to:
+  /// **'Until your store is approved its page is closed to shoppers, so ads couldn’t reach them. Complete verification and every plan opens up.'**
+  String get adsNotVerifiedBody;
+
+  /// adsNotVerifiedAction
+  ///
+  /// In en, this message translates to:
+  /// **'Complete verification'**
+  String get adsNotVerifiedAction;
+
+  /// adsErrorNotVerified
+  ///
+  /// In en, this message translates to:
+  /// **'Your store must be approved before it can advertise.'**
+  String get adsErrorNotVerified;
+
+  /// Chip on a ranked feed card: chosen from what she likes and shops
+  ///
+  /// In en, this message translates to:
+  /// **'For you'**
+  String get feedReasonForYou;
+
+  /// Chip on a ranked feed card: doing unusually well right now
+  ///
+  /// In en, this message translates to:
+  /// **'Trending now'**
+  String get feedReasonTrending;
+
+  /// Chip on a ranked feed card: a good account she has not met yet
+  ///
+  /// In en, this message translates to:
+  /// **'New voice'**
+  String get feedReasonNewVoice;
 }
 
 class _AppLocalizationsDelegate

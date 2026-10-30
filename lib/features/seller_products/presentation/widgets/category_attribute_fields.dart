@@ -159,7 +159,7 @@ class _Options extends StatelessWidget {
               ),
               child: Text(
                 errorText!,
-                style: context.dsText.caption.tint(palette.critical),
+                style: context.dsText.caption.tint(palette.criticalInk),
               ),
             ),
         ],

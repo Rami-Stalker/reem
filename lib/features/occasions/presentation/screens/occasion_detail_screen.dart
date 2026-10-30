@@ -392,7 +392,7 @@ class _StepTile extends ConsumerWidget {
               DsGaps.vSm,
               Text(
                 l10n.occasionSalonCancelled(appointment.salon?.name ?? ''),
-                style: context.dsText.caption.tint(context.dsColors.warning),
+                style: context.dsText.caption.tint(context.dsColors.warningInk),
               ),
             ],
             DsGaps.vSm,

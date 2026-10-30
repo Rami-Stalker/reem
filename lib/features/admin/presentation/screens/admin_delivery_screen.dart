@@ -66,7 +66,7 @@ class AdminDeliveryScreen extends ConsumerWidget {
                   error: (error, _) => _Panel(
                     child: Text(
                       '$error',
-                      style: context.dsText.bodySmall.tint(palette.critical),
+                      style: context.dsText.bodySmall.tint(palette.criticalInk),
                     ),
                   ),
                   data: (rows) => Column(
@@ -100,14 +100,14 @@ class AdminDeliveryScreen extends ConsumerWidget {
                   ),
                   error: (error, _) => Text(
                     '$error',
-                    style: context.dsText.bodySmall.tint(palette.critical),
+                    style: context.dsText.bodySmall.tint(palette.criticalInk),
                   ),
                   data: (rows) => rows.isEmpty
                       ? _Panel(
                           child: Text(
                             l10n.adminDeliveryNothingStuck,
                             style: context.dsText.bodySmall.tint(
-                              palette.positive,
+                              palette.positiveInk,
                             ),
                           ),
                         )
@@ -242,7 +242,7 @@ class _ProviderCard extends StatelessWidget {
               padding: const EdgeInsets.only(top: DsSpacing.xxs),
               child: Text(
                 l10n.adminDeliveryAdapterMissing(account.adapter),
-                style: context.dsText.caption.tint(palette.critical),
+                style: context.dsText.caption.tint(palette.criticalInk),
               ),
             ),
           if (account.lastError != null)
@@ -250,7 +250,7 @@ class _ProviderCard extends StatelessWidget {
               padding: const EdgeInsets.only(top: DsSpacing.xxs),
               child: Text(
                 account.lastError!,
-                style: context.dsText.caption.tint(palette.critical),
+                style: context.dsText.caption.tint(palette.criticalInk),
               ),
             ),
         ],
@@ -284,7 +284,7 @@ class _StuckCard extends StatelessWidget {
                     row.lastError!,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: context.dsText.caption.tint(palette.critical),
+                    style: context.dsText.caption.tint(palette.criticalInk),
                   ),
               ],
             ),

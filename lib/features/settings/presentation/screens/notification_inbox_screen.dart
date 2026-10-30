@@ -150,6 +150,15 @@ class NotificationInboxScreen extends ConsumerWidget {
 
     if (id('chat_id') != null) return RoutePaths.chats;
 
+    // «إعلانات المتاجر»: her plan and her campaigns live in the ads centre;
+    // a plan payment waiting on finance lives on the finance desk.
+    switch (id('kind')) {
+      case 'ad_plan' || 'ad_campaign':
+        return RoutePaths.sellerAds;
+      case 'ad_plan_purchase':
+        return RoutePaths.adminFinancials;
+    }
+
     return switch (notification.type) {
       NotificationEntityType.coupon => RoutePaths.coupons,
       NotificationEntityType.promo => RoutePaths.coupons,

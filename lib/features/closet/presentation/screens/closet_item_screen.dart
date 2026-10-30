@@ -571,7 +571,7 @@ class _Manage extends ConsumerWidget {
                 leading: Icon(Icons.delete_outline_rounded, color: colors.error),
                 title: Text(
                   l10n.closetDeleteForever,
-                  style: text.bodyStrong.tint(colors.error),
+                  style: text.bodyStrong.tint(colors.errorInk),
                 ),
                 subtitle: Text(l10n.closetDeleteHint, style: text.caption),
                 onTap: () => _delete(context, ref),

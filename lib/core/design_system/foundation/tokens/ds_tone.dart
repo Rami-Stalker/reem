@@ -46,6 +46,22 @@ extension DsToneContext on BuildContext {
     };
   }
 
+  /// The text colour for a tone — a deeper shade of [toneColor] that stays
+  /// readable (4.5:1) on the page, on cards and on [toneContainer]. Use it for
+  /// words; keep [toneColor] for icons, dots, bars and fills.
+  Color toneInk(DsTone tone) {
+    final c = dsColors;
+    return switch (tone) {
+      DsTone.positive => c.successInk,
+      DsTone.info => c.infoInk,
+      DsTone.caution => c.warningInk,
+      DsTone.critical => c.errorInk,
+      DsTone.accent => c.onSecondaryContainer,
+      DsTone.reversal => c.discount,
+      DsTone.neutral => c.onSurfaceVariant,
+    };
+  }
+
   /// The tinted fill that goes behind [toneColor] — a chip, a status pill, a
   /// medallion behind an icon.
   Color toneContainer(DsTone tone) {

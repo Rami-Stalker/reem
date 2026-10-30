@@ -136,7 +136,7 @@ class CourierParcelCard extends StatelessWidget {
                 const SizedBox(width: DsSpacing.xxs),
                 Text(
                   l10n.trackAttempts(assignment.attemptCount),
-                  style: context.dsText.caption.semibold.tint(colors.warning),
+                  style: context.dsText.caption.semibold.tint(colors.warningInk),
                 ),
               ],
             ),
@@ -217,7 +217,7 @@ class _CollectionLine extends StatelessWidget {
           const SizedBox(width: DsSpacing.xxs),
           Text(
             l10n.courierPrepaid,
-            style: context.dsText.bodySmall.semibold.tint(colors.success),
+            style: context.dsText.bodySmall.semibold.tint(colors.successInk),
           ),
         ],
       );

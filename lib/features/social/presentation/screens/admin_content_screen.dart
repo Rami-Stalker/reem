@@ -429,7 +429,7 @@ class _ModerationRow extends StatelessWidget {
             // one is refused before it reaches the database.
             Text(
               context.l10n.adminContentRemovedFor(item.removalReason!),
-              style: context.dsText.caption.tint(console.critical),
+              style: context.dsText.caption.tint(console.criticalInk),
             ),
           ],
           DsGaps.vSm,
@@ -508,11 +508,11 @@ class _ReportsSummary extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.flag_outlined, size: 16, color: console.caution),
+              Icon(Icons.flag_outlined, size: 16, color: console.cautionInk),
               DsGaps.hXxs,
               Text(
                 context.l10n.adminContentReportsCount(item.reportsCount),
-                style: context.dsText.caption.tint(console.caution),
+                style: context.dsText.caption.tint(console.cautionInk),
               ),
             ],
           ),
@@ -713,7 +713,7 @@ class _ReasonDialogState extends State<_ReasonDialog> {
               DsGaps.vXs,
               Text(
                 context.l10n.adminContentReasonTooShort,
-                style: context.dsText.micro.tint(context.dsColors.error),
+                style: context.dsText.micro.tint(context.dsColors.errorInk),
               ),
             ],
           ],

@@ -5,6 +5,7 @@ export 'package:ohara/core/design_system/components/avatars/app_avatar.dart';
 export 'package:ohara/core/design_system/components/avatars/ds_avatar.dart';
 // Badges & avatars
 export 'package:ohara/core/design_system/components/badges/ds_badge.dart';
+export 'package:ohara/core/design_system/components/badges/ds_tier_badge.dart';
 export 'package:ohara/core/design_system/components/buttons/button_sizes.dart';
 export 'package:ohara/core/design_system/components/buttons/button_states.dart';
 export 'package:ohara/core/design_system/components/buttons/button_styles.dart';

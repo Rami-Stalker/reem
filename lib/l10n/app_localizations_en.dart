@@ -13772,4 +13772,700 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get adTierFree => 'Free';
+
+  @override
+  String get adTierSilver => 'Silver';
+
+  @override
+  String get adTierGold => 'Gold';
+
+  @override
+  String get adTierDiamond => 'Diamond';
+
+  @override
+  String storeTierBadge(String tier) {
+    return '$tier store';
+  }
+
+  @override
+  String get adPlacementSearch => 'Top of search';
+
+  @override
+  String get adPlacementCategory => 'Category page';
+
+  @override
+  String get adPlacementFeedTop => 'Top of the feed';
+
+  @override
+  String get adPlacementHomeSpotlight => 'Home spotlight';
+
+  @override
+  String get adPlacementSearchHint =>
+      'Above the results when shoppers search for pieces like yours';
+
+  @override
+  String get adPlacementCategoryHint =>
+      'At the top of the shelf your piece belongs to';
+
+  @override
+  String get adPlacementFeedTopHint =>
+      'Your post pinned above every post in the community';
+
+  @override
+  String get adPlacementHomeSpotlightHint =>
+      'The first thing shoppers see when they open the app';
+
+  @override
+  String get adsCenterTitle => 'Ads Center';
+
+  @override
+  String get adsCenterSubtitle =>
+      'Reach more women, and pay only for what you choose';
+
+  @override
+  String get adsEntryBody => 'Put your best pieces in front of more women';
+
+  @override
+  String get adsYourPlan => 'Your plan';
+
+  @override
+  String adsActiveOf(int active, int max) {
+    return '$active of $max campaigns running';
+  }
+
+  @override
+  String adsPlanEndsIn(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Ends in $days days',
+      one: 'Ends tomorrow',
+      zero: 'Ends today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsCreditLeft(String amount) {
+    return '$amount ad credit left';
+  }
+
+  @override
+  String adsRecommendSaving(String tier, String amount) {
+    return '$tier would have saved you $amount last month';
+  }
+
+  @override
+  String get adsUpgrade => 'Upgrade your plan';
+
+  @override
+  String get adsSeePlans => 'See plans';
+
+  @override
+  String get adsNewCampaign => 'New campaign';
+
+  @override
+  String get adsPerformance => 'Performance';
+
+  @override
+  String get adsPerformanceCaption => 'Across all your campaigns';
+
+  @override
+  String get adsMetricSpend => 'Spent';
+
+  @override
+  String get adsMetricReach => 'Women reached';
+
+  @override
+  String get adsMetricClicks => 'Taps';
+
+  @override
+  String get adsMetricOrders => 'Orders from ads';
+
+  @override
+  String get adsMetricRevenue => 'Sales from ads';
+
+  @override
+  String get adsMetricRoas => 'Return per lira spent';
+
+  @override
+  String adsRoasValue(String value) {
+    return '$value×';
+  }
+
+  @override
+  String get adsNotYet => 'Not yet';
+
+  @override
+  String get adsInsightAbove =>
+      'Your ads are tapped more than average — keep going';
+
+  @override
+  String get adsInsightAverage => 'Your ads perform about average';
+
+  @override
+  String get adsInsightBelow =>
+      'Fewer taps than average — try a stronger photo or a targeted audience';
+
+  @override
+  String get adsInsightNoData => 'Results appear once your ads have been seen';
+
+  @override
+  String get adsSuggestionsTitle => 'Smart picks to promote';
+
+  @override
+  String get adsSuggestionsCaption =>
+      'Chosen from your own views, favourites and sales';
+
+  @override
+  String get adsReasonLoved => 'Loved, not yet bought';
+
+  @override
+  String get adsReasonBest => 'Your best seller';
+
+  @override
+  String get adsReasonHidden => 'New and barely seen';
+
+  @override
+  String get adsReasonFresh => 'Fresh pick';
+
+  @override
+  String get adsCampaignsTitle => 'Your campaigns';
+
+  @override
+  String get adsNoCampaigns => 'No campaigns yet';
+
+  @override
+  String get adsNoCampaignsBody =>
+      'Start with one of the smart picks above — it takes a minute.';
+
+  @override
+  String get adsStatusLive => 'Live';
+
+  @override
+  String get adsStatusPaused => 'Paused';
+
+  @override
+  String get adsStatusEnded => 'Ended';
+
+  @override
+  String get adsStatusScheduled => 'Scheduled';
+
+  @override
+  String get adsStatusUnpaid => 'Unpaid';
+
+  @override
+  String get adsPause => 'Pause';
+
+  @override
+  String get adsResume => 'Resume';
+
+  @override
+  String adsCampaignWhere(String placement, String audience) {
+    return '$placement · $audience';
+  }
+
+  @override
+  String adsCampaignStats(String impressions, String clicks) {
+    return '$impressions views · $clicks taps';
+  }
+
+  @override
+  String adsCampaignReachOrders(String reach, String orders) {
+    return '$reach women · $orders orders';
+  }
+
+  @override
+  String adsCampaignRevenue(String amount) {
+    return '$amount in sales from this ad';
+  }
+
+  @override
+  String get adsAudienceEveryone => 'Everyone';
+
+  @override
+  String get adsAudienceTargeted => 'Targeted';
+
+  @override
+  String get adsAudienceEveryoneHint => 'Every shopper, signed in or not';
+
+  @override
+  String get adsAudienceTargetedHint =>
+      'Only the women you choose — 20% cheaper';
+
+  @override
+  String get adsFailed => 'Couldn\'t load your ads';
+
+  @override
+  String get adsPlansTitle => 'Advertising plans';
+
+  @override
+  String get adsPlansSubtitle => 'The more you invest, the further you reach';
+
+  @override
+  String adsPlanPerMonth(String price) {
+    return '$price / month';
+  }
+
+  @override
+  String get adsPlanFreeLabel => 'Free';
+
+  @override
+  String adsPlanCredit(String amount) {
+    return '$amount of ad credit included';
+  }
+
+  @override
+  String adsPlanBonus(String amount) {
+    return '$amount more credit than you pay';
+  }
+
+  @override
+  String adsPlanDiscount(int percent) {
+    return '$percent% off every campaign';
+  }
+
+  @override
+  String adsPlanCampaigns(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count campaigns at once',
+      one: '1 campaign at a time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsPlanWeight(int weight) {
+    return 'Shown $weight× more often than free stores';
+  }
+
+  @override
+  String get adsPlanTargetingNone => 'Ads shown to everyone';
+
+  @override
+  String get adsPlanTargetingLocation => 'Target by governorate';
+
+  @override
+  String get adsPlanTargetingFull =>
+      'Target followers, past buyers, interests and new shoppers';
+
+  @override
+  String get adsPlanFollowers => 'Your followers hear about every new campaign';
+
+  @override
+  String get adsPlanFeatured => 'First in «Featured stores», with your badge';
+
+  @override
+  String adsPlanPlacements(String list) {
+    return 'Placements: $list';
+  }
+
+  @override
+  String get adsListSeparator => ', ';
+
+  @override
+  String get adsPlanCurrent => 'Your plan';
+
+  @override
+  String get adsPlanRecommendedChip => 'Best for you';
+
+  @override
+  String adsPlanSaving(String amount) {
+    return 'Would have saved you $amount last month';
+  }
+
+  @override
+  String get adsPlanStartHint =>
+      'Start with Silver: its credit is worth more than its price';
+
+  @override
+  String adsPlanChoose(String tier) {
+    return 'Choose $tier';
+  }
+
+  @override
+  String get adsPlanRenew => 'Renew';
+
+  @override
+  String adsPlanQueued(String tier, String date) {
+    return '$tier starts on $date';
+  }
+
+  @override
+  String adsPlanConfirmTitle(String tier) {
+    return 'Subscribe to $tier?';
+  }
+
+  @override
+  String adsPlanConfirmBody(String price) {
+    return '$price for 30 days. The plan does not renew by itself.';
+  }
+
+  @override
+  String get adsPlanConfirmUpgradeNote =>
+      'Unused credit from your current plan carries over.';
+
+  @override
+  String adsPlanSubscribed(String tier) {
+    return 'Welcome to $tier!';
+  }
+
+  @override
+  String get adsConfirm => 'Confirm';
+
+  @override
+  String get adsErrorBalance =>
+      'Your earnings balance doesn\'t cover this yet.';
+
+  @override
+  String get adsErrorLimit =>
+      'Your plan’s campaign limit is reached — pause one or upgrade.';
+
+  @override
+  String get adsErrorFeedPost =>
+      'Publish a public post featuring this piece first.';
+
+  @override
+  String get adsErrorLocked => 'This needs a higher plan.';
+
+  @override
+  String get adsComposerTitle => 'New campaign';
+
+  @override
+  String get adsStepProduct => 'The piece';
+
+  @override
+  String get adsChooseProduct => 'Choose a piece to promote';
+
+  @override
+  String get adsChangeProduct => 'Change';
+
+  @override
+  String get adsPickProductTitle => 'Which piece?';
+
+  @override
+  String get adsNoProducts => 'You have no live pieces to promote';
+
+  @override
+  String get adsStepPlacement => 'Where it appears';
+
+  @override
+  String get adsStepAudience => 'Who sees it';
+
+  @override
+  String get adsStepDuration => 'For how long';
+
+  @override
+  String adsDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsLockedNeeds(String tier) {
+    return 'Needs $tier';
+  }
+
+  @override
+  String get adsTargetGroups => 'Groups';
+
+  @override
+  String get adsTargetGovernorates => 'Governorates';
+
+  @override
+  String get adsTargetFollowers => 'My followers';
+
+  @override
+  String get adsTargetPastBuyers => 'Bought from me';
+
+  @override
+  String get adsTargetInterested => 'Interested in this kind of piece';
+
+  @override
+  String get adsTargetNewShoppers => 'New shoppers';
+
+  @override
+  String get adsReachTitle => 'Estimated reach';
+
+  @override
+  String adsReachValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count women',
+      one: '1 woman',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adsReachShare(int percent) {
+    return '$percent% of all shoppers';
+  }
+
+  @override
+  String get adsShareOfVoice => 'Your share of the slot';
+
+  @override
+  String adsShareOfVoiceHint(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Against $count live campaigns',
+      one: 'Against 1 live campaign',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adsShareAlone => 'No competition right now';
+
+  @override
+  String adsPercent(int value) {
+    return '$value%';
+  }
+
+  @override
+  String adsPriceLine(String duration) {
+    return 'Placement for $duration';
+  }
+
+  @override
+  String adsPriceDiscount(String tier) {
+    return '$tier plan discount';
+  }
+
+  @override
+  String get adsPriceCredit => 'Paid from ad credit';
+
+  @override
+  String get adsPriceToPay => 'From your earnings';
+
+  @override
+  String adsMinus(String amount) {
+    return '−$amount';
+  }
+
+  @override
+  String get adsFeedPostPinned => 'This post will be pinned:';
+
+  @override
+  String get adsFeedPostMissing =>
+      'This placement pins one of your posts. Publish a post featuring this piece first.';
+
+  @override
+  String get adsCreatePost => 'Create a post';
+
+  @override
+  String adsUnlockWith(String tier) {
+    return 'Unlock with $tier';
+  }
+
+  @override
+  String adsLaunch(String amount) {
+    return 'Launch · $amount';
+  }
+
+  @override
+  String get adsLaunchFree => 'Launch with your credit';
+
+  @override
+  String get adsLaunched => 'Your campaign is live ✨';
+
+  @override
+  String get adsQuoteFailed => 'Couldn\'t price this campaign';
+
+  @override
+  String get homeSpotlightTitle => 'Featured picks';
+
+  @override
+  String get homeSpotlightShop => 'Shop';
+
+  @override
+  String homeSpotlightCardLabel(String product, String store) {
+    return 'Sponsored: $product, from $store';
+  }
+
+  @override
+  String get adsPayHow => 'How would you like to pay?';
+
+  @override
+  String get adsPayFromEarnings => 'From my earnings';
+
+  @override
+  String adsPayEarningsBalance(String amount) {
+    return 'Balance: $amount';
+  }
+
+  @override
+  String adsPayEarningsShort(String amount) {
+    return 'Balance $amount — not enough yet';
+  }
+
+  @override
+  String get adsPayInstant => 'Instant';
+
+  @override
+  String get adsPayTransferHint =>
+      'Send the amount, then enter the transaction number';
+
+  @override
+  String get adsPayNoMethods =>
+      'Payment by transfer is not set up yet — contact support';
+
+  @override
+  String adsPaymentBannerAwaiting(String tier) {
+    return 'Your $tier plan is waiting for your payment — tap to finish';
+  }
+
+  @override
+  String adsPaymentBannerReview(String tier) {
+    return 'We received your $tier payment number and are checking it';
+  }
+
+  @override
+  String adsPaymentBannerRejected(String tier) {
+    return 'We couldn’t match your $tier payment — tap to see why';
+  }
+
+  @override
+  String get adsPaymentTitle => 'Pay for your plan';
+
+  @override
+  String adsPaymentPlan(String tier) {
+    return '$tier plan · 30 days';
+  }
+
+  @override
+  String adsPaymentStepSend(String amount, String method) {
+    return 'Send $amount by $method';
+  }
+
+  @override
+  String get adsPaymentStepReference =>
+      'Enter the transaction number you received';
+
+  @override
+  String get adsPaymentStepChange => 'Sent the wrong number? Send it again';
+
+  @override
+  String get adsPaymentReferenceField => 'Transaction number';
+
+  @override
+  String get adsPaymentSend => 'Send for review';
+
+  @override
+  String get adsPaymentSent =>
+      'Received — we’ll turn your plan on as soon as it’s matched';
+
+  @override
+  String get adsPaymentReviewTitle => 'Being checked';
+
+  @override
+  String adsPaymentReviewBody(String reference) {
+    return 'Transaction $reference is with our finance team. You’ll get a notification the moment your plan is on.';
+  }
+
+  @override
+  String get adsPaymentRejectedTitle => 'We couldn’t match this payment';
+
+  @override
+  String get adsPaymentHowLong =>
+      'Payments are usually matched within a few working hours.';
+
+  @override
+  String get adsPaymentCancel => 'Cancel this payment';
+
+  @override
+  String get adsPaymentCopy => 'Copy payment details';
+
+  @override
+  String get adsPaymentCopied => 'Copied';
+
+  @override
+  String get adsPaymentNothingOpen => 'No payment is waiting';
+
+  @override
+  String get adsErrorMethodUnavailable =>
+      'This payment method isn’t available right now.';
+
+  @override
+  String get adsErrorPurchaseInProgress =>
+      'You already have a plan payment in progress.';
+
+  @override
+  String get adsErrorPurchaseClosed => 'This payment has already been decided.';
+
+  @override
+  String get adsErrorReferenceRequired =>
+      'Enter the transaction number you received.';
+
+  @override
+  String get adminAdsTitle => 'Advertising plans';
+
+  @override
+  String adminAdsSummary(int plans, String revenue) {
+    return '$plans active plans · $revenue ad revenue this month';
+  }
+
+  @override
+  String get adminAdsNoPending => 'No plan payments waiting to be matched.';
+
+  @override
+  String adminAdsReference(String reference) {
+    return 'Transaction number: $reference';
+  }
+
+  @override
+  String adminAdsConfirmBody(String amount, String seller, String tier) {
+    return 'Confirm that $amount arrived from $seller? Their $tier plan turns on at once.';
+  }
+
+  @override
+  String get adminAdsConfirmed => 'Plan turned on, and the boutique was told';
+
+  @override
+  String get adminAdsInstructionsTitle => 'Where boutiques send plan payments';
+
+  @override
+  String get adminAdsInstructionsHint => 'A method left empty is not offered';
+
+  @override
+  String get adminAdsInstructionsSave => 'Save payment details';
+
+  @override
+  String get adminAdsInstructionsSaved => 'Saved';
+
+  @override
+  String get adsNotVerifiedTitle => 'Your store needs approval to advertise';
+
+  @override
+  String get adsNotVerifiedBody =>
+      'Until your store is approved its page is closed to shoppers, so ads couldn’t reach them. Complete verification and every plan opens up.';
+
+  @override
+  String get adsNotVerifiedAction => 'Complete verification';
+
+  @override
+  String get adsErrorNotVerified =>
+      'Your store must be approved before it can advertise.';
+
+  @override
+  String get feedReasonForYou => 'For you';
+
+  @override
+  String get feedReasonTrending => 'Trending now';
+
+  @override
+  String get feedReasonNewVoice => 'New voice';
 }

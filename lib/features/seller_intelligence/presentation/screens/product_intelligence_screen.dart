@@ -207,7 +207,7 @@ class _ProductCardState extends ConsumerState<_ProductCard> {
                             Text(
                               context.l10n.siSoldOut,
                               style: context.dsText.micro.tint(
-                                palette.critical,
+                                palette.criticalInk,
                               ),
                             ),
                           ],

@@ -90,7 +90,7 @@ class AdminPoliciesScreen extends ConsumerWidget {
                   ),
                   error: (error, _) => Text(
                     '$error',
-                    style: context.dsText.bodySmall.tint(palette.critical),
+                    style: context.dsText.bodySmall.tint(palette.criticalInk),
                   ),
                   data: (rows) => Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

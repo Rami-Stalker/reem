@@ -250,7 +250,7 @@ class _ChipWrap extends StatelessWidget {
             context.l10n.visualLowConfidence,
             style: Theme.of(
               context,
-            ).textTheme.labelSmall?.copyWith(color: colors.warning),
+            ).textTheme.labelSmall?.copyWith(color: colors.warningInk),
           ),
       ],
     );

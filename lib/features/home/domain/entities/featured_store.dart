@@ -15,6 +15,7 @@ class FeaturedStore extends Equatable {
     this.followerCount = 0,
     this.isFollowing = false,
     this.previewImages = const [],
+    this.adTier,
   });
 
   final String id;
@@ -35,6 +36,10 @@ class FeaturedStore extends Equatable {
   /// A few product thumbnails shown as a teaser strip on the card.
   final List<String> previewImages;
 
+  /// Her advertising plan — `silver`, `gold`, `diamond` — or null for free.
+  /// Gold and Diamond boutiques lead this rail; the badge says why.
+  final String? adTier;
+
   FeaturedStore copyWith({bool? isFollowing, int? followerCount}) {
     return FeaturedStore(
       id: id,
@@ -48,6 +53,7 @@ class FeaturedStore extends Equatable {
       followerCount: followerCount ?? this.followerCount,
       isFollowing: isFollowing ?? this.isFollowing,
       previewImages: previewImages,
+      adTier: adTier,
     );
   }
 
@@ -64,5 +70,6 @@ class FeaturedStore extends Equatable {
     followerCount,
     isFollowing,
     previewImages,
+    adTier,
   ];
 }

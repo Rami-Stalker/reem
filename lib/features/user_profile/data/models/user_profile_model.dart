@@ -13,6 +13,7 @@ class UserProfileModel extends UserProfile {
     super.hasStory,
     super.profileIsPublic,
     super.sellerStats,
+    super.adTier,
   });
 
   /// The backend returns user fields at the top level (spread) plus the
@@ -31,6 +32,7 @@ class UserProfileModel extends UserProfile {
       sellerStats: statsJson is Map<String, dynamic>
           ? SellerStatsModel.fromJson(statsJson)
           : null,
+      adTier: json['ad_tier'] as String?,
     );
   }
 }

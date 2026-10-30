@@ -146,7 +146,7 @@ class _FlashDealCard extends StatelessWidget {
                       child: Text(
                         '−${product.discountPercent}%',
                         style: context.dsText.caption.bold.tint(
-                          DsColors.onMedia,
+                          c.onDiscount,
                         ),
                       ),
                     ),

@@ -69,8 +69,8 @@ class CourtSky extends StatelessWidget {
             ),
             colors: [
               palette.nav,
-              isDark ? DsColors.mauve900 : DsColors.mauve800,
-              isDark ? DsColors.primary950 : DsColors.primary900,
+              isDark ? DsColors.secondary900 : DsColors.secondary800,
+              isDark ? DsColors.primary900 : DsColors.primary900,
             ],
             stops: const [0, 0.62, 1],
           ),
@@ -519,7 +519,7 @@ class CourtDoor extends StatelessWidget {
                 lit: lit,
                 surface: palette.surface,
                 line: palette.line,
-                nightTop: isDark ? DsColors.mauve800 : DsColors.mauve700,
+                nightTop: isDark ? DsColors.secondary800 : DsColors.secondary700,
                 nightBottom: palette.nav,
                 shadow: palette.shadow.isEmpty
                     ? DsColors.transparent
@@ -836,7 +836,7 @@ class CourtNight extends StatelessWidget {
               : AlignmentDirectional.centerEnd.resolve(
                   Directionality.of(context),
                 ),
-          colors: [palette.nav, isDark ? DsColors.mauve900 : DsColors.mauve800],
+          colors: [palette.nav, isDark ? DsColors.secondary900 : DsColors.secondary800],
         ),
       ),
       child: CustomPaint(painter: const _LatticePainter(), child: child),
@@ -1461,7 +1461,7 @@ class _Bead extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: DsRadius.borderPill,
               gradient: selected
-                  ? LinearGradient(colors: [palette.nav, DsColors.mauve700])
+                  ? LinearGradient(colors: [palette.nav, DsColors.secondary700])
                   : null,
               color: selected ? null : palette.surface,
               border: Border.all(

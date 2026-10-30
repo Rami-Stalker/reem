@@ -87,6 +87,22 @@ recipient), `messages.delivered` (`message_ids`), `messages.read`
 delivered the moment the recipient's open socket receives it. Errors carry
 `source_event` and the `client_id` of the send that failed.
 
+## Store advertising (`/ads`)
+
+Seller-only. Plans, quotes, smart suggestions, campaigns and their results.
+Full account in [STORE_ADS.md](STORE_ADS.md).
+
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/ads/plans` | Her plan and credit, every plan, a recommendation |
+| POST | `/ads/plans/subscribe` | `{ tier }` — paid from earnings; send `Idempotency-Key` |
+| POST | `/ads/quote` | `{ offer_id, placement, days, audience? }` → price, reach, share of voice |
+| GET | `/ads/suggestions` | Which pieces to promote, and why |
+| GET | `/ads/overview` | Spend, reach, taps, attributed orders and sales |
+| GET | `/ads/audience/governorates` | Targetable governorates with shopper counts |
+| GET/POST | `/ads/campaigns` | List / create-and-launch (send `Idempotency-Key`) |
+| PATCH | `/ads/campaigns/:id/status` | Pause or resume |
+
 ## Salons and appointments (`/salons`, `/appointments`)
 
 «الصالونات والجمال». The directory and a salon's page are public — a shared

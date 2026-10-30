@@ -366,7 +366,7 @@ class _ProductFace extends StatelessWidget {
                     // A signed number keeps its own direction, or Arabic
                     // turns «-21%» into «21%-».
                     textDirection: TextDirection.ltr,
-                    style: context.dsText.captionStrong.tint(DsColors.onMedia),
+                    style: context.dsText.captionStrong.tint(colors.onDiscount),
                   ),
                 ),
               ),
@@ -577,7 +577,7 @@ class _DoneCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
-          colors: [DsColors.mauve800, DsColors.primary700, DsColors.coral400],
+          colors: [DsColors.secondary800, DsColors.primary700, DsColors.rosewood],
         ),
         boxShadow: context.shadowLuxury,
       ),

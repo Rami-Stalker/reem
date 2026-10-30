@@ -225,7 +225,7 @@ export class UsersService {
 
   private async profileExtras(user: User, viewerId: string, isMe: boolean) {
     const isSeller = user.role === UserRole.SELLER;
-    const [postsCount, isFollowing, sellerStats, picksCount, hasStory] =
+    const [postsCount, isFollowing, sellerStats, picksCount, hasStory, adTier] =
       await Promise.all([
         this.users.countPosts(user.id),
         isMe
@@ -234,6 +234,7 @@ export class UsersService {
         isSeller ? this.users.sellerStats(user.id) : Promise.resolve(null),
         this.users.countVisiblePicks(user, viewerId),
         this.users.hasVisibleStory(user, viewerId),
+        isSeller ? this.adTierOf(user.id) : Promise.resolve(null),
       ]);
 
     return {
@@ -244,6 +245,24 @@ export class UsersService {
       hasStory,
       productsCount: sellerStats?.productsCount ?? 0,
       sellerStats,
+      adTier,
     };
+  }
+
+  /**
+   * The advertising plan a boutique carries right now — «فضي/ذهبي/ماسي» on
+   * her page. Null for free, which wears no badge.
+   */
+  private async adTierOf(sellerId: string): Promise<string | null> {
+    const now = new Date();
+    const rows = await this.prisma.storeAdSubscription.findMany({
+      where: { sellerId, startsAt: { lte: now }, endsAt: { gt: now } },
+      select: { tier: true },
+    });
+    const order = ['FREE', 'SILVER', 'GOLD', 'DIAMOND'];
+    const best = rows
+      .map((row) => row.tier as string)
+      .sort((a, b) => order.indexOf(b) - order.indexOf(a))[0];
+    return best && best !== 'FREE' ? best.toLowerCase() : null;
   }
 }

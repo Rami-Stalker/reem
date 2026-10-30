@@ -466,7 +466,7 @@ class _VerifiedNumber extends StatelessWidget {
                   Text(
                     context.l10n.numberVerified,
                     style: context.dsText.caption.copyWith(
-                      color: colors.success,
+                      color: colors.successInk,
                     ),
                   ),
                   Text(

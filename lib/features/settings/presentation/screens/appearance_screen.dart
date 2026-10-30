@@ -66,7 +66,7 @@ class AppearanceScreen extends StatelessWidget {
                           title: l10n.themeSystem,
                           subtitle: l10n.themeSystemSubtitle,
                           preview: const _Glass(
-                            gradient: DsGradients.lavenderBlush,
+                            gradient: DsGradients.roseMauveBlush,
                             icon: Icons.phone_iphone_rounded,
                             tint: DsColors.primary600,
                           ),

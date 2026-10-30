@@ -339,7 +339,7 @@ class ClosetPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ink = onMedia ? DsColors.onMedia : context.toneColor(tone);
+    final ink = onMedia ? DsColors.onMedia : context.toneInk(tone);
     final fill = onMedia ? DsColors.mediaScrim : context.toneContainer(tone);
 
     return Container(

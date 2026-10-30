@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserRole } from '@prisma/client';
+import { PromotionPlacement, UserRole } from '@prisma/client';
 import { Authorize } from '../../common/decorators/authorize.decorator';
 import {
   AuthUser,
@@ -27,7 +27,9 @@ import {
   ViewerState,
 } from '../../common/serializers';
 import { ContentFeedService } from './feed/content-feed.service';
+import { MAX_FEED_SLOTS, PromotionsService } from '../promotions/promotions.service';
 import { ContentFeedControlsService } from './feed/content-feed-controls.service';
+import { FeedRankingService } from './ranking/feed-ranking.service';
 import { ContentInteractionsService } from './interactions/content-interactions.service';
 import { ContentModerationService } from './moderation/content-moderation.service';
 import { ProductTagPolicyService } from './tagging/product-tag-policy.service';
@@ -40,6 +42,9 @@ import {
   ReportContentDto,
   ReshareContentDto,
 } from './dto/social.dto';
+
+/** Where a later page's sponsored post sits: after a few of her own. */
+const INLINE_AD_POSITION = 4;
 
 const NO_VIEWER: ViewerState = {
   is_liked: false,
@@ -68,6 +73,8 @@ export class ContentSocialController {
     private readonly moderation: ContentModerationService,
     private readonly tagPolicy: ProductTagPolicyService,
     private readonly prisma: PrismaService,
+    private readonly promotions: PromotionsService,
+    private readonly ranking: FeedRankingService,
   ) {}
 
   // ── Feeds ─────────────────────────────────────────────────────────────────
@@ -85,6 +92,15 @@ export class ContentSocialController {
     const filtered = Boolean(
       query.content_type || query.author_id || query.author_kind,
     );
+
+    // The plain feed is ranked for her: following, closeness, her categories,
+    // what is doing well, what is new — one session per visit. A channel or
+    // a filter is a list she asked for and stays newest-first.
+    if (!filtered && !query.channel) {
+      const ranked = await this.ranking.page('feed', user?.id, query);
+      if (ranked) return this.renderRanked(ranked, user?.id, true);
+    }
+
     const page = await (user || filtered
       ? this.feed.feed(query, {
           viewerId: user?.id,
@@ -94,7 +110,141 @@ export class ContentSocialController {
           authorKind: query.author_kind,
         })
       : this.feed.publicFeed(query, query.channel));
-    return this.renderFeed(page, user?.id);
+
+    // The head of the plain home feed carries one sponsored post, labelled.
+    // Never on a channel or a filtered view: an advert on her own boutique's
+    // page is noise.
+    const head = !query.cursor && !filtered && !query.channel;
+    const sponsored = head ? await this.sponsoredHead(user?.id) : [];
+    if (sponsored.length === 0) return this.renderFeed(page, user?.id);
+    return this.withSponsored(page, sponsored, 0, user?.id);
+  }
+
+  /**
+   * A ranked page: the session's next slice, a sponsored post where one
+   * belongs, and each piece's reason — «تتابعينها», «مقترح لكِ», «رائج الآن»,
+   * «صوت جديد» — so the app can say why it is there.
+   *
+   * The first page leads with the paid FEED_TOP post; every later page of
+   * the same scroll carries one more, a few places in, and never one this
+   * scroll already showed. One in twenty, labelled, never twice.
+   */
+  private async renderRanked(
+    ranked: NonNullable<Awaited<ReturnType<FeedRankingService['page']>>>,
+    viewerId: string | undefined,
+    withAds: boolean,
+  ) {
+    let sponsored: Awaited<ReturnType<typeof this.sponsoredHead>> = [];
+    let at = 0;
+    // A post this scroll already showed as an advert does not come back
+    // further down as one of her own.
+    const shown = this.ranking.adsShown(ranked.session);
+    if (shown.size > 0) ranked = { ...ranked, items: ranked.items.filter((i) => !shown.has(i.id)) };
+    if (withAds && ranked.items.length > 0) {
+      sponsored = await this.sponsoredHead(viewerId, shown);
+      at = ranked.offset === 0 ? 0 : Math.min(INLINE_AD_POSITION, ranked.items.length);
+      this.ranking.rememberAds(
+        ranked.session,
+        sponsored.map((s) => s.row.id),
+      );
+    }
+    const rendered =
+      sponsored.length === 0
+        ? await this.renderFeed(ranked, viewerId)
+        : await this.withSponsored(ranked, sponsored, at, viewerId);
+    return {
+      ...rendered,
+      data: rendered.data.map((item) => {
+        const id = (item as { id: string }).id;
+        const reason = ranked.reasons[id];
+        return reason && !(item as { sponsored?: unknown }).sponsored
+          ? { ...item, rank_reason: reason }
+          : item;
+      }),
+    };
+  }
+
+  /** The page with the sponsored posts placed at [at], each labelled. */
+  private async withSponsored(
+    page: { items: { id: string }[]; meta: unknown },
+    sponsored: Awaited<ReturnType<typeof this.sponsoredHead>>,
+    at: number,
+    viewerId?: string,
+  ) {
+    const pinned = new Set(sponsored.map((s) => s.row.id));
+    const organic = page.items.filter((item) => !pinned.has(item.id));
+    const rendered = await this.renderFeed(
+      {
+        items: [
+          ...organic.slice(0, at),
+          ...sponsored.map((s) => s.row),
+          ...organic.slice(at),
+        ],
+        meta: page.meta,
+      },
+      viewerId,
+    );
+    const bySlot = new Map(sponsored.map((s) => [s.row.id, s.slot]));
+    return {
+      ...rendered,
+      data: rendered.data.map((item, index) => {
+        const inSlot = index >= at && index < at + sponsored.length;
+        const slot = inSlot ? bySlot.get((item as { id: string }).id) : undefined;
+        return slot
+          ? {
+              ...item,
+              sponsored: {
+                promotion_id: slot.promotionId,
+                offer_id: slot.offerId,
+                // The placement she paid for, wherever in the scroll it sits:
+                // a tap is credited against it.
+                placement: 'feed_top',
+                store_tier: slot.tier.toLowerCase(),
+              },
+            }
+          : item;
+      }),
+    };
+  }
+
+  /**
+   * The paid FEED_TOP slot for this viewer, with its post. A failure here
+   * serves the feed without it — a broken ad system must never take the feed
+   * down with it.
+   */
+  private async sponsoredHead(viewerId?: string, skip?: ReadonlySet<string>) {
+    try {
+      // A few in serving order, so a shop she muted gives way to the next
+      // rather than leaving the slot empty.
+      const slots = await this.promotions.serve(PromotionPlacement.FEED_TOP, {
+        viewerId,
+        limit: MAX_FEED_SLOTS + 2,
+      });
+      const withPost = slots.filter(
+        (slot) => slot.contentId && !skip?.has(slot.contentId),
+      );
+      if (withPost.length === 0) return [];
+      const rows = await this.feed.sponsoredRows(
+        withPost.map((slot) => slot.contentId!),
+        viewerId,
+      );
+      const slotOf = new Map(withPost.map((slot) => [slot.contentId!, slot]));
+      const served = rows
+        .slice(0, MAX_FEED_SLOTS)
+        .map((row) => ({ row, slot: slotOf.get(row.id)! }));
+      if (served.length > 0) {
+        void this.promotions
+          .recordImpressions(
+            served.map((s) => s.slot.offerId),
+            PromotionPlacement.FEED_TOP,
+            viewerId,
+          )
+          .catch(() => undefined);
+      }
+      return served;
+    } catch {
+      return [];
+    }
   }
 
   @Get('reels')
@@ -103,6 +253,10 @@ export class ContentSocialController {
     @CurrentUser() user: AuthUser | undefined,
     @Query() query: CursorPageDto,
   ) {
+    // Ranked like the feed, with watch time counting most: a reel she
+    // watches to the end says more than a heart.
+    const ranked = await this.ranking.page('reels', user?.id, query);
+    if (ranked) return this.renderRanked(ranked, user?.id, false);
     const page = await this.feed.feed(query, {
       viewerId: user?.id,
       contentType: 'reel',
@@ -128,7 +282,18 @@ export class ContentSocialController {
   @Get('stories')
   @OptionalAuth()
   async stories(@CurrentUser() user: AuthUser | undefined) {
-    const tray = await this.feed.storiesTray(user?.id);
+    // In the order she would open them: her own ring, then the ones with
+    // something new — closest people first — then the ones she finished.
+    const tray = await this.ranking
+      .orderTray(
+        user?.id,
+        (await this.feed.storiesTray(user?.id)).map((group) => ({
+          ...group,
+          authorId: group.author.id,
+          allSeen: group.all_seen,
+          newestAt: group.stories[group.stories.length - 1].createdAt,
+        })),
+      );
     const viewer = await this.viewerStates(
       tray.flatMap((group) => group.stories.map((story) => story.id)),
       user?.id,
