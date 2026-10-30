@@ -1227,6 +1227,14 @@ model User {
   flashSalesRun        FlashSale[]         @relation("FlashSalesRun")
   flashSalesCreated    FlashSale[]         @relation("FlashSalesCreated")
   promotionsBought     ProductPromotion[]  @relation("PromotionsBought")
+  /// «باقات الإعلان» she has bought — the tier her boutique carries.
+  adSubscriptions      StoreAdSubscription[] @relation("StoreAdSubscriptions")
+  /// Plans she asked to pay for by transfer, and their review.
+  adPlanPurchases      AdPlanPurchase[]    @relation("AdPlanPurchases")
+  /// What the ranked feed has already shown her.
+  feedSeen             FeedSeen[]          @relation("FeedSeen")
+  /// The sponsored placements she, as a shopper, was shown.
+  adExposures          AdExposure[]          @relation("AdExposures")
   experimentsCreated   Experiment[]        @relation("ExperimentsCreated")
   customerProfile      CustomerProfile?    @relation("CustomerProfile")
   /// How this boutique ranks against other boutiques, 0–100. Zero for anyone
@@ -3025,6 +3033,10 @@ model CommerceContent {
   highlightItems          ProfileHighlightItem[]
   /// Her page timeline, and branch A of the following feed. Keyset-ordered, so
   hiddenBy                ContentHide[]
+  /// Paid placements boosting this post to the top of the feed.
+  promotions              ProductPromotion[]                @relation("PromotedContent")
+  /// Who the ranked feed has shown it to.
+  servedTo                FeedSeen[]
 
   /// Her authoring workspace: drafts and scheduled rows, most recently touched
   /// first.
@@ -4391,13 +4403,202 @@ model ProductPromotion {
   impressions Int @default(0)
   clicks      Int @default(0)
 
+  /// The post a FEED_TOP placement pins above the feed. Always one of her own
+  /// posts tagging the advertised product; null for every other placement.
+  contentId String?          @map("content_id") @db.Uuid
+  content   CommerceContent? @relation("PromotedContent", fields: [contentId], references: [id], onDelete: SetNull)
+
+  /// Who sees it. EVERYONE is every shopper, signed in or not; TARGETED is
+  /// only the signed-in shoppers the fields below describe.
+  audience           AdAudience @default(EVERYONE)
+  /// Location filter: her default address's governorate must be one of these.
+  /// Empty means anywhere.
+  targetGovernorates String[]   @default([]) @map("target_governorates")
+  /// Interest filters. A shopper matches when she is in ANY of the chosen
+  /// groups (and in a chosen governorate, when there are some).
+  targetFollowers    Boolean    @default(false) @map("target_followers")
+  targetPastBuyers   Boolean    @default(false) @map("target_past_buyers")
+  targetInterested   Boolean    @default(false) @map("target_interested")
+  targetNewShoppers  Boolean    @default(false) @map("target_new_shoppers")
+
+  /// The part of the fee paid from her plan's ad credit rather than from her
+  /// earnings. The rest went through the ledger.
+  creditApplied Decimal @default(0) @map("credit_applied") @db.Decimal(18, 4)
+
+  /// When her followers were told about it — a GOLD/DIAMOND perk, at most once
+  /// a week per boutique so it never turns into spam.
+  followersNotifiedAt DateTime? @map("followers_notified_at")
+
+  /// When she was sent the campaign's results after its window closed.
+  endedNoticeSentAt DateTime? @map("ended_notice_sent_at")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  exposures AdExposure[]
 
   @@index([status, startsAt, endsAt])
   @@index([sellerId, status])
   @@index([offerId])
+  @@index([placement, status, endsAt])
   @@map("product_promotions")
+}
+
+/// A boutique's advertising plan — «عادي، فضي، ذهبي، ماسي».
+///
+/// What she pays decides how far her advertising reaches: which placements she
+/// may buy, whether she may target, how many campaigns run at once, the
+/// discount on every campaign, the ad credit the plan carries, and where her
+/// placements stand when several compete for one slot. The plan is paid once,
+/// up front, from her earnings, and the credit it includes is spent before her
+/// earnings are touched again.
+///
+/// Not auto-renewing. Nothing here charges a boutique without her pressing a
+/// button: a plan that renews itself out of a woman's earnings is the kind of
+/// surprise that ends a seller relationship.
+model StoreAdSubscription {
+  id String @id @default(uuid()) @db.Uuid
+
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("StoreAdSubscriptions", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  tier StoreAdTier
+
+  priceAmount   Decimal  @map("price_amount") @db.Decimal(18, 4)
+  priceCurrency Currency @default(SYP) @map("price_currency")
+
+  startsAt DateTime @map("starts_at")
+  endsAt   DateTime @map("ends_at")
+
+  /// Ad credit the plan carries for its period, including what was carried
+  /// over from a plan she upgraded out of.
+  creditGranted Decimal @map("credit_granted") @db.Decimal(18, 4)
+  creditUsed    Decimal @default(0) @map("credit_used") @db.Decimal(18, 4)
+
+  /// The journal entry that took the price. Unique, so a plan is never billed
+  /// twice.
+  chargeReference String? @unique @map("charge_reference")
+
+  /// When she was told it ends soon, and that it ended — each once.
+  reminderSentAt    DateTime? @map("reminder_sent_at")
+  endedNoticeSentAt DateTime? @map("ended_notice_sent_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([sellerId, endsAt])
+  @@map("store_ad_subscriptions")
+}
+
+/// What the ranked feed has already put in front of her.
+///
+/// Written when a page is served, not when she says she looked — serving is
+/// the one thing the server knows for certain, and a piece scrolled past is a
+/// piece she has had her chance at. It is what turns a feed into something
+/// other than the same ten posts on every refresh, and what lets the ranker
+/// tell a boutique nobody has been shown yet from one everybody has.
+///
+/// Kept a fortnight; older rows are swept nightly.
+model FeedSeen {
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("FeedSeen", fields: [userId], references: [id], onDelete: Cascade)
+
+  contentId String          @map("content_id") @db.Uuid
+  content   CommerceContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  servedCount  Int      @default(1) @map("served_count")
+  lastServedAt DateTime @map("last_served_at")
+
+  @@id([userId, contentId])
+  @@index([userId, lastServedAt])
+  @@index([contentId, lastServedAt])
+  @@index([lastServedAt])
+  @@map("feed_seen")
+}
+
+/// A plan she pays for outside the platform — Sham Cash, Syriatel Cash, MTN
+/// Cash, a bank transfer or a hawala — and finance's review of it.
+///
+/// Paying from her earnings is instant and needs no row here. A boutique that
+/// has not sold anything yet has no earnings, though, and the plan is exactly
+/// what she would buy to start selling — so she sends the money the way she
+/// sends any money in Syria, tells us the transaction number, and finance
+/// matches it. Only a confirmed purchase becomes a [StoreAdSubscription];
+/// the ledger entry is taken from the platform's cash, where the money landed.
+model AdPlanPurchase {
+  id String @id @default(uuid()) @db.Uuid
+
+  sellerId String @map("seller_id") @db.Uuid
+  seller   User   @relation("AdPlanPurchases", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  tier     StoreAdTier
+  method   PaymentMethodType
+  amount   Decimal              @db.Decimal(18, 4)
+  currency Currency             @default(SYP)
+  status   AdPlanPurchaseStatus @default(AWAITING_PAYMENT)
+
+  /// The transaction number her wallet, bank or exchange office gave her.
+  reference            String?
+  referenceSubmittedAt DateTime? @map("reference_submitted_at")
+
+  /// Why finance could not match it — shown to her, word for word.
+  rejectionReason String?   @map("rejection_reason")
+  decidedById     String?   @map("decided_by_id") @db.Uuid
+  decidedAt       DateTime? @map("decided_at")
+
+  /// The plan it became, once confirmed.
+  subscriptionId String? @unique @map("subscription_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, createdAt])
+  @@index([sellerId, createdAt])
+  @@map("ad_plan_purchases")
+}
+
+enum AdPlanPurchaseStatus {
+  /// Asked for; she has not sent the money yet (or not told us).
+  AWAITING_PAYMENT
+  /// She sent the reference; finance has to match it.
+  AWAITING_REVIEW
+  /// Matched — the plan is hers.
+  CONFIRMED
+  /// Finance could not match it. She may send the right reference again.
+  REJECTED
+  /// She withdrew it before it was confirmed.
+  CANCELLED
+}
+
+/// One shopper's day with one placement: how often it was shown to her and
+/// whether she tapped it.
+///
+/// Three things read it. The frequency cap — the same advert three times a day
+/// is enough, and the fourth is what makes a woman resent the boutique. The
+/// seller's «وصول» — how many *different* women saw it, which is what she
+/// actually bought. And attribution — an order for the advertised piece from a
+/// woman who tapped the advert in the week before.
+///
+/// Signed-in shoppers only. A guest has no identity to cap or attribute.
+model AdExposure {
+  id String @id @default(uuid()) @db.Uuid
+
+  promotionId String           @map("promotion_id") @db.Uuid
+  promotion   ProductPromotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("AdExposures", fields: [userId], references: [id], onDelete: Cascade)
+
+  day DateTime @db.Date
+
+  impressions Int @default(0)
+  clicks      Int @default(0)
+
+  lastClickedAt DateTime? @map("last_clicked_at")
+
+  @@unique([promotionId, userId, day])
+  @@index([userId, day])
+  @@map("ad_exposures")
 }
 
 /// A change being tried on some customers and not others.
@@ -4557,6 +4758,25 @@ enum PromotionPlacement {
   SEARCH
   /// A labelled slot on a category page.
   CATEGORY
+  /// Her post, pinned above the community feed with a «مُموَّل» label.
+  FEED_TOP
+  /// A spotlight card at the top of the home page.
+  HOME_SPOTLIGHT
+}
+
+enum AdAudience {
+  /// Every shopper, signed in or not.
+  EVERYONE
+  /// Only the signed-in shoppers the placement's target fields describe.
+  TARGETED
+}
+
+/// A boutique's advertising plan. Ordered: a later value is a higher plan.
+enum StoreAdTier {
+  FREE
+  SILVER
+  GOLD
+  DIAMOND
 }
 
 enum PromotionStatus {

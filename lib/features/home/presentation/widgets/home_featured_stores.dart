@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/media/media_decode.dart';
@@ -12,6 +11,7 @@ import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/home/domain/entities/featured_store.dart';
 import 'package:ohara/features/home/presentation/providers/home_content_provider.dart';
 import 'package:ohara/features/home/presentation/widgets/home_section_header.dart';
+import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
 
 /// "Featured boutiques" — rich store cards with cover, logo, trust signals and
@@ -181,6 +181,16 @@ class _StoreCardState extends ConsumerState<_StoreCard> {
                       ),
                     ),
                   ),
+                  // «متجر ماسي» — what her plan buys her on this rail.
+                  if (storeTierJewel(store.adTier) case final jewel?)
+                    PositionedDirectional(
+                      top: DsSpacing.xs,
+                      end: DsSpacing.xs,
+                      child: DsTierBadge(
+                        tier: jewel,
+                        label: storeTierLabel(context.l10n, store.adTier),
+                      ),
+                    ),
                 ],
               ),
             ),

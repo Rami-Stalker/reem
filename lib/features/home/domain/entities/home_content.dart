@@ -11,6 +11,7 @@ import 'package:ohara/features/home/domain/entities/home_category.dart';
 import 'package:ohara/features/home/domain/entities/home_notification.dart';
 import 'package:ohara/features/home/domain/entities/nearby_store.dart';
 import 'package:ohara/features/home/domain/entities/search_suggestions.dart';
+import 'package:ohara/features/home/domain/entities/sponsored_spotlight.dart';
 
 /// The aggregate of all personalized, home-specific content fetched in one
 /// pass. Product *rails* (recommended / new arrivals / best sellers …) and the
@@ -29,6 +30,7 @@ class HomeContent extends Equatable {
     this.searchSuggestions = const SearchSuggestions(),
     this.notifications = const NotificationSummary(),
     this.loyalty,
+    this.sponsoredSpotlight = const [],
   });
 
   final List<HeroBanner> heroBanners;
@@ -43,6 +45,10 @@ class HomeContent extends Equatable {
   final NotificationSummary notifications;
   final LoyaltySummary? loyalty;
 
+  /// Paid HOME_SPOTLIGHT slots, at most three, already filtered by the server
+  /// for this shopper's audience and daily cap.
+  final List<SponsoredSpotlight> sponsoredSpotlight;
+
   @override
   List<Object?> get props => [
     heroBanners,
@@ -56,5 +62,6 @@ class HomeContent extends Equatable {
     searchSuggestions,
     notifications,
     loyalty,
+    sponsoredSpotlight,
   ];
 }

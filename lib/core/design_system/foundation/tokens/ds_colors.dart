@@ -162,6 +162,12 @@ abstract final class DsColors {
   /// Ink on the gold gradient — the smaller type on "new in" ribbons.
   static const Color onGold = textPrimary;
 
+  /// Ink on the silver tier gradient. Mode-independent, like [onGold].
+  static const Color onTierSilver = Color(0xFF3D3848);
+
+  /// Ink on the diamond tier gradient.
+  static const Color onTierDiamond = Color(0xFFFFFFFF);
+
   /// Material [ColorScheme] for light mode, derived from [DsColorScheme.light]
   /// so Material widgets and Ohara components read the same values.
   static ColorScheme get lightScheme =>

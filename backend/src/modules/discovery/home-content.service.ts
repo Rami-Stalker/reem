@@ -7,6 +7,8 @@ import {
   OfferStatus,
   Prisma,
   ProductStatus,
+  PromotionPlacement,
+  StoreAdTier,
   UserRole,
 } from '@prisma/client';
 
@@ -15,6 +17,9 @@ import { Money } from '../../common/money';
 import { serializeProduct } from '../../common/serializers';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ValueVisibilityService } from '../value/value-visibility.service';
+import { MAX_SLOTS, PromotionsService } from '../promotions/promotions.service';
+import { AdTiersService } from '../promotions/ad-tiers.service';
+import { AD_PLANS, tierRank } from '../promotions/ad-plans';
 
 /**
  * Everything the customer's home page shows, in one call.
@@ -35,6 +40,8 @@ export class HomeContentService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly visibility: ValueVisibilityService,
+    private readonly promotions: PromotionsService,
+    private readonly tiers: AdTiersService,
   ) {}
 
   async content(viewerId?: string) {
@@ -48,6 +55,7 @@ export class HomeContentService {
       notifications,
       loyalty,
       nearbyStores,
+      sponsoredSpotlight,
     ] = await Promise.all([
       this.heroBanners(),
       this.featuredCategories(),
@@ -58,6 +66,7 @@ export class HomeContentService {
       this.notifications(viewerId),
       this.loyalty(viewerId),
       this.nearbyStores(viewerId),
+      this.sponsoredSpotlight(viewerId),
     ]);
 
     return {
@@ -70,6 +79,7 @@ export class HomeContentService {
       notifications,
       loyalty,
       nearby_stores: nearbyStores,
+      sponsored_spotlight: sponsoredSpotlight,
 
       // Still deliberately absent rather than invented: nothing records what a
       // customer has looked at, and no admin has configured a block.
@@ -332,26 +342,127 @@ export class HomeContentService {
   }
 
   /** Sellers she can be shown with a straight face: verified, and rated. */
-  private async featuredStores(viewerId?: string) {
-    const sellers = await this.prisma.user.findMany({
-      where: {
-        role: UserRole.SELLER,
-        sellerVerifiedAt: { not: null },
-        // A store with nothing on its shelves is not a store to feature.
-        sellerOffers: { some: { status: OfferStatus.ACTIVE, isActive: true } },
-      },
-      orderBy: [{ followersCount: 'desc' }, { createdAt: 'asc' }],
-      take: 8,
-      select: {
-        id: true,
-        name: true,
-        bio: true,
-        imageUrl: true,
-        sellerVerifiedAt: true,
-        followersCount: true,
-        _count: { select: { sellerOffers: true } },
-      },
+  /**
+   * «مختارات مميزة» — the paid HOME_SPOTLIGHT slots, at most three, each
+   * labelled as an advert and carrying the offer that paid for it.
+   *
+   * The viewer's audience rule, frequency cap and Ohara Value visibility all
+   * apply. Never cached: the impression counter is what the boutique paid to
+   * see move. A failure returns no slots, never an error.
+   */
+  private async sponsoredSpotlight(viewerId?: string) {
+    try {
+      const slots = await this.promotions.serve(PromotionPlacement.HOME_SPOTLIGHT, {
+        viewerId,
+        limit: MAX_SLOTS,
+      });
+      if (slots.length === 0) return [];
+      const [cards, sellers] = await Promise.all([
+        this.loadProducts(
+          slots.map((slot) => slot.productId),
+          viewerId,
+        ),
+        this.prisma.user.findMany({
+          where: { id: { in: slots.map((slot) => slot.sellerId) } },
+          select: { id: true, name: true, imageUrl: true },
+        }),
+      ]);
+      const sellerOf = new Map(sellers.map((seller) => [seller.id, seller]));
+      const shown = slots.filter((slot) => cards.has(slot.productId));
+      if (shown.length === 0) return [];
+      void this.promotions
+        .recordImpressions(
+          shown.map((slot) => slot.offerId),
+          PromotionPlacement.HOME_SPOTLIGHT,
+          viewerId,
+        )
+        .catch(() => undefined);
+      return shown.map((slot) => ({
+        ...(cards.get(slot.productId) as Record<string, unknown>),
+        is_sponsored: true,
+        sponsored_offer_id: slot.offerId,
+        sponsored_placement: 'home_spotlight',
+        sponsored_store_tier: slot.tier.toLowerCase(),
+        sponsored_store: {
+          id: slot.sellerId,
+          name: sellerOf.get(slot.sellerId)?.name ?? '',
+          logo_url: sellerOf.get(slot.sellerId)?.imageUrl ?? '',
+        },
+      }));
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Gold and Diamond boutiques that can be featured right now, highest plan
+   * first. Their place at the front of «متاجر مميزة» is part of what the
+   * plan buys.
+   */
+  private async paidFeaturedSellerIds(): Promise<{ id: string; tier: StoreAdTier }[]> {
+    const now = new Date();
+    const featuredTiers = (Object.keys(AD_PLANS) as StoreAdTier[]).filter(
+      (tier) => AD_PLANS[tier].featuredStore,
+    );
+    const rows = await this.prisma.storeAdSubscription.findMany({
+      where: { tier: { in: featuredTiers }, startsAt: { lte: now }, endsAt: { gt: now } },
+      select: { sellerId: true, tier: true, createdAt: true },
+      take: 50,
     });
+    const best = new Map<string, { tier: StoreAdTier; createdAt: Date }>();
+    for (const row of rows) {
+      const seen = best.get(row.sellerId);
+      if (!seen || tierRank(row.tier) > tierRank(seen.tier)) {
+        best.set(row.sellerId, { tier: row.tier, createdAt: row.createdAt });
+      }
+    }
+    return [...best.entries()]
+      .sort(
+        ([, a], [, b]) =>
+          tierRank(b.tier) - tierRank(a.tier) || a.createdAt.getTime() - b.createdAt.getTime(),
+      )
+      .map(([id, { tier }]) => ({ id, tier }));
+  }
+
+  private async featuredStores(viewerId?: string) {
+    const featurable: Prisma.UserWhereInput = {
+      role: UserRole.SELLER,
+      sellerVerifiedAt: { not: null },
+      // A store with nothing on its shelves is not a store to feature.
+      sellerOffers: { some: { status: OfferStatus.ACTIVE, isActive: true } },
+    };
+    const select = {
+      id: true,
+      name: true,
+      bio: true,
+      imageUrl: true,
+      sellerVerifiedAt: true,
+      followersCount: true,
+      _count: { select: { sellerOffers: true } },
+    } as const;
+
+    // Paying boutiques first, in plan order, then the rest by following —
+    // still only boutiques that qualify to be featured at all.
+    const paid = await this.paidFeaturedSellerIds();
+    const paidRows = paid.length
+      ? await this.prisma.user.findMany({
+          where: { ...featurable, id: { in: paid.map((p) => p.id) } },
+          select,
+        })
+      : [];
+    const paidById = new Map(paidRows.map((row) => [row.id, row]));
+    const front = paid
+      .map((p) => paidById.get(p.id))
+      .filter((row) => row !== undefined)
+      .slice(0, 8);
+    const organic = await this.prisma.user.findMany({
+      where: { ...featurable, id: { notIn: front.map((row) => row.id) } },
+      orderBy: [{ followersCount: 'desc' }, { createdAt: 'asc' }],
+      take: 8 - front.length,
+      select,
+    });
+    const sellers = [...front, ...organic];
+    const tierOf = await this.tiers.tiersOf(sellers.map((seller) => seller.id));
 
     const following = viewerId
       ? new Set(
@@ -400,6 +511,8 @@ export class HomeContentService {
       follower_count: seller.followersCount,
       is_following: following.has(seller.id),
       preview_images: previews.get(seller.id) ?? [],
+      // «فضي/ذهبي/ماسي» — the badge her plan carries. Free is no badge.
+      ad_tier: (tierOf.get(seller.id) ?? StoreAdTier.FREE).toLowerCase(),
     }));
   }
 

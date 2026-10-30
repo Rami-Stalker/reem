@@ -93,6 +93,39 @@ export function contentVisibilityWhere(
   };
 }
 
+/** The visibility rule, SQL spelling — the same rule as [contentVisibilityWhere]. */
+export function contentVisibilitySql(alias: string, viewerId?: string): Prisma.Sql {
+  const a = Prisma.raw(`"${alias}"`);
+  const live = Prisma.sql`
+    ${a}."status" = 'PUBLISHED'
+    AND ${a}."moderation_status" <> 'REJECTED'
+    AND (${a}."expires_at" IS NULL OR ${a}."expires_at" > now())`;
+
+  if (!viewerId) {
+    return Prisma.sql`${live}
+      AND ${a}."visibility" = 'PUBLIC' AND ${a}."author_is_public"`;
+  }
+
+  return Prisma.sql`${live} AND (
+      ${a}."author_id" = ${viewerId}::uuid
+      OR (${a}."visibility" = 'PUBLIC' AND ${a}."author_is_public")
+      OR (${a}."visibility" = 'FOLLOWERS' AND ${a}."author_is_public"
+          AND EXISTS (SELECT 1 FROM "follows" f
+                      WHERE f."follower_id" = ${viewerId}::uuid
+                        AND f."following_id" = ${a}."author_id"))
+    )`;
+}
+
+/** Her «غير مهتمة» and mutes, SQL spelling. */
+export function contentControlsSql(alias: string, viewerId: string): Prisma.Sql {
+  const a = Prisma.raw(`"${alias}"`);
+  return Prisma.sql`
+    NOT EXISTS (SELECT 1 FROM "content_hides" h
+                WHERE h."user_id" = ${viewerId}::uuid AND h."content_id" = ${a}."id")
+    AND NOT EXISTS (SELECT 1 FROM "user_mutes" m
+                    WHERE m."muter_id" = ${viewerId}::uuid AND m."muted_id" = ${a}."author_id")`;
+}
+
 @Injectable()
 export class ContentFeedService {
   constructor(
@@ -115,25 +148,7 @@ export class ContentFeedService {
    * express. `alias` is the content table's alias in the surrounding query.
    */
   private visibilitySql(alias: string, viewerId?: string): Prisma.Sql {
-    const a = Prisma.raw(`"${alias}"`);
-    const live = Prisma.sql`
-      ${a}."status" = 'PUBLISHED'
-      AND ${a}."moderation_status" <> 'REJECTED'
-      AND (${a}."expires_at" IS NULL OR ${a}."expires_at" > now())`;
-
-    if (!viewerId) {
-      return Prisma.sql`${live}
-        AND ${a}."visibility" = 'PUBLIC' AND ${a}."author_is_public"`;
-    }
-
-    return Prisma.sql`${live} AND (
-        ${a}."author_id" = ${viewerId}::uuid
-        OR (${a}."visibility" = 'PUBLIC' AND ${a}."author_is_public")
-        OR (${a}."visibility" = 'FOLLOWERS' AND ${a}."author_is_public"
-            AND EXISTS (SELECT 1 FROM "follows" f
-                        WHERE f."follower_id" = ${viewerId}::uuid
-                          AND f."following_id" = ${a}."author_id"))
-      )`;
+    return contentVisibilitySql(alias, viewerId);
   }
 
   // ── Her own controls ──────────────────────────────────────────────────────
@@ -156,12 +171,7 @@ export class ContentFeedService {
   }
 
   private controlsSql(alias: string, viewerId: string): Prisma.Sql {
-    const a = Prisma.raw(`"${alias}"`);
-    return Prisma.sql`
-      NOT EXISTS (SELECT 1 FROM "content_hides" h
-                  WHERE h."user_id" = ${viewerId}::uuid AND h."content_id" = ${a}."id")
-      AND NOT EXISTS (SELECT 1 FROM "user_mutes" m
-                      WHERE m."muter_id" = ${viewerId}::uuid AND m."muted_id" = ${a}."author_id")`;
+    return contentControlsSql(alias, viewerId);
   }
 
   // ── The simple feeds ──────────────────────────────────────────────────────
@@ -227,6 +237,28 @@ export class ContentFeedService {
   async publicFeed(page: CursorPageDto, channel?: CommerceContentPublicationChannel) {
     const key = [FEED_CACHE_PREFIX, 'anon', page.cursor ?? 'head', page.limit, channel ?? 'all'].join(':');
     return this.cache.wrap(key, 15_000, () => this.feed(page, { channel }));
+  }
+
+  /**
+   * Full rows for sponsored posts, under the same rules a feed row obeys: the
+   * visibility rule, and her own «غير مهتمة» and mutes. Paying for the top of
+   * the feed does not buy a place in the feed of a woman who muted the shop.
+   * Returned in the order asked for.
+   */
+  async sponsoredRows(ids: readonly string[], viewerId?: string) {
+    if (ids.length === 0) return [];
+    const rows = await this.prisma.commerceContent.findMany({
+      where: {
+        AND: [
+          { id: { in: [...ids] } },
+          this.visibilityWhere(viewerId),
+          ...this.controlsWhere(viewerId),
+        ],
+      },
+      include: commerceContentInclude,
+    });
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    return ids.map((id) => byId.get(id)).filter((row) => row !== undefined);
   }
 
   /** Live stories, grouped by the woman who posted them. */

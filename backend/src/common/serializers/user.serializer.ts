@@ -96,6 +96,8 @@ export function serializePublicUser(user: UserPublic) {
 }
 
 export interface ProfileExtras {
+  /** A boutique's advertising plan — `silver`, `gold`, `diamond` — or null. */
+  adTier?: string | null;
   isFollowing?: boolean;
   isMe?: boolean;
   productsCount?: number;
@@ -135,6 +137,7 @@ export function serializeUserProfile(user: UserPublic, extras: ProfileExtras = {
     // Public by nature: a closed page has to be able to say it is closed,
     // or a stranger reads an empty page as a woman who never posted.
     profile_is_public: user.profileIsPublic ?? false,
+    ad_tier: extras.adTier ?? null,
     seller_stats: extras.sellerStats
       ? {
           products_count: extras.sellerStats.productsCount,

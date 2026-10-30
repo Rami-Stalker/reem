@@ -21,6 +21,8 @@ class PostModel extends Post {
     super.isSaved,
     super.isReshared,
     required super.createdAt,
+    super.sponsoredOfferId,
+    super.sponsoredStoreTier,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,9 @@ class PostModel extends Post {
     final product = productJson == null
         ? null
         : ProductModel.fromJson(productJson);
+    // A boutique's paid post carries the offer that paid for it.
+    final sponsored = json['sponsored'];
+    final sponsoredOfferId = sponsored is Map ? sponsored['offer_id'] : null;
     return PostModel(
       id: json['id'] as String,
       author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
@@ -48,6 +53,12 @@ class PostModel extends Post {
       isSaved: json['is_saved'] as bool? ?? false,
       isReshared: json['is_reshared'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
+      sponsoredOfferId:
+          sponsoredOfferId is String && sponsoredOfferId.isNotEmpty
+              ? sponsoredOfferId
+              : null,
+      sponsoredStoreTier:
+          sponsored is Map ? sponsored['store_tier'] as String? : null,
     );
   }
 
@@ -67,6 +78,12 @@ class PostModel extends Post {
         'is_saved': isSaved,
         'is_reshared': isReshared,
         'created_at': createdAt.toIso8601String(),
+        if (sponsoredOfferId != null)
+          'sponsored': {
+            'offer_id': sponsoredOfferId,
+            'placement': 'feed_top',
+            'store_tier': sponsoredStoreTier,
+          },
       };
 
   PostModel copyWith({
@@ -98,6 +115,8 @@ class PostModel extends Post {
       isSaved: isSaved ?? this.isSaved,
       isReshared: isReshared ?? this.isReshared,
       createdAt: createdAt ?? this.createdAt,
+      sponsoredOfferId: sponsoredOfferId,
+      sponsoredStoreTier: sponsoredStoreTier,
     );
   }
 }
