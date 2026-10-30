@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/media/media_asset.dart';
 import 'package:ohara/core/result/result.dart';
-import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
 import 'package:ohara/features/reputation/domain/entities/reputation_entities.dart';
 import 'package:ohara/features/reputation/domain/repositories/reputation_repository.dart';
@@ -48,10 +47,10 @@ Future<void> showReviewComposer({
   VoidCallback? onSubmitted,
   bool askFit = false,
 }) {
-  return showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    showDragHandle: true,
+  // On the root navigator, like every sheet in the app: raised from the
+  // product page's own navigator it sat behind the floating bottom bar.
+  return DsBottomSheet.show<void>(
+    context,
     builder: (_) => _ReviewComposerSheet(
       onSubmit: onSubmit,
       askFit: askFit,
@@ -227,7 +226,11 @@ class _ReviewComposerSheetState extends ConsumerState<_ReviewComposerSheet> {
         onChanged: (urls) => setState(() => _photos = urls),
         onUploadingChanged: (value) => setState(() => _uploading = value),
       ),
-      DsGaps.vSm,
+      DsGaps.vMd,
+      // «مقاساتي», right here. It used to be a link to the profile screen,
+      // pushed from inside this sheet — so the screen opened behind the sheet
+      // she was looking at, and the link seemed to do nothing.
+      _MySizes(enabled: !_submitting),
       if (profile != null && profile.isSet)
         SwitchListTile.adaptive(
           contentPadding: EdgeInsets.zero,
@@ -240,15 +243,6 @@ class _ReviewComposerSheetState extends ConsumerState<_ReviewComposerSheet> {
             l10n.fitShareOnReviewHint,
             style: context.dsText.caption.tint(colors.onSurfaceVariant),
           ),
-        )
-      else
-        // Not a blocker: a review without her size is still a review. But it
-        // is the one that cannot help the next woman her size, and saying so
-        // is the whole pitch for the profile.
-        TextButton.icon(
-          onPressed: () => context.push(RoutePaths.fitProfile),
-          icon: const Icon(Icons.straighten_rounded),
-          label: Text(l10n.fitAddProfilePrompt),
         ),
     ];
   }
@@ -278,5 +272,188 @@ class _ReviewComposerSheetState extends ConsumerState<_ReviewComposerSheet> {
           type: DsSnackbarType.error,
         );
     }
+  }
+}
+
+/// Her height and usual size, read and edited inside the review sheet.
+///
+/// Saved to her profile, not only to this review: the same answer powers
+/// «اللي بمقاسي» on every product page. Collapsed to one line once it is set,
+/// with «عدّلي» to open it again.
+class _MySizes extends ConsumerStatefulWidget {
+  const _MySizes({required this.enabled});
+
+  final bool enabled;
+
+  @override
+  ConsumerState<_MySizes> createState() => _MySizesState();
+}
+
+class _MySizesState extends ConsumerState<_MySizes> {
+  static const _minHeight = 130;
+  static const _maxHeight = 200;
+
+  final _height = TextEditingController();
+  String? _size;
+  bool _editing = false;
+  bool _saving = false;
+  bool _seeded = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _height.dispose();
+    super.dispose();
+  }
+
+  void _seed(FitProfile profile) {
+    if (_seeded) return;
+    _seeded = true;
+    _height.text = profile.heightCm?.toString() ?? '';
+    _size = profile.usualSize;
+    _editing = !profile.isSet;
+  }
+
+  Future<void> _save(FitProfile profile) async {
+    final l10n = context.l10n;
+    final typed = _height.text.trim();
+    final height = typed.isEmpty ? null : int.tryParse(typed);
+    if (typed.isNotEmpty &&
+        (height == null || height < _minHeight || height > _maxHeight)) {
+      setState(() => _error = l10n.fitHeightInvalid(_minHeight, _maxHeight));
+      return;
+    }
+    setState(() {
+      _error = null;
+      _saving = true;
+    });
+    final result = await ref
+        .read(reputationActionsProvider)
+        .saveFitProfile(
+          heightCm: height,
+          usualSize: _size,
+          shareOnReviews: profile.shareOnReviews,
+        );
+    if (!mounted) return;
+    setState(() {
+      _saving = false;
+      if (result case Success(:final data)) {
+        _editing = !data.isSet;
+      } else if (result case Error(:final failure)) {
+        _error = failure.message;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    final async = ref.watch(fitProfileProvider);
+    final profile = async.asData?.value;
+    if (profile == null) return const SizedBox.shrink();
+    _seed(profile);
+
+    final summary = profile.isSet && !_editing
+        ? l10n.fitMineSummary(
+            profile.heightCm == null
+                ? '—'
+                : '${profile.heightCm} ${l10n.fitCentimetres}',
+            profile.usualSize ?? '—',
+          )
+        : null;
+
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        color: colors.surfaceVariant.withValues(alpha: 0.6),
+        borderRadius: DsRadius.borderLg,
+        border: Border.all(color: colors.border.withValues(alpha: 0.6)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.straighten_rounded,
+                size: DsSizes.iconSm,
+                color: colors.primary,
+              ),
+              DsGaps.hXs,
+              Expanded(
+                child: Text(l10n.fitMineTitle, style: context.dsText.labelStrong),
+              ),
+              if (summary != null)
+                TextButton(
+                  onPressed: widget.enabled
+                      ? () => setState(() => _editing = true)
+                      : null,
+                  child: Text(l10n.fitMineEdit),
+                ),
+            ],
+          ),
+          if (summary != null)
+            Text(summary, style: context.dsText.body.semibold)
+          else ...[
+            DsGaps.vXxs,
+            Text(
+              l10n.fitMineHelp,
+              style: context.dsText.caption.tint(colors.onSurfaceVariant),
+            ),
+            DsGaps.vSm,
+            DsInputField(
+              controller: _height,
+              enabled: widget.enabled && !_saving,
+              label: l10n.fitHeightLabel,
+              hint: l10n.fitHeightHint,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(3),
+              ],
+              suffixIcon: Padding(
+                padding: const EdgeInsetsDirectional.only(end: DsSpacing.md),
+                child: Center(
+                  widthFactor: 1,
+                  child: Text(l10n.fitCentimetres, style: context.dsText.caption),
+                ),
+              ),
+              errorText: _error,
+            ),
+            DsGaps.vSm,
+            Text(l10n.fitUsualSizeLabel, style: context.dsText.caption),
+            DsGaps.vXs,
+            Wrap(
+              spacing: DsSpacing.xs,
+              runSpacing: DsSpacing.xs,
+              children: [
+                for (final size in profile.sizes)
+                  DsChip(
+                    label: size,
+                    selected: _size == size,
+                    onTap: !widget.enabled || _saving
+                        ? null
+                        : () => setState(
+                            () => _size = _size == size ? null : size,
+                          ),
+                  ),
+              ],
+            ),
+            DsGaps.vSm,
+            DsButton(
+              label: l10n.fitProfileSave,
+              icon: Icons.check_rounded,
+              variant: DsButtonVariant.tonal,
+              size: DsButtonSize.sm,
+              isLoading: _saving,
+              onPressed: widget.enabled && !_saving
+                  ? () => _save(profile)
+                  : null,
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }

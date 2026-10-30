@@ -42,10 +42,23 @@ final productFitProvider =
   return result.fold((failure) => throw failure.message, (fit) => fit);
 });
 
+/// Whether she may review this piece — read with the account, so signing in
+/// on the product page turns «سجّلي دخول» into «اكتبي تقييمكِ» at once.
+final productReviewEligibilityProvider = FutureProvider.autoDispose
+    .family<ReviewEligibility, String>((ref, productId) async {
+      ref.watch(authNotifierProvider.select((s) => s.user?.id));
+      final result = await ref
+          .watch(reputationRepositoryProvider)
+          .getProductReviewEligibility(productId);
+      return result.fold((failure) => throw failure.message, (e) => e);
+    });
+
 /// «مقاساتي». Rebuilt with the account: one woman's height is not the next
-/// one's.
+/// one's. A guest has no profile to read, so nothing is asked of the server —
+/// the request could only come back 401.
 final fitProfileProvider = FutureProvider<FitProfile>((ref) async {
-  ref.watch(authNotifierProvider.select((s) => s.user?.id));
+  final userId = ref.watch(authNotifierProvider.select((s) => s.user?.id));
+  if (userId == null) return const FitProfile();
   final result = await ref.watch(reputationRepositoryProvider).getFitProfile();
   return result.fold((failure) => throw failure.message, (profile) => profile);
 });
@@ -100,6 +113,7 @@ class ReputationActions {
     if (result is Success) {
       _ref.invalidate(productReviewsProvider);
       _ref.invalidate(productFitProvider(productId));
+      _ref.invalidate(productReviewEligibilityProvider(productId));
     }
     return result;
   }

@@ -1,3 +1,5 @@
+import 'package:ohara/core/shared/entities/referral_terms.dart';
+
 class RewardsHub {
   const RewardsHub({
     required this.points,
@@ -92,6 +94,7 @@ class ReferralSummary {
     required this.pointsEarned,
     required this.cashbackEarned,
     required this.suspicious,
+    this.terms,
   });
 
   final String customerCode;
@@ -104,6 +107,9 @@ class ReferralSummary {
   final int pointsEarned;
   final double cashbackEarned;
   final int suspicious;
+
+  /// What a shopper's invite pays each side.
+  final ReferralTerms? terms;
 }
 
 class LoyaltyRewardItem {

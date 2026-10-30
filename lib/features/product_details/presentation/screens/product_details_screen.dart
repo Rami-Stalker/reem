@@ -204,7 +204,11 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                     // first.
                     ProductSellerCard(product: product, offer: offer),
                     DsGaps.section,
-                    ProductReviewsSection(productId: product.id),
+                    ProductReviewsSection(
+                      productId: product.id,
+                      rating: product.rating,
+                      reviewsCount: product.reviewsCount,
+                    ),
                     DsGaps.section,
                     // Visually similar comes before the ordinary related rail:
                     // "شكلها متل هاي" is a stronger reason to look than "من

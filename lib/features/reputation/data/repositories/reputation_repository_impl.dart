@@ -46,6 +46,14 @@ class ReputationRepositoryImpl
   }
 
   @override
+  Future<Result<ReviewEligibility>> getProductReviewEligibility(
+    String productId,
+  ) => guard(
+    () => remote.getProductReviewEligibility(productId),
+    operation: 'review eligibility',
+  );
+
+  @override
   Future<Result<ProductFit>> getProductFit(String productId) =>
       guard(() => remote.getProductFit(productId), operation: 'product fit');
 

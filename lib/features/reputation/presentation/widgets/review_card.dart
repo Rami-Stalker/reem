@@ -72,7 +72,11 @@ class ReviewCard extends StatelessWidget {
                           review.rating,
                         ),
                         excludeSemantics: true,
-                        child: Row(
+                        // A Wrap, not a Row: beside a «شراء مؤكَّد» badge the
+                        // column is ~100dp wide on a phone, and five stars
+                        // plus the figure overflowed it.
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             for (var index = 0; index < 5; index++)
                               Icon(
@@ -84,7 +88,8 @@ class ReviewCard extends StatelessWidget {
                               ),
                             DsGaps.hXxs,
                             Text(
-                              '${review.rating}/5',
+                              '${review.rating}/5 · '
+                              '${dsShortTimeAgo(context, review.createdAt)}',
                               style: context.dsText.caption.tabular,
                             ),
                           ],
@@ -109,7 +114,7 @@ class ReviewCard extends StatelessWidget {
                   ),
                   child: Text(
                     context.l10n.reviewPending,
-                    style: context.dsText.body.semibold.tint(colors.warningInk),
+                    style: context.dsText.caption.semibold.tint(colors.warningInk),
                   ),
                 )
               else if (review.verifiedPurchase)
@@ -124,7 +129,7 @@ class ReviewCard extends StatelessWidget {
                   ),
                   child: Text(
                     context.l10n.reviewsVerified,
-                    style: context.dsText.body.semibold.tint(colors.successInk),
+                    style: context.dsText.caption.semibold.tint(colors.successInk),
                   ),
                 ),
             ],

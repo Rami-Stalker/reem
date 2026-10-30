@@ -80,6 +80,59 @@ export class ReputationService {
    * `status`, so the client can show it marked as under review. This is the
    * same rule `myReviews` already follows.
    */
+  /**
+   * Whether the woman looking at a product may review it — asked before she
+   * writes, not after.
+   *
+   * The page offered «اكتبي تقييم» to everyone, let her fill in the stars, the
+   * words, her fit and her photographs, and only then answered "you can only
+   * review what you received". From her side the button simply did not work.
+   * The rule itself is unchanged and still enforced in `createProductReview`;
+   * this only lets the page say it first.
+   *
+   * `reason` is one of `sign_in`, `not_delivered`, `already_reviewed`, or null
+   * when she can. Her own review travels with `already_reviewed`, so the page
+   * can show it — pending or published — instead of a button.
+   */
+  async productReviewEligibility(productId: string, viewerId?: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: { id: true },
+    });
+    if (!product) throw new NotFoundException('Product not found');
+    if (!viewerId) return { can_review: false, reason: 'sign_in', review: null };
+
+    const [existing, delivered] = await Promise.all([
+      this.prisma.productReview.findFirst({
+        where: { productId, userId: viewerId },
+        include: { user: { select: reviewUserSelect } },
+      }),
+      this.prisma.order.findFirst({
+        where: {
+          userId: viewerId,
+          sellerOrders: {
+            some: {
+              status: SellerOrderStatus.DELIVERED,
+              items: { some: { productId } },
+            },
+          },
+        },
+        select: { id: true },
+      }),
+    ]);
+    if (existing) {
+      return {
+        can_review: false,
+        reason: 'already_reviewed',
+        review: this.serializeProductReview(existing),
+      };
+    }
+    if (!delivered) {
+      return { can_review: false, reason: 'not_delivered', review: null };
+    }
+    return { can_review: true, reason: null, review: null };
+  }
+
   async productReviews(
     productId: string,
     viewerId?: string,
@@ -1030,7 +1083,10 @@ export class ReputationService {
         ? await this.prisma.productReview.findFirst({ where })
         : await this.prisma.sellerReview.findFirst({ where });
     if (existing) {
-      throw new BadRequestException('You have already reviewed this target');
+      throw new BadRequestException({
+        code: 'REVIEW_ALREADY_EXISTS',
+        message: 'قيّمتِ هالشي من قبل — تقييمكِ موجود',
+      });
     }
   }
 

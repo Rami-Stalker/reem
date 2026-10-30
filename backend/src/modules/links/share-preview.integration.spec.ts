@@ -137,6 +137,30 @@ dbTest('a live product resolves with its price and its boutique', async ({ db, p
   assert.ok(preview.priceCurrency);
 });
 
+dbTest('an invite tells the friend her own half, not the inviter\'s', async ({ db, previews }) => {
+  const inviter = await db.user.findFirstOrThrow({
+    where: { role: UserRole.CUSTOMER },
+    select: { id: true, name: true },
+  });
+  const code = await db.referralCode.create({
+    data: {
+      userId: inviter.id,
+      code: `INVTEST${Date.now()}`,
+      participantType: 'CUSTOMER',
+    },
+  });
+
+  const preview = await previews.resolve('referral', { code: code.code });
+
+  assert.ok(preview, 'a live invite resolved to nothing');
+  assert.equal(preview.path, `/invite/${code.code}`);
+  // The friend is the invited side: 15% off and 250 points. 500 is what the
+  // inviter earns, and showing it here is the backwards message this replaced.
+  assert.match(preview.description ?? '', /15٪/);
+  assert.match(preview.description ?? '', /250/);
+  assert.doesNotMatch(preview.description ?? '', /500/);
+});
+
 dbTest('a public post resolves with its author', async ({ db, previews }) => {
   const post = await aPublicPost(db);
 

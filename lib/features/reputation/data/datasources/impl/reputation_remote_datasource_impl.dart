@@ -3,6 +3,7 @@ import 'package:ohara/core/network/base_remote_datasource.dart';
 import 'package:ohara/features/reputation/data/datasources/reputation_remote_datasource.dart';
 import 'package:ohara/features/reputation/data/models/reputation_models.dart';
 import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
+import 'package:ohara/features/reputation/domain/entities/reputation_entities.dart';
 
 final class ReputationRemoteDataSourceImpl extends BaseRemoteDataSource
     implements ReputationRemoteDataSource {
@@ -22,6 +23,13 @@ final class ReputationRemoteDataSourceImpl extends BaseRemoteDataSource
         .map((item) => ReviewModel.fromJson(Map<String, dynamic>.from(item)))
         .toList();
   }
+
+  @override
+  Future<ReviewEligibility> getProductReviewEligibility(
+    String productId,
+  ) async => reviewEligibilityFromJson(
+    await getJson(ApiEndpoints.productReviewEligibility(productId)),
+  );
 
   @override
   Future<MyReviewsModel> getMyReviews() async =>

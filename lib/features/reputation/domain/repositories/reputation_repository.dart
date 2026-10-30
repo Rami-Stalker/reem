@@ -13,6 +13,11 @@ class ReviewFitInput {
 }
 
 abstract interface class ReputationRepository {
+  /// Whether she may review this piece, and why not.
+  Future<Result<ReviewEligibility>> getProductReviewEligibility(
+    String productId,
+  );
+
   Future<Result<List<ReviewEntity>>> getProductReviews(
     String productId, {
     ReviewFilter filter = ReviewFilter.all,

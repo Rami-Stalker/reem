@@ -4551,7 +4551,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewsSubmit => 'Post review';
 
   @override
-  String get reviewsSubmitted => 'Thank you — your review is posted';
+  String get reviewsSubmitted =>
+      'Thank you — your review is in and will appear once it has been checked';
 
   @override
   String get reviewsUnavailable => 'Reviews could not load';
@@ -14467,4 +14468,132 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedReasonNewVoice => 'New voice';
+
+  @override
+  String get reviewsSignInToWrite => 'Sign in to write a review';
+
+  @override
+  String get reviewsSignInToWriteBody =>
+      'A review is tied to your account and your order, so everyone knows it comes from someone who received the piece.';
+
+  @override
+  String get reviewsAfterDeliveryTitle => 'You can review it once it arrives';
+
+  @override
+  String get reviewsAfterDeliveryBody =>
+      'Reviews here come only from people who bought and received the piece, so every one is real.';
+
+  @override
+  String get reviewsYoursPendingTitle => 'Your review is in';
+
+  @override
+  String get reviewsYoursPendingBody =>
+      'We\'re reviewing it, and it will be published as soon as it\'s approved.';
+
+  @override
+  String get reviewsYoursPublishedTitle => 'You\'ve reviewed this piece';
+
+  @override
+  String get reviewsYoursPublishedBody =>
+      'Your review is published with the others — thank you.';
+
+  @override
+  String get fitMineTitle => 'My sizes';
+
+  @override
+  String fitMineSummary(String height, String size) {
+    return '$height · size $size';
+  }
+
+  @override
+  String get fitMineEdit => 'Edit';
+
+  @override
+  String get fitMineHelp =>
+      'Your height and size are never shown by name — they only help women like you know whether a piece will fit them.';
+
+  @override
+  String get fitMineSaved => 'Your sizes are saved';
+
+  @override
+  String get productUnavailableSoldOut => 'This piece is sold out for now';
+
+  @override
+  String get productUnavailableSoldOutBody =>
+      'The boutique has none in stock right now. We can tell you the moment it\'s back.';
+
+  @override
+  String get productUnavailablePaused => 'The boutique has paused this piece';
+
+  @override
+  String get productUnavailablePausedBody =>
+      'It may be back soon — ask the boutique, or let us tell you when it\'s listed again.';
+
+  @override
+  String get productUnavailableNoSeller =>
+      'Nobody is selling this piece right now';
+
+  @override
+  String get productUnavailableNoSellerBody =>
+      'No boutique has it on sale at the moment. We\'ll tell you as soon as one does.';
+
+  @override
+  String get productUnavailableVariant => 'This option is sold out';
+
+  @override
+  String get productUnavailableVariantBody =>
+      'Pick another size or colour above — others are in stock.';
+
+  @override
+  String get productNotifyWhenBack => 'Tell me when it\'s back';
+
+  @override
+  String get productNotifyOn => 'We\'ll tell you when it\'s back';
+
+  @override
+  String get productNotifyConfirmed =>
+      'Done — it\'s in your favourites and you\'ll get a notification the moment it\'s back';
+
+  @override
+  String get productNotifyOff =>
+      'Removed from your favourites — no alert for it';
+
+  @override
+  String referralForFriend(int discount, int points, String code) {
+    return 'I\'ve got an Ohara invite for you 💕\nYou get $discount% off your first order, and $points bonus points once it\'s completed.\nUse my code $code in the coupon field when you order.';
+  }
+
+  @override
+  String referralForFriendPlain(String code) {
+    return 'I\'ve got an Ohara invite for you 💕\nUse my code $code in the coupon field on your first order.';
+  }
+
+  @override
+  String referralForInviter(
+    int myPoints,
+    int myDiscount,
+    int herDiscount,
+    int herPoints,
+  ) {
+    return 'You get $myPoints points and $myDiscount% off when your friend\'s first order completes — she gets $herDiscount% off and $herPoints points.';
+  }
+
+  @override
+  String get referralHowItWorks => 'How invites work';
+
+  @override
+  String get referralStepShare => 'Share your code with a friend';
+
+  @override
+  String referralStepUse(int discount) {
+    return 'She enters it in the coupon field on her first order and gets $discount% off straight away';
+  }
+
+  @override
+  String referralStepReward(int myPoints, int myDiscount, int herPoints) {
+    return 'Once her order completes: you get $myPoints points and $myDiscount% off, and she gets $herPoints points';
+  }
+
+  @override
+  String get referralShareInvite => 'Share invite';
 }

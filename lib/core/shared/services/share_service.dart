@@ -99,21 +99,20 @@ abstract final class ShareService {
     );
   }
 
-  /// Her invite. The code travels in the link, so a friend who taps it is
-  /// credited without having to type anything.
+  /// Her invite, as her friend will read it.
+  ///
+  /// [message] is written to the *friend* — see `ReferralCopy.forFriend`. It
+  /// used to be the inviter's own hint («لكِ 500 نقطة ولها 250»), which the
+  /// friend read as her own rewards, backwards. The link carries the code too,
+  /// and opens a page that tells her the same thing in her own words.
   static Future<bool> referral({
     required BuildContext context,
     required String code,
-    String? hint,
+    required String message,
   }) {
-    final invitation = [
-      if (hint != null && hint.trim().isNotEmpty) hint.trim(),
-      code,
-    ].join('\n');
-
     return _share(
       context: context,
-      text: invitation,
+      text: message,
       uri: ShareLinks.referral(code),
     );
   }

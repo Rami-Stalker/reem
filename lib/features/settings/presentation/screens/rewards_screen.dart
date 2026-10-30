@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/shared/entities/referral_terms.dart';
+import 'package:ohara/core/shared/services/referral_copy.dart';
+import 'package:ohara/core/shared/services/share_service.dart';
 import 'package:ohara/core/shared/value_objects/money_format.dart';
 import 'package:ohara/features/rewards/domain/entities/rewards_hub.dart';
 import 'package:ohara/features/rewards/presentation/providers/rewards_hub_provider.dart';
@@ -289,7 +292,10 @@ class _ReferralPanel extends StatelessWidget {
           _SectionHeader(
             icon: Icons.group_add_rounded,
             title: l10n.rewardsInviteTitle,
-            subtitle: l10n.rewardsInviteBody,
+            // Her half first; the friend's half is in the message she sends.
+            subtitle: referral.terms == null
+                ? l10n.rewardsInviteBody
+                : ReferralCopy.forInviter(l10n, referral.terms!),
           ),
           const SizedBox(height: DsSpacing.md),
           _CodeRow(
@@ -297,6 +303,31 @@ class _ReferralPanel extends StatelessWidget {
             code: referral.customerCode,
             onCopy: () => _copy(context, referral.customerCode),
           ),
+          const SizedBox(height: DsSpacing.sm),
+          // The invite used to be copy-only here: she had to find somewhere to
+          // paste a bare code and explain it herself. It shares the same
+          // message the profile card sends, worded to the friend.
+          DsButton(
+            label: l10n.referralShareInvite,
+            icon: Icons.ios_share_rounded,
+            variant: DsButtonVariant.accent,
+            size: DsButtonSize.md,
+            onPressed: referral.customerCode.isEmpty
+                ? null
+                : () => ShareService.referral(
+                    context: context,
+                    code: referral.customerCode,
+                    message: ReferralCopy.forFriend(
+                      l10n,
+                      code: referral.customerCode,
+                      terms: referral.terms,
+                    ),
+                  ),
+          ),
+          if (referral.terms case final terms?) ...[
+            const SizedBox(height: DsSpacing.md),
+            _HowInvitesWork(terms: terms),
+          ],
           const SizedBox(height: DsSpacing.sm),
           _CodeRow(
             label: l10n.rewardsSellerCode,
@@ -926,3 +957,56 @@ String _rewardSubtitle(BuildContext context, LoyaltyRewardItem reward) {
 /// gives the right symbol, the right grouping and no fraction digits, since
 /// SYP is charged in whole units.
 String _money(double value) => value.sypFull;
+
+/// The three steps of an invite, with the numbers the ledger pays.
+class _HowInvitesWork extends StatelessWidget {
+  const _HowInvitesWork({required this.terms});
+
+  final ReferralTerms terms;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    final steps = [
+      l10n.referralStepShare,
+      l10n.referralStepUse(terms.referredDiscountPercent),
+      l10n.referralStepReward(
+        terms.referrerPoints,
+        terms.referrerDiscountPercent,
+        terms.referredPoints,
+      ),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.referralHowItWorks, style: context.dsText.labelStrong),
+        const SizedBox(height: DsSpacing.xs),
+        for (final (index, step) in steps.indexed)
+          Padding(
+            padding: const EdgeInsets.only(bottom: DsSpacing.xs),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 10,
+                  backgroundColor: colors.primary.withValues(alpha: 0.12),
+                  child: Text(
+                    '${index + 1}',
+                    style: context.dsText.caption.semibold.tint(colors.primary),
+                  ),
+                ),
+                const SizedBox(width: DsSpacing.sm),
+                Expanded(
+                  child: Text(
+                    step,
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}

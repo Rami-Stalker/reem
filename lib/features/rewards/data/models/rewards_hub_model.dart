@@ -1,3 +1,4 @@
+import 'package:ohara/core/shared/models/referral_terms_model.dart';
 import 'package:ohara/features/rewards/domain/entities/rewards_hub.dart';
 
 class RewardsHubModel extends RewardsHub {
@@ -118,6 +119,7 @@ class ReferralSummaryModel extends ReferralSummary {
     required super.pointsEarned,
     required super.cashbackEarned,
     required super.suspicious,
+    super.terms,
   });
 
   factory ReferralSummaryModel.fromJson(Map<String, dynamic> json) {
@@ -135,6 +137,7 @@ class ReferralSummaryModel extends ReferralSummary {
       pointsEarned: _int(stats['points_earned']),
       cashbackEarned: _double(stats['cashback_earned']),
       suspicious: _int(stats['suspicious']),
+      terms: referralTermsFromJson(json['terms']),
     );
   }
 }

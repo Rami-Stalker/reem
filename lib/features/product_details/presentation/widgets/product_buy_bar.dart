@@ -17,6 +17,9 @@ import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
 import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
+import 'package:ohara/features/product_social/presentation/product_gestures.dart';
+import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
+import 'package:ohara/features/profile/presentation/providers/profile_provider.dart';
 import 'package:ohara/features/rooms/presentation/widgets/propose_to_room_sheet.dart';
 
 /// The frosted bar pinned to the foot of the product page.
@@ -134,6 +137,157 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
     );
   }
 
+  /// The bar's frosted frame, shared by both of its faces.
+  Widget _frame(BuildContext context, Widget child) {
+    final colors = context.dsColors;
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: DsBlur.heavy, sigmaY: DsBlur.heavy),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            DsSpacing.lg,
+            DsSpacing.md,
+            DsSpacing.lg,
+            DsSpacing.md + MediaQuery.paddingOf(context).bottom,
+          ),
+          decoration: BoxDecoration(
+            color: colors.surfaceElevated.withValues(alpha: 0.92),
+            border: Border(top: BorderSide(color: colors.border)),
+            boxShadow: context.softShadow,
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  /// Why it cannot be bought, said whole — and what she can do instead.
+  ///
+  /// This used to be the price's slot: a third of the bar, one line, and an
+  /// ellipsis, so «هالقطعة مو متوفرة هلّق» reached her as «هالقطعة مو…» beside
+  /// a greyed-out button, and she could not tell what was wrong. The bar now
+  /// gives the whole width to the reason, and offers the two things that
+  /// still make sense: be told when it is back (her favourites get that
+  /// alert), and ask the boutique.
+  Widget _unavailable(BuildContext context, SellerOffer? offer) {
+    final l10n = context.l10n;
+    final colors = context.dsColors;
+    final variantOnly = offer != null && offer.isBuyable;
+    final (title, body) = switch (offer) {
+      null => (l10n.productUnavailableNoSeller, l10n.productUnavailableNoSellerBody),
+      _ when variantOnly => (
+        l10n.productUnavailableVariant,
+        l10n.productUnavailableVariantBody,
+      ),
+      _ when offer.status == OfferStatus.paused => (
+        l10n.productUnavailablePaused,
+        l10n.productUnavailablePausedBody,
+      ),
+      _ => (l10n.productUnavailableSoldOut, l10n.productUnavailableSoldOutBody),
+    };
+    final saved = ProductGestures.watch(ref, widget.product).isSaved;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.info_outline_rounded,
+              size: DsSizes.iconSm,
+              color: colors.warningInk,
+            ),
+            DsGaps.hXs,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: context.dsText.bodyStrong),
+                  DsGaps.vXxxs,
+                  Text(
+                    body,
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        DsGaps.vSm,
+        Row(
+          children: [
+            if (offer != null) ...[
+              IconButton.outlined(
+                tooltip: l10n.productAskBoutique,
+                onPressed: _opening ? null : _ask,
+                icon: _opening
+                    ? const SizedBox.square(
+                        dimension: DsSizes.iconSm,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.chat_bubble_outline_rounded),
+              ),
+              DsGaps.hSm,
+            ],
+            Expanded(
+              // A choice of option is hers to change on the page above, so
+              // the alert is offered only when the piece itself is gone.
+              child: variantOnly
+                  ? const SizedBox.shrink()
+                  : DsButton(
+                      label: saved
+                          ? l10n.productNotifyOn
+                          : l10n.productNotifyWhenBack,
+                      icon: saved
+                          ? Icons.notifications_active_rounded
+                          : Icons.notifications_none_rounded,
+                      variant: saved
+                          ? DsButtonVariant.tonal
+                          : DsButtonVariant.primary,
+                      isLoading: _notifying,
+                      onPressed: _notifying ? null : () => _notify(saved),
+                    ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  bool _notifying = false;
+
+  /// «خبّريني لما ترجع» — kept in her favourites, which is what the
+  /// back-in-stock alert is sent to. No collection sheet in the way here:
+  /// she asked to be told, not to file it.
+  Future<void> _notify(bool saved) async {
+    final ok = await requireAuthenticatedUser(
+      context,
+      ref,
+      title: context.l10n.signInToInteract,
+      message: context.l10n.signInToInteractBody,
+      from: RoutePaths.productDetailsOf(widget.product.id),
+    );
+    if (!ok || !mounted) return;
+    setState(() => _notifying = true);
+    final outcome = await ref
+        .read(productEngagementProvider.notifier)
+        .setSaved(widget.product.id, !saved);
+    if (!mounted) return;
+    setState(() => _notifying = false);
+    final l10n = context.l10n;
+    if (outcome == EngagementOutcome.failed) {
+      DsSnackbar.error(context, l10n.actionDidNotSave);
+      return;
+    }
+    unawaited(ref.read(favoritesNotifierProvider.notifier).load());
+    DsSnackbar.success(
+      context,
+      saved ? l10n.productNotifyOff : l10n.productNotifyConfirmed,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
@@ -145,6 +299,8 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
         offer != null &&
         offer.isBuyable &&
         (widget.variant == null || widget.variant!.inStock);
+
+    if (!buyable) return _frame(context, _unavailable(context, offer));
 
     return ClipRect(
       child: BackdropFilter(
@@ -176,23 +332,21 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      buyable ? l10n.total : l10n.productUnavailable,
+                      l10n.total,
                       style: text.caption,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (buyable) ...[
-                      DsGaps.vXxs,
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Text(
-                          _lineTotal ?? '—',
-                          maxLines: 1,
-                          style: text.metric.tint(colors.price),
-                        ),
+                    DsGaps.vXxs,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Text(
+                        _lineTotal ?? '—',
+                        maxLines: 1,
+                        style: text.metric.tint(colors.price),
                       ),
-                    ],
+                    ),
                   ],
                 ),
               ),
@@ -205,7 +359,7 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.chat_bubble_outline_rounded),
-                onPressed: offer?.seller == null || _opening ? null : _ask,
+                onPressed: _opening ? null : _ask,
               ),
               // Ohara Rooms, beside the cart rather than instead of it. The two
               // are different gestures: the cart is "I am taking this", a room

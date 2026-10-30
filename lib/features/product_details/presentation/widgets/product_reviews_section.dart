@@ -5,6 +5,7 @@ import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/errors/failure_exception.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:ohara/features/reputation/domain/entities/fit_entities.dart';
 import 'package:ohara/features/reputation/presentation/providers/reputation_provider.dart';
 import 'package:ohara/features/reputation/presentation/widgets/product_fit_panel.dart';
@@ -15,9 +16,19 @@ import 'package:ohara/features/reputation/presentation/widgets/review_composer.d
 /// two narrowings that matter before buying clothes — women her size, and
 /// women who showed it on.
 class ProductReviewsSection extends ConsumerStatefulWidget {
-  const ProductReviewsSection({super.key, required this.productId});
+  const ProductReviewsSection({
+    super.key,
+    required this.productId,
+    this.rating = 0,
+    this.reviewsCount = 0,
+  });
 
   final String? productId;
+
+  /// The piece's average and how many reviews it is over — the product's
+  /// own live figures, drawn under the heading.
+  final double rating;
+  final int reviewsCount;
 
   @override
   ConsumerState<ProductReviewsSection> createState() =>
@@ -41,7 +52,15 @@ class _ProductReviewsSectionState extends ConsumerState<ProductReviewsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _ReviewsHeader(onWrite: () => _showReviewSheet(context, id)),
+        _ReviewsHeader(
+          rating: widget.rating,
+          reviewsCount: widget.reviewsCount,
+        ),
+        DsGaps.vSm,
+        _ReviewAction(
+          productId: id,
+          onWrite: () => _showReviewSheet(context, id),
+        ),
         DsGaps.vMd,
         ProductFitPanel(productId: id),
         DsGaps.vMd,
@@ -148,28 +167,139 @@ class _ProductReviewsSectionState extends ConsumerState<ProductReviewsSection> {
   );
 }
 
+/// «التقييمات», and the piece's standing under it.
+///
+/// The heading used to share one row with a filled «اكتبي» button, and on a
+/// phone of ordinary width the two did not fit: the row overflowed and the
+/// button was cut. The action has a row of its own now, below.
 class _ReviewsHeader extends StatelessWidget {
-  const _ReviewsHeader({required this.onWrite});
+  const _ReviewsHeader({required this.rating, required this.reviewsCount});
 
-  final VoidCallback onWrite;
+  final double rating;
+  final int reviewsCount;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final colors = context.dsColors;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           context.l10n.reviewsSectionTitle,
-          style: context.dsText.screenTitle.copyWith(
-                fontWeight: DsTypography.bold,
+          style: context.dsText.screenTitle.bold,
+        ),
+        if (reviewsCount > 0) ...[
+          DsGaps.vXxs,
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: DsSpacing.xs,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 1; i <= 5; i++)
+                    Icon(
+                      rating >= i
+                          ? Icons.star_rounded
+                          : rating >= i - 0.5
+                          ? Icons.star_half_rounded
+                          : Icons.star_border_rounded,
+                      size: DsSizes.iconSm,
+                      color: colors.rating,
+                    ),
+                ],
               ),
-        ),
-        const Spacer(),
-        FilledButton.icon(
-          onPressed: onWrite,
-          icon: const Icon(Icons.edit_outlined),
-          label: Text(context.l10n.reviewsWriteShort),
-        ),
+              Text(
+                context.l10n.productRatingSummary(
+                  rating.toStringAsFixed(1),
+                  reviewsCount,
+                ),
+                style: context.dsText.caption,
+              ),
+            ],
+          ),
+        ],
       ],
+    );
+  }
+}
+
+/// What she can do about reviewing this piece, said before she starts.
+///
+/// The page offered «اكتبي» to everyone, let her fill in the stars, the words
+/// and her photographs, and only then reported that reviews are for women who
+/// received the piece. Now the answer comes first: the button when she may,
+/// the way in when she is a guest, and a plain sentence when she may not yet
+/// or already has.
+class _ReviewAction extends ConsumerWidget {
+  const _ReviewAction({required this.productId, required this.onWrite});
+
+  final String productId;
+  final VoidCallback onWrite;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final eligibility = ref.watch(productReviewEligibilityProvider(productId));
+
+    return eligibility.when(
+      // Nothing rather than a spinner: the reviews below are what she came
+      // for, and the action settles in a moment.
+      loading: () => const SizedBox.shrink(),
+      // The rule still holds on the server; if the question could not be
+      // asked, the button is offered and the server's answer is shown.
+      error: (_, _) => _WriteButton(onPressed: onWrite),
+      data: (answer) {
+        if (answer.canReview) return _WriteButton(onPressed: onWrite);
+        return switch (answer.block) {
+          ReviewBlock.signIn => _WriteButton(
+            label: l10n.reviewsSignInToWrite,
+            icon: Icons.login_rounded,
+            onPressed: () => requireAuthenticatedUser(
+              context,
+              ref,
+              title: l10n.reviewsSignInToWrite,
+              message: l10n.reviewsSignInToWriteBody,
+              from: RoutePaths.productDetailsOf(productId),
+            ),
+          ),
+          ReviewBlock.alreadyReviewed => _ReviewsMessage(
+            icon: Icons.check_circle_outline_rounded,
+            title: answer.myReview?.status == 'pending'
+                ? l10n.reviewsYoursPendingTitle
+                : l10n.reviewsYoursPublishedTitle,
+            message: answer.myReview?.status == 'pending'
+                ? l10n.reviewsYoursPendingBody
+                : l10n.reviewsYoursPublishedBody,
+          ),
+          ReviewBlock.notDelivered || null => _ReviewsMessage(
+            icon: Icons.local_shipping_outlined,
+            title: l10n.reviewsAfterDeliveryTitle,
+            message: l10n.reviewsAfterDeliveryBody,
+          ),
+        };
+      },
+    );
+  }
+}
+
+class _WriteButton extends StatelessWidget {
+  const _WriteButton({required this.onPressed, this.label, this.icon});
+
+  final VoidCallback onPressed;
+  final String? label;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return DsButton(
+      label: label ?? context.l10n.reviewsWriteAction,
+      icon: icon ?? Icons.edit_outlined,
+      variant: label == null
+          ? DsButtonVariant.primary
+          : DsButtonVariant.secondary,
+      size: DsButtonSize.md,
+      onPressed: onPressed,
     );
   }
 }
