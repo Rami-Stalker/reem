@@ -98,6 +98,14 @@ export class ReportContentDto {
   detail?: string;
 }
 
+/** Keeping a reported piece. The note is optional; a default is recorded. */
+export class DismissReportsDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  note?: string;
+}
+
 export class RemoveContentDto {
   /**
    * Mandatory, and long enough to be a sentence.

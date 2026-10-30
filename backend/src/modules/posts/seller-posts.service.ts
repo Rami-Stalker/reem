@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
-  CommerceContentModerationStatus,
   CommerceAuthorKind,
   CommerceContentStatus,
   ContentTagBasis,
@@ -16,6 +15,7 @@ import { ContentAttributionService } from '../commerce-content/attribution/conte
 import { ProductTagPolicyService } from '../commerce-content/tagging/product-tag-policy.service';
 import { assertAuthorMayChange } from '../commerce-content/commerce-content.service';
 import { screenText } from '../commerce-content/content-policy';
+import { ContentModerationService } from '../commerce-content/moderation/content-moderation.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -39,6 +39,7 @@ export class SellerPostsService {
     private readonly events: EventEmitter2,
     private readonly tagPolicy: ProductTagPolicyService,
     private readonly attribution: ContentAttributionService,
+    private readonly moderation: ContentModerationService,
   ) {}
 
   private readonly include = {
@@ -101,6 +102,8 @@ export class SellerPostsService {
     });
 
     await this.attribution.rebuild(post.id);
+    // Live already; a caption that trips the screen is shown to a moderator.
+    await this.moderation.autoFlag(post.id, screenText(dto.caption));
     this.events.emit(AppEvent.PostPublished, {
       sellerId: user.id,
       postId: post.id,
@@ -111,23 +114,18 @@ export class SellerPostsService {
   async update(user: AuthUser, id: string, dto: UpdatePostDto) {
     const owner = await this.ownedOrThrow(user, id);
     assertAuthorMayChange(owner.status);
-    // The same screen the content platform runs on an edit: a caption edited
-    // into an off-platform phone number goes back to a moderator.
-    const flagged = screenText(dto.caption).length > 0;
     const post = await this.prisma.commerceContent.update({
       where: { id },
       data: {
         body: dto.caption,
         payload: { caption: dto.caption, legacy: 'post' },
-        ...(flagged && {
-          moderationStatus: CommerceContentModerationStatus.PENDING,
-          ...(owner.status === CommerceContentStatus.PUBLISHED && {
-            status: CommerceContentStatus.IN_REVIEW,
-          }),
-        }),
       },
       include: this.include,
     });
+    // The same screen the content platform runs on an edit: the post stays
+    // up, and a caption edited into an off-platform phone number is put in
+    // front of a moderator, who can take it down from the console.
+    await this.moderation.autoFlag(id, screenText(dto.caption));
     return serializeLegacyPost(post);
   }
 

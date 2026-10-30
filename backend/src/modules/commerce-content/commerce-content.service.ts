@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   CommerceContentAnalyticsEventType,
@@ -42,6 +41,7 @@ import {
 } from './dto/commerce-content.dto';
 import { RegisterContentTypeDto } from './dto/content-type.dto';
 import { ProductTagPolicyService } from './tagging/product-tag-policy.service';
+import { ContentModerationService } from './moderation/content-moderation.service';
 import {
   maxDurationMs,
   maxMedia,
@@ -133,7 +133,7 @@ export class CommerceContentService {
     private readonly events: EventEmitter2,
     private readonly cache: CacheService,
     private readonly tagPolicy: ProductTagPolicyService,
-    private readonly config: ConfigService,
+    private readonly moderation: ContentModerationService,
   ) {}
 
   listTypes(includeInactive = false) {
@@ -159,15 +159,12 @@ export class CommerceContentService {
     const productTags = await this.productTagCreates(user, dto.product_tags ?? []);
     const scheduledAt = this.futureDate(dto.scheduled_at, 'scheduled_at');
     const expiresAt = this.expirationDate(dto.expires_at, definition);
-    // Screened here as well as at publish. `APPROVED` has to mean "the words
-    // on it now have been passed", or a caption carrying a phone number is
-    // waved through by the publish gate on the strength of a status it was
-    // given before anybody read it.
-    const flagged = !isAdmin(user) && screenText(dto.title, dto.body).length > 0;
-    const moderationStatus =
-      flagged || (await this.reviewRequired(user, definition))
-        ? CommerceContentModerationStatus.PENDING
-        : CommerceContentModerationStatus.APPROVED;
+    // Posts, reels and stories go live without anybody approving them first;
+    // only a format the registry marks `moderation_required` waits. The word
+    // screen runs at publish, where it opens a case instead of holding it.
+    const moderationStatus = this.reviewRequired(definition)
+      ? CommerceContentModerationStatus.PENDING
+      : CommerceContentModerationStatus.APPROVED;
 
     const author = await this.repo.authorFacts(user.id);
     if (!author) throw new NotFoundException('Author not found');
@@ -233,23 +230,17 @@ export class CommerceContentService {
         ? undefined
         : await this.productTagCreates(user, dto.product_tags);
 
-    // An edit to something already approved is a new thing to approve when
-    // the new words trip the screen, or when she is still inside her first
-    // reviewed posts and the caption or the pictures changed. Without this a
-    // piece could be published clean and then edited into whatever the
-    // review gate exists to stop, and nobody would ever look at it again.
+    // An edit does not take a live piece off the feed. If the new words trip
+    // the screen, a moderator is shown it after the save, the same as a new
+    // post; moderation is reactive, so the console's takedown is the answer to
+    // a piece edited into something it should not be.
     const title = dto.title !== undefined ? dto.title : full.title;
     const body = dto.body !== undefined ? dto.body : full.body;
-    const substanceChanged =
+    const wordsChanged =
       (dto.title !== undefined && (dto.title?.trim() ?? null) !== full.title) ||
-      (dto.body !== undefined && (dto.body ?? null) !== full.body) ||
-      dto.media !== undefined ||
-      dto.payload !== undefined;
-    const backToReview =
-      !isAdmin(user) &&
-      substanceChanged &&
-      (screenText(title, body).length > 0 ||
-        (await this.reviewRequired(user, definition)));
+      (dto.body !== undefined && (dto.body ?? null) !== full.body);
+    const flaggedTerms =
+      !isAdmin(user) && wordsChanged ? screenText(title, body) : [];
     const wasLive =
       current.status === CommerceContentStatus.PUBLISHED ||
       current.status === CommerceContentStatus.SCHEDULED;
@@ -284,18 +275,10 @@ export class CommerceContentService {
       ...(productTags !== undefined && {
         productTags: { deleteMany: {}, create: productTags },
       }),
-      ...(backToReview && {
-        moderationStatus: CommerceContentModerationStatus.PENDING,
-        ...(wasLive && { status: CommerceContentStatus.IN_REVIEW }),
-      }),
     });
 
-    if (backToReview && wasLive) {
-      this.events.emit(AppEvent.CommerceContentSubmitted, {
-        authorId: content.authorId,
-        contentId: content.id,
-        contentType: content.contentType,
-      });
+    if (wasLive && flaggedTerms.length > 0) {
+      await this.moderation.autoFlag(content.id, flaggedTerms);
     }
 
     await this.saveVersion(user.id, content.id, dto.change_note ?? 'Updated');
@@ -360,12 +343,11 @@ export class CommerceContentService {
       return serializeCommerceContent(content);
     }
 
-    const flagged = screenText(content.title, content.body);
-    const moderationRequired =
-      flagged.length > 0 ||
-      (await this.reviewRequired(user, content.typeDefinition));
+    // Only a format that is reviewed by definition waits here. Everything
+    // else — every post, reel and story — goes straight to the feed.
     if (
-      moderationRequired &&
+      !isAdmin(user) &&
+      this.reviewRequired(content.typeDefinition) &&
       owner.moderationStatus !== CommerceContentModerationStatus.APPROVED
     ) {
       // Already waiting on a moderator: a second tap is not a second
@@ -404,6 +386,10 @@ export class CommerceContentService {
       });
     }
 
+    // Live, and in front of a moderator if the caption trips the screen.
+    const flagged = isAdmin(user) ? [] : screenText(content.title, content.body);
+    if (flagged.length > 0) await this.moderation.autoFlag(id, flagged);
+
     this.invalidateFeeds();
     return serializeCommerceContent(updated);
   }
@@ -431,9 +417,6 @@ export class CommerceContentService {
     if (!full) throw new NotFoundException('Content not found');
     this.assertMediaFits(full.typeDefinition, snapshot.media ?? []);
     const productTags = await this.productTagCreates(user, snapshot.product_tags);
-    const flagged =
-      !isAdmin(user) && screenText(snapshot.title, snapshot.body).length > 0;
-
     const content = await this.repo.updateContent(id, {
       title: snapshot.title,
       body: snapshot.body,
@@ -449,9 +432,6 @@ export class CommerceContentService {
       expiresAt: this.optionalDate(snapshot.expires_at),
       pinnedUntil: this.optionalDate(snapshot.pinned_until),
       status: CommerceContentStatus.DRAFT,
-      ...(flagged && {
-        moderationStatus: CommerceContentModerationStatus.PENDING,
-      }),
       publishedAt: null,
       archivedAt: null,
       media: { deleteMany: {}, create: this.mediaCreateArray(snapshot.media) },
@@ -642,17 +622,8 @@ export class CommerceContentService {
    * has shown what she posts — nobody has to remember to lift it, and nobody
    * has to be trusted in advance.
    */
-  private async reviewRequired(
-    user: AuthUser,
-    definition: CommerceContentTypeDefinition,
-  ): Promise<boolean> {
-    const approvedCount = await this.repo.approvedCountFor(user.id);
-    return needsPrePublishReview({
-      definition,
-      role: user.role,
-      approvedCount,
-      reviewFreeAfter: this.config.get<number>('content.reviewFreeAfter') ?? 3,
-    });
+  private reviewRequired(definition: CommerceContentTypeDefinition): boolean {
+    return needsPrePublishReview({ definition });
   }
 
   /**

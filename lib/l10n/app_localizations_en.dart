@@ -7107,6 +7107,103 @@ class AppLocalizationsEn extends AppLocalizations {
       'Write a clear reason (at least 10 characters)';
 
   @override
+  String get adminContentFilterPosts => 'Posts';
+
+  @override
+  String get adminContentFilterReels => 'Reels';
+
+  @override
+  String get adminContentFilterStories => 'Stories';
+
+  @override
+  String get adminContentFormatPost => 'Post';
+
+  @override
+  String get adminContentFormatReel => 'Reel';
+
+  @override
+  String get adminContentFormatStory => 'Story';
+
+  @override
+  String get adminContentFormatOther => 'Content';
+
+  @override
+  String adminContentReportsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reports',
+      one: '1 report',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminContentAutoFlagged => 'Auto-flagged: restricted words';
+
+  @override
+  String get adminContentKeep => 'Keep';
+
+  @override
+  String get adminContentKeepTitle => 'Keep this content';
+
+  @override
+  String get adminContentKeepBody =>
+      'Every open report on it will be closed and it stays up. You can add a note for the record.';
+
+  @override
+  String get adminContentNoteLabel => 'Note (optional)';
+
+  @override
+  String get adminContentRemovedToast =>
+      'Removed. The author has been told why.';
+
+  @override
+  String get adminContentReinstatedToast => 'Restored to where it was.';
+
+  @override
+  String get adminContentKeptToast => 'Reports closed. It stays up.';
+
+  @override
+  String get adminContentQuickReasons => 'Common reasons';
+
+  @override
+  String get adminContentPresetImmodest =>
+      'The image does not follow the modesty policy for content.';
+
+  @override
+  String get adminContentPresetOffPlatform =>
+      'It shares contact details to deal outside the app.';
+
+  @override
+  String get adminContentPresetSpam =>
+      'Repeated or misleading promotional content.';
+
+  @override
+  String get adminContentPresetStolen =>
+      'Photos taken from another store or person without permission.';
+
+  @override
+  String get adminContentPresetHarassment =>
+      'It insults or harasses other people.';
+
+  @override
+  String get adminContentPresetCounterfeit =>
+      'It promotes a counterfeit or misdescribed product.';
+
+  @override
+  String get adminContentLoadMore => 'Load more';
+
+  @override
+  String get adminContentOpenMedia => 'Open media';
+
+  @override
+  String get adminContentRemoveHeading => 'Remove content';
+
+  @override
+  String get adminContentReinstateHeading => 'Restore content';
+
+  @override
   String get discardChangesTitle => 'Discard what you have written?';
 
   @override

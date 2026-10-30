@@ -7189,6 +7189,106 @@ class AppLocalizationsAr extends AppLocalizations {
       'اكتبي سبباً واضحاً (10 أحرف على الأقل)';
 
   @override
+  String get adminContentFilterPosts => 'منشورات';
+
+  @override
+  String get adminContentFilterReels => 'ريلز';
+
+  @override
+  String get adminContentFilterStories => 'قصص';
+
+  @override
+  String get adminContentFormatPost => 'منشور';
+
+  @override
+  String get adminContentFormatReel => 'ريل';
+
+  @override
+  String get adminContentFormatStory => 'قصة';
+
+  @override
+  String get adminContentFormatOther => 'محتوى';
+
+  @override
+  String adminContentReportsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بلاغ',
+      many: '$count بلاغاً',
+      few: '$count بلاغات',
+      two: 'بلاغان',
+      one: 'بلاغ واحد',
+      zero: 'لا بلاغات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminContentAutoFlagged => 'رصد تلقائي: كلمات تستدعي المراجعة';
+
+  @override
+  String get adminContentKeep => 'إبقاء';
+
+  @override
+  String get adminContentKeepTitle => 'إبقاء المحتوى';
+
+  @override
+  String get adminContentKeepBody =>
+      'ستُغلق كل البلاغات المفتوحة عليه ويبقى ظاهراً. يمكنك إضافة ملاحظة للسجل.';
+
+  @override
+  String get adminContentNoteLabel => 'ملاحظة (اختيارية)';
+
+  @override
+  String get adminContentRemovedToast =>
+      'تم الحذف، ووصل السبب إلى صاحبة المحتوى.';
+
+  @override
+  String get adminContentReinstatedToast => 'أُعيد المحتوى إلى مكانه.';
+
+  @override
+  String get adminContentKeptToast => 'أُغلقت البلاغات وبقي المحتوى ظاهراً.';
+
+  @override
+  String get adminContentQuickReasons => 'أسباب شائعة';
+
+  @override
+  String get adminContentPresetImmodest =>
+      'الصورة لا تلتزم بسياسة الحشمة المعتمدة للمحتوى.';
+
+  @override
+  String get adminContentPresetOffPlatform =>
+      'يحتوي على وسيلة تواصل للتعامل خارج التطبيق.';
+
+  @override
+  String get adminContentPresetSpam => 'محتوى ترويجي مكرر أو مضلل.';
+
+  @override
+  String get adminContentPresetStolen =>
+      'صور منسوخة من متجر أو شخص آخر دون إذن.';
+
+  @override
+  String get adminContentPresetHarassment =>
+      'يحتوي على إساءة أو تحرش بالآخرين.';
+
+  @override
+  String get adminContentPresetCounterfeit =>
+      'يروّج لمنتج مقلَّد أو موصوف بشكل مضلل.';
+
+  @override
+  String get adminContentLoadMore => 'عرض المزيد';
+
+  @override
+  String get adminContentOpenMedia => 'فتح الوسائط';
+
+  @override
+  String get adminContentRemoveHeading => 'حذف المحتوى';
+
+  @override
+  String get adminContentReinstateHeading => 'إعادة المحتوى';
+
+  @override
   String get discardChangesTitle => 'هل تتركين ما كتبتِه؟';
 
   @override

@@ -21,6 +21,7 @@ import { serializeFeedContent } from '../../common/serializers';
 import { ContentModerationService } from './moderation/content-moderation.service';
 import {
   AdminContentQueryDto,
+  DismissReportsDto,
   RemoveContentDto,
   RemoveCommentDto,
 } from './dto/social.dto';
@@ -68,7 +69,16 @@ export class AdminContentController {
     // because that is what every other `/admin` list speaks and what
     // `AdminSectionNotifier` on the client already pages through.
     return {
-      items: result.items.map((content) => serializeFeedContent(content)),
+      items: result.items.map((content) => {
+        const open = result.reports.get(content.id);
+        return {
+          ...serializeFeedContent(content),
+          // Moderator-only: never part of the public feed shape.
+          reports_count: content.reportsCount,
+          open_report_reasons: open?.reasons ?? [],
+          auto_flagged: open?.autoFlagged ?? false,
+        };
+      }),
       page: query.page,
       limit: query.limit,
       total: result.total,
@@ -125,6 +135,17 @@ export class AdminContentController {
     @Body() dto: RemoveContentDto,
   ) {
     return this.moderation.reinstate(user, id, dto.reason);
+  }
+
+  /** Keep it: the reports were looked at and it stays up. Audited. */
+  @Post(':id/dismiss-reports')
+  @HttpCode(HttpStatus.OK)
+  dismissReports(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: DismissReportsDto,
+  ) {
+    return this.moderation.dismissReports(user, id, dto.note);
   }
 
   @Post('comments/:commentId/remove')
