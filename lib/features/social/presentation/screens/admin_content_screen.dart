@@ -357,9 +357,9 @@ class _ModerationRow extends StatelessWidget {
                             const Center(
                               child: Icon(
                                 Icons.play_arrow_rounded,
-                                color: Colors.white,
+                                color: DsColors.onMedia,
                                 shadows: [
-                                  Shadow(blurRadius: 6, color: Colors.black54),
+                                  Shadow(blurRadius: 6, color: DsColors.mediaScrim),
                                 ],
                               ),
                             ),
