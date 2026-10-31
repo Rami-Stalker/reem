@@ -182,6 +182,20 @@ abstract final class RoutePaths {
   static String closetItemOf(String id) => '/closet/items/$id';
   static const closetAddItem = '/closet/add';
 
+  /// The add form with its slot already chosen — what the "+" on a wardrobe
+  /// compartment opens.
+  static String closetAddItemTo(String slot) =>
+      Uri(path: closetAddItem, queryParameters: {'slot': slot}).toString();
+
+  /// One compartment of the wardrobe, opened: a slot key, or `all`,
+  /// `favourites` or `stored`. `?search=1` opens it with the search field
+  /// already focused.
+  static const closetCompartment = '/closet/drawers/:key';
+  static String closetCompartmentOf(String key, {bool search = false}) => Uri(
+    path: '/closet/drawers/$key',
+    queryParameters: search ? {'search': '1'} : null,
+  ).toString();
+
   /// «مقاساتي» — her height and usual size, for «تقييمات من بمقاسي». Reached
   /// from a product's reviews and from the profile menu.
   static const fitProfile = '/fit-profile';

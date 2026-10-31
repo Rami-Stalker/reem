@@ -8,6 +8,7 @@ import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/closet/domain/entities/closet_item.dart';
 import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
 import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_compartments.dart';
 import 'package:ohara/features/closet/presentation/widgets/closet_visuals.dart';
 
 /// Add a garment Ohara never sold her.
@@ -19,7 +20,11 @@ import 'package:ohara/features/closet/presentation/widgets/closet_visuals.dart';
 /// nothing else is asked for here. The two optional extras sit in their own
 /// card, marked optional, so the form reads as three steps rather than five.
 class AddPersonalItemScreen extends ConsumerStatefulWidget {
-  const AddPersonalItemScreen({super.key});
+  const AddPersonalItemScreen({super.key, this.initialSlot});
+
+  /// The slot chosen before she arrived — set when she pressed the "+" on a
+  /// wardrobe compartment, so the one required question is already answered.
+  final String? initialSlot;
 
   @override
   ConsumerState<AddPersonalItemScreen> createState() =>
@@ -30,7 +35,7 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
   final _title = TextEditingController();
   final _brand = TextEditingController();
 
-  String? _slot;
+  late String? _slot = widget.initialSlot;
   String? _imageUrl;
   String? _size;
   bool _uploading = false;
@@ -144,10 +149,25 @@ class _AddPersonalItemScreenState extends ConsumerState<AddPersonalItemScreen> {
               step: 3,
               title: l10n.closetPieceSlot,
               done: _slot != null,
-              child: _SlotPicker(
-                slots: overview.vocabulary.slots,
-                selected: _slot,
-                onSelected: (slot) => setState(() => _slot = slot),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_slot case final slot?) ...[
+                    ClosetPill(
+                      icon: ClosetCompartment.forSlot(slot).icon,
+                      tone: DsTone.accent,
+                      label: l10n.closetAddingTo(
+                        ClosetCompartment.forSlot(slot).name(context, overview.vocabulary),
+                      ),
+                    ),
+                    DsGaps.vSm,
+                  ],
+                  _SlotPicker(
+                    slots: overview.vocabulary.slots,
+                    selected: _slot,
+                    onSelected: (slot) => setState(() => _slot = slot),
+                  ),
+                ],
               ),
             ),
             DsGaps.vMd,

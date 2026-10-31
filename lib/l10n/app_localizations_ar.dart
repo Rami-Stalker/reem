@@ -14788,4 +14788,141 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get referralShareInvite => 'شاركي الدعوة';
+
+  @override
+  String get closetDrawerDress => 'الفساتين';
+
+  @override
+  String get closetDrawerAbaya => 'العبايات';
+
+  @override
+  String get closetDrawerOuterwear => 'المعاطف';
+
+  @override
+  String get closetDrawerTop => 'البلايز';
+
+  @override
+  String get closetDrawerBottom => 'البناطيل والتنانير';
+
+  @override
+  String get closetDrawerShoes => 'الأحذية';
+
+  @override
+  String get closetDrawerBag => 'الحقائب';
+
+  @override
+  String get closetDrawerJewelry => 'المجوهرات';
+
+  @override
+  String get closetDrawerAccessory => 'الإكسسوارات';
+
+  @override
+  String get closetDrawerPerfume => 'العطور';
+
+  @override
+  String get closetDrawerBeauty => 'التجميل';
+
+  @override
+  String get closetDrawerAll => 'كل القطع';
+
+  @override
+  String get closetDrawerFavourites => 'المفضّلة';
+
+  @override
+  String get closetDrawerFavouritesCaption => 'اللي بتحبّيها';
+
+  @override
+  String get closetDrawerStored => 'صندوق المواسم';
+
+  @override
+  String get closetDrawerStoredCaption => 'لموسم تاني';
+
+  @override
+  String get closetDrawerEmpty => 'فاضي';
+
+  @override
+  String closetDrawerAddTo(String name) {
+    return 'ضيفي قطعة إلى $name';
+  }
+
+  @override
+  String closetDrawerOpen(String name) {
+    return 'افتحي $name';
+  }
+
+  @override
+  String closetArmoireOutfits(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count إطلالة لهالموسم',
+      few: '$count إطلالات لهالموسم',
+      two: 'إطلالتين لهالموسم',
+      one: 'إطلالة وحدة لهالموسم',
+      zero: 'ولا إطلالة كاملة لهالموسم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetArmoireHint =>
+      'اضغطي على أي رف أو درج لتفتحيه — والـ + بيضيف قطعة عليه مباشرة.';
+
+  @override
+  String get closetSearchWardrobe => 'دوّري بخزانتكِ';
+
+  @override
+  String get closetCompartmentEmptyRail => 'ما في شي معلّق هون لسّا';
+
+  @override
+  String get closetCompartmentEmptyShelf => 'هالرف لسّا فاضي';
+
+  @override
+  String get closetCompartmentEmptyDrawer => 'هالدرج لسّا فاضي';
+
+  @override
+  String get closetCompartmentEmptyBody =>
+      'ضيفي أول قطعة بصورة، وبتلاقيها هون كل ما فتحتي الخزانة.';
+
+  @override
+  String get closetCompartmentAddFirst => 'ضيفي أول قطعة';
+
+  @override
+  String get closetFavouritesEmptyTitle => 'ما في قطع مفضّلة لسّا';
+
+  @override
+  String get closetFavouritesEmptyBody =>
+      'اضغطي عالقلب بصفحة أي قطعة لتنحط بهالصندوق.';
+
+  @override
+  String get closetStoredEmptyTitle => 'صندوق المواسم فاضي';
+
+  @override
+  String get closetStoredEmptyBody =>
+      'القطع اللي بتشيليها لموسم تاني بتستناكِ هون لحتى يرجع وقتها.';
+
+  @override
+  String get closetFavouritesOnlyOn => 'عرض المفضّلة بس';
+
+  @override
+  String get closetFavouritesOnlyOff => 'عرض كل القطع';
+
+  @override
+  String closetAddingTo(String name) {
+    return 'رح تنضاف إلى $name';
+  }
+
+  @override
+  String get closetFinishWhite => 'أبيض مطفي';
+
+  @override
+  String get closetFinishOak => 'خشب بلوط';
+
+  @override
+  String get closetFinishWalnut => 'خشب جوز';
+
+  @override
+  String closetFinishTooltip(String name) {
+    return 'لون الخزانة: $name';
+  }
 }
