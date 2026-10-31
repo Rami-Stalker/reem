@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ohara/core/presentation/providers/core_providers.dart';
 import 'package:ohara/core/result/result.dart';
@@ -22,10 +24,17 @@ final reputationRepositoryProvider = Provider<ReputationRepository>(
 
 /// A product's reviews, all of them or narrowed to «من بمقاسي» / «مع صور».
 ///
-/// Keyed by a record so the three lists are cached separately and switching
-/// chips back and forth does not refetch.
-final productReviewsProvider = FutureProvider.family<List<ReviewEntity>,
+/// Keyed by a record so the three lists are cached separately. `autoDispose`,
+/// held for a few minutes after the page lets go: switching chips back and
+/// forth does not refetch, but a product opened again later reads its reviews
+/// again. Kept for the whole session it used to remember a failed answer, and
+/// the section stayed broken on that product until the app was restarted.
+final productReviewsProvider = FutureProvider.autoDispose.family<
+    List<ReviewEntity>,
     ({String productId, ReviewFilter filter})>((ref, key) async {
+  final link = ref.keepAlive();
+  final timer = Timer(const Duration(minutes: 3), link.close);
+  ref.onDispose(timer.cancel);
   final result = await ref
       .watch(reputationRepositoryProvider)
       .getProductReviews(key.productId, filter: key.filter);

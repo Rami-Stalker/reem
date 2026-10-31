@@ -90,16 +90,15 @@ class _ProductReviewsSectionState extends ConsumerState<ProductReviewsSection> {
         ),
         DsGaps.vMd,
         reviews.when(
-          loading: () =>
-              const Center(child: CircularProgressIndicator.adaptive()),
+          loading: () => const _ReviewsSkeleton(),
           error: (error, _) => _ReviewsMessage(
             icon: Icons.error_outline_rounded,
             title: context.l10n.reviewsUnavailable,
             message: messageOf(error),
-            action: IconButton(
-              tooltip: context.l10n.retry,
+            action: TextButton.icon(
               onPressed: () => ref.invalidate(productReviewsProvider(key)),
               icon: const Icon(Icons.refresh_rounded),
+              label: Text(context.l10n.retry),
             ),
           ),
           data: (items) {
@@ -345,6 +344,44 @@ class _ReviewsMessage extends StatelessWidget {
             ),
           ),
           ?action,
+        ],
+      ),
+    );
+  }
+}
+
+/// Two review-shaped placeholders while the list is on its way — the shape of
+/// what is coming, not a spinner floating in the middle of the page.
+class _ReviewsSkeleton extends StatelessWidget {
+  const _ReviewsSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return DsShimmer(
+      child: Column(
+        children: [
+          for (var i = 0; i < 2; i++) ...[
+            if (i > 0) DsGaps.vMd,
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DsSkeleton.circle(size: 36),
+                SizedBox(width: DsSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DsSkeleton.line(width: 120),
+                      SizedBox(height: DsSpacing.xs),
+                      DsSkeleton.line(),
+                      SizedBox(height: DsSpacing.xs),
+                      DsSkeleton.line(width: 180),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

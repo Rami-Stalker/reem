@@ -17,8 +17,20 @@ Future<void> main() async {
     runApp(
       const ProviderScope(
         observers: [ProviderBreadcrumbs()],
+        retry: noProviderRetry,
         child: MyApp(),
       ),
     );
   });
 }
+
+/// Riverpod's automatic retry, switched off.
+///
+/// By default a provider that fails is rebuilt up to ten times, with delays
+/// growing to 6.4 s, and stays *loading* the whole time — every attempt a new
+/// request with its own 30 s timeout. A failed read therefore never reached
+/// its error state: the product's reviews, among others, showed a spinner for
+/// minutes and looked like they would never load. The network layer already
+/// retries what is safe to retry (`RetryInterceptor`); a screen should show
+/// the failure, with its own retry button, as soon as that has given up.
+Duration? noProviderRetry(int retryCount, Object error) => null;

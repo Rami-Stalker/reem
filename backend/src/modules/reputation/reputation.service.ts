@@ -99,7 +99,7 @@ export class ReputationService {
       where: { id: productId },
       select: { id: true },
     });
-    if (!product) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('هذا المنتج غير متوفر');
     if (!viewerId) return { can_review: false, reason: 'sign_in', review: null };
 
     const [existing, delivered] = await Promise.all([
@@ -139,7 +139,7 @@ export class ReputationService {
     filter?: ProductReviewFilter,
   ) {
     const product = await this.prisma.product.findUnique({ where: { id: productId } });
-    if (!product) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('هذا المنتج غير متوفر');
 
     // «من بمقاسي» against a woman who has not said her size is not "nobody
     // matched", it is a question she has not asked yet. Answered with an
@@ -185,7 +185,7 @@ export class ReputationService {
       where: { id: productId },
       select: { id: true },
     });
-    if (!product) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('هذا المنتج غير متوفر');
 
     const [rows, viewer] = await Promise.all([
       this.prisma.productReview.findMany({
@@ -398,7 +398,7 @@ export class ReputationService {
         select: { sellerId: true, status: true },
       });
       if (!review || review.sellerId !== sellerId) {
-        throw new NotFoundException('Review not found');
+        throw new NotFoundException('التقييم غير موجود');
       }
       this.assertAnswerable(review.status);
 
@@ -418,7 +418,7 @@ export class ReputationService {
       },
     });
     if (!review || review.product.offers.length === 0) {
-      throw new NotFoundException('Review not found');
+      throw new NotFoundException('التقييم غير موجود');
     }
     this.assertAnswerable(review.status);
 
@@ -445,7 +445,7 @@ export class ReputationService {
 
   async createProductReview(userId: string, productId: string, dto: CreateReviewDto) {
     const product = await this.prisma.product.findUnique({ where: { id: productId } });
-    if (!product) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('هذا المنتج غير متوفر');
 
     // The purchase is the credential.
     //
@@ -581,7 +581,7 @@ export class ReputationService {
   async createSellerReview(userId: string, sellerId: string, dto: CreateReviewDto) {
     await this.ensureSeller(sellerId);
     if (userId === sellerId) {
-      throw new BadRequestException('Sellers cannot review themselves');
+      throw new BadRequestException('لا يمكنكِ تقييم متجركِ');
     }
     // Same rule as a product review: only a woman this boutique has actually
     // delivered to may rate it. See `createProductReview`.
@@ -1096,7 +1096,7 @@ export class ReputationService {
       select: { id: true, role: true },
     });
     if (!seller || seller.role !== UserRole.SELLER) {
-      throw new NotFoundException('Seller not found');
+      throw new NotFoundException('المتجر غير موجود');
     }
   }
 
