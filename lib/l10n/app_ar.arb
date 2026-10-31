@@ -4396,5 +4396,13 @@
   "closetFavouritesOnlyOff": "عرض كل القطع",
   "@closetFavouritesOnlyOff": {"description": "Toggle favourites filter off."},
   "closetAddingTo": "رح تنضاف إلى {name}",
-  "@closetAddingTo": {"description": "Add screen: which compartment the piece goes into.", "placeholders": {"name": {"type": "String"}}}
+  "@closetAddingTo": {"description": "Add screen: which compartment the piece goes into.", "placeholders": {"name": {"type": "String"}}},
+  "closetFinishWhite": "أبيض مطفي",
+  "@closetFinishWhite": {"description": "Wardrobe finish."},
+  "closetFinishOak": "خشب بلوط",
+  "@closetFinishOak": {"description": "Wardrobe finish."},
+  "closetFinishWalnut": "خشب جوز",
+  "@closetFinishWalnut": {"description": "Wardrobe finish."},
+  "closetFinishTooltip": "لون الخزانة: {name}",
+  "@closetFinishTooltip": {"description": "Finish swatch tooltip.", "placeholders": {"name": {"type": "String"}}}
 }

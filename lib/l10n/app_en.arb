@@ -16868,5 +16868,13 @@
   "closetFavouritesOnlyOff": "Show every piece",
   "@closetFavouritesOnlyOff": {"description": "Toggle favourites filter off."},
   "closetAddingTo": "It will go into {name}",
-  "@closetAddingTo": {"description": "Add screen: which compartment the piece goes into.", "placeholders": {"name": {"type": "String"}}}
+  "@closetAddingTo": {"description": "Add screen: which compartment the piece goes into.", "placeholders": {"name": {"type": "String"}}},
+  "closetFinishWhite": "Matte white",
+  "@closetFinishWhite": {"description": "Wardrobe finish."},
+  "closetFinishOak": "Light oak",
+  "@closetFinishOak": {"description": "Wardrobe finish."},
+  "closetFinishWalnut": "Walnut",
+  "@closetFinishWalnut": {"description": "Wardrobe finish."},
+  "closetFinishTooltip": "Wardrobe finish: {name}",
+  "@closetFinishTooltip": {"description": "Finish swatch tooltip.", "placeholders": {"name": {"type": "String"}}}
 }

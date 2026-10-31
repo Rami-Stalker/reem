@@ -14911,4 +14911,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String closetAddingTo(String name) {
     return 'رح تنضاف إلى $name';
   }
+
+  @override
+  String get closetFinishWhite => 'أبيض مطفي';
+
+  @override
+  String get closetFinishOak => 'خشب بلوط';
+
+  @override
+  String get closetFinishWalnut => 'خشب جوز';
+
+  @override
+  String closetFinishTooltip(String name) {
+    return 'لون الخزانة: $name';
+  }
 }

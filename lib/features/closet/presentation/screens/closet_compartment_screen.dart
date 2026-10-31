@@ -11,6 +11,7 @@ import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/closet/domain/entities/closet_item.dart';
 import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
 import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/features/closet/presentation/providers/closet_finish_provider.dart';
 import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
 import 'package:ohara/features/closet/presentation/widgets/closet_compartments.dart';
 import 'package:ohara/features/closet/presentation/widgets/closet_item_tile.dart';
@@ -124,15 +125,27 @@ class _ClosetCompartmentScreenState extends ConsumerState<ClosetCompartmentScree
 
   @override
   Widget build(BuildContext context) {
-    final a = context.armoire;
-    final l10n = context.l10n;
     final overview = ref.watch(closetOverviewProvider).asData?.value;
     final wardrobeAsync = ref.watch(closetWardrobeProvider(_itemQuery));
     final name = _compartment.name(context, overview?.vocabulary);
     final count = _count(overview, wardrobeAsync.asData?.value);
 
+    return ArmoireFinishScope(
+      finish: ref.watch(closetFinishProvider),
+      child: Builder(builder: (context) => _page(context, name, count, wardrobeAsync)),
+    );
+  }
+
+  Widget _page(
+    BuildContext context,
+    String name,
+    int? count,
+    AsyncValue<ClosetItemPage> wardrobeAsync,
+  ) {
+    final a = context.armoire;
+    final l10n = context.l10n;
     return Scaffold(
-      backgroundColor: a.cavityDeep,
+      backgroundColor: a.wallDeep,
       // An empty compartment carries its own "add the first piece" in the
       // middle of the page; a second button under it would be noise.
       bottomNavigationBar:
@@ -145,14 +158,7 @@ class _ClosetCompartmentScreenState extends ConsumerState<ClosetCompartmentScree
               onPressed: _add,
             )
           : null,
-      body: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [a.cavity, a.cavityDeep],
-          ),
-        ),
+      body: ArmoireWall(
         child: RefreshIndicator(
           onRefresh: _refresh,
           child: CustomScrollView(
@@ -316,7 +322,7 @@ class _ClosetCompartmentScreenState extends ConsumerState<ClosetCompartmentScree
                       ? LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [a.lacquer, a.lacquerDeep],
+                          colors: [a.panelLight, a.panelDeep],
                         )
                       : RadialGradient(
                           center: const Alignment(-.3, -.8),
@@ -324,7 +330,7 @@ class _ClosetCompartmentScreenState extends ConsumerState<ClosetCompartmentScree
                           colors: [a.velvet, a.velvetDeep],
                         ),
                   borderRadius: DsRadius.borderLg,
-                  border: Border.all(color: a.inlay),
+                  border: Border.all(color: a.metal, width: DsSpacing.xxxs),
                   boxShadow: [
                     BoxShadow(
                       color: a.shade.withValues(alpha: .35),
@@ -404,12 +410,12 @@ class _DrawerHeader extends StatelessWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       expandedHeight: DsSizes.appBarHeight + _front,
-      backgroundColor: a.lacquer,
+      backgroundColor: a.panel,
       surfaceTintColor: Colors.transparent,
-      iconTheme: IconThemeData(color: a.ink),
-      actionsIconTheme: IconThemeData(color: a.ink),
+      iconTheme: IconThemeData(color: a.panelInk),
+      actionsIconTheme: IconThemeData(color: a.panelInk),
       leading: IconButton(
-        icon: Icon(DsIcons.back, size: DsSizes.iconSm, color: a.ink),
+        icon: Icon(DsIcons.back, size: DsSizes.iconSm, color: a.panelInk),
         tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         onPressed: () => popOrHome(context),
       ),
@@ -459,84 +465,66 @@ class _DrawerFrontArt extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: a.lacquerGradient,
-        border: Border(bottom: BorderSide(color: a.brass, width: DsSpacing.xxxs)),
         boxShadow: [
           BoxShadow(
-            color: a.shade.withValues(alpha: .45),
+            color: a.shade.withValues(alpha: .5),
             blurRadius: DsSpacing.md,
             offset: const Offset(0, DsSpacing.xs),
           ),
         ],
       ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // The raised panel of the front, inside its bevel.
-          if (openOpacity > 0)
-            Positioned(
-              left: DsSpacing.md,
-              right: DsSpacing.md,
-              top: topInset + DsSizes.appBarHeight - DsSpacing.xs,
-              bottom: DsSpacing.md,
-              child: Opacity(
-                opacity: openOpacity,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: DsRadius.borderMd,
-                    border: Border.all(color: a.inlay),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(DsSpacing.xxs),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: DsRadius.borderSm,
-                        border: Border.all(
-                          color: DsColors.white.withValues(alpha: a.isDark ? .07 : .7),
-                        ),
-                      ),
-                      child: Center(
-                        child: SingleChildScrollView(
-                          physics: const NeverScrollableScrollPhysics(),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ArmoirePlaque(
-                                large: true,
-                                icon: icon,
-                                label: name,
-                                caption: caption,
-                              ),
-                              DsGaps.vSm,
-                              const ArmoirePull(width: DsSizes.thumbMd),
-                            ],
-                          ),
-                        ),
+      child: ArmoirePanel(
+        radius: 0,
+        seed: 33,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // The front she pulled: its name, and its pull.
+            if (openOpacity > 0)
+              Positioned(
+                left: DsSpacing.lg,
+                right: DsSpacing.lg,
+                top: topInset + DsSizes.appBarHeight - DsSpacing.md,
+                bottom: DsSpacing.md,
+                child: Opacity(
+                  opacity: openOpacity,
+                  child: Center(
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(icon, size: DsSizes.iconSm, color: a.metalDeep),
+                          DsGaps.vXxs,
+                          ArmoireLabel(large: true, name: name, caption: caption),
+                          DsGaps.vMd,
+                          const ArmoireHandle(length: DsSizes.thumbLg),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          if (barOpacity > 0)
-            Positioned(
-              top: topInset,
-              left: DsSizes.appBarHeight + DsSpacing.huge,
-              right: DsSizes.appBarHeight + DsSpacing.huge,
-              height: DsSizes.appBarHeight,
-              child: Opacity(
-                opacity: barOpacity,
-                child: Center(
-                  child: Text(
-                    name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.dsText.sectionTitle.displayFamily.bold.tint(a.ink),
+            if (barOpacity > 0)
+              Positioned(
+                top: topInset,
+                left: DsSizes.appBarHeight + DsSpacing.huge,
+                right: DsSizes.appBarHeight + DsSpacing.huge,
+                height: DsSizes.appBarHeight,
+                child: Opacity(
+                  opacity: barOpacity,
+                  child: Center(
+                    child: Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.dsText.sectionTitle.displayFamily.bold.tint(a.panelInk),
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -629,7 +617,7 @@ class _InteriorRow extends StatelessWidget {
                 Container(
                   width: DsSpacing.xxxs,
                   height: DsSpacing.sm,
-                  color: a.brassDeep,
+                  color: a.metalDeep,
                 ),
                 piece,
               ],
@@ -667,7 +655,7 @@ class _InteriorRow extends StatelessWidget {
                   top: 0,
                   left: 0,
                   right: 0,
-                  child: ArmoireRail(height: DsSpacing.sm),
+                  child: ArmoireRod(height: DsSpacing.sm),
                 ),
               ],
             ),
@@ -678,7 +666,7 @@ class _InteriorRow extends StatelessWidget {
               children: [
                 cells,
                 DsGaps.vXs,
-                ArmoirePlank(
+                ArmoireShelf(
                   height: DsSpacing.md,
                   slant: style == ClosetCompartmentStyle.rack,
                 ),
@@ -744,7 +732,7 @@ class _EmptyInterior extends StatelessWidget {
     final art = switch (compartment.style) {
       ClosetCompartmentStyle.rail || ClosetCompartmentStyle.hooks => Column(
         children: [
-          const ArmoireRail(height: DsSpacing.sm),
+          const ArmoireRod(height: DsSpacing.sm),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -781,11 +769,11 @@ class _EmptyInterior extends StatelessWidget {
               child: Icon(
                 compartment.icon,
                 size: DsSizes.iconXl,
-                color: a.brass.withValues(alpha: .6),
+                color: a.metal.withValues(alpha: .7),
               ),
             ),
           ),
-          ArmoirePlank(
+          ArmoireShelf(
             height: DsSpacing.md,
             slant: compartment.style == ClosetCompartmentStyle.rack,
           ),
@@ -801,7 +789,7 @@ class _EmptyInterior extends StatelessWidget {
         children: [
           art,
           DsGaps.vXl,
-          Text(title, textAlign: TextAlign.center, style: text.sectionTitle.tint(a.ink)),
+          Text(title, textAlign: TextAlign.center, style: text.sectionTitle),
           DsGaps.vXs,
           Text(body, textAlign: TextAlign.center, style: text.bodyMuted),
           DsGaps.vLg,
@@ -873,8 +861,8 @@ class _AddBar extends StatelessWidget {
     final a = context.armoire;
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: a.lacquerGradient,
-        border: Border(top: BorderSide(color: a.inlay)),
+        gradient: a.panelGradient,
+        border: Border(top: BorderSide(color: a.gap)),
         boxShadow: [
           BoxShadow(
             color: a.shade.withValues(alpha: .3),

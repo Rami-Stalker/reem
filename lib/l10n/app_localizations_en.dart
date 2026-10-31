@@ -14720,4 +14720,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String closetAddingTo(String name) {
     return 'It will go into $name';
   }
+
+  @override
+  String get closetFinishWhite => 'Matte white';
+
+  @override
+  String get closetFinishOak => 'Light oak';
+
+  @override
+  String get closetFinishWalnut => 'Walnut';
+
+  @override
+  String closetFinishTooltip(String name) {
+    return 'Wardrobe finish: $name';
+  }
 }

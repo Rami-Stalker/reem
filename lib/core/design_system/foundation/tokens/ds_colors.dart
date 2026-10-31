@@ -47,6 +47,28 @@ abstract final class DsColors {
   static const Color sageGreen = Color(0xFFA8B9A0);
 
   // ---------------------------------------------------------------------------
+  // Wardrobe finishes — the closet's furniture (see `armoire_stage.dart`).
+  // Real materials rather than brand tints: a wardrobe reads as furniture
+  // only when its wood looks like wood.
+  // ---------------------------------------------------------------------------
+  static const Color oakLight = Color(0xFFE9D6B7);
+  static const Color oak = Color(0xFFDCC29C);
+  static const Color oakDeep = Color(0xFFC6A67C);
+  static const Color oakGrain = Color(0xFF8A6740);
+  static const Color oakInk = Color(0xFF4A3724);
+  static const Color mattePanelLight = Color(0xFFFBF9F6);
+  static const Color mattePanel = Color(0xFFF2EEE8);
+  static const Color mattePanelDeep = Color(0xFFE3DCD2);
+  static const Color mattePanelInk = Color(0xFF3E3832);
+  static const Color walnutLight = Color(0xFF8C664A);
+  static const Color walnut = Color(0xFF6E4C36);
+  static const Color walnutDeep = Color(0xFF533827);
+  static const Color walnutGrain = Color(0xFF2E1D12);
+  static const Color walnutInk = Color(0xFFF3E7D7);
+  static const Color ledWarm = Color(0xFFFFE6BC);
+  static const Color nightRoom = Color(0xFF121014);
+
+  // ---------------------------------------------------------------------------
   // Gold scale — built around [softGold] and [champagneGold]. Use sparingly:
   // ratings, premium badges, hairline flourishes.
   // ---------------------------------------------------------------------------

@@ -2,173 +2,226 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'package:ohara/core/design_system/foundation/theme/extensions/color_extension.dart';
 import 'package:ohara/core/design_system/foundation/theme/extensions/typography_extension.dart';
 import 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 import 'package:ohara/core/design_system/foundation/tokens/ds_radius.dart';
 import 'package:ohara/core/design_system/foundation/tokens/ds_sizes.dart';
 import 'package:ohara/core/design_system/foundation/tokens/ds_spacing.dart';
 
-/// Her wardrobe, drawn as one: **the armoire**.
+/// Her closet, drawn as a modern fitted wardrobe.
 ///
-/// The closet used to be a grid of photographs under a rail of filter chips —
-/// a catalogue that happened to hold her own clothes. A wardrobe is not
-/// browsed like that. She opens the drawer the necklace is in. So the closet
-/// is drawn as the piece of furniture it is named after, and every part of it
-/// is one of the pieces below.
+/// Not an antique armoire and not a grid of cards: the built-in wardrobe of a
+/// new flat — flush matte panels, wood inside, an LED strip lighting every
+/// compartment, slim metal pulls, a glass-fronted jewellery drawer. The parts:
 ///
-/// * [ArmoireCarcass] — the lacquered body that holds everything.
-/// * [ArmoireCrown] / [ArmoirePlinth] — the cornice on top and the feet.
-/// * [ArmoireRecess] — an open compartment: a lit cavity in the body.
-/// * [ArmoireRail], [ArmoireHanger], [ArmoirePeg], [ArmoirePlank] — what
-///   clothes hang from and sit on.
-/// * [ArmoireDrawerFront] / [ArmoirePull] — a drawer, closed or just ajar.
-/// * [ArmoireVelvet] — the lining a drawer opens onto.
-/// * [ArmoirePlaque] — an engraved name plate.
-/// * [ArmoireBox] — a storage box sitting on top of the wardrobe.
-/// * [ArmoireAddKnob] — the small brass "+" each compartment carries.
+/// * [ArmoireCarcass] / [ArmoirePlinth] — the body and the recessed kick.
+/// * [ArmoireCell] — an open compartment, drawn in depth: ceiling, side
+///   walls, floor and back wall, lit from the front by its LED strip.
+/// * [ArmoireRod], [ArmoireHanger], [ArmoirePeg], [ArmoireShelf] — what
+///   clothes hang from and stand on.
+/// * [ArmoireDrawer] — a flush drawer, solid or glass-fronted.
+/// * [ArmoireDoor] — a top-cabinet door that swings open on its hinge.
+/// * [ArmoireHandle] — the slim metal bar every front carries.
+/// * [ArmoireVelvet] / [ArmoireCushion] — a drawer's lining.
+/// * [ArmoireLabel] — the name on a board, set like engraving.
+/// * [ArmoireAddKnob] — the small "+" each compartment carries.
+/// * [ArmoireFinishSwatch] — one finish she can choose for it.
 ///
-/// Ivory lacquer and champagne brass by day, aubergine lacquer at night:
-/// everything resolves from [ArmoirePalette], so the furniture follows the
-/// theme like the rest of her pages.
+/// Three finishes — light oak, matte white, walnut — chosen by her and passed
+/// down through [ArmoireFinishScope]. In dark mode the room's lights go down
+/// and the LEDs stay on.
+enum ArmoireFinish { oak, white, walnut }
+
+/// The finish the wardrobe below is built in.
+class ArmoireFinishScope extends InheritedWidget {
+  const ArmoireFinishScope({super.key, required this.finish, required super.child});
+
+  final ArmoireFinish finish;
+
+  static ArmoireFinish of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<ArmoireFinishScope>()?.finish ??
+      ArmoireFinish.oak;
+
+  @override
+  bool updateShouldNotify(ArmoireFinishScope old) => old.finish != finish;
+}
+
 class ArmoirePalette {
   const ArmoirePalette({
-    required this.lacquerLight,
-    required this.lacquer,
-    required this.lacquerDeep,
-    required this.inlay,
-    required this.cavity,
-    required this.cavityDeep,
+    required this.finish,
+    required this.isDark,
+    required this.panelLight,
+    required this.panel,
+    required this.panelDeep,
+    required this.panelGrain,
+    required this.panelInk,
+    required this.panelMuted,
+    required this.gap,
+    required this.woodLight,
+    required this.wood,
+    required this.woodDeep,
+    required this.grain,
+    required this.led,
+    required this.metalLight,
+    required this.metal,
+    required this.metalDeep,
+    required this.glass,
     required this.velvet,
     required this.velvetDeep,
-    required this.brassLight,
-    required this.brass,
-    required this.brassDeep,
-    required this.plaque,
-    required this.plaqueInk,
-    required this.plank,
-    required this.plankEdge,
-    required this.glow,
+    required this.hanger,
     required this.shade,
-    required this.ink,
-    required this.muted,
-    required this.boxRose,
-    required this.boxLinen,
-    required this.isDark,
+    required this.wall,
+    required this.wallDeep,
   });
 
-  /// The lacquer of the body, lit side to shadow side.
-  final Color lacquerLight;
-  final Color lacquer;
-  final Color lacquerDeep;
+  /// The back wall behind a whole page — an open compartment seen from
+  /// inside. Kept light by day whatever the finish, so the app's own text
+  /// reads on it.
+  final Color wall;
+  final Color wallDeep;
 
-  /// The fine brass line set into the lacquer.
-  final Color inlay;
+  final ArmoireFinish finish;
+  final bool isDark;
 
-  /// The inside of an open compartment, and the deepest part of it.
-  final Color cavity;
-  final Color cavityDeep;
+  /// The outside: doors, drawer fronts, the frame between compartments.
+  final Color panelLight;
+  final Color panel;
+  final Color panelDeep;
 
-  /// Drawer lining.
+  /// Grain on the outside; null for a matte lacquer finish.
+  final Color? panelGrain;
+
+  /// Words written on the outside.
+  final Color panelInk;
+  final Color panelMuted;
+
+  /// The shadow gap between two fronts.
+  final Color gap;
+
+  /// The inside: back walls, shelves, floors.
+  final Color woodLight;
+  final Color wood;
+  final Color woodDeep;
+  final Color grain;
+
+  /// The warm white of the LED strips.
+  final Color led;
+
+  /// Rods, pulls, frames.
+  final Color metalLight;
+  final Color metal;
+  final Color metalDeep;
+
+  /// Smoked glass.
+  final Color glass;
+
   final Color velvet;
   final Color velvetDeep;
 
-  /// Hardware: rails, pulls, hooks and knobs.
-  final Color brassLight;
-  final Color brass;
-  final Color brassDeep;
+  /// The wood of the hangers.
+  final Color hanger;
 
-  /// Name plates and the engraving on them.
-  final Color plaque;
-  final Color plaqueInk;
-
-  /// Shelf boards.
-  final Color plank;
-  final Color plankEdge;
-
-  /// The warm light inside a compartment.
-  final Color glow;
-
-  /// Shadow cast inside and under the furniture.
   final Color shade;
 
-  /// Words written on the lacquer.
-  final Color ink;
-  final Color muted;
-
-  /// The two storage boxes on top: a rose one and a linen one.
-  final Color boxRose;
-  final Color boxLinen;
-
-  final bool isDark;
-
-  LinearGradient get lacquerGradient => LinearGradient(
+  LinearGradient get panelGradient => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [lacquerLight, lacquer, lacquerDeep],
-    stops: const [0, .45, 1],
+    colors: [panelLight, panel, panelDeep],
+    stops: const [0, .5, 1],
   );
 
-  LinearGradient get brassGradient => LinearGradient(
+  LinearGradient get metalGradient => LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [brassLight, brass, brassDeep],
-    stops: const [0, .55, 1],
+    colors: [metalLight, metal, metalDeep],
+    stops: const [0, .5, 1],
   );
 
   static ArmoirePalette of(BuildContext context) {
-    final c = context.dsColors;
+    final finish = ArmoireFinishScope.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    if (isDark) {
-      final lacquer = DsColors.secondary900;
-      return ArmoirePalette(
-        lacquerLight: Color.lerp(DsColors.secondary800, DsColors.surfaceVariantDark, .35)!,
-        lacquer: lacquer,
-        lacquerDeep: Color.lerp(lacquer, DsColors.backgroundDark, .55)!,
-        inlay: DsColors.gold500.withValues(alpha: .55),
-        cavity: Color.lerp(DsColors.backgroundDark, lacquer, .45)!,
-        cavityDeep: DsColors.surfaceDimDark,
-        velvet: Color.lerp(DsColors.secondary800, DsColors.primary900, .5)!,
-        velvetDeep: Color.lerp(DsColors.secondary900, DsColors.primary900, .3)!,
-        brassLight: DsColors.gold200,
-        brass: DsColors.gold400,
-        brassDeep: DsColors.gold700,
-        plaque: Color.lerp(lacquer, DsColors.black, .28)!,
-        plaqueInk: DsColors.gold200,
-        plank: Color.lerp(DsColors.secondary800, DsColors.gold700, .3)!,
-        plankEdge: Color.lerp(DsColors.secondary900, DsColors.gold700, .45)!,
-        glow: DsColors.gold300.withValues(alpha: .20),
-        shade: DsColors.black.withValues(alpha: .55),
-        ink: c.onSurface,
-        muted: c.onSurfaceVariant,
-        boxRose: Color.lerp(DsColors.primary800, DsColors.secondary900, .35)!,
-        boxLinen: Color.lerp(DsColors.gold700, DsColors.secondary900, .35)!,
-        isDark: true,
-      );
-    }
+    return resolve(finish, isDark: isDark);
+  }
+
+  static ArmoirePalette resolve(ArmoireFinish finish, {required bool isDark}) {
+    // Outside and inside per finish, in daylight.
+    final (pl, p, pd, pg, ink) = switch (finish) {
+      ArmoireFinish.oak => (
+        DsColors.oakLight,
+        DsColors.oak,
+        DsColors.oakDeep,
+        DsColors.oakGrain as Color?,
+        DsColors.oakInk,
+      ),
+      ArmoireFinish.white => (
+        DsColors.mattePanelLight,
+        DsColors.mattePanel,
+        DsColors.mattePanelDeep,
+        null,
+        DsColors.mattePanelInk,
+      ),
+      ArmoireFinish.walnut => (
+        DsColors.walnutLight,
+        DsColors.walnut,
+        DsColors.walnutDeep,
+        DsColors.walnutGrain as Color?,
+        DsColors.walnutInk,
+      ),
+    };
+    // White wardrobes are oak inside; oak and walnut are themselves inside,
+    // a shade lighter, the way the carcass board of a real one is.
+    final (wl, w, wd, g) = switch (finish) {
+      ArmoireFinish.walnut => (
+        Color.lerp(DsColors.walnutLight, DsColors.oakDeep, .25)!,
+        DsColors.walnutLight,
+        DsColors.walnut,
+        DsColors.walnutGrain,
+      ),
+      _ => (
+        Color.lerp(DsColors.oakLight, DsColors.white, .35)!,
+        DsColors.oakLight,
+        DsColors.oak,
+        DsColors.oakGrain,
+      ),
+    };
+
+    // At night the room is dark but the wood stays warm: everything sinks
+    // towards a deep brown-black rather than towards grey.
+    final dusk = Color.lerp(DsColors.nightRoom, DsColors.walnutGrain, .45)!;
+    Color night(Color c, double amount) => isDark ? Color.lerp(c, dusk, amount)! : c;
+
     return ArmoirePalette(
-      lacquerLight: Color.lerp(DsColors.gold50, DsColors.white, .6)!,
-      lacquer: DsColors.gold50,
-      lacquerDeep: Color.lerp(DsColors.gold100, DsColors.warmBeige, .35)!,
-      inlay: DsColors.gold300.withValues(alpha: .75),
-      cavity: Color.lerp(DsColors.gold50, DsColors.primary100, .28)!,
-      cavityDeep: Color.lerp(DsColors.gold100, DsColors.primary100, .42)!,
-      velvet: Color.lerp(DsColors.primary100, DsColors.primary200, .45)!,
-      velvetDeep: Color.lerp(DsColors.primary200, DsColors.rosewood, .22)!,
-      brassLight: DsColors.gold100,
-      brass: DsColors.champagneGold,
-      brassDeep: DsColors.gold600,
-      plaque: Color.lerp(DsColors.gold50, DsColors.white, .45)!,
-      plaqueInk: DsColors.gold700,
-      plank: Color.lerp(DsColors.gold100, DsColors.white, .3)!,
-      plankEdge: DsColors.gold300,
-      glow: DsColors.gold100.withValues(alpha: .85),
-      shade: DsColors.gold700.withValues(alpha: .30),
-      ink: c.onSurface,
-      muted: c.onSurfaceVariant,
-      boxRose: DsColors.primary200,
-      boxLinen: DsColors.warmBeige,
-      isDark: false,
+      finish: finish,
+      isDark: isDark,
+      panelLight: night(pl, .55),
+      panel: night(p, .6),
+      panelDeep: night(pd, .66),
+      panelGrain: pg == null ? null : night(pg, .5),
+      panelInk: isDark || finish == ArmoireFinish.walnut ? DsColors.walnutInk : ink,
+      panelMuted: (isDark || finish == ArmoireFinish.walnut ? DsColors.walnutInk : ink)
+          .withValues(alpha: .66),
+      gap: night(Color.lerp(pd, DsColors.black, .45)!, .4),
+      woodLight: night(wl, .42),
+      wood: night(w, .48),
+      woodDeep: night(wd, .55),
+      grain: night(g, .35),
+      led: DsColors.ledWarm,
+      metalLight: isDark ? DsColors.gold200 : DsColors.gold100,
+      metal: DsColors.champagneGold,
+      metalDeep: isDark ? DsColors.gold700 : DsColors.gold600,
+      glass: isDark
+          ? DsColors.nightRoom.withValues(alpha: .38)
+          : DsColors.neutral900.withValues(alpha: .14),
+      velvet: isDark
+          ? Color.lerp(DsColors.secondary800, DsColors.primary900, .45)!
+          : Color.lerp(DsColors.primary100, DsColors.primary200, .5)!,
+      velvetDeep: isDark
+          ? Color.lerp(DsColors.secondary900, DsColors.nightRoom, .3)!
+          : Color.lerp(DsColors.primary200, DsColors.rosewood, .3)!,
+      hanger: night(Color.lerp(DsColors.oakDeep, DsColors.oakGrain, .2)!, .35),
+      shade: DsColors.black.withValues(alpha: isDark ? .6 : .32),
+      wall: isDark ? night(w, .62) : Color.lerp(w, DsColors.oakLight, finish == ArmoireFinish.walnut ? .62 : .2)!,
+      wallDeep: isDark ? night(wd, .68) : Color.lerp(wd, DsColors.oak, finish == ArmoireFinish.walnut ? .55 : .1)!,
     );
   }
 }
@@ -178,15 +231,63 @@ extension ArmoireContext on BuildContext {
 }
 
 // ---------------------------------------------------------------------------
+// Wood
+// ---------------------------------------------------------------------------
+
+/// Draws wood grain into [rect]: fine, slightly wandering lines whose
+/// spacing and strength vary like a real board's. Deterministic per [seed],
+/// so a shelf does not shimmer between frames.
+void paintArmoireGrain(
+  Canvas canvas,
+  Rect rect,
+  Color color, {
+  bool vertical = true,
+  int seed = 7,
+  double strength = 1,
+}) {
+  if (rect.isEmpty) return;
+  final random = math.Random(seed);
+  final across = vertical ? rect.width : rect.height;
+  final along = vertical ? rect.height : rect.width;
+  final paint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = .7;
+  canvas.save();
+  canvas.clipRect(rect);
+  var t = random.nextDouble() * 3;
+  while (t < across) {
+    paint.color = color.withValues(
+      alpha: ((.035 + random.nextDouble() * .075) * strength).clamp(0, 1),
+    );
+    final amplitude = .5 + random.nextDouble() * 1.8;
+    final frequency = .015 + random.nextDouble() * .035;
+    final phase = random.nextDouble() * math.pi * 2;
+    final path = Path();
+    for (var s = 0.0; s <= along + 6; s += 6) {
+      final o = t + math.sin(s * frequency + phase) * amplitude;
+      final point = vertical
+          ? Offset(rect.left + o, rect.top + s)
+          : Offset(rect.left + s, rect.top + o);
+      s == 0 ? path.moveTo(point.dx, point.dy) : path.lineTo(point.dx, point.dy);
+    }
+    canvas.drawPath(path, paint);
+    t += 1.8 + random.nextDouble() * 4;
+  }
+  canvas.restore();
+}
+
+// ---------------------------------------------------------------------------
 // The body
 // ---------------------------------------------------------------------------
 
-/// The lacquered body of the wardrobe, with a brass line set into its edge.
+/// The wardrobe's body: flush panels in the chosen finish. Its padding is
+/// the thickness of the side panels; whatever is laid inside it shows the
+/// finish between, as the boards between compartments.
 class ArmoireCarcass extends StatelessWidget {
   const ArmoireCarcass({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(DsSpacing.sm),
+    this.padding = const EdgeInsets.all(DsSpacing.xs),
   });
 
   final Widget child;
@@ -197,158 +298,141 @@ class ArmoireCarcass extends StatelessWidget {
     final a = context.armoire;
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: a.lacquerGradient,
-        borderRadius: DsRadius.borderMd,
+        borderRadius: DsRadius.borderXs,
         boxShadow: [
           BoxShadow(
-            color: a.shade.withValues(alpha: a.isDark ? .6 : .35),
+            color: a.shade.withValues(alpha: a.isDark ? .7 : .45),
             blurRadius: DsSpacing.xxl,
             offset: const Offset(0, DsSpacing.md),
-          ),
-          BoxShadow(
-            color: a.shade.withValues(alpha: a.isDark ? .4 : .18),
-            blurRadius: DsSpacing.xs,
-            offset: const Offset(0, DsSpacing.xxs),
           ),
         ],
       ),
       child: CustomPaint(
-        foregroundPainter: _InlayPainter(color: a.inlay),
+        painter: _PanelPainter(palette: a, seed: 3),
         child: Padding(padding: padding, child: child),
       ),
     );
   }
 }
 
-class _InlayPainter extends CustomPainter {
-  const _InlayPainter({required this.color});
+/// A flat front in the finish: its gradient, its grain if it has one, a
+/// catch of light along the top edge and the shadow gap round it.
+class _PanelPainter extends CustomPainter {
+  const _PanelPainter({required this.palette, this.seed = 1, this.radius = DsRadius.xs});
 
-  final Color color;
+  final ArmoirePalette palette;
+  final int seed;
+  final double radius;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = (Offset.zero & size).deflate(DsSpacing.xxs);
+    final a = palette;
+    final rect = Offset.zero & size;
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(radius));
+    canvas.drawRRect(rrect, Paint()..shader = a.panelGradient.createShader(rect));
+    if (a.panelGrain case final grain?) {
+      canvas.save();
+      canvas.clipRRect(rrect);
+      paintArmoireGrain(canvas, rect, grain, seed: seed, strength: .9);
+      canvas.restore();
+    }
+    canvas.drawLine(
+      Offset(radius, .6),
+      Offset(size.width - radius, .6),
+      Paint()
+        ..color = DsColors.white.withValues(alpha: a.isDark ? .08 : .55)
+        ..strokeWidth = 1,
+    );
     canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(DsRadius.sm)),
+      rrect.deflate(.5),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
-        ..color = color,
+        ..color = a.gap.withValues(alpha: .55),
     );
   }
 
   @override
-  bool shouldRepaint(_InlayPainter old) => old.color != color;
+  bool shouldRepaint(_PanelPainter old) =>
+      old.palette.finish != palette.finish ||
+      old.palette.isDark != palette.isDark ||
+      old.seed != seed;
 }
 
-/// The cornice: a stepped moulding wider than the body, with a frieze under
-/// it that carries [child] — usually an [ArmoirePlaque].
-class ArmoireCrown extends StatelessWidget {
-  const ArmoireCrown({super.key, this.child});
+/// A flat front in the finish — a door, a drawer front, a header — with
+/// [child] on it.
+class ArmoirePanel extends StatelessWidget {
+  const ArmoirePanel({super.key, required this.child, this.radius = DsRadius.xs, this.seed = 5});
 
-  final Widget? child;
-
-  static const double moulding = DsSpacing.md;
+  final Widget child;
+  final double radius;
+  final int seed;
 
   @override
   Widget build(BuildContext context) {
-    final a = context.armoire;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: moulding,
-          child: CustomPaint(painter: _MouldingPainter(palette: a)),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: a.lacquerGradient,
-              border: Border(
-                bottom: BorderSide(color: a.inlay, width: DsSpacing.xxxs),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: DsSpacing.md,
-                vertical: DsSpacing.xs,
-              ),
-              child: Center(child: child),
-            ),
-          ),
-        ),
-      ],
+    return CustomPaint(
+      painter: _PanelPainter(palette: context.armoire, seed: seed, radius: radius),
+      child: child,
     );
   }
 }
 
-class _MouldingPainter extends CustomPainter {
-  const _MouldingPainter({required this.palette});
+/// The back wall of a compartment as the ground of a whole page: wood with
+/// its grain, lit from the top by the strip she has just switched on.
+class ArmoireWall extends StatelessWidget {
+  const ArmoireWall({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _WallPainter(palette: context.armoire),
+      child: child,
+    );
+  }
+}
+
+class _WallPainter extends CustomPainter {
+  const _WallPainter({required this.palette});
 
   final ArmoirePalette palette;
 
   @override
   void paint(Canvas canvas, Size size) {
     final a = palette;
-    final w = size.width;
-    final h = size.height;
-    // The cap: the widest step, a rounded slab.
-    final cap = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, 0, w, h * .42),
-      const Radius.circular(DsRadius.xs),
-    );
-    canvas.drawRRect(
-      cap.shift(const Offset(0, 2)),
-      Paint()
-        ..color = a.shade.withValues(alpha: .25)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-    );
-    canvas.drawRRect(
-      cap,
-      Paint()..shader = a.lacquerGradient.createShader(cap.outerRect),
-    );
-    // The cove: a narrower step that curves back into the body.
-    final cove = Path()
-      ..moveTo(DsSpacing.xxs, h * .42)
-      ..lineTo(w - DsSpacing.xxs, h * .42)
-      ..quadraticBezierTo(w - DsSpacing.xxs, h, w - DsSpacing.xs, h)
-      ..lineTo(DsSpacing.xs, h)
-      ..quadraticBezierTo(DsSpacing.xxs, h, DsSpacing.xxs, h * .42)
-      ..close();
-    canvas.drawPath(
-      cove,
+    final rect = Offset.zero & size;
+    canvas.drawRect(
+      rect,
       Paint()
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [a.lacquerDeep, a.lacquer],
-        ).createShader(Offset.zero & size),
+          colors: [Color.lerp(a.wall, a.led, a.isDark ? .12 : .3)!, a.wall, a.wallDeep],
+          stops: const [0, .35, 1],
+        ).createShader(rect),
     );
-    // A brass bead along the cap's edge.
-    canvas.drawLine(
-      Offset(DsSpacing.xxs, h * .42),
-      Offset(w - DsSpacing.xxs, h * .42),
-      Paint()
-        ..color = a.brass
-        ..strokeWidth = 1.4,
+    paintArmoireGrain(canvas, rect, a.grain, seed: 41, strength: a.isDark ? 1.2 : .8);
+    final pool = Rect.fromCenter(
+      center: Offset(size.width / 2, 0),
+      width: size.width * 1.6,
+      height: math.min(size.height, size.width * 1.8),
     );
-    // Light catching the top of the cap.
-    canvas.drawLine(
-      const Offset(DsSpacing.xs, 1),
-      Offset(w - DsSpacing.xs, 1),
+    canvas.drawOval(
+      pool,
       Paint()
-        ..color = DsColors.white.withValues(alpha: a.isDark ? .10 : .7)
-        ..strokeWidth = 1,
+        ..shader = RadialGradient(
+          colors: [a.led.withValues(alpha: a.isDark ? .22 : .35), a.led.withValues(alpha: 0)],
+        ).createShader(pool),
     );
   }
 
   @override
-  bool shouldRepaint(_MouldingPainter old) => old.palette.isDark != palette.isDark;
+  bool shouldRepaint(_WallPainter old) =>
+      old.palette.finish != palette.finish || old.palette.isDark != palette.isDark;
 }
 
-/// The base of the wardrobe and the two turned feet it stands on.
+/// The recessed kick under the wardrobe and its shadow on the floor.
 class ArmoirePlinth extends StatelessWidget {
   const ArmoirePlinth({super.key});
 
@@ -372,103 +456,716 @@ class _PlinthPainter extends CustomPainter {
     final a = palette;
     final w = size.width;
     final h = size.height;
-    // The floor shadow.
-    canvas.drawOval(
-      Rect.fromLTWH(w * .04, h * .55, w * .92, h * .45),
-      Paint()
-        ..color = a.shade.withValues(alpha: a.isDark ? .55 : .30)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
-    );
-    // The plinth board.
-    final board = RRect.fromRectAndCorners(
-      Rect.fromLTWH(DsSpacing.xxs, 0, w - DsSpacing.xs, h * .38),
-      bottomLeft: const Radius.circular(DsRadius.xs),
-      bottomRight: const Radius.circular(DsRadius.xs),
-    );
-    canvas.drawRRect(
-      board,
+    canvas.drawRect(
+      Rect.fromLTWH(DsSpacing.sm, 0, w - DsSpacing.sm * 2, h * .5),
       Paint()
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [a.lacquerDeep, a.lacquer],
-        ).createShader(board.outerRect),
+          colors: [a.gap, Color.lerp(a.panelDeep, a.gap, .5)!],
+        ).createShader(Rect.fromLTWH(0, 0, w, h * .5)),
     );
-    canvas.drawLine(
-      Offset(DsSpacing.xxs, .5),
-      Offset(w - DsSpacing.xxs, .5),
+    canvas.drawOval(
+      Rect.fromLTWH(-w * .02, h * .3, w * 1.04, h * .7),
       Paint()
-        ..color = a.brass
+        ..color = a.shade.withValues(alpha: a.isDark ? .55 : .3)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_PlinthPainter old) =>
+      old.palette.finish != palette.finish || old.palette.isDark != palette.isDark;
+}
+
+// ---------------------------------------------------------------------------
+// An open compartment
+// ---------------------------------------------------------------------------
+
+/// An open compartment, drawn in depth.
+///
+/// The ceiling, the two side walls and the floor recede to the back wall,
+/// each shaded for where the light falls; an LED strip runs along the front
+/// of the ceiling and pools light down the back wall. Lay [child] out
+/// against the back wall — [side], [ceiling] and [floor] are how much of the
+/// box each face takes — and stand things on the floor line.
+///
+/// [lit] (0..1) brightens the strip, the way it brightens when she opens it.
+class ArmoireCell extends StatelessWidget {
+  const ArmoireCell({super.key, this.child, this.lit = 0, this.seed = 11});
+
+  final Widget? child;
+  final double lit;
+  final int seed;
+
+  static const double side = DsSpacing.xs;
+  static const double ceiling = DsSpacing.xs;
+  static const double floor = DsSpacing.sm;
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: CustomPaint(
+        painter: _CellPainter(palette: context.armoire, lit: lit, seed: seed),
+        child: child,
+      ),
+    );
+  }
+}
+
+class _CellPainter extends CustomPainter {
+  const _CellPainter({required this.palette, required this.lit, required this.seed});
+
+  final ArmoirePalette palette;
+  final double lit;
+  final int seed;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final a = palette;
+    final w = size.width;
+    final h = size.height;
+    const sx = ArmoireCell.side;
+    const st = ArmoireCell.ceiling;
+    const sb = ArmoireCell.floor;
+    final back = Rect.fromLTRB(sx, st, w - sx, h - sb);
+    final glow = (a.isDark ? .55 : .42) + .4 * lit;
+
+    // The back wall, lit from the top, its grain running up it.
+    canvas.drawRect(
+      back,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color.lerp(a.woodLight, a.led, .25 * glow)!, a.wood, a.woodDeep],
+          stops: const [0, .55, 1],
+        ).createShader(back),
+    );
+    paintArmoireGrain(canvas, back, a.grain, seed: seed);
+    // The pool of light the strip throws.
+    final pool = Rect.fromCenter(
+      center: Offset(w / 2, st),
+      width: w * 1.15,
+      height: (h - st - sb) * 1.5,
+    );
+    canvas.save();
+    canvas.clipRect(back);
+    canvas.drawOval(
+      pool,
+      Paint()
+        ..shader = RadialGradient(
+          colors: [a.led.withValues(alpha: .55 * glow), a.led.withValues(alpha: 0)],
+        ).createShader(pool),
+    );
+    canvas.restore();
+
+    Path quad(Offset p1, Offset p2, Offset p3, Offset p4) => Path()
+      ..moveTo(p1.dx, p1.dy)
+      ..lineTo(p2.dx, p2.dy)
+      ..lineTo(p3.dx, p3.dy)
+      ..lineTo(p4.dx, p4.dy)
+      ..close();
+
+    // The floor: the best-lit face, nearest the strip's light.
+    final floorPath = quad(Offset(0, h), Offset(sx, h - sb), Offset(w - sx, h - sb), Offset(w, h));
+    canvas.drawPath(
+      floorPath,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.lerp(a.woodDeep, a.shade, .25)!,
+            Color.lerp(a.woodLight, a.led, .2 * glow)!,
+          ],
+        ).createShader(Rect.fromLTWH(0, h - sb, w, sb)),
+    );
+    // The side walls, darker towards the back.
+    canvas.drawPath(
+      quad(const Offset(0, 0), const Offset(sx, st), Offset(sx, h - sb), Offset(0, h)),
+      Paint()
+        ..shader = LinearGradient(
+          colors: [Color.lerp(a.wood, a.led, .12 * glow)!, Color.lerp(a.woodDeep, a.shade, .3)!],
+        ).createShader(Rect.fromLTWH(0, 0, sx, h)),
+    );
+    canvas.drawPath(
+      quad(Offset(w, 0), Offset(w - sx, st), Offset(w - sx, h - sb), Offset(w, h)),
+      Paint()
+        ..shader = LinearGradient(
+          colors: [Color.lerp(a.woodDeep, a.shade, .38)!, Color.lerp(a.wood, a.shade, .12)!],
+        ).createShader(Rect.fromLTWH(w - sx, 0, sx, h)),
+    );
+    // The ceiling's underside: in its own shadow, but for the strip.
+    canvas.drawPath(
+      quad(const Offset(0, 0), Offset(w, 0), Offset(w - sx, st), const Offset(sx, st)),
+      Paint()..color = Color.lerp(a.woodDeep, a.shade, .45)!,
+    );
+    // The strip, and its glow.
+    final strip = Rect.fromLTWH(sx * .6, 1, w - sx * 1.2, 2.2);
+    canvas.drawRect(
+      strip.inflate(2.5),
+      Paint()
+        ..color = a.led.withValues(alpha: .7 * glow)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(strip, const Radius.circular(1)),
+      Paint()..color = Color.lerp(a.led, DsColors.white, .5)!,
+    );
+    // Shadow gathering in the back corners.
+    canvas.drawRect(
+      back,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = a.shade.withValues(alpha: .35)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.5),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_CellPainter old) =>
+      old.lit != lit ||
+      old.seed != seed ||
+      old.palette.finish != palette.finish ||
+      old.palette.isDark != palette.isDark;
+}
+
+/// A metal hanging rod: an oval tube on two end sockets, across the width.
+class ArmoireRod extends StatelessWidget {
+  const ArmoireRod({super.key, this.height = DsSpacing.sm});
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: height,
+      child: CustomPaint(painter: _RodPainter(palette: context.armoire)),
+    );
+  }
+}
+
+class _RodPainter extends CustomPainter {
+  const _RodPainter({required this.palette});
+
+  final ArmoirePalette palette;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final a = palette;
+    final cy = size.height * .5;
+    final t = math.max(3.5, size.height * .42);
+    final rod = RRect.fromRectAndRadius(
+      Rect.fromLTRB(0, cy - t / 2, size.width, cy + t / 2),
+      Radius.circular(t),
+    );
+    canvas.drawRRect(
+      rod.shift(Offset(0, t)),
+      Paint()
+        ..color = a.shade.withValues(alpha: .4)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.5),
+    );
+    canvas.drawRRect(rod, Paint()..shader = a.metalGradient.createShader(rod.outerRect));
+    canvas.drawLine(
+      Offset(t, cy - t * .2),
+      Offset(size.width - t, cy - t * .2),
+      Paint()
+        ..color = DsColors.white.withValues(alpha: .7)
         ..strokeWidth = 1,
     );
-    // The feet: tapered brass-capped turnings.
-    for (final x in [w * .07, w * .93]) {
-      final foot = Path()
-        ..moveTo(x - DsSpacing.sm, h * .38)
-        ..lineTo(x + DsSpacing.sm, h * .38)
-        ..lineTo(x + DsSpacing.xxs, h * .92)
-        ..lineTo(x - DsSpacing.xxs, h * .92)
-        ..close();
-      canvas.drawPath(
-        foot,
-        Paint()
-          ..shader = LinearGradient(
-            colors: [a.lacquerLight, a.lacquerDeep],
-          ).createShader(foot.getBounds()),
-      );
+    for (final x in [0.0, size.width]) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromCenter(
-            center: Offset(x, h * .92),
-            width: DsSpacing.sm,
-            height: DsSpacing.xxs,
-          ),
-          const Radius.circular(DsRadius.xs),
+          Rect.fromCenter(center: Offset(x, cy), width: t * 1.4, height: size.height),
+          Radius.circular(t * .4),
         ),
-        Paint()..shader = a.brassGradient.createShader(Offset(x - 6, h * .88) & const Size(12, 4)),
+        Paint()..shader = a.metalGradient.createShader(Rect.fromLTWH(x - t, 0, t * 2, size.height)),
       );
     }
   }
 
   @override
-  bool shouldRepaint(_PlinthPainter old) => old.palette.isDark != palette.isDark;
+  bool shouldRepaint(_RodPainter old) => old.palette.isDark != palette.isDark;
+}
+
+/// A wooden hanger seen from the front: the metal hook over the rod and the
+/// shaped wooden shoulders below it.
+class ArmoireHanger extends StatelessWidget {
+  const ArmoireHanger({super.key, this.width = DsSizes.iconXl, this.height = DsSpacing.md});
+
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: CustomPaint(painter: _HangerPainter(palette: context.armoire)),
+    );
+  }
+}
+
+class _HangerPainter extends CustomPainter {
+  const _HangerPainter({required this.palette});
+
+  final ArmoirePalette palette;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final a = palette;
+    final w = size.width;
+    final h = size.height;
+    final cx = w / 2;
+    final hookH = h * .5;
+    // The hook, curling over the rod.
+    final hook = Path()
+      ..moveTo(cx, hookH)
+      ..lineTo(cx, h * .28)
+      ..arcToPoint(Offset(cx - h * .2, h * .1), radius: Radius.circular(h * .15), clockwise: false);
+    canvas.drawPath(
+      hook,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = math.max(1.2, h * .08)
+        ..color = Color.lerp(a.metalDeep, DsColors.neutral500, .5)!,
+    );
+    // The wooden body: a shaped bar, thicker at the middle.
+    final thick = math.max(2.6, h * .2);
+    final body = Path()
+      ..moveTo(w * .03, h * .98)
+      ..quadraticBezierTo(cx - w * .22, h * .6, cx, hookH - thick * .2)
+      ..quadraticBezierTo(cx + w * .22, h * .6, w * .97, h * .98)
+      ..lineTo(w * .95, h)
+      ..quadraticBezierTo(cx + w * .2, h * .7, cx, hookH + thick * .8)
+      ..quadraticBezierTo(cx - w * .2, h * .7, w * .05, h)
+      ..close();
+    canvas.drawPath(
+      body.shift(const Offset(0, 1.2)),
+      Paint()
+        ..color = a.shade.withValues(alpha: .35)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.2),
+    );
+    canvas.drawPath(
+      body,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color.lerp(a.hanger, DsColors.white, .25)!, a.hanger],
+        ).createShader(Offset.zero & size),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_HangerPainter old) =>
+      old.palette.finish != palette.finish || old.palette.isDark != palette.isDark;
+}
+
+/// A small metal hook, screwed to the back wall.
+class ArmoirePeg extends StatelessWidget {
+  const ArmoirePeg({super.key, this.size = DsSpacing.sm});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          center: const Alignment(-.35, -.4),
+          colors: [a.metalLight, a.metal, a.metalDeep],
+          stops: const [0, .55, 1],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: a.shade.withValues(alpha: .6),
+            blurRadius: 2.5,
+            offset: const Offset(1, 2),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A shelf inside a compartment: the board's top face and its edge banding.
+/// [slant] tilts it the way a shoe shelf sits, and puts a metal rail along
+/// its front so nothing slides off.
+class ArmoireShelf extends StatelessWidget {
+  const ArmoireShelf({super.key, this.height = DsSpacing.sm, this.slant = false});
+
+  final double height;
+  final bool slant;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: height,
+      child: CustomPaint(painter: _ShelfPainter(palette: context.armoire, slant: slant)),
+    );
+  }
+}
+
+class _ShelfPainter extends CustomPainter {
+  const _ShelfPainter({required this.palette, required this.slant});
+
+  final ArmoirePalette palette;
+  final bool slant;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final a = palette;
+    final w = size.width;
+    final h = size.height;
+    final face = h * (slant ? .6 : .45);
+    final inset = slant ? h * .6 : h * .3;
+    final top = Path()
+      ..moveTo(inset, 0)
+      ..lineTo(w - inset, 0)
+      ..lineTo(w, face)
+      ..lineTo(0, face)
+      ..close();
+    canvas.drawPath(
+      top,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color.lerp(a.woodDeep, a.shade, .15)!, Color.lerp(a.woodLight, a.led, .15)!],
+        ).createShader(Rect.fromLTWH(0, 0, w, face)),
+    );
+    paintArmoireGrain(canvas, Rect.fromLTWH(0, 0, w, face), a.grain, vertical: false, seed: 5);
+    final edge = Rect.fromLTWH(0, face, w, h * .32);
+    canvas.drawRect(
+      edge,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [a.panelLight, a.panelDeep],
+        ).createShader(edge),
+    );
+    canvas.drawLine(
+      Offset(0, face),
+      Offset(w, face),
+      Paint()
+        ..color = DsColors.white.withValues(alpha: a.isDark ? .15 : .6)
+        ..strokeWidth = 1,
+    );
+    final below = Rect.fromLTWH(0, edge.bottom, w, h - edge.bottom);
+    canvas.drawRect(
+      below,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [a.shade.withValues(alpha: .5), a.shade.withValues(alpha: 0)],
+        ).createShader(below),
+    );
+    if (slant) {
+      // The rail along the front edge.
+      final y = face - 2.5;
+      final rail = RRect.fromRectAndRadius(
+        Rect.fromLTRB(DsSpacing.xxs, y - 1.6, w - DsSpacing.xxs, y + 1.6),
+        const Radius.circular(2),
+      );
+      canvas.drawRRect(rail, Paint()..shader = a.metalGradient.createShader(rail.outerRect));
+    }
+  }
+
+  @override
+  bool shouldRepaint(_ShelfPainter old) =>
+      old.slant != slant ||
+      old.palette.finish != palette.finish ||
+      old.palette.isDark != palette.isDark;
 }
 
 // ---------------------------------------------------------------------------
-// Inside the wardrobe
+// Fronts
 // ---------------------------------------------------------------------------
 
-/// An open compartment: a cavity sunk into the lacquer, lit from the top by
-/// a warm strip, with a soft inner shadow round its rim.
+/// A slim metal bar pull, horizontal unless [vertical].
+class ArmoireHandle extends StatelessWidget {
+  const ArmoireHandle({super.key, this.length = DsSizes.iconXl, this.vertical = false});
+
+  final double length;
+  final bool vertical;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    const thickness = DsSpacing.xxs + 1;
+    return Container(
+      width: vertical ? thickness : length,
+      height: vertical ? length : thickness,
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderPill,
+        gradient: LinearGradient(
+          begin: vertical ? Alignment.centerLeft : Alignment.topCenter,
+          end: vertical ? Alignment.centerRight : Alignment.bottomCenter,
+          colors: [a.metalLight, a.metal, a.metalDeep],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: a.shade.withValues(alpha: .55),
+            blurRadius: 2.5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A flush drawer front.
 ///
-/// [lit] brightens the strip — the compartment light coming on as she opens
-/// it.
-class ArmoireRecess extends StatelessWidget {
-  const ArmoireRecess({
+/// Solid, it is the finish with a pull along its top and [child] — the
+/// label — under it. With [window], it is a glass-fronted drawer: a metal
+/// frame round smoked glass, and through the glass, the drawer's velvet with
+/// what is in it.
+///
+/// [pulled] (0..1) slides it towards her and lets its side show.
+class ArmoireDrawer extends StatelessWidget {
+  const ArmoireDrawer({
     super.key,
     required this.child,
-    this.lit = 0,
-    this.radius = DsRadius.sm,
+    this.window,
+    this.windowHeight = DsSizes.thumbSm,
+    this.pulled = 0,
+    this.handle = DsSizes.thumbSm,
   });
 
   final Widget child;
+  final Widget? window;
+  final double windowHeight;
+  final double pulled;
+  final double handle;
 
-  /// 0 — the resting glow; 1 — fully lit.
-  final double lit;
+  @override
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    final front = DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXs,
+        boxShadow: [
+          BoxShadow(
+            color: a.shade.withValues(alpha: .3 + .35 * pulled),
+            blurRadius: 2 + DsSpacing.md * pulled,
+            offset: Offset(0, 1 + DsSpacing.sm * pulled),
+          ),
+        ],
+      ),
+      child: CustomPaint(
+        painter: _PanelPainter(palette: a, seed: 9),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(DsSpacing.xs, DsSpacing.xs, DsSpacing.xs, DsSpacing.xs),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(child: ArmoireHandle(length: handle)),
+              const SizedBox(height: DsSpacing.xs),
+              if (window != null) ...[
+                SizedBox(height: windowHeight, child: ArmoireGlass(child: window!)),
+                const SizedBox(height: DsSpacing.xs),
+              ],
+              child,
+            ],
+          ),
+        ),
+      ),
+    );
+
+    return Transform.translate(
+      offset: Offset(0, DsSpacing.xs * pulled),
+      child: Transform.scale(scale: 1 + .03 * pulled, child: front),
+    );
+  }
+}
+
+/// Smoked glass in a slim metal frame, with [child] behind it.
+class ArmoireGlass extends StatelessWidget {
+  const ArmoireGlass({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.xxxs),
+      decoration: BoxDecoration(
+        gradient: a.metalGradient,
+        borderRadius: DsRadius.borderXs,
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(DsRadius.xs - 1)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            child,
+            DecoratedBox(decoration: BoxDecoration(color: a.glass)),
+            // A slant of reflected light across the pane.
+            CustomPaint(painter: _ReflectionPainter(dark: a.isDark)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ReflectionPainter extends CustomPainter {
+  const _ReflectionPainter({required this.dark});
+
+  final bool dark;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final band = Path()
+      ..moveTo(w * .58, 0)
+      ..lineTo(w * .74, 0)
+      ..lineTo(w * .5, h)
+      ..lineTo(w * .34, h)
+      ..close();
+    canvas.drawPath(band, Paint()..color = DsColors.white.withValues(alpha: dark ? .06 : .16));
+    final thin = Path()
+      ..moveTo(w * .78, 0)
+      ..lineTo(w * .81, 0)
+      ..lineTo(w * .57, h)
+      ..lineTo(w * .54, h)
+      ..close();
+    canvas.drawPath(thin, Paint()..color = DsColors.white.withValues(alpha: dark ? .05 : .14));
+  }
+
+  @override
+  bool shouldRepaint(_ReflectionPainter old) => old.dark != dark;
+}
+
+/// A top-cabinet door, hung on [hingeAtStart] or the end side.
+///
+/// [open] (0..1) swings it on its hinge in perspective, showing [inside]
+/// behind it. With [glass], the door is a framed pane and [inside] shows
+/// through it even while it is shut.
+class ArmoireDoor extends StatelessWidget {
+  const ArmoireDoor({
+    super.key,
+    required this.child,
+    required this.inside,
+    this.open = 0,
+    this.hingeAtStart = true,
+    this.glass = false,
+  });
+
+  /// The label on the door.
+  final Widget child;
+  final Widget inside;
+  final double open;
+  final bool hingeAtStart;
+  final bool glass;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final hingeLeft = hingeAtStart != rtl;
+    final handle = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs),
+      child: const ArmoireHandle(length: DsSpacing.xxl, vertical: true),
+    );
+
+    final face = CustomPaint(
+      painter: _PanelPainter(palette: a, seed: hingeLeft ? 13 : 17),
+      child: Padding(
+        padding: const EdgeInsets.all(DsSpacing.xs),
+        child: Row(
+          textDirection: TextDirection.ltr,
+          children: [
+            if (!hingeLeft) handle,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (glass) ...[
+                    Expanded(child: ArmoireGlass(child: inside)),
+                    const SizedBox(height: DsSpacing.xxs),
+                  ],
+                  Directionality(
+                    textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
+                    child: child,
+                  ),
+                ],
+              ),
+            ),
+            if (hingeLeft) handle,
+          ],
+        ),
+      ),
+    );
+
+    final angle = open * 1.05 * (hingeLeft ? 1 : -1);
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        if (open > 0) Positioned.fill(child: inside),
+        Transform(
+          alignment: hingeLeft ? Alignment.centerLeft : Alignment.centerRight,
+          transform: Matrix4.identity()
+            ..setEntry(3, 2, .0016)
+            ..rotateY(angle),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: a.shade.withValues(alpha: .25 + .3 * open),
+                  blurRadius: 2 + DsSpacing.md * open,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: face,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Linings
+// ---------------------------------------------------------------------------
+
+/// Velvet lining: a deep, slightly lustrous ground for small precious things.
+class ArmoireVelvet extends StatelessWidget {
+  const ArmoireVelvet({super.key, required this.child, this.radius = DsRadius.xs});
+
+  final Widget child;
   final double radius;
 
   @override
   Widget build(BuildContext context) {
     final a = context.armoire;
-    final shape = BorderRadius.circular(radius);
     return ClipRRect(
-      borderRadius: shape,
-      child: CustomPaint(
-        painter: _CavityPainter(palette: a, lit: lit),
-        foregroundPainter: _InnerShadowPainter(
-          color: a.shade,
-          radius: radius,
-          depth: a.isDark ? 10 : 8,
+      borderRadius: BorderRadius.circular(radius),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: const Alignment(-.3, -.7),
+            radius: 1.5,
+            colors: [a.velvet, a.velvetDeep],
+          ),
         ),
         child: child,
       ),
@@ -476,62 +1173,40 @@ class ArmoireRecess extends StatelessWidget {
   }
 }
 
-class _CavityPainter extends CustomPainter {
-  const _CavityPainter({required this.palette, required this.lit});
+/// A recessed velvet cushion — one slot of a jewellery tray.
+class ArmoireCushion extends StatelessWidget {
+  const ArmoireCushion({super.key, required this.child});
 
-  final ArmoirePalette palette;
-  final double lit;
+  final Widget child;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final a = palette;
-    final rect = Offset.zero & size;
-    canvas.drawRect(
-      rect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [a.cavity, a.cavityDeep],
-        ).createShader(rect),
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    return ClipRRect(
+      borderRadius: DsRadius.borderSm,
+      child: CustomPaint(
+        foregroundPainter: _InnerShadowPainter(
+          color: Color.lerp(a.velvetDeep, DsColors.black, .5)!.withValues(alpha: .55),
+          radius: DsRadius.sm,
+          depth: 6,
+        ),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [a.velvetDeep, a.velvet],
+            ),
+          ),
+          child: child,
+        ),
+      ),
     );
-    // The light strip under the top rail, and the pool it throws.
-    final pool = Rect.fromLTWH(
-      -size.width * .1,
-      -size.height * .55,
-      size.width * 1.2,
-      size.height * 1.25,
-    );
-    canvas.drawOval(
-      pool,
-      Paint()
-        ..shader = RadialGradient(
-          colors: [
-            a.glow.withValues(alpha: (a.glow.a * (0.65 + 0.35 * lit)).clamp(0, 1)),
-            a.glow.withValues(alpha: 0),
-          ],
-        ).createShader(pool),
-    );
-    if (lit > 0) {
-      canvas.drawRect(
-        rect,
-        Paint()..color = DsColors.white.withValues(alpha: (a.isDark ? .06 : .16) * lit),
-      );
-    }
   }
-
-  @override
-  bool shouldRepaint(_CavityPainter old) =>
-      old.lit != lit || old.palette.isDark != palette.isDark;
 }
 
-/// A shadow cast inward from every edge of a rounded rectangle.
 class _InnerShadowPainter extends CustomPainter {
-  const _InnerShadowPainter({
-    required this.color,
-    required this.radius,
-    required this.depth,
-  });
+  const _InnerShadowPainter({required this.color, required this.radius, required this.depth});
 
   final Color color;
   final double radius;
@@ -561,523 +1236,87 @@ class _InnerShadowPainter extends CustomPainter {
       old.color != color || old.radius != radius || old.depth != depth;
 }
 
-/// A brass hanging rod with its two end brackets, across the full width.
-class ArmoireRail extends StatelessWidget {
-  const ArmoireRail({super.key, this.height = DsSpacing.sm});
-
-  final double height;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: height,
-      child: CustomPaint(painter: _RailPainter(palette: context.armoire)),
-    );
-  }
-}
-
-class _RailPainter extends CustomPainter {
-  const _RailPainter({required this.palette});
-
-  final ArmoirePalette palette;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final a = palette;
-    final cy = size.height * .5;
-    final thickness = math.max(3.0, size.height * .34);
-    final rod = RRect.fromRectAndRadius(
-      Rect.fromLTRB(0, cy - thickness / 2, size.width, cy + thickness / 2),
-      Radius.circular(thickness),
-    );
-    canvas.drawRRect(
-      rod.shift(Offset(0, thickness * .8)),
-      Paint()
-        ..color = a.shade.withValues(alpha: .35)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2),
-    );
-    canvas.drawRRect(rod, Paint()..shader = a.brassGradient.createShader(rod.outerRect));
-    canvas.drawLine(
-      Offset(thickness, cy - thickness * .22),
-      Offset(size.width - thickness, cy - thickness * .22),
-      Paint()
-        ..color = DsColors.white.withValues(alpha: .55)
-        ..strokeWidth = 1,
-    );
-    // The brackets that hold it to the sides.
-    for (final x in [0.0, size.width]) {
-      final bracket = Rect.fromCenter(
-        center: Offset(x, cy),
-        width: thickness * 1.6,
-        height: size.height,
-      );
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(bracket, Radius.circular(thickness * .5)),
-        Paint()..color = a.brassDeep,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_RailPainter old) => old.palette.isDark != palette.isDark;
-}
-
-/// A hanger seen from the front: the hook over the rail and the shoulders
-/// below it. Sized by the box it is given.
-class ArmoireHanger extends StatelessWidget {
-  const ArmoireHanger({super.key, this.width = DsSizes.iconXl, this.height = DsSpacing.md});
-
-  final double width;
-  final double height;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
-      child: CustomPaint(painter: _HangerPainter(palette: context.armoire)),
-    );
-  }
-}
-
-class _HangerPainter extends CustomPainter {
-  const _HangerPainter({required this.palette});
-
-  final ArmoirePalette palette;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final a = palette;
-    final w = size.width;
-    final h = size.height;
-    final cx = w / 2;
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..strokeWidth = math.max(1.4, h * .09)
-      ..color = a.brassDeep;
-    // The hook, curling over the rail at the top.
-    final hook = Path()
-      ..moveTo(cx, h * .5)
-      ..lineTo(cx, h * .3)
-      ..arcToPoint(
-        Offset(cx - h * .18, h * .1),
-        radius: Radius.circular(h * .14),
-        clockwise: false,
-      );
-    canvas.drawPath(hook, paint);
-    // The shoulders.
-    final shoulders = Path()
-      ..moveTo(cx, h * .5)
-      ..quadraticBezierTo(cx - w * .2, h * .66, w * .04, h * .96)
-      ..lineTo(w * .96, h * .96)
-      ..quadraticBezierTo(cx + w * .2, h * .66, cx, h * .5);
-    canvas.drawPath(
-      shoulders,
-      paint
-        ..color = a.brass
-        ..strokeWidth = math.max(1.6, h * .11),
-    );
-  }
-
-  @override
-  bool shouldRepaint(_HangerPainter old) => old.palette.isDark != palette.isDark;
-}
-
-/// A round brass peg for a bag or a scarf to hang from.
-class ArmoirePeg extends StatelessWidget {
-  const ArmoirePeg({super.key, this.size = DsSpacing.sm});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final a = context.armoire;
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          center: const Alignment(-.35, -.4),
-          colors: [a.brassLight, a.brass, a.brassDeep],
-          stops: const [0, .55, 1],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: a.shade.withValues(alpha: .5),
-            blurRadius: 2,
-            offset: const Offset(0, 1.5),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// A shelf board: its top face, its front edge, and the shadow under it.
-/// [slant] tilts the top face back, the way a shoe shelf sits.
-class ArmoirePlank extends StatelessWidget {
-  const ArmoirePlank({super.key, this.height = DsSpacing.sm, this.slant = false});
-
-  final double height;
-  final bool slant;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: height,
-      child: CustomPaint(
-        painter: _PlankPainter(palette: context.armoire, slant: slant),
-      ),
-    );
-  }
-}
-
-class _PlankPainter extends CustomPainter {
-  const _PlankPainter({required this.palette, required this.slant});
-
-  final ArmoirePalette palette;
-  final bool slant;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final a = palette;
-    final w = size.width;
-    final h = size.height;
-    final faceDepth = h * (slant ? .55 : .42);
-    final inset = slant ? h * .9 : h * .45;
-    // The top face, receding.
-    final face = Path()
-      ..moveTo(inset, 0)
-      ..lineTo(w - inset, 0)
-      ..lineTo(w, faceDepth)
-      ..lineTo(0, faceDepth)
-      ..close();
-    canvas.drawPath(
-      face,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color.lerp(a.plank, a.cavityDeep, .35)!, a.plank],
-        ).createShader(Rect.fromLTWH(0, 0, w, faceDepth)),
-    );
-    // The front edge.
-    final edge = Rect.fromLTWH(0, faceDepth, w, h * .38);
-    canvas.drawRect(
-      edge,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [a.plankEdge, Color.lerp(a.plankEdge, a.shade, .35)!],
-        ).createShader(edge),
-    );
-    canvas.drawLine(
-      Offset(0, faceDepth),
-      Offset(w, faceDepth),
-      Paint()
-        ..color = DsColors.white.withValues(alpha: a.isDark ? .12 : .65)
-        ..strokeWidth = 1,
-    );
-    // The shadow it casts on the back of the cavity.
-    final shadow = Rect.fromLTWH(0, edge.bottom, w, h - edge.bottom);
-    canvas.drawRect(
-      shadow,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [a.shade.withValues(alpha: .45), a.shade.withValues(alpha: 0)],
-        ).createShader(shadow),
-    );
-  }
-
-  @override
-  bool shouldRepaint(_PlankPainter old) =>
-      old.slant != slant || old.palette.isDark != palette.isDark;
-}
-
 // ---------------------------------------------------------------------------
-// Drawers
+// Labels and controls
 // ---------------------------------------------------------------------------
 
-/// A brass bar pull on two posts.
-class ArmoirePull extends StatelessWidget {
-  const ArmoirePull({super.key, this.width = DsSizes.iconXl});
-
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: DsSpacing.sm,
-      child: CustomPaint(painter: _PullPainter(palette: context.armoire)),
-    );
-  }
-}
-
-class _PullPainter extends CustomPainter {
-  const _PullPainter({required this.palette});
-
-  final ArmoirePalette palette;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final a = palette;
-    final w = size.width;
-    final h = size.height;
-    final bar = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, h * .15, w, h * .42),
-      Radius.circular(h),
-    );
-    // Its shadow on the lacquer.
-    canvas.drawRRect(
-      bar.shift(Offset(0, h * .35)),
-      Paint()
-        ..color = a.shade.withValues(alpha: .45)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.2),
-    );
-    // The two posts.
-    for (final x in [w * .12, w * .88]) {
-      canvas.drawCircle(Offset(x, h * .62), h * .28, Paint()..color = a.brassDeep);
-    }
-    canvas.drawRRect(bar, Paint()..shader = a.brassGradient.createShader(bar.outerRect));
-    canvas.drawLine(
-      Offset(w * .14, h * .26),
-      Offset(w * .86, h * .26),
-      Paint()
-        ..color = DsColors.white.withValues(alpha: .6)
-        ..strokeWidth = 1,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_PullPainter old) => old.palette.isDark != palette.isDark;
-}
-
-/// A drawer front: a raised lacquer panel inside a fine bevel.
-///
-/// [peek], when given, is drawn as the velvet just showing above the front —
-/// the drawer left a finger's width open, so she can see there is something
-/// inside before she opens it. [pulled] (0..1) slides it towards her.
-class ArmoireDrawerFront extends StatelessWidget {
-  const ArmoireDrawerFront({
+/// The name of a compartment, set on the board under it like engraving:
+/// the name, a hairline, and how many pieces.
+class ArmoireLabel extends StatelessWidget {
+  const ArmoireLabel({
     super.key,
-    required this.child,
-    this.peek,
-    this.peekHeight = DsSpacing.lg,
-    this.pulled = 0,
-  });
-
-  final Widget child;
-  final Widget? peek;
-  final double peekHeight;
-  final double pulled;
-
-  @override
-  Widget build(BuildContext context) {
-    final a = context.armoire;
-    final front = DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: a.lacquerGradient,
-        borderRadius: DsRadius.borderSm,
-        border: Border.all(color: a.inlay),
-        boxShadow: [
-          BoxShadow(
-            color: a.shade.withValues(alpha: .35 + .25 * pulled),
-            blurRadius: DsSpacing.xxs + DsSpacing.sm * pulled,
-            offset: Offset(0, 1.5 + DsSpacing.xs * pulled),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(DsSpacing.xxs),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: DsRadius.borderXs,
-            border: Border.all(
-              color: DsColors.white.withValues(alpha: a.isDark ? .07 : .7),
-            ),
-          ),
-          child: child,
-        ),
-      ),
-    );
-
-    return Transform.translate(
-      offset: Offset(0, DsSpacing.xxs * pulled),
-      child: Transform.scale(
-        scale: 1 + .025 * pulled,
-        child: peek == null
-            ? front
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: peekHeight + DsSpacing.xs * pulled,
-                    child: ArmoireRecess(
-                      radius: DsRadius.xs,
-                      child: ArmoireVelvet(radius: 0, child: peek!),
-                    ),
-                  ),
-                  front,
-                ],
-              ),
-      ),
-    );
-  }
-}
-
-/// Velvet lining: a deep, slightly lustrous ground for small precious things.
-class ArmoireVelvet extends StatelessWidget {
-  const ArmoireVelvet({super.key, required this.child, this.radius = DsRadius.md});
-
-  final Widget child;
-  final double radius;
-
-  @override
-  Widget build(BuildContext context) {
-    final a = context.armoire;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            center: const Alignment(-.3, -.6),
-            radius: 1.4,
-            colors: [a.velvet, a.velvetDeep],
-          ),
-        ),
-        child: child,
-      ),
-    );
-  }
-}
-
-/// A recessed velvet cushion — one slot of a jewellery tray.
-class ArmoireCushion extends StatelessWidget {
-  const ArmoireCushion({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final a = context.armoire;
-    return ClipRRect(
-      borderRadius: DsRadius.borderMd,
-      child: CustomPaint(
-        foregroundPainter: _InnerShadowPainter(
-          color: Color.lerp(a.velvetDeep, DsColors.black, .45)!.withValues(alpha: .55),
-          radius: DsRadius.md,
-          depth: 7,
-        ),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [a.velvetDeep, a.velvet],
-            ),
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Plates, knobs, boxes
-// ---------------------------------------------------------------------------
-
-/// An engraved name plate: a short [label], an optional [caption] under it
-/// and an optional [icon] before it.
-class ArmoirePlaque extends StatelessWidget {
-  const ArmoirePlaque({
-    super.key,
-    required this.label,
+    required this.name,
     this.caption,
-    this.icon,
     this.large = false,
+    this.stacked = false,
   });
 
-  final String label;
+  final String name;
   final String? caption;
-  final IconData? icon;
 
-  /// The crown's plate and a drawer's open header: the display serif, bigger.
+  /// The caption under the name rather than beside it — for a door, which
+  /// is tall and narrow.
+  final bool stacked;
+
+  /// The header of an open compartment: the display serif, bigger.
   final bool large;
 
   @override
   Widget build(BuildContext context) {
     final a = context.armoire;
     final text = context.dsText;
-    final labelStyle = (large ? text.cardTitle.displayFamily.bold : text.captionStrong)
-        .tint(a.plaqueInk);
-    final captionStyle = text.micro.tint(a.plaqueInk.withValues(alpha: .78));
+    final nameStyle = (large ? text.screenTitle.displayFamily.bold : text.captionStrong).tint(
+      a.panelInk,
+    );
+    final captionStyle = (large ? text.caption : text.micro).tint(a.panelMuted);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: a.plaque,
-        borderRadius: DsRadius.borderPill,
-        border: Border.all(color: a.brass.withValues(alpha: .85)),
-        boxShadow: [
-          BoxShadow(
-            color: a.shade.withValues(alpha: .25),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+    if (stacked && !large) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: nameStyle),
+          if (caption != null)
+            Text(caption!, maxLines: 1, overflow: TextOverflow.ellipsis, style: captionStyle),
+        ],
+      );
+    }
+    if (large) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: nameStyle),
+          if (caption != null) ...[
+            const SizedBox(height: DsSpacing.xxs),
+            Container(width: DsSpacing.xl, height: 1, color: a.metal),
+            const SizedBox(height: DsSpacing.xxs),
+            Text(caption!, maxLines: 1, overflow: TextOverflow.ellipsis, style: captionStyle),
+          ],
+        ],
+      );
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Flexible(
+          child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: nameStyle),
+        ),
+        if (caption != null) ...[
+          Container(
+            width: 1,
+            height: DsSpacing.sm,
+            margin: const EdgeInsets.symmetric(horizontal: DsSpacing.xxs + 1),
+            color: a.metal.withValues(alpha: .8),
+          ),
+          Flexible(
+            child: Text(caption!, maxLines: 1, overflow: TextOverflow.ellipsis, style: captionStyle),
           ),
         ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: large ? DsSpacing.lg : DsSpacing.sm,
-          vertical: large ? DsSpacing.xs : DsSpacing.xxs,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: large ? DsSizes.iconSm : DsSizes.iconXxs, color: a.brassDeep),
-              const SizedBox(width: DsSpacing.xxs),
-            ],
-            Flexible(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: labelStyle,
-                  ),
-                  if (caption != null)
-                    Text(
-                      caption!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: captionStyle,
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }
 
-/// The small brass "+" on a compartment: add a piece straight to it.
+/// The small "+" on a compartment: add a piece straight into it.
 class ArmoireAddKnob extends StatelessWidget {
   const ArmoireAddKnob({
     super.key,
@@ -1093,8 +1332,8 @@ class ArmoireAddKnob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final a = context.armoire;
-    // The knob is small to look at and full size to press: the visible brass
-    // sits centred in a target that meets the minimum touch size.
+    // Small to look at and full size to press: the visible button sits
+    // centred in a target that meets the minimum touch size.
     return Tooltip(
       message: tooltip,
       child: Semantics(
@@ -1113,17 +1352,8 @@ class ArmoireAddKnob extends StatelessWidget {
                 height: size,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  // A porcelain knob in a brass collar.
-                  gradient: RadialGradient(
-                    center: const Alignment(-.35, -.45),
-                    colors: [
-                      Color.lerp(a.plaque, DsColors.white, a.isDark ? .08 : .7)!,
-                      a.plaque,
-                      Color.lerp(a.plaque, a.brass, .25)!,
-                    ],
-                    stops: const [0, .6, 1],
-                  ),
-                  border: Border.all(color: a.brass, width: 1.6),
+                  color: Color.lerp(a.panelLight, DsColors.white, a.isDark ? .05 : .5),
+                  border: Border.all(color: a.metal, width: 1.4),
                   boxShadow: [
                     BoxShadow(
                       color: a.shade.withValues(alpha: .5),
@@ -1135,7 +1365,7 @@ class ArmoireAddKnob extends StatelessWidget {
                 child: Icon(
                   Icons.add_rounded,
                   size: size * .7,
-                  color: a.isDark ? a.brassLight : a.brassDeep,
+                  color: a.isDark ? a.metalLight : a.metalDeep,
                 ),
               ),
             ),
@@ -1146,148 +1376,60 @@ class ArmoireAddKnob extends StatelessWidget {
   }
 }
 
-/// A lidded storage box with a ribbon round it, sitting on top of the
-/// wardrobe. [rose] picks the rose box over the linen one.
-class ArmoireBox extends StatelessWidget {
-  const ArmoireBox({
+/// One finish she can build the wardrobe in, as a sample chip.
+class ArmoireFinishSwatch extends StatelessWidget {
+  const ArmoireFinishSwatch({
     super.key,
-    required this.child,
-    this.rose = false,
-    this.pressed = 0,
+    required this.finish,
+    required this.selected,
+    required this.tooltip,
+    required this.onTap,
   });
 
-  final Widget child;
-  final bool rose;
-
-  /// 0..1 — the lid lifting as she opens it.
-  final double pressed;
+  final ArmoireFinish finish;
+  final bool selected;
+  final String tooltip;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final a = context.armoire;
-    final body = rose ? a.boxRose : a.boxLinen;
-    final ribbon = rose ? a.brass : DsColors.rosewood;
-    return CustomPaint(
-      painter: _BoxPainter(
-        body: body,
-        ribbon: ribbon,
-        shade: a.shade,
-        lift: pressed,
-        dark: a.isDark,
-        rtl: Directionality.of(context) == TextDirection.rtl,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          DsSpacing.sm,
-          DsSpacing.md + DsSpacing.xxs,
-          DsSpacing.sm,
-          DsSpacing.xs,
+    final a = ArmoirePalette.resolve(finish, isDark: false);
+    final ring = context.armoire.metal;
+    const size = DsSizes.avatarXs;
+    return Tooltip(
+      message: tooltip,
+      child: Semantics(
+        button: true,
+        selected: selected,
+        label: tooltip,
+        excludeSemantics: true,
+        child: InkResponse(
+          onTap: onTap,
+          radius: DsSizes.minTouchTarget / 2,
+          child: SizedBox(
+            width: DsSizes.controlSm,
+            height: DsSizes.controlSm,
+            child: Center(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                width: size,
+                height: size,
+                padding: const EdgeInsets.all(DsSpacing.xxxs),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: selected ? ring : ring.withValues(alpha: .25),
+                    width: selected ? 2 : 1,
+                  ),
+                ),
+                child: ClipOval(
+                  child: CustomPaint(painter: _PanelPainter(palette: a, seed: 21, radius: 0)),
+                ),
+              ),
+            ),
+          ),
         ),
-        child: child,
       ),
     );
   }
-}
-
-class _BoxPainter extends CustomPainter {
-  const _BoxPainter({
-    required this.body,
-    required this.ribbon,
-    required this.shade,
-    required this.lift,
-    required this.dark,
-    required this.rtl,
-  });
-
-  final bool rtl;
-  final Color body;
-  final Color ribbon;
-  final Color shade;
-  final double lift;
-  final bool dark;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width;
-    final h = size.height;
-    const lidH = DsSpacing.sm;
-    final lidLift = DsSpacing.xxs * lift;
-    final boxRect = Rect.fromLTWH(DsSpacing.xxs, lidH * .6, w - DsSpacing.xs, h - lidH * .6);
-    // Its shadow on the cornice.
-    canvas.drawOval(
-      Rect.fromLTWH(w * .04, h - DsSpacing.xxs, w * .92, DsSpacing.xs),
-      Paint()
-        ..color = shade.withValues(alpha: .45)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-    );
-    final bodyRRect = RRect.fromRectAndCorners(
-      boxRect,
-      bottomLeft: const Radius.circular(DsRadius.xs),
-      bottomRight: const Radius.circular(DsRadius.xs),
-    );
-    canvas.drawRRect(
-      bodyRRect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color.lerp(body, DsColors.white, dark ? .08 : .45)!,
-            body,
-            Color.lerp(body, DsColors.black, dark ? .3 : .08)!,
-          ],
-        ).createShader(boxRect),
-    );
-    // The ribbon round the box, off-centre like one tied by hand — towards
-    // the end, clear of the words.
-    final rx = rtl ? w * .16 : w * .84;
-    canvas.drawRect(
-      Rect.fromLTWH(rx - 3, boxRect.top, 6, boxRect.height),
-      Paint()..color = ribbon.withValues(alpha: .9),
-    );
-    // The lid, a little wider than the box.
-    final lid = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, -lidLift, w, lidH),
-      const Radius.circular(DsRadius.xs),
-    );
-    canvas.drawRRect(
-      lid.shift(const Offset(0, 1.5)),
-      Paint()
-        ..color = shade.withValues(alpha: .35)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2),
-    );
-    canvas.drawRRect(
-      lid,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.lerp(body, DsColors.white, dark ? .12 : .55)!,
-            Color.lerp(body, DsColors.white, dark ? .02 : .2)!,
-          ],
-        ).createShader(lid.outerRect),
-    );
-    canvas.drawRect(
-      Rect.fromLTWH(rx - 3, -lidLift, 6, lidH),
-      Paint()..color = ribbon,
-    );
-    // The bow.
-    final bow = Offset(rx, -lidLift + lidH * .2);
-    final loop = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.4
-      ..color = ribbon;
-    canvas.drawOval(Rect.fromCenter(center: bow.translate(-5, -2), width: 9, height: 6), loop);
-    canvas.drawOval(Rect.fromCenter(center: bow.translate(5, -2), width: 9, height: 6), loop);
-    canvas.drawCircle(bow, 2.4, Paint()..color = ribbon);
-  }
-
-  @override
-  bool shouldRepaint(_BoxPainter old) =>
-      old.body != body ||
-      old.ribbon != ribbon ||
-      old.lift != lift ||
-      old.dark != dark ||
-      old.rtl != rtl;
 }

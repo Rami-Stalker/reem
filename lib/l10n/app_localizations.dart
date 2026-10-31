@@ -25104,6 +25104,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'It will go into {name}'**
   String closetAddingTo(String name);
+
+  /// Wardrobe finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Matte white'**
+  String get closetFinishWhite;
+
+  /// Wardrobe finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Light oak'**
+  String get closetFinishOak;
+
+  /// Wardrobe finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Walnut'**
+  String get closetFinishWalnut;
+
+  /// Finish swatch tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Wardrobe finish: {name}'**
+  String closetFinishTooltip(String name);
 }
 
 class _AppLocalizationsDelegate

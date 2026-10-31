@@ -11,6 +11,7 @@ import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/closet/domain/entities/closet_item.dart';
 import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
 import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/features/closet/presentation/providers/closet_finish_provider.dart';
 import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
 import 'package:ohara/features/closet/presentation/widgets/closet_compartments.dart';
 import 'package:ohara/features/closet/presentation/widgets/closet_visuals.dart';
@@ -19,18 +20,26 @@ import 'package:ohara/features/closet/presentation/widgets/closet_visuals.dart';
 ValueKey<String> closetBayKey(String compartment) =>
     ValueKey('closet-bay-$compartment'); // l10n-ignore: a widget key, not copy
 
-/// خزانتي, drawn as the wardrobe it is.
+/// The finish names, for the swatches and anything else that names one.
+String closetFinishName(BuildContext context, ArmoireFinish finish) => switch (finish) {
+  ArmoireFinish.white => context.l10n.closetFinishWhite,
+  ArmoireFinish.oak => context.l10n.closetFinishOak,
+  ArmoireFinish.walnut => context.l10n.closetFinishWalnut,
+};
+
+/// خزانتي, drawn as a modern fitted wardrobe.
 ///
 /// Replaces the grid under a rail of filter chips. That layout asked her to
 /// think like a database — pick a filter, scroll a list — about the one place
 /// in her life she already knows by heart. Here she opens the drawer the
 /// necklace is in.
 ///
-/// Every compartment shows, closed, what is in it: dresses on their hangers,
-/// tops folded on the shelf, gems peeking from a drawer left a finger's width
-/// open. Tapping it opens it; the brass "+" on it adds a piece straight into
-/// it. The two boxes on top hold what is in no single compartment — her
-/// favourites, and what she has put away for another season.
+/// Every compartment shows, shut or open, what is in it: dresses on wooden
+/// hangers, folded pieces on the floor of their shelf, bags in their cubbies,
+/// jewellery behind the glass of its drawer. Tapping it opens it; the "+" on
+/// it adds a piece straight into it. The two cabinets along the top hold what
+/// belongs to no single compartment: her favourites behind glass, and what
+/// she has put away for another season.
 class ClosetArmoire extends ConsumerWidget {
   const ClosetArmoire({super.key, required this.overview, this.gutter = DsSpacing.lg});
 
@@ -39,15 +48,16 @@ class ClosetArmoire extends ConsumerWidget {
   /// The page margin either side, for a caller already inside one.
   final double gutter;
 
-  /// What the closed compartments show. One request for the whole front,
-  /// grouped here by slot, rather than one per compartment: the previews are
-  /// a glimpse, and the counts on the plates come from the overview, so a
-  /// wardrobe larger than one page still counts right.
+  /// What the compartments show. One request for the whole front, grouped
+  /// here by slot, rather than one per compartment: the previews are a
+  /// glimpse, and the counts come from the overview, so a wardrobe larger
+  /// than one page still counts right.
   static const previewQuery = ClosetItemQuery(limit: 100);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final finish = ref.watch(closetFinishProvider);
     final page = ref.watch(closetWardrobeProvider(previewQuery)).asData?.value;
 
     final bySlot = <String, List<ClosetItem>>{};
@@ -55,69 +65,45 @@ class ClosetArmoire extends ConsumerWidget {
       (bySlot[item.slot] ??= []).add(item);
     }
     final counts = {for (final entry in overview.slotCounts) entry.slot: entry.count};
+    final favourites = [
+      for (final item in page?.items ?? const <ClosetItem>[])
+        if (item.isFavourite) item,
+    ];
     // Favourites are not counted by the overview; they can be counted here
     // only when the preview holds the whole wardrobe.
-    final favourites = page == null || page.hasMore
-        ? null
-        : page.items.where((item) => item.isFavourite).length;
-
+    final favouritesCount = page == null || page.hasMore ? null : favourites.length;
     final rows = closetFloorPlan(overview.vocabulary);
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: gutter),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          // The body sits a little inside the cornice, like a real one.
-          const bodyInset = DsSpacing.xxs;
-          final inner = constraints.maxWidth - bodyInset * 2 - DsSpacing.sm * 2;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.md),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: _TopBox(
-                        compartment: ClosetCompartment.favourites,
-                        rose: true,
-                        caption: favourites != null && favourites > 0
-                            ? l10n.closetLookPieceCount(favourites)
+    return ArmoireFinishScope(
+      finish: finish,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: gutter),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final inner = constraints.maxWidth - DsSpacing.xs * 2;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _Summary(overview: overview, finish: finish),
+                DsGaps.vSm,
+                ArmoireCarcass(
+                  child: Column(
+                    children: [
+                      _TopCabinets(
+                        width: inner,
+                        favourites: favourites,
+                        favouritesCaption: favouritesCount != null && favouritesCount > 0
+                            ? l10n.closetLookPieceCount(favouritesCount)
                             : l10n.closetDrawerFavouritesCaption,
-                      ),
-                    ),
-                    const Spacer(flex: 2),
-                    Expanded(
-                      flex: 5,
-                      child: _TopBox(
-                        compartment: ClosetCompartment.stored,
-                        caption: overview.archivedCount > 0
+                        stored: overview.archivedCount,
+                        storedCaption: overview.archivedCount > 0
                             ? l10n.closetLookPieceCount(overview.archivedCount)
                             : l10n.closetDrawerStoredCaption,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              ArmoireCrown(
-                child: ArmoirePlaque(
-                  large: true,
-                  label: l10n.closetLookPieceCount(overview.itemsCount),
-                  caption: l10n.closetArmoireOutfits(overview.seasonOutfitCapacity),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: bodyInset),
-                child: ArmoireCarcass(
-                  child: Column(
-                    children: [
-                      for (var r = 0; r < rows.length; r++) ...[
-                        if (r > 0) DsGaps.vXs,
+                      for (final row in rows) ...[
+                        DsGaps.vXs,
                         _BayRow(
-                          compartments: rows[r],
+                          compartments: row,
                           width: inner,
                           vocabulary: overview.vocabulary,
                           counts: counts,
@@ -127,14 +113,205 @@ class ClosetArmoire extends ConsumerWidget {
                     ],
                   ),
                 ),
-              ),
-              const ArmoirePlinth(),
-              DsGaps.vSm,
+                const ArmoirePlinth(),
+                DsGaps.vXs,
+                Text(
+                  l10n.closetArmoireHint,
+                  textAlign: TextAlign.center,
+                  style: context.dsText.caption,
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// The line above the wardrobe: what it holds, and the finish swatches.
+class _Summary extends ConsumerWidget {
+  const _Summary({required this.overview, required this.finish});
+
+  final ClosetOverview overview;
+  final ArmoireFinish finish;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final text = context.dsText;
+    final palette = context.boutique;
+
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                l10n.closetArmoireHint,
-                textAlign: TextAlign.center,
-                style: context.dsText.caption,
+                l10n.closetLookPieceCount(overview.itemsCount),
+                style: text.sectionTitle.displayFamily.bold.tint(palette.ink),
               ),
+              Text(
+                l10n.closetArmoireOutfits(overview.seasonOutfitCapacity),
+                style: text.caption,
+              ),
+            ],
+          ),
+        ),
+        for (final option in ArmoireFinish.values)
+          ArmoireFinishSwatch(
+            finish: option,
+            selected: option == finish,
+            tooltip: l10n.closetFinishTooltip(closetFinishName(context, option)),
+            onTap: () => ref.read(closetFinishProvider.notifier).choose(option),
+          ),
+      ],
+    );
+  }
+}
+
+// ── The top cabinets ──────────────────────────────────────────────────────
+
+class _TopCabinets extends StatelessWidget {
+  const _TopCabinets({
+    required this.width,
+    required this.favourites,
+    required this.favouritesCaption,
+    required this.stored,
+    required this.storedCaption,
+  });
+
+  final double width;
+  final List<ClosetItem> favourites;
+  final String favouritesCaption;
+  final int stored;
+  final String storedCaption;
+
+  @override
+  Widget build(BuildContext context) {
+    final height = DsSizes.thumbLg + MediaQuery.textScalerOf(context).scale(DsSpacing.lg);
+    return SizedBox(
+      height: height,
+      child: Row(
+        children: [
+          Expanded(
+            child: _CabinetDoor(
+              compartment: ClosetCompartment.favourites,
+              caption: favouritesCaption,
+              glass: true,
+              hingeAtStart: true,
+              inside: _ShelfOfThings(items: favourites),
+            ),
+          ),
+          DsGaps.hXs,
+          Expanded(
+            child: _CabinetDoor(
+              compartment: ClosetCompartment.stored,
+              caption: storedCaption,
+              hingeAtStart: false,
+              inside: _StorageBoxes(count: stored),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CabinetDoor extends StatefulWidget {
+  const _CabinetDoor({
+    required this.compartment,
+    required this.caption,
+    required this.inside,
+    required this.hingeAtStart,
+    this.glass = false,
+  });
+
+  final ClosetCompartment compartment;
+  final String caption;
+  final Widget inside;
+  final bool hingeAtStart;
+  final bool glass;
+
+  @override
+  State<_CabinetDoor> createState() => _CabinetDoorState();
+}
+
+class _CabinetDoorState extends State<_CabinetDoor> with SingleTickerProviderStateMixin {
+  late final AnimationController _swing = AnimationController(
+    vsync: this,
+    duration: DsMotion.normal,
+  );
+
+  @override
+  void dispose() {
+    _swing.dispose();
+    super.dispose();
+  }
+
+  Future<void> _open() async {
+    unawaited(HapticFeedback.selectionClick());
+    await _swing.forward();
+    if (!mounted) return;
+    await context.push(RoutePaths.closetCompartmentOf(widget.compartment.key));
+    if (mounted) await _swing.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final name = widget.compartment.name(context);
+    return Semantics(
+      button: true,
+      label: '${context.l10n.closetDrawerOpen(name)}، ${widget.caption}',
+      excludeSemantics: true,
+      child: GestureDetector(
+        key: closetBayKey(widget.compartment.key),
+        behavior: HitTestBehavior.opaque,
+        onTap: _open,
+        child: AnimatedBuilder(
+          animation: _swing,
+          builder: (context, _) => ArmoireDoor(
+            open: Curves.easeOutCubic.transform(_swing.value) * .55,
+            glass: widget.glass,
+            hingeAtStart: widget.hingeAtStart,
+            inside: ArmoireCell(lit: _swing.value, seed: 29, child: widget.inside),
+            child: ArmoireLabel(name: name, caption: widget.caption, stacked: true),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A few favourites standing on the floor of the glass cabinet.
+class _ShelfOfThings extends StatelessWidget {
+  const _ShelfOfThings({required this.items});
+
+  final List<ClosetItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        ArmoireCell.side + DsSpacing.xxs,
+        ArmoireCell.ceiling + DsSpacing.xxs,
+        ArmoireCell.side + DsSpacing.xxs,
+        ArmoireCell.floor * .5,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final size = math.max(0.0, constraints.maxHeight);
+          final fit = math.max(1, (constraints.maxWidth / (size * .8 + DsSpacing.xxs)).floor());
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (final item in items.take(math.min(fit, 4)))
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxxs),
+                  child: _PieceCard(item: item, width: size * .74, height: size),
+                ),
             ],
           );
         },
@@ -142,6 +319,70 @@ class ClosetArmoire extends ConsumerWidget {
     );
   }
 }
+
+/// Fabric storage boxes on the cabinet floor — the season's put-away pieces.
+class _StorageBoxes extends StatelessWidget {
+  const _StorageBoxes({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    final boxes = math.min(3, count);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        ArmoireCell.side + DsSpacing.xxs,
+        DsSpacing.lg,
+        ArmoireCell.side + DsSpacing.xxs,
+        ArmoireCell.floor * .5,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          for (var i = 0; i < boxes; i++) ...[
+            if (i > 0) DsGaps.hXxs,
+            Expanded(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: DsRadius.borderXs,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color.lerp(DsColors.warmBeige, a.wood, .3)!,
+                      Color.lerp(DsColors.warmBeige, a.woodDeep, .55)!,
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(color: a.shade, blurRadius: 3, offset: const Offset(1, 2)),
+                  ],
+                ),
+                // The box's handle: a little leather loop.
+                child: SizedBox(
+                  height: double.infinity,
+                  child: Align(
+                    alignment: const Alignment(0, -.4),
+                    child: Container(
+                      width: DsSpacing.md,
+                      height: DsSpacing.xxs,
+                      decoration: BoxDecoration(
+                        color: Color.lerp(a.woodDeep, a.shade, .5),
+                        borderRadius: DsRadius.borderPill,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── The compartments ──────────────────────────────────────────────────────
 
 /// Compartments that sit side by side.
 class _BayRow extends StatelessWidget {
@@ -163,40 +404,23 @@ class _BayRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final n = compartments.length;
     final bayWidth = (width - DsSpacing.xs * (n - 1)) / n;
-    final isRail = compartments.first.style == ClosetCompartmentStyle.rail;
-
-    final bays = <Widget>[
-      for (var i = 0; i < n; i++) ...[
-        if (i > 0) DsGaps.hXs,
-        Expanded(
-          child: _Bay(
-            key: closetBayKey(compartments[i].key),
-            compartment: compartments[i],
-            name: compartments[i].name(context, vocabulary),
-            count: counts[compartments[i].slot] ?? 0,
-            items: bySlot[compartments[i].slot] ?? const [],
-            width: bayWidth,
-          ),
-        ),
-      ],
-    ];
-
-    final row = IntrinsicHeight(
-      child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: bays),
-    );
-    if (!isRail) return row;
-
-    // One rod runs the whole width of the hanging section, behind the
-    // partitions, the way it does in a real wardrobe.
-    return Stack(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        row,
-        const PositionedDirectional(
-          top: _Bay.railTop,
-          start: 0,
-          end: 0,
-          child: IgnorePointer(child: ArmoireRail(height: _Bay.railHeight)),
-        ),
+        for (var i = 0; i < n; i++) ...[
+          if (i > 0) DsGaps.hXs,
+          SizedBox(
+            width: bayWidth,
+            child: _Bay(
+              key: closetBayKey(compartments[i].key),
+              compartment: compartments[i],
+              name: compartments[i].name(context, vocabulary),
+              count: counts[compartments[i].slot] ?? 0,
+              items: bySlot[compartments[i].slot] ?? const [],
+              width: bayWidth,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -219,11 +443,8 @@ class _Bay extends StatefulWidget {
   final List<ClosetItem> items;
   final double width;
 
-  /// The band across the top of an open compartment where its "+" sits,
-  /// clear of the rod and the pegs below it.
-  static const double knobBand = DsSizes.controlSm - DsSpacing.xxs;
-  static const double railTop = knobBand;
-  static const double railHeight = DsSpacing.sm;
+  /// Where the rod and the pegs sit: under the LED strip, below the "+".
+  static const double fixturesTop = DsSizes.controlSm - DsSpacing.xxs;
 
   @override
   State<_Bay> createState() => _BayState();
@@ -241,7 +462,7 @@ class _BayState extends State<_Bay> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  /// The drawer slides out, or the compartment light comes on — then it
+  /// The drawer slides out, or the compartment light comes up — then it
   /// opens. On the way back it closes again.
   Future<void> _open() async {
     unawaited(HapticFeedback.selectionClick());
@@ -263,11 +484,13 @@ class _BayState extends State<_Bay> with SingleTickerProviderStateMixin {
     final countLabel = widget.count == 0
         ? l10n.closetDrawerEmpty
         : l10n.closetLookPieceCount(widget.count);
-    final knob = ArmoireAddKnob(
-      tooltip: l10n.closetDrawerAddTo(widget.name),
-      onPressed: _add,
+    final knob = ArmoireAddKnob(tooltip: l10n.closetDrawerAddTo(widget.name), onPressed: _add);
+    // A narrow compartment has room for the name and a number, not a phrase.
+    final narrow = widget.width < DsSizes.railCardWidth * .8;
+    final label = ArmoireLabel(
+      name: widget.name,
+      caption: narrow && widget.count > 0 ? '${widget.count}' : countLabel,
     );
-    final plaque = ArmoirePlaque(label: widget.name, caption: countLabel);
 
     return Semantics(
       button: true,
@@ -279,118 +502,90 @@ class _BayState extends State<_Bay> with SingleTickerProviderStateMixin {
           animation: _press,
           builder: (context, _) {
             final t = Curves.easeOut.transform(_press.value);
-            if (widget.compartment.style == ClosetCompartmentStyle.drawer) {
-              return _drawer(t, plaque, knob);
-            }
-            return _cavity(t, plaque, knob);
+            return widget.compartment.style == ClosetCompartmentStyle.drawer
+                ? _drawer(t, label, knob)
+                : _cavity(t, label, knob);
           },
         ),
       ),
     );
   }
 
-  Widget _drawer(double t, Widget plaque, Widget knob) {
-    final peek = widget.items.isEmpty ? null : _GemPeek(items: widget.items);
-    return ArmoireDrawerFront(
+  Widget _drawer(double t, Widget label, Widget knob) {
+    // Jewellery is the one drawer worth seeing into while it is shut.
+    final glass = widget.compartment.slot == 'JEWELRY';
+    return ArmoireDrawer(
       pulled: t,
-      peek: peek,
-      peekHeight: DsSpacing.lg,
-      child: Stack(
-        alignment: Alignment.center,
+      handle: math.min(widget.width * .32, DsSizes.thumbMd),
+      window: glass ? _VelvetTray(items: widget.items) : null,
+      windowHeight: DsSizes.avatarLg,
+      child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              DsSizes.controlSm,
-              DsSpacing.xs,
-              DsSizes.controlSm,
-              DsSpacing.xs,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(child: plaque),
-                DsGaps.vXs,
-                Center(
-                  child: ArmoirePull(width: math.min(widget.width * .3, DsSizes.thumbSm)),
-                ),
-              ],
-            ),
-          ),
-          PositionedDirectional(
-            end: 0,
-            top: 0,
-            bottom: 0,
-            child: Center(child: knob),
-          ),
+          // A full-width drawer centres its name; a narrow one needs the
+          // room more than the symmetry.
+          if (widget.width > DsSizes.railCardWidth * 1.4)
+            const SizedBox(width: DsSizes.controlSm),
+          Expanded(child: label),
+          knob,
         ],
       ),
     );
   }
 
-  Widget _cavity(double t, Widget plaque, Widget knob) {
+  Widget _cavity(double t, Widget label, Widget knob) {
     final style = widget.compartment.style;
-    final previewHeight = _Bay.knobBand +
-        switch (style) {
-          ClosetCompartmentStyle.rail => DsSizes.thumbLg,
-          ClosetCompartmentStyle.rack => DsSizes.thumbSm + DsSpacing.xxs,
-          _ => DsSizes.thumbSm + DsSpacing.sm,
-        };
-    final preview = switch (style) {
-      ClosetCompartmentStyle.rail => _RailPreview(
+    final height = switch (style) {
+      ClosetCompartmentStyle.rail => DsSizes.thumbLg + DsSizes.thumbSm,
+      ClosetCompartmentStyle.rack => DsSizes.thumbLg + DsSizes.thumbSm,
+      ClosetCompartmentStyle.hooks => DsSizes.thumbLg + DsSpacing.xl,
+      _ => DsSizes.thumbLg,
+    };
+    final inside = switch (style) {
+      _ when widget.compartment.slot == 'BAG' => _Cubbies(items: widget.items),
+      ClosetCompartmentStyle.rail => _Hanging(
         items: widget.items,
         width: widget.width,
-        height: previewHeight,
+        height: height,
       ),
-      ClosetCompartmentStyle.hooks => _HooksPreview(
+      ClosetCompartmentStyle.hooks => _OnPegs(
         items: widget.items,
         width: widget.width,
-        height: previewHeight,
+        height: height,
       ),
-      ClosetCompartmentStyle.rack => _ShelfPreview(
-        items: widget.items,
-        width: widget.width,
-        height: previewHeight,
-        slant: true,
-      ),
-      _ => _ShelfPreview(
-        items: widget.items,
-        width: widget.width,
-        height: previewHeight,
-      ),
+      ClosetCompartmentStyle.rack => _ShoeShelves(items: widget.items, height: height),
+      _ => _OnTheFloor(items: widget.items),
     };
 
-    return ArmoireRecess(
-      lit: t,
-      child: Stack(
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(width: widget.width, height: previewHeight, child: preview),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  DsSpacing.xxs,
-                  DsSpacing.xxs,
-                  DsSpacing.xxs,
-                  DsSpacing.xs,
-                ),
-                child: plaque,
-              ),
-            ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: widget.width,
+          height: height,
+          child: ArmoireCell(
+            lit: t,
+            seed: widget.compartment.key.hashCode & 0xff,
+            child: Stack(
+              children: [
+                Positioned.fill(child: inside),
+                PositionedDirectional(top: 0, end: 0, child: knob),
+              ],
+            ),
           ),
-          // The "+" sits in the top corner — on the hanging section it reads
-          // as the finial at the end of the rod.
-          PositionedDirectional(top: 0, end: 0, child: knob),
-        ],
-      ),
+        ),
+        // The board under it, with the compartment's name on its edge.
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs + 1),
+          child: label,
+        ),
+      ],
     );
   }
 }
 
-// ── What a closed compartment shows ───────────────────────────────────────
+// ── What a compartment shows ──────────────────────────────────────────────
 
-/// A piece's photograph as a small framed card.
+/// A piece's photograph, with the shadow it casts on the back wall.
 class _PieceCard extends StatelessWidget {
   const _PieceCard({required this.item, required this.width, required this.height});
 
@@ -405,32 +600,32 @@ class _PieceCard extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: DsRadius.borderSm,
-        border: Border.all(color: a.inlay.withValues(alpha: .6)),
+        borderRadius: DsRadius.borderXs,
         boxShadow: [
           BoxShadow(
-            color: a.shade.withValues(alpha: .4),
-            blurRadius: DsSpacing.xxs,
-            offset: const Offset(0, DsSpacing.xxxs),
+            color: a.shade.withValues(alpha: .55),
+            blurRadius: DsSpacing.xs,
+            offset: const Offset(DsSpacing.xxxs, DsSpacing.xxs),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: DsRadius.borderSm,
+        borderRadius: DsRadius.borderXs,
         child: ClosetPhoto(
           url: item.imageUrl,
           slot: item.slot,
           blurHash: item.blurHash,
-          iconSize: math.min(width, height) * .45,
+          iconSize: math.max(DsSizes.iconXxs, math.min(width, height) * .42),
         ),
       ),
     );
   }
 }
 
-/// Up to three pieces on hangers, overlapping along the rod.
-class _RailPreview extends StatelessWidget {
-  const _RailPreview({required this.items, required this.width, required this.height});
+/// Up to three pieces on wooden hangers along the rod, overlapping the way
+/// clothes hang.
+class _Hanging extends StatelessWidget {
+  const _Hanging({required this.items, required this.width, required this.height});
 
   final List<ClosetItem> items;
   final double width;
@@ -438,108 +633,150 @@ class _RailPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const hangerHeight = DsSpacing.md;
-    const top = _Bay.railTop + _Bay.railHeight * .5 - DsSpacing.xxxs;
-    final cardHeight = height - top - hangerHeight - DsSpacing.xxs;
-    final cardWidth = math.min(width * .48, cardHeight * .72);
+    const rodTop = _Bay.fixturesTop;
+    const rodHeight = DsSpacing.sm;
+    const hangerHeight = DsSpacing.md + DsSpacing.xxs;
+    const top = rodTop + rodHeight * .5 - DsSpacing.xxxs;
+    final inner = width - ArmoireCell.side * 2;
+    final cardHeight = height - top - hangerHeight - ArmoireCell.floor - DsSpacing.xxs;
+    final cardWidth = math.min(inner * .56, cardHeight * .62);
     final shown = items.take(3).toList(growable: false);
-
-    if (shown.isEmpty) {
-      // Two bare hangers: the space is there, waiting.
-      return Stack(
-        children: [
-          for (final dx in [-.18, .18])
-            Positioned(
-              top: top,
-              left: width / 2 + width * dx - cardWidth * .35,
-              child: Opacity(
-                opacity: .55,
-                child: ArmoireHanger(width: cardWidth * .7, height: hangerHeight),
-              ),
-            ),
-        ],
-      );
-    }
-
-    final step = shown.length == 1
+    final step = shown.length < 2
         ? 0.0
-        : math.min(cardWidth * .62, (width - DsSpacing.md - cardWidth) / (shown.length - 1));
-    final groupWidth = cardWidth + step * (shown.length - 1);
-    final start = (width - groupWidth) / 2;
+        : math.min(cardWidth * .55, (inner - DsSpacing.xs - cardWidth) / (shown.length - 1));
+    final group = cardWidth + step * math.max(0, shown.length - 1);
+    final start = (width - group) / 2;
 
     return Stack(
       children: [
-        for (var i = 0; i < shown.length; i++)
-          PositionedDirectional(
-            top: top,
-            start: start + step * i,
-            child: Column(
-              children: [
-                ArmoireHanger(width: cardWidth * .78, height: hangerHeight),
-                _PieceCard(item: shown[i], width: cardWidth, height: cardHeight),
-              ],
+        const Positioned(
+          top: rodTop,
+          left: ArmoireCell.side,
+          right: ArmoireCell.side,
+          child: ArmoireRod(height: rodHeight),
+        ),
+        if (shown.isEmpty)
+          // Bare hangers on the rod: the space is there, waiting.
+          for (final dx in [-.16, .16])
+            Positioned(
+              top: top,
+              left: width / 2 + width * dx - cardWidth * .4,
+              child: ArmoireHanger(width: cardWidth * .8, height: hangerHeight),
+            )
+        else
+          for (var i = 0; i < shown.length; i++)
+            PositionedDirectional(
+              top: top,
+              start: start + step * i,
+              child: Column(
+                children: [
+                  ArmoireHanger(width: cardWidth * .9, height: hangerHeight),
+                  _PieceCard(item: shown[i], width: cardWidth, height: cardHeight),
+                ],
+              ),
             ),
-          ),
       ],
     );
   }
 }
 
-/// Pieces sitting on a shelf board — folded tops, or shoes on a slanted rack.
-class _ShelfPreview extends StatelessWidget {
-  const _ShelfPreview({
-    required this.items,
-    required this.width,
-    required this.height,
-    this.slant = false,
-  });
+/// Folded pieces standing on the compartment floor.
+class _OnTheFloor extends StatelessWidget {
+  const _OnTheFloor({required this.items});
 
   final List<ClosetItem> items;
-  final double width;
-  final double height;
-  final bool slant;
 
   @override
   Widget build(BuildContext context) {
-    const plank = DsSpacing.sm;
-    final size = height - _Bay.knobBand - plank - DsSpacing.xxxs;
-    final fit = math.max(1, ((width - DsSpacing.md) / (size + DsSpacing.xxs)).floor());
-    final shown = items.take(math.min(fit, 5)).toList(growable: false);
-
-    return Column(
-      children: [
-        Expanded(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                for (var i = 0; i < shown.length; i++) ...[
-                  if (i > 0) DsGaps.hXxs,
-                  Transform.rotate(
-                    // Shoes lean on the rack; folded things sit square.
-                    angle: slant ? -.06 : 0,
-                    child: _PieceCard(
-                      item: shown[i],
-                      width: slant ? size * 1.1 : size,
-                      height: slant ? size * .82 : size,
-                    ),
-                  ),
-                ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        ArmoireCell.side + DsSpacing.xxs,
+        _Bay.fixturesTop,
+        ArmoireCell.side + DsSpacing.xxs,
+        ArmoireCell.floor * .45,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final size = constraints.maxHeight;
+          final fit = math.max(1, (constraints.maxWidth / (size + DsSpacing.xxs)).floor());
+          final shown = items.take(math.min(fit, 4)).toList(growable: false);
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (var i = 0; i < shown.length; i++) ...[
+                if (i > 0) DsGaps.hXxs,
+                _PieceCard(item: shown[i], width: size, height: size * .86),
               ],
-            ),
-          ),
-        ),
-        ArmoirePlank(height: plank, slant: slant),
-      ],
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
-/// Bags and scarves hanging from brass pegs by a strap.
-class _HooksPreview extends StatelessWidget {
-  const _HooksPreview({required this.items, required this.width, required this.height});
+/// Bags, each in its own cubby between thin wooden dividers.
+class _Cubbies extends StatelessWidget {
+  const _Cubbies({required this.items});
+
+  final List<ClosetItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = context.armoire;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        ArmoireCell.side,
+        ArmoireCell.ceiling,
+        ArmoireCell.side,
+        ArmoireCell.floor * .45,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < 2; i++) ...[
+            if (i > 0)
+              Container(
+                width: DsSpacing.xxs,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [a.panelLight, a.panelDeep]),
+                  boxShadow: [
+                    BoxShadow(color: a.shade, blurRadius: 3, offset: const Offset(1, 0)),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  DsSpacing.xs,
+                  _Bay.fixturesTop - ArmoireCell.ceiling,
+                  DsSpacing.xs,
+                  0,
+                ),
+                child: i < items.length
+                    ? LayoutBuilder(
+                        builder: (context, c) {
+                          final s = math.min(c.maxWidth, c.maxHeight);
+                          return Align(
+                            alignment: Alignment.bottomCenter,
+                            child: _PieceCard(item: items[i], width: s, height: s * .9),
+                          );
+                        },
+                      )
+                    : null,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Accessories hanging from small hooks on the back wall.
+class _OnPegs extends StatelessWidget {
+  const _OnPegs({required this.items, required this.width, required this.height});
 
   final List<ClosetItem> items;
   final double width;
@@ -548,34 +785,35 @@ class _HooksPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final a = context.armoire;
-    const pegTop = _Bay.knobBand - DsSpacing.xs;
+    const pegTop = _Bay.fixturesTop;
     const peg = DsSpacing.sm;
-    final cardSize = height - pegTop - peg - DsSpacing.md;
-    final pegs = math.max(2, math.min(3, (width / (cardSize + DsSpacing.md)).floor()));
-    final gap = width / pegs;
+    const strap = DsSpacing.sm;
+    final card = height - pegTop - peg / 2 - strap - ArmoireCell.floor - DsSpacing.xs;
+    final inner = width - ArmoireCell.side * 2;
+    final pegs = math.max(2, math.min(3, (inner / (card + DsSpacing.md)).floor()));
+    final gap = inner / pegs;
 
     return Stack(
       children: [
         for (var i = 0; i < pegs; i++) ...[
           if (i < items.length) ...[
-            // The strap, from the peg to the corners of the piece.
             Positioned(
               top: pegTop + peg / 2,
-              left: gap * i + gap / 2 - cardSize * .32,
+              left: ArmoireCell.side + gap * i + gap / 2 - card * .3,
               child: CustomPaint(
-                size: Size(cardSize * .64, DsSpacing.md),
-                painter: _StrapPainter(color: a.brassDeep),
+                size: Size(card * .6, strap),
+                painter: _StrapPainter(color: Color.lerp(a.woodDeep, a.shade, .6)!),
               ),
             ),
             Positioned(
-              top: pegTop + peg / 2 + DsSpacing.md - DsSpacing.xxxs,
-              left: gap * i + gap / 2 - cardSize / 2,
-              child: _PieceCard(item: items[i], width: cardSize, height: cardSize),
+              top: pegTop + peg / 2 + strap - DsSpacing.xxxs,
+              left: ArmoireCell.side + gap * i + gap / 2 - card / 2,
+              child: _PieceCard(item: items[i], width: card, height: card),
             ),
           ],
           Positioned(
             top: pegTop,
-            left: gap * i + gap / 2 - peg / 2,
+            left: ArmoireCell.side + gap * i + gap / 2 - peg / 2,
             child: const ArmoirePeg(size: peg),
           ),
         ],
@@ -593,7 +831,7 @@ class _StrapPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.6
+      ..strokeWidth = 1.4
       ..strokeCap = StrokeCap.round
       ..color = color;
     final top = Offset(size.width / 2, 0);
@@ -605,136 +843,94 @@ class _StrapPainter extends CustomPainter {
   bool shouldRepaint(_StrapPainter old) => old.color != color;
 }
 
-/// What shows through the gap of a drawer left slightly open: the velvet, and
-/// a few of the pieces on it, small as gems.
-class _GemPeek extends StatelessWidget {
-  const _GemPeek({required this.items});
+/// Two slanted shoe shelves, each with its rail.
+class _ShoeShelves extends StatelessWidget {
+  const _ShoeShelves({required this.items, required this.height});
 
   final List<ClosetItem> items;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
-    final a = context.armoire;
-    const size = DsSpacing.md;
-    return Center(
+    const shelf = DsSpacing.md;
+    const top = ArmoireCell.ceiling + DsSpacing.xs;
+    final level = (height - top - ArmoireCell.floor - DsSpacing.xxs) / 2;
+    final shoe = level - shelf;
+    final upper = items.take(2).toList(growable: false);
+    final lower = items.skip(2).take(2).toList(growable: false);
+
+    Widget row(List<ClosetItem> pieces) => SizedBox(
+      height: shoe,
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          for (final item in items.take(5)) ...[
-            Container(
-              width: size,
-              height: size,
-              margin: const EdgeInsets.symmetric(horizontal: DsSpacing.xxxs),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: a.brass, width: 1.2),
-                boxShadow: [
-                  BoxShadow(color: a.shade.withValues(alpha: .5), blurRadius: 2),
-                ],
-              ),
-              child: ClipOval(
-                child: ClosetPhoto(
-                  url: item.imageUrl,
-                  slot: item.slot,
-                  iconSize: DsSizes.iconXxs * .75,
-                ),
-              ),
+          for (var i = 0; i < pieces.length; i++) ...[
+            if (i > 0) DsGaps.hXs,
+            Transform.rotate(
+              angle: -.08,
+              child: _PieceCard(item: pieces[i], width: shoe * 1.25, height: shoe * .8),
             ),
           ],
+        ],
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        ArmoireCell.side,
+        top,
+        ArmoireCell.side,
+        ArmoireCell.floor,
+      ),
+      child: Column(
+        children: [
+          row(upper),
+          const ArmoireShelf(height: shelf, slant: true),
+          DsGaps.vXxs,
+          row(lower),
+          const ArmoireShelf(height: shelf, slant: true),
         ],
       ),
     );
   }
 }
 
-// ── The boxes on top ──────────────────────────────────────────────────────
+/// What shows through the glass of the jewellery drawer: the velvet tray
+/// and its pieces in their cushions.
+class _VelvetTray extends StatelessWidget {
+  const _VelvetTray({required this.items});
 
-class _TopBox extends StatefulWidget {
-  const _TopBox({
-    required this.compartment,
-    required this.caption,
-    this.rose = false,
-  });
-
-  final ClosetCompartment compartment;
-  final String caption;
-  final bool rose;
-
-  @override
-  State<_TopBox> createState() => _TopBoxState();
-}
-
-class _TopBoxState extends State<_TopBox> with SingleTickerProviderStateMixin {
-  late final AnimationController _lift = AnimationController(
-    vsync: this,
-    duration: DsMotion.fast,
-  );
-
-  @override
-  void dispose() {
-    _lift.dispose();
-    super.dispose();
-  }
-
-  Future<void> _open() async {
-    unawaited(HapticFeedback.selectionClick());
-    await _lift.forward();
-    if (!mounted) return;
-    await context.push(RoutePaths.closetCompartmentOf(widget.compartment.key));
-    if (mounted) await _lift.reverse();
-  }
+  final List<ClosetItem> items;
 
   @override
   Widget build(BuildContext context) {
-    final a = context.armoire;
-    final text = context.dsText;
-    final name = widget.compartment.name(context);
-
-    return Semantics(
-      button: true,
-      label: '${context.l10n.closetDrawerOpen(name)}، ${widget.caption}',
-      excludeSemantics: true,
-      child: GestureDetector(
-        key: closetBayKey(widget.compartment.key),
-        behavior: HitTestBehavior.opaque,
-        onTap: _open,
-        child: AnimatedBuilder(
-          animation: _lift,
-          builder: (context, child) => ArmoireBox(
-            rose: widget.rose,
-            pressed: Curves.easeOut.transform(_lift.value),
-            child: child!,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                widget.compartment.icon,
-                size: DsSizes.iconXs,
-                color: widget.rose ? context.dsColors.favorite : a.brassDeep,
-              ),
-              DsGaps.hXs,
+    return ArmoireVelvet(
+      radius: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(DsSpacing.xxs),
+        child: Row(
+          children: [
+            for (var i = 0; i < 6; i++) ...[
+              if (i > 0) DsGaps.hXxs,
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.captionStrong.tint(a.ink),
-                    ),
-                    Text(
-                      widget.caption,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.micro.tint(a.muted),
-                    ),
-                  ],
+                child: ArmoireCushion(
+                  child: i < items.length
+                      ? Padding(
+                          padding: const EdgeInsets.all(DsSpacing.xxs),
+                          child: ClipOval(
+                            child: ClosetPhoto(
+                              url: items[i].imageUrl,
+                              slot: items[i].slot,
+                              iconSize: DsSizes.iconXs,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.expand(),
                 ),
               ),
             ],
-          ),
+          ],
         ),
       ),
     );

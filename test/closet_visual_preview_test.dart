@@ -41,6 +41,7 @@ import 'package:ohara/features/closet/domain/entities/closet_item.dart';
 import 'package:ohara/features/closet/domain/entities/closet_look.dart';
 import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
 import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
+import 'package:ohara/features/closet/presentation/providers/closet_finish_provider.dart';
 import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
 import 'package:ohara/features/closet/presentation/screens/add_personal_item_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_compartment_screen.dart';
@@ -151,6 +152,22 @@ void main() {
         );
         await _settle(tester);
         await _capture(tester, 'closet_${entry.key}_${mode.name}');
+      });
+    }
+  }
+
+  for (final finish in [ArmoireFinish.white, ArmoireFinish.walnut]) {
+    for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+      testWidgets('renders the ${finish.name} wardrobe in ${mode.name}', (tester) async {
+        tester.view.physicalSize = _phone;
+        tester.view.devicePixelRatio = 3.0;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(
+          _Preview(themeMode: mode, screen: const MyClosetScreen(), finish: finish),
+        );
+        await _settle(tester);
+        await _capture(tester, 'closet_finish_${finish.name}_${mode.name}');
       });
     }
   }
@@ -411,8 +428,10 @@ class _Preview extends StatelessWidget {
     required this.screen,
     this.repository,
     this.textScale = 1,
+    this.finish,
   });
 
+  final ArmoireFinish? finish;
   final ThemeMode themeMode;
   final Widget screen;
   final ClosetRepository? repository;
@@ -451,6 +470,7 @@ class _Preview extends StatelessWidget {
           repository ?? _FakeClosetRepository(),
         ),
         wardrobeSummaryProvider.overrideWith((ref) async => null),
+        if (finish != null) closetFinishProvider.overrideWith(() => _FixedFinish(finish!)),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -780,6 +800,15 @@ TodayOutfits _today() => TodayOutfits(
     ),
   ],
 );
+
+class _FixedFinish extends ClosetFinishNotifier {
+  _FixedFinish(this.finish);
+
+  final ArmoireFinish finish;
+
+  @override
+  ArmoireFinish build() => finish;
+}
 
 class _FakeClosetRepository implements ClosetRepository {
   _FakeClosetRepository({this.empty = false});
