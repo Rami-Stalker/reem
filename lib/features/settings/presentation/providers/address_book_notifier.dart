@@ -62,6 +62,7 @@ class AddressBookNotifier extends StateNotifier<AddressBookState> {
       Success(:final data) => state.copyWith(
         addresses: data,
         isLoading: false,
+        clearFailure: true,
       ),
       Error(:final failure) => state.copyWith(
         isLoading: false,
@@ -76,14 +77,24 @@ class AddressBookNotifier extends StateNotifier<AddressBookState> {
   /// form that has to decide whether to stay open — and because a
   /// `STEP_UP_REQUIRED` refusal is not an error to show her, it is a challenge
   /// `runWithStepUp` is about to turn into a second attempt.
-  Future<Failure?> _write<T>(Future<Result<T>> Function() action) async {
+  Future<Failure?> _write<T>(
+    Future<Result<T>> Function() action, {
+    List<AddressEntity> Function(T value)? apply,
+  }) async {
     state = state.copyWith(isSaving: true, clearFailure: true);
     final result = await action();
     if (!mounted) return null;
 
-    if (result case Error(:final failure)) {
-      state = state.copyWith(isSaving: false);
-      return failure;
+    switch (result) {
+      case Error(:final failure):
+        state = state.copyWith(isSaving: false);
+        return failure;
+      case Success(:final data):
+        // Drawn from the server's own answer straight away. The book used to
+        // change only once the follow-up read came back, so when that read
+        // failed — a slow line, a server waking up — the address she had just
+        // saved was not there, with nothing to say why.
+        if (apply != null) state = state.copyWith(addresses: apply(data));
     }
 
     await load();
@@ -91,15 +102,31 @@ class AddressBookNotifier extends StateNotifier<AddressBookState> {
     return null;
   }
 
+  /// The book with [address] in it — replacing its old copy — and, when it is
+  /// the default, every other one un-defaulted, the way the server does it.
+  List<AddressEntity> _withAddress(AddressEntity address) {
+    final others = [
+      for (final existing in state.addresses)
+        if (existing.id != address.id)
+          address.isDefault ? existing.copyWith(isDefault: false) : existing,
+    ];
+    return address.isDefault ? [address, ...others] : [...others, address];
+  }
+
   Future<Failure?> create(AddressDraft draft) =>
-      _write(() => _repository.createAddress(draft));
+      _write(() => _repository.createAddress(draft), apply: _withAddress);
 
   Future<Failure?> update(String id, AddressDraft draft) =>
-      _write(() => _repository.updateAddress(id, draft));
+      _write(() => _repository.updateAddress(id, draft), apply: _withAddress);
 
-  Future<Failure?> remove(String id) =>
-      _write(() => _repository.deleteAddress(id));
+  Future<Failure?> remove(String id) => _write(
+    () => _repository.deleteAddress(id),
+    apply: (_) => [
+      for (final existing in state.addresses)
+        if (existing.id != id) existing,
+    ],
+  );
 
   Future<Failure?> makeDefault(String id) =>
-      _write(() => _repository.setDefaultAddress(id));
+      _write(() => _repository.setDefaultAddress(id), apply: _withAddress);
 }

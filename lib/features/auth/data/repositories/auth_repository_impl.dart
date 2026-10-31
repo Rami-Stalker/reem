@@ -349,6 +349,12 @@ class AuthRepositoryImpl with RepositoryHandler implements AuthRepository {
   });
 
   @override
+  Future<Result<void>> reenrolDevice() async {
+    await identity.reset();
+    return ensureDeviceRegistered();
+  }
+
+  @override
   Future<Result<void>> continueAsGuest() => guard(() async {
     await _ensureConnected();
     final guestToken = await remote.createGuestSession();

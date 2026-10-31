@@ -51,6 +51,25 @@ class AddressEntity extends Equatable {
 
   final bool isDefault;
 
+  /// The same address with its default flag changed — what making another
+  /// address the default does to this one.
+  AddressEntity copyWith({bool? isDefault}) => AddressEntity(
+    id: id,
+    label: label,
+    recipientName: recipientName,
+    recipientPhone: recipientPhone,
+    governorate: governorate,
+    city: city,
+    addressLine: addressLine,
+    district: district,
+    landmark: landmark,
+    latitude: latitude,
+    longitude: longitude,
+    isRural: isRural,
+    deliveryInstructions: deliveryInstructions,
+    isDefault: isDefault ?? this.isDefault,
+  );
+
   /// One line for a card: «دمشق، المزة — شارع الجلاء، بناء 12».
   String get summary {
     final place = [

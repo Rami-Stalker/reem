@@ -102,7 +102,10 @@ class AuthInterceptor extends Interceptor {
     final is401 = err.response?.statusCode == 401;
     final alreadyRetried = request.extra[_retriedFlag] == true;
 
-    if (!is401 || alreadyRetried || _isAuthRoute(request.path)) {
+    if (!is401 ||
+        alreadyRetried ||
+        _isAuthRoute(request.path) ||
+        _isDeviceProofRefusal(err.response?.data)) {
       return handler.next(err);
     }
 
@@ -123,6 +126,20 @@ class AuthInterceptor extends Interceptor {
     } on DioException catch (e) {
       return handler.next(e);
     }
+  }
+
+  /// A 401 about the handset's signature, not about the session.
+  ///
+  /// It used to be taken for an expired token: the app refreshed — with the
+  /// same signature the server had just refused, so the refresh was refused
+  /// too — and then cleared the session. A phone whose key the server no
+  /// longer knew was signed out silently the first time she saved an address,
+  /// and every page behind her account stopped answering while the app still
+  /// looked signed in. The caller re-enrols the key instead (`runWithStepUp`).
+  static bool _isDeviceProofRefusal(Object? body) {
+    if (body is! Map) return false;
+    final code = body['code'];
+    return code is String && code.startsWith('DEVICE_PROOF');
   }
 
   bool _isAuthRoute(String path) =>

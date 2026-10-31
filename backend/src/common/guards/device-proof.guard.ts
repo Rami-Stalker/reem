@@ -52,7 +52,7 @@ export class DeviceProofGuard implements CanActivate {
       if (config.required) {
         throw new UnauthorizedException({
           code: 'DEVICE_PROOF_REQUIRED',
-          message: 'This action must be signed by a registered device',
+          message: 'تعذّر التحقق من جهازكِ لهذا الإجراء. حدّثي التطبيق أو سجّلي الدخول من جديد',
         });
       }
       return true;
@@ -73,7 +73,7 @@ export class DeviceProofGuard implements CanActivate {
       // information an attacker gains anything from.
       throw new UnauthorizedException({
         code: 'DEVICE_PROOF_INVALID',
-        message: 'Device proof rejected',
+        message: 'تعذّر التحقق من جهازكِ. سجّلي الدخول من جديد',
         reason: result.reason,
       });
     }
@@ -92,7 +92,7 @@ export class DeviceProofGuard implements CanActivate {
     if (user && result.deviceKey.userId !== user.id) {
       throw new UnauthorizedException({
         code: 'DEVICE_PROOF_INVALID',
-        message: 'Device proof rejected',
+        message: 'تعذّر التحقق من جهازكِ. سجّلي الدخول من جديد',
         reason: 'foreign_key',
       });
     }

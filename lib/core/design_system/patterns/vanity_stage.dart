@@ -1184,11 +1184,15 @@ class _VanityTapeState extends State<VanityTape> {
     final value = widget.value;
     return Semantics(
       slider: true,
-      value: value == null ? '' : '$value ${widget.unit}',
+      // Never empty: the framework asserts that a value and its increased /
+      // decreased neighbours are all given or all absent, and an unset ruler
+      // used to report '' beside a real next step — the «مقاساتي» page failed
+      // that assertion whenever a screen reader was on.
+      value: value == null ? '—' : '$value ${widget.unit}',
       increasedValue:
-          '${((value ?? _middle) + 1).clamp(widget.min, widget.max)}',
+          '${((value ?? _middle) + 1).clamp(widget.min, widget.max)} ${widget.unit}',
       decreasedValue:
-          '${((value ?? _middle) - 1).clamp(widget.min, widget.max)}',
+          '${((value ?? _middle) - 1).clamp(widget.min, widget.max)} ${widget.unit}',
       onIncrease: () => _jumpBy(1),
       onDecrease: () => _jumpBy(-1),
       child: Column(
