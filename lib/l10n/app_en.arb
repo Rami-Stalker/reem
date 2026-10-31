@@ -3966,6 +3966,10 @@
   "@messageSellerAboutOrder": {
     "description": "Button on an order parcel"
   },
+  "messageCustomerAboutOrder": "Message the customer",
+  "@messageCustomerAboutOrder": {
+    "description": "Button on the seller's order screen that opens the conversation with the shopper about this parcel"
+  },
   "messages": "Messages",
   "@messages": {
     "description": "Tooltip on the seller header's chat shortcut."

@@ -3228,6 +3228,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get messageSellerAboutOrder => 'Message about this order';
 
   @override
+  String get messageCustomerAboutOrder => 'Message the customer';
+
+  @override
   String get messages => 'Messages';
 
   @override

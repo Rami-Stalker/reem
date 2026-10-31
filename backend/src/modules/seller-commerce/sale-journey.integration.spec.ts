@@ -556,7 +556,19 @@ dbTest('a seller carrying her own parcel completes the journey', async (world) =
 
   await world.sellerOrders.confirm(sale.seller, sale.sellerOrder.id);
   await world.sellerOrders.ready(sale.seller, sale.sellerOrder.id);
-  await world.sellerOrders.handOver(sale.seller, sale.sellerOrder.id, 'بنفسها');
+  const onTheRoad = await world.sellerOrders.handOver(
+    sale.seller,
+    sale.sellerOrder.id,
+    'بنفسها',
+  );
+  // The button that closes the journey has to be offered. It was read from
+  // the seller's edges, where DELIVERED is unreachable, so a parcel she had
+  // handed over sat in «قيد الشحن» with no action at all.
+  assert.ok(
+    (onTheRoad as { available_actions: string[] }).available_actions.includes(
+      'deliver',
+    ),
+  );
   await world.sellerOrders.deliver(sale.seller, sale.sellerOrder.id, {
     collected: sale.subtotal.toPrisma().toString(),
   });
@@ -582,7 +594,7 @@ dbTest('a seller cannot declare a courier parcel delivered', async (world) => {
 
   await assert.rejects(
     () => world.sellerOrders.deliver(sale.seller, sale.sellerOrder.id),
-    /marked delivered by its courier/,
+    /يُعلَّم كمُسلَّم من قِبل المندوب/,
   );
 });
 
@@ -645,7 +657,7 @@ dbTest("a seller cannot open another seller's parcel", async (world) => {
 
   await assert.rejects(
     () => world.sellerOrders.detail(other, sale.sellerOrder.id),
-    /Order not found/,
+    /الطلب غير موجود/,
   );
 });
 

@@ -5942,6 +5942,12 @@ abstract class AppLocalizations {
   /// **'Message about this order'**
   String get messageSellerAboutOrder;
 
+  /// Button on the seller's order screen that opens the conversation with the shopper about this parcel
+  ///
+  /// In en, this message translates to:
+  /// **'Message the customer'**
+  String get messageCustomerAboutOrder;
+
   /// Tooltip on the seller header's chat shortcut.
   ///
   /// In en, this message translates to:

@@ -138,16 +138,22 @@ export class ChatListQueryDto {
 }
 
 export class MessageQueryDto {
+  // The explicit `number` and `@Type` matter: a bare `page = 1` is recorded as
+  // `Object`, so the query string `"50"` was never converted and every request
+  // that sent `limit` — which the app always does — failed validation, and the
+  // conversation opened on an error instead of its messages.
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @Min(1)
-  page = 1;
+  page: number = 1;
 
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(100)
-  limit = 50;
+  limit: number = 50;
 
   @IsOptional()
   @IsString()

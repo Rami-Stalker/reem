@@ -223,7 +223,7 @@ dbTest('two shoppers cannot open a conversation with each other', async (world) 
   // brokers is the one between a woman and the boutique she is buying from.
   await assert.rejects(
     world.chats.startConversation(one.id, { participant_id: two.id }),
-    /buyers and sellers/i,
+    /بين الزبونات والمتاجر فقط/,
   );
 });
 
@@ -255,7 +255,7 @@ dbTest('a stranger cannot read a conversation she is not in', async (world) => {
 
   await assert.rejects(
     world.chats.thread(opened.id, stranger.id),
-    /not a member/i,
+    /لستِ طرفًا في هذه المحادثة/,
   );
 });
 
@@ -478,6 +478,6 @@ dbTest('blocking someone who does not exist is a 404, not a crash', async (world
   const buyer = await makeUser(world.tx, 'y1', UserRole.CUSTOMER);
   await assert.rejects(
     world.chats.blockUser(buyer.id, '00000000-0000-4000-8000-000000000000', {}),
-    /not found/i,
+    /غير موجودة/,
   );
 });

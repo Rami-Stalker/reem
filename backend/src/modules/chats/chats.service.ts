@@ -297,12 +297,12 @@ export class ChatsService {
   async send(chatId: string, userId: string, dto: SendMessageDto) {
     const chat = await this.assertMember(chatId, userId);
     if (chat.closedAt) {
-      throw new ForbiddenException('This conversation is closed');
+      throw new ForbiddenException('هذه المحادثة مغلقة');
     }
     const content = dto.content?.trim() ?? '';
     const attachments = dto.attachments ?? [];
     if (!content && attachments.length === 0) {
-      throw new BadRequestException('Message content or attachment is required');
+      throw new BadRequestException('اكتبي رسالة أو أرفقي ملفًا');
     }
     // A media kind with nothing attached is a text message that claims to be
     // a photograph — the client draws an empty frame for it. The kind follows
@@ -597,7 +597,7 @@ export class ChatsService {
 
   async blockUser(userId: string, blockedId: string, dto: BlockUserDto) {
     if (userId === blockedId) {
-      throw new BadRequestException('You cannot block yourself');
+      throw new BadRequestException('لا يمكنكِ حظر نفسكِ');
     }
     // An unknown id used to reach the insert and fail the foreign key — a 500
     // for what is a plain "no such person".
@@ -605,7 +605,7 @@ export class ChatsService {
       where: { id: blockedId },
       select: { id: true },
     });
-    if (!target) throw new NotFoundException('User not found');
+    if (!target) throw new NotFoundException('المستخدمة غير موجودة');
     await this.prisma.chatBlock.upsert({
       where: { blockerId_blockedId: { blockerId: userId, blockedId } },
       create: { blockerId: userId, blockedId, reason: dto.reason },
@@ -628,7 +628,7 @@ export class ChatsService {
       dto.reported_user_id === userId ||
       !participantIds.includes(dto.reported_user_id)
     ) {
-      throw new BadRequestException('Reported user must be another chat participant');
+      throw new BadRequestException('يمكن الإبلاغ عن الطرف الآخر في المحادثة فقط');
     }
     if (dto.message_id) {
       const message = await this.prisma.message.findFirst({
@@ -636,7 +636,7 @@ export class ChatsService {
         select: { id: true },
       });
       if (!message) {
-        throw new BadRequestException('Reported message does not belong to this chat');
+        throw new BadRequestException('الرسالة المُبلَّغ عنها ليست من هذه المحادثة');
       }
     }
     const report = await this.prisma.chatReport.create({
@@ -729,7 +729,7 @@ export class ChatsService {
         },
       },
     });
-    if (!product) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('المنتج غير موجود');
     const offer = product.offers[0];
     return {
       id: product.id,
@@ -744,7 +744,7 @@ export class ChatsService {
       where: { id: chatId, participants: { some: { userId } } },
       include: { participants: true },
     });
-    if (!chat) throw new ForbiddenException('Not a member of this chat');
+    if (!chat) throw new ForbiddenException('لستِ طرفًا في هذه المحادثة');
     return chat;
   }
 
@@ -757,14 +757,14 @@ export class ChatsService {
         where: { id: dto.order_id },
         include: { order: { select: { userId: true } } },
       });
-      if (!sellerOrder) throw new NotFoundException('Order not found');
+      if (!sellerOrder) throw new NotFoundException('الطلب غير موجود');
 
       const buyerId = sellerOrder.order.userId;
       if (!buyerId) {
-        throw new BadRequestException('Guest orders have no chat thread');
+        throw new BadRequestException('هذا الطلب تمّ كزائرة، فلا توجد محادثة مرتبطة به');
       }
       if (userId !== buyerId && userId !== sellerOrder.sellerId) {
-        throw new ForbiddenException('You cannot access this order chat');
+        throw new ForbiddenException('لا يمكنكِ فتح محادثة هذا الطلب');
       }
       await this.assertBuyerSellerPair(buyerId, sellerOrder.sellerId);
       return this.conversationShape({
@@ -791,15 +791,15 @@ export class ChatsService {
           offers: { select: { sellerId: true }, orderBy: { price: 'asc' } },
         },
       });
-      if (!product) throw new NotFoundException('Product not found');
+      if (!product) throw new NotFoundException('المنتج غير موجود');
       if (product.offers.length === 0) {
-        throw new BadRequestException('Nobody currently sells this product');
+        throw new BadRequestException('لا يوجد متجر يبيع هذا المنتج حاليًا');
       }
 
       const sellerId = dto.seller_id ?? product.offers[0].sellerId;
       if (!product.offers.some((offer) => offer.sellerId === sellerId)) {
         throw new BadRequestException(
-          'That seller does not list this product',
+          'هذا المتجر لا يعرض هذا المنتج',
         );
       }
 
@@ -821,7 +821,7 @@ export class ChatsService {
       this.prisma.user.findUnique({ where: { id: userId } }),
       this.prisma.user.findUnique({ where: { id: peerId } }),
     ]);
-    if (!me || !peer) throw new NotFoundException('Participant not found');
+    if (!me || !peer) throw new NotFoundException('الطرف الآخر غير موجود');
     const { buyerId, sellerId } = this.resolveBuyerSellerPair(me, peer);
     // Always DIRECT. A `type` of PRODUCT or ORDER with no product or parcel
     // behind it was taken at its word, and the lookup that reuses threads —
@@ -839,7 +839,7 @@ export class ChatsService {
     peer: { id: string; role: UserRole },
   ) {
     if (me.id === peer.id) {
-      throw new BadRequestException('You cannot start a chat with yourself');
+      throw new BadRequestException('لا يمكنكِ مراسلة نفسكِ');
     }
     if (me.role === UserRole.CUSTOMER && peer.role === UserRole.SELLER) {
       return { buyerId: me.id, sellerId: peer.id };
@@ -847,12 +847,12 @@ export class ChatsService {
     if (me.role === UserRole.SELLER && peer.role === UserRole.CUSTOMER) {
       return { buyerId: peer.id, sellerId: me.id };
     }
-    throw new ForbiddenException('Chats are only available between buyers and sellers');
+    throw new ForbiddenException('المحادثات متاحة بين الزبونات والمتاجر فقط');
   }
 
   private async assertBuyerSellerPair(buyerId: string, sellerId: string) {
     if (buyerId === sellerId) {
-      throw new BadRequestException('Buyer and seller must be different users');
+      throw new BadRequestException('لا يمكن أن تكون الزبونة والمتجر الحساب نفسه');
     }
     const [buyer, seller] = await Promise.all([
       this.prisma.user.findUnique({
@@ -865,10 +865,10 @@ export class ChatsService {
       }),
     ]);
     if (!buyer || !seller) {
-      throw new NotFoundException('Chat participant not found');
+      throw new NotFoundException('الطرف الآخر غير موجود');
     }
     if (buyer.role !== UserRole.CUSTOMER || seller.role !== UserRole.SELLER) {
-      throw new ForbiddenException('Chats are only available between buyers and sellers');
+      throw new ForbiddenException('المحادثات متاحة بين الزبونات والمتاجر فقط');
     }
   }
 
@@ -988,7 +988,7 @@ export class ChatsService {
       },
     });
     if (block) {
-      throw new ForbiddenException('Messaging is not available for this user');
+      throw new ForbiddenException('المراسلة غير متاحة مع هذا الحساب');
     }
   }
 
