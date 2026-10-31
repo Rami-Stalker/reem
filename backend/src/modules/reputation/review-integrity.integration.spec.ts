@@ -344,7 +344,7 @@ dbTest('a seller still cannot review herself', async (world) => {
   const seller = await makeUser(world.tx, 'sel', UserRole.SELLER);
   await assert.rejects(
     world.reputation.createSellerReview(seller.id, seller.id, review),
-    /cannot review themselves/i,
+    /لا يمكنكِ تقييم متجركِ/,
   );
 });
 
