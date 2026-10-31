@@ -9,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User, UserRole } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
+  serializePublicUser,
   serializeUser,
   serializeUserProfile,
 } from '../../common/serializers';
@@ -76,9 +77,9 @@ export class UsersService {
   }
 
   /** Any user's public profile, annotated with the viewer's relationship. */
-  async getProfile(targetId: string, viewerId: string) {
+  async getProfile(targetId: string, viewerId?: string) {
     const user = await this.requireUser(targetId);
-    const isMe = targetId === viewerId;
+    const isMe = viewerId !== undefined && targetId === viewerId;
     return serializeUserProfile(
       user,
       await this.profileExtras(user, viewerId, isMe),
@@ -206,13 +207,15 @@ export class UsersService {
   async listFollowers(targetId: string) {
     await this.requireUser(targetId);
     const followers = await this.users.listFollowers(targetId);
-    return followers.map(serializeUser);
+    // Public: anyone can open these lists. `serializeUser` carried each
+    // person's phone number and email to whoever looked.
+    return followers.map((user) => serializePublicUser(user));
   }
 
   async listFollowing(targetId: string) {
     await this.requireUser(targetId);
     const following = await this.users.listFollowing(targetId);
-    return following.map(serializeUser);
+    return following.map((user) => serializePublicUser(user));
   }
 
   // ── helpers ──────────────────────────────────────────────────────────────
@@ -223,12 +226,14 @@ export class UsersService {
     return user;
   }
 
-  private async profileExtras(user: User, viewerId: string, isMe: boolean) {
+  private async profileExtras(user: User, viewerId: string | undefined, isMe: boolean) {
     const isSeller = user.role === UserRole.SELLER;
     const [postsCount, isFollowing, sellerStats, picksCount, hasStory, adTier] =
       await Promise.all([
         this.users.countPosts(user.id),
-        isMe
+        // A visitor follows nobody. Asked with no follower, the lookup
+        // by compound key throws rather than answering no.
+        isMe || !viewerId
           ? Promise.resolve(false)
           : this.users.findFollow(viewerId, user.id).then(Boolean),
         isSeller ? this.users.sellerStats(user.id) : Promise.resolve(null),

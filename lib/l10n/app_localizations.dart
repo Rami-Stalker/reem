@@ -10352,6 +10352,18 @@ abstract class AppLocalizations {
   /// **'Conversations are tied to your account, so you keep them across your devices.'**
   String get signInToMessageBody;
 
+  /// Auth prompt title when a guest taps Follow on a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to follow'**
+  String get signInToFollow;
+
+  /// Auth prompt body when a guest taps Follow on a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Following is kept on your account, so her new pieces and posts reach you on any device.'**
+  String get signInToFollowBody;
+
   /// Primary sign-in button: a code on her SIM is the credential
   ///
   /// In en, this message translates to:

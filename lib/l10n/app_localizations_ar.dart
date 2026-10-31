@@ -5816,6 +5816,13 @@ class AppLocalizationsAr extends AppLocalizations {
       'المحادثات مربوطة بحسابكِ، لتضلّ معكِ على كل أجهزتكِ.';
 
   @override
+  String get signInToFollow => 'سجّلي دخولكِ لتتابعي';
+
+  @override
+  String get signInToFollowBody =>
+      'المتابعة محفوظة بحسابكِ، لتوصلكِ القطع والمنشورات الجديدة على أي جهاز.';
+
+  @override
   String get signInWithCode => 'ادخلي برمز';
 
   @override

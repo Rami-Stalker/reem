@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { ProfileOverviewService } from './profile-overview.service';
@@ -66,19 +67,29 @@ export class UsersController {
     return this.users.setProfileVisibility(userId, dto.is_public);
   }
 
+  /**
+   * A page anyone may open — a boutique's shopfront above all, which is what a
+   * shared link lands on. It used to demand a signed-in account, so a visitor
+   * browsing as a guest got «صار في غلط» on every seller and shopper page she
+   * tapped. A closed customer page still says only that it is closed: what is
+   * readable is decided by the owner's visibility, not by who is asking.
+   */
+  @OptionalAuth()
   @Get(':id')
   getProfile(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('id') viewerId: string,
+    @CurrentUser('id') viewerId?: string,
   ) {
     return this.users.getProfile(id, viewerId);
   }
 
+  @OptionalAuth()
   @Get(':id/followers')
   followers(@Param('id', ParseUUIDPipe) id: string) {
     return this.users.listFollowers(id);
   }
 
+  @OptionalAuth()
   @Get(':id/following')
   following(@Param('id', ParseUUIDPipe) id: string) {
     return this.users.listFollowing(id);

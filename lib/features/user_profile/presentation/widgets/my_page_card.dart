@@ -106,13 +106,19 @@ class _MyPageCardState extends ConsumerState<MyPageCard> {
           // painted "off" before the server says so would invite her to open a
           // page that is already open.
           if (profile != null)
-            SwitchListTile.adaptive(
-              contentPadding: EdgeInsets.zero,
-              value: isPublic,
-              onChanged: _saving ? null : _setPublic,
-              title: Text(
-                l10n.myPagePublicToggle,
-                style: context.dsText.tileTitle.tint(c.onSurface),
+            // A list tile paints its ink on the nearest Material. The card is
+            // a decorated box, not one, so Flutter refused to build the tile —
+            // the red error panel on her own profile in a debug build.
+            Material(
+              type: MaterialType.transparency,
+              child: SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                value: isPublic,
+                onChanged: _saving ? null : _setPublic,
+                title: Text(
+                  l10n.myPagePublicToggle,
+                  style: context.dsText.tileTitle.tint(c.onSurface),
+                ),
               ),
             ),
           DsGaps.vSm,
