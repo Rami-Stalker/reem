@@ -32,7 +32,14 @@ class DeviceIdentityService {
   final SecureStorageService _storage;
   static final _algorithm = Ed25519();
 
+  /// The loaded key, and the stored seed it was loaded from.
+  ///
+  /// Keyed by the seed because the app holds several instances of this class
+  /// over one storage — the network layer signs with one, sign-in enrols with
+  /// another. A plain cache kept signing with the old key after the other
+  /// instance had replaced it, so a re-enrolled phone was refused anyway.
   SimpleKeyPair? _cached;
+  String? _cachedSeed;
 
   /// Base64url of the raw 32-byte public key, as the server stores it.
   Future<String> publicKeyBase64Url() async {
@@ -63,20 +70,24 @@ class DeviceIdentityService {
   /// nothing recognises.
   Future<void> reset() async {
     _cached = null;
+    _cachedSeed = null;
     await _storage.delete(SecureStorageKeys.devicePrivateKey);
     await _storage.delete(SecureStorageKeys.deviceKeyId);
   }
 
   Future<SimpleKeyPair> _keyPair() async {
-    final cached = _cached;
-    if (cached != null) return cached;
-
     final stored = await _storage.read(SecureStorageKeys.devicePrivateKey);
+    final cached = _cached;
+    if (cached != null && stored != null && stored == _cachedSeed) {
+      return cached;
+    }
+
     if (stored != null && stored.isNotEmpty) {
       try {
         final seed = base64Url.decode(base64Url.normalize(stored));
         final keyPair = await _algorithm.newKeyPairFromSeed(seed);
         _cached = keyPair;
+        _cachedSeed = stored;
         return keyPair;
       } catch (error) {
         // A key we cannot load is worse than no key: it would fail every proof
@@ -93,11 +104,10 @@ class DeviceIdentityService {
 
     final keyPair = await _algorithm.newKeyPair();
     final seed = await keyPair.extractPrivateKeyBytes();
-    await _storage.write(
-      SecureStorageKeys.devicePrivateKey,
-      base64Url.encode(seed).replaceAll('=', ''),
-    );
+    final encoded = base64Url.encode(seed).replaceAll('=', '');
+    await _storage.write(SecureStorageKeys.devicePrivateKey, encoded);
     _cached = keyPair;
+    _cachedSeed = encoded;
     return keyPair;
   }
 }

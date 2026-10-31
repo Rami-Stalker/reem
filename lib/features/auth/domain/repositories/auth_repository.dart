@@ -128,6 +128,12 @@ abstract interface class AuthRepository {
   /// Safe to call on every launch — it is a no-op once enrolled.
   Future<Result<void>> ensureDeviceRegistered();
 
+  /// Drops this device's key and enrols a fresh one for the signed-in
+  /// account. For a server that no longer recognises the key this install
+  /// holds — or that records it under another account — which no amount of
+  /// retrying with the old key fixes.
+  Future<Result<void>> reenrolDevice();
+
   Future<Result<void>> continueAsGuest();
 
   Future<Result<bool>> isGuestSession();

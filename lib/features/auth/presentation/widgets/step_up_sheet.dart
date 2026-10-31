@@ -49,22 +49,39 @@ class StepUpResult {
 /// factor for the named scope, collects it, and reports whether the caller
 /// should try again.
 ///
-/// Two refusals are deliberately **not** recoverable here. `NEW_DEVICE_COOLDOWN`
-/// is a delay, not a challenge — for the first 24 hours on a handset the
-/// platform has just met, the sensitive actions are refused outright, because
-/// every second factor a shopper has arrives on the SIM a swapper would be
-/// holding, so offering one would defeat the control. And `DEVICE_PROOF_REQUIRED`
-/// means this install has not enrolled a key at all, which no amount of typing
-/// fixes.
+/// A refusal about the handset's key (`DEVICE_PROOF_REQUIRED`, or
+/// `DEVICE_PROOF_INVALID` for a key the server does not know or files under
+/// another account) is met by enrolling a fresh key and trying once more —
+/// no amount of typing fixes it, but re-enrolment does.
+///
+/// `NEW_DEVICE_COOLDOWN` is deliberately **not** recoverable here: it is a
+/// delay, not a challenge — for the first 24 hours on a handset the platform
+/// has just met, the sensitive actions are refused outright, because every
+/// second factor a shopper has arrives on the SIM a swapper would be holding,
+/// so offering one would defeat the control.
 Future<StepUpResult> runWithStepUp(
   BuildContext context,
   WidgetRef ref, {
   required Future<Result<Object?>> Function() action,
 }) async {
-  final first = await action();
+  var first = await action();
   if (first is Success) return const StepUpResult(StepUpOutcome.succeeded);
 
-  final failure = (first as Error).failure;
+  var failure = (first as Error).failure;
+
+  // The server does not recognise this install's key — none was ever saved,
+  // the server's record of it is gone, or it is filed under another account
+  // that used this phone. Enrolling a fresh key for the signed-in account and
+  // trying once more is the whole fix; telling her «sign this with your
+  // registered device» was a dead end she could do nothing about.
+  if (_needsReenrolment(failure)) {
+    final reenrolled = await ref.read(authRepositoryProvider).reenrolDevice();
+    if (reenrolled is Success) {
+      first = await action();
+      if (first is Success) return const StepUpResult(StepUpOutcome.succeeded);
+      failure = (first as Error).failure;
+    }
+  }
 
   // The request has been awaited, so the screen that asked may already be
   // gone. Everything below reads `context` — for the localisations, and then
@@ -98,6 +115,15 @@ Future<StepUpResult> runWithStepUp(
   return elevated
       ? const StepUpResult(StepUpOutcome.elevated)
       : const StepUpResult(StepUpOutcome.cancelled);
+}
+
+/// A refusal about the handset's key that a fresh key fixes. A *revoked* key
+/// is deliberately not one: she, or support, switched that device off.
+bool _needsReenrolment(Failure failure) {
+  if (failure.code == 'DEVICE_PROOF_REQUIRED') return true;
+  if (failure.code != 'DEVICE_PROOF_INVALID') return false;
+  final reason = _detail(failure, 'reason');
+  return reason == 'unknown_key' || reason == 'foreign_key';
 }
 
 /// Requests a factor for [scope] and collects it. True once the session is

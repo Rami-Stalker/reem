@@ -53,7 +53,7 @@ export class StepUpGuard implements CanActivate {
     if (!request.provenDevice) {
       throw new ForbiddenException({
         code: 'DEVICE_PROOF_REQUIRED',
-        message: 'This action must be signed by your registered device',
+        message: 'تعذّر التحقق من جهازكِ لهذا الإجراء. حدّثي التطبيق أو سجّلي الدخول من جديد',
         scope: requirement.scope,
       });
     }
@@ -77,7 +77,7 @@ export class StepUpGuard implements CanActivate {
     if (state?.level !== AssuranceLevel.AAL3) {
       throw new ForbiddenException({
         code: 'STEP_UP_REQUIRED',
-        message: 'Confirm it is you before continuing',
+        message: 'أكّدي هويتكِ للمتابعة',
         scope: requirement.scope,
       });
     }
