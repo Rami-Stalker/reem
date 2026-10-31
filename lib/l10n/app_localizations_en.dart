@@ -5765,6 +5765,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Conversations are tied to your account, so you keep them across your devices.';
 
   @override
+  String get signInToFollow => 'Sign in to follow';
+
+  @override
+  String get signInToFollowBody =>
+      'Following is kept on your account, so her new pieces and posts reach you on any device.';
+
+  @override
   String get signInWithCode => 'Sign in with a code';
 
   @override

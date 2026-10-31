@@ -6815,6 +6815,14 @@
   "@signInToMessageBody": {
     "description": "Auth prompt body for chat"
   },
+  "signInToFollow": "Sign in to follow",
+  "@signInToFollow": {
+    "description": "Auth prompt title when a guest taps Follow on a profile"
+  },
+  "signInToFollowBody": "Following is kept on your account, so her new pieces and posts reach you on any device.",
+  "@signInToFollowBody": {
+    "description": "Auth prompt body when a guest taps Follow on a profile"
+  },
   "signInWithCode": "Sign in with a code",
   "@signInWithCode": {
     "description": "Primary sign-in button: a code on her SIM is the credential"

@@ -9,6 +9,7 @@ import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/platform/app_haptics.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
 import 'package:ohara/features/discovery/presentation/providers/collection_state.dart';
 import 'package:ohara/features/discovery/presentation/providers/discovery_providers.dart';
 import 'package:ohara/features/highlights/presentation/widgets/highlights_rail.dart';
@@ -20,6 +21,7 @@ import 'package:ohara/features/social/presentation/providers/social_providers.da
 import 'package:ohara/features/social/presentation/widgets/interactive_content_card.dart';
 import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 import 'package:ohara/features/user_profile/domain/entities/user_profile.dart';
+import 'package:ohara/features/user_profile/presentation/providers/user_profile_notifier.dart';
 import 'package:ohara/features/user_profile/presentation/providers/user_profile_providers.dart';
 import 'package:ohara/features/user_profile/presentation/widgets/my_page_card.dart';
 import 'package:ohara/features/user_profile/presentation/widgets/profile_page_header.dart';
@@ -134,6 +136,23 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     setState(() => _tab = tab);
   }
 
+  /// A visitor is asked to sign in rather than sent to the server, which
+  /// could only refuse her — and used to, as a bare «Unauthorized».
+  Future<void> _toggleFollow(UserProfileNotifier notifier) async {
+    final l10n = context.l10n;
+    final signedIn = await requireAuthenticatedUser(
+      context,
+      ref,
+      title: l10n.signInToFollow,
+      message: l10n.signInToFollowBody,
+      from: switch (widget.userId) {
+        final id? => RoutePaths.userProfileOf(id),
+        null => null,
+      },
+    );
+    if (signedIn) await notifier.toggleFollow();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -168,7 +187,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             child: ProfilePageHeader(
               profile: profile,
               isFollowLoading: state.isFollowLoading,
-              onToggleFollow: notifier.toggleFollow,
+              onToggleFollow: () => _toggleFollow(notifier),
             ),
           ),
           // «متجر ماسي» — the plan a boutique carries, under her name.
