@@ -3262,6 +3262,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get messageSellerAboutOrder => 'راسلي المتجر بخصوص الطلب';
 
   @override
+  String get messageCustomerAboutOrder => 'راسلي الزبونة بخصوص الطلب';
+
+  @override
   String get messages => 'الرسايل';
 
   @override

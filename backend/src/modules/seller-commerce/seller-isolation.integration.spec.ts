@@ -226,7 +226,7 @@ dbTest("a rival cannot read a boutique's parcel", async (tx) => {
 
   await assert.rejects(
     service.detail(asAuth(rival), mine.sellerOrder.id),
-    /Order not found/,
+    /الطلب غير موجود/,
     'a 404, deliberately — a 403 would confirm the order number exists',
   );
 });

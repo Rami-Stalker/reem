@@ -6,6 +6,8 @@ import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:ohara/core/utils/arabic_numerals.dart';
 import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
+import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:ohara/features/seller_orders/presentation/providers/seller_orders_provider.dart';
 import 'package:ohara/features/seller_orders/presentation/seller_order_labels.dart';
@@ -97,6 +99,18 @@ class SellerOrderDetailScreen extends ConsumerWidget {
                 SellerCustomerPanel(
                   customer: order.summary.customer,
                   mode: order.summary.fulfilmentMode,
+                ),
+                DsGaps.vSm,
+                // The conversation about this parcel, opened from the parcel.
+                // Before this the only way to answer «وين طلبي؟» was to go
+                // back to the inbox and hunt for her name. The chat goes
+                // through the platform, so it works even when her phone and
+                // address are masked from the boutique.
+                MessageSellerButton(
+                  label: context.l10n.messageCustomerAboutOrder,
+                  variant: DsButtonVariant.tonal,
+                  size: DsButtonSize.sm,
+                  request: ChatStartRequest.order(sellerOrderId: order.summary.id),
                 ),
                 DsGaps.vLg,
 

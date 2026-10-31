@@ -41,6 +41,15 @@ void main() {
       expect(queue.countFor(SellerQueueTab.shipping), 0);
     });
 
+    test('a further page is read from `has_next_page`', () {
+      // The server's pagination meta (`buildMeta`) names it `has_next_page`.
+      // The mapper used to read `has_more`, so page two was never requested.
+      expect(queue.hasMore, isFalse);
+      final json = _fixture('seller_order_queue.json');
+      (json['pagination'] as Map<String, dynamic>)['has_next_page'] = true;
+      expect(SellerOrderMapper.queueFromJson(json).hasMore, isTrue);
+    });
+
     test('the attention count is the work waiting on her', () {
       // new + preparing + returns — the three piles nobody else can clear.
       expect(queue.needsAttention, 3 + 1 + 1);

@@ -555,8 +555,10 @@ export class SellerCommerceService {
 
     return contents.map((content) => ({
       id: content.id,
-      name: content.title ?? this.titleCase(content.contentType),
-      kind: this.titleCase(content.contentType.replace(/_/g, ' ')),
+      // Arabic, like the rest of the dashboard. The raw type used to be
+      // title-cased into «Product Post» — English on an Arabic screen.
+      name: content.title ?? this.contentKindLabel(content.contentType),
+      kind: this.contentKindLabel(content.contentType),
       uses: Number(content.productClicksCount + content.engagementCount),
       revenue: Money.of(
         content.revenueGenerated,
@@ -807,9 +809,9 @@ export class SellerCommerceService {
       insights.push({
         id: 'top-product-momentum',
         kind: 'revenue',
-        title: 'Top product momentum',
-        body: `${bestProduct.title} leads this month with ${bestProduct.revenue} in seller revenue.`,
-        action: 'Review product',
+        title: 'الأكثر مبيعاً هذا الشهر',
+        body: `«${bestProduct.title}» يتصدّر مبيعاتكِ هذا الشهر بإيراد ${this.syp(bestProduct.revenue)}.`,
+        action: 'عرض المنتج',
       });
     }
 
@@ -817,9 +819,9 @@ export class SellerCommerceService {
       insights.push({
         id: 'low-stock-risk',
         kind: 'inventory',
-        title: 'Inventory risk detected',
-        body: `${input.lowStockCount} products are at or below the low-stock threshold.`,
-        action: 'Review stock',
+        title: 'مخزون على وشك النفاد',
+        body: `${input.lowStockCount} من منتجاتكِ وصلت إلى حدّ المخزون المنخفض أو أقل.`,
+        action: 'مراجعة المخزون',
       });
     }
 
@@ -827,9 +829,9 @@ export class SellerCommerceService {
       insights.push({
         id: 'draft-products',
         kind: 'product',
-        title: 'Publish-ready catalog work',
-        body: `${input.draftProducts} product drafts can be completed or scheduled.`,
-        action: 'Open drafts',
+        title: 'مسودات جاهزة للنشر',
+        body: `لديكِ ${input.draftProducts} مسودة منتج يمكن إكمالها ونشرها.`,
+        action: 'فتح المسودات',
       });
     }
 
@@ -840,20 +842,20 @@ export class SellerCommerceService {
     insights.push({
       id: 'monthly-performance',
       kind: monthTrend >= 0 ? 'revenue' : 'warning',
-      title: monthTrend >= 0 ? 'Revenue is growing' : 'Revenue needs attention',
-      body: `Month-to-date revenue is ${Math.abs(monthTrend)}% ${
-        monthTrend >= 0 ? 'above' : 'below'
-      } the previous period.`,
-      action: 'Open analytics',
+      title: monthTrend >= 0 ? 'مبيعاتكِ في نمو' : 'المبيعات تحتاج انتباهكِ',
+      body: `إيراد هذا الشهر حتى اليوم ${
+        monthTrend >= 0 ? 'أعلى' : 'أقل'
+      } بنسبة ${Math.abs(monthTrend)}٪ من الفترة السابقة.`,
+      action: 'فتح التحليلات',
     });
 
     if (input.conversionRate < 2 && input.revenue.month.revenue > 0) {
       insights.push({
         id: 'conversion-opportunity',
         kind: 'customer',
-        title: 'Conversion opportunity',
-        body: `Current conversion is ${input.conversionRate}%. Improve titles, media, pricing, or bundles for high-traffic products.`,
-        action: 'Improve listings',
+        title: 'فرصة لرفع التحويل',
+        body: `نسبة التحويل الحالية ${input.conversionRate}٪. حسّني العناوين والصور والأسعار للمنتجات الأكثر زيارة.`,
+        action: 'تحسين المنتجات',
       });
     }
 
@@ -1080,6 +1082,24 @@ export class SellerCommerceService {
     const hours = Math.floor(minutes / 60);
     if (hours < 24) return `${hours}h`;
     return `${Math.floor(hours / 24)}d`;
+  }
+
+  /** What a seller calls each kind of shoppable content. */
+  private contentKindLabel(type: string): string {
+    const labels: Record<string, string> = {
+      product_post: 'منشور منتج',
+      reel: 'ريل',
+      story: 'قصة',
+      collection: 'مجموعة',
+      flash_offer: 'عرض سريع',
+      live_stream: 'بث مباشر',
+    };
+    return labels[type] ?? this.titleCase(type.replace(/_/g, ' '));
+  }
+
+  /** «26,520 ل.س» — the figure as the goals card already writes it. */
+  private syp(value: number): string {
+    return `${Math.round(value).toLocaleString('en-US')} ل.س`;
   }
 
   private titleCase(value: string) {

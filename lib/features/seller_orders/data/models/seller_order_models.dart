@@ -27,8 +27,12 @@ final class SellerOrderMapper {
     }
 
     final pagination = json['pagination'];
+    // The server's pagination meta says `has_next_page` (`buildMeta`). Reading
+    // only `has_more` meant the queue never asked for page two: a shop with
+    // more than twenty orders in a tab could not see the rest.
     final hasMore =
-        pagination is Map<String, dynamic> && pagination['has_more'] == true;
+        pagination is Map<String, dynamic> &&
+        (pagination['has_next_page'] == true || pagination['has_more'] == true);
 
     return SellerOrderQueue(orders: rows, counts: counts, hasMore: hasMore);
   }

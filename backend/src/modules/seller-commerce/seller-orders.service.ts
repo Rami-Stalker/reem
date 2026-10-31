@@ -224,7 +224,7 @@ export class SellerOrdersService {
     const parcel = await this.load(sellerOrderId, user.id);
     this.assertSelfCarried(
       parcel.fulfilmentMode,
-      'Only a parcel you are carrying yourself can be handed over here — the courier records the pick-up for the rest',
+      'التسليم من هنا للطلبات التي تشحنينها بنفسكِ فقط — مندوب المنصة يسجّل الاستلام لباقي الطلبات',
     );
 
     await this.prisma.$transaction((tx) =>
@@ -259,7 +259,7 @@ export class SellerOrdersService {
     const parcel = await this.load(sellerOrderId, user.id);
     this.assertSelfCarried(
       parcel.fulfilmentMode,
-      'A parcel carried by the platform is marked delivered by its courier',
+      'الطلب الذي يشحنه مندوب المنصة يُعلَّم كمُسلَّم من قِبل المندوب',
     );
 
     const collected =
@@ -267,7 +267,7 @@ export class SellerOrdersService {
         ? null
         : Money.of(options.collected, parcel.currency);
     if (collected?.isNegative()) {
-      throw new BadRequestException('Collected cash cannot be negative');
+      throw new BadRequestException('المبلغ المُحصّل لا يمكن أن يكون سالبًا');
     }
 
     await this.prisma.$transaction(async (tx) => {
@@ -443,11 +443,11 @@ export class SellerOrdersService {
       where: { id: sellerOrderId },
       include: this.listInclude(),
     });
-    if (!parcel) throw new NotFoundException('Order not found');
+    if (!parcel) throw new NotFoundException('الطلب غير موجود');
     if (parcel.sellerId !== sellerId) {
       // Not a 403: a seller has no business learning that another seller's
       // order number exists.
-      throw new NotFoundException('Order not found');
+      throw new NotFoundException('الطلب غير موجود');
     }
     return parcel;
   }
@@ -725,8 +725,18 @@ export class SellerOrdersService {
     if (selfCarried && allowed.includes(SellerOrderStatus.HANDED_TO_COURIER)) {
       actions.push('hand_over');
     }
-    if (selfCarried && allowed.includes(SellerOrderStatus.DELIVERED)) {
-      actions.push('deliver');
+    // On her own parcel she is the courier — `deliver()` moves it as one — so
+    // the button follows the courier's edges, not the seller's. Read from the
+    // seller's row alone, `DELIVERED` is never reachable and a parcel she had
+    // handed over sat in «قيد الشحن» with no way to close it. From
+    // HANDED_TO_COURIER `deliver()` walks the IN_TRANSIT step itself.
+    if (selfCarried) {
+      const asCourier = nextStatuses(parcel.status, 'COURIER');
+      const reachable =
+        asCourier.includes(SellerOrderStatus.DELIVERED) ||
+        (parcel.status === SellerOrderStatus.HANDED_TO_COURIER &&
+          asCourier.includes(SellerOrderStatus.IN_TRANSIT));
+      if (reachable) actions.push('deliver');
     }
     if (allowed.includes(SellerOrderStatus.CANCELLED_BY_SELLER)) {
       actions.push('cancel');

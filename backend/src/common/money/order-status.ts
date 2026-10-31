@@ -141,7 +141,12 @@ export function assertTransition(
   actor: StatusActor,
 ): void {
   if (from === to) {
-    throw new BadRequestException(`Order is already ${from}`);
+    // Arabic: the usual way to reach this is a seller tapping the same button
+    // twice, or acting on a screen another device already moved on — and the
+    // app shows this text as it is.
+    throw new BadRequestException(
+      `تم تحديث هذا الطلب مسبقًا (${from}) — حدّثي الصفحة`,
+    );
   }
   if (!canTransition(from, to, actor)) {
     throw new BadRequestException(

@@ -84,7 +84,7 @@
     "page": 1,
     "limit": 20,
     "total": 6,
-    "count": 2,
-    "has_more": false
+    "total_pages": 1,
+    "has_next_page": false
   }
 }
