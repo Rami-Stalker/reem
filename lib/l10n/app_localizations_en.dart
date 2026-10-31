@@ -14599,4 +14599,125 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get referralShareInvite => 'Share invite';
+
+  @override
+  String get closetDrawerDress => 'Dresses';
+
+  @override
+  String get closetDrawerAbaya => 'Abayas';
+
+  @override
+  String get closetDrawerOuterwear => 'Coats';
+
+  @override
+  String get closetDrawerTop => 'Tops';
+
+  @override
+  String get closetDrawerBottom => 'Trousers & skirts';
+
+  @override
+  String get closetDrawerShoes => 'Shoes';
+
+  @override
+  String get closetDrawerBag => 'Bags';
+
+  @override
+  String get closetDrawerJewelry => 'Jewellery';
+
+  @override
+  String get closetDrawerAccessory => 'Accessories';
+
+  @override
+  String get closetDrawerPerfume => 'Perfumes';
+
+  @override
+  String get closetDrawerBeauty => 'Beauty';
+
+  @override
+  String get closetDrawerAll => 'Every piece';
+
+  @override
+  String get closetDrawerFavourites => 'Favourites';
+
+  @override
+  String get closetDrawerFavouritesCaption => 'The ones you love';
+
+  @override
+  String get closetDrawerStored => 'Season box';
+
+  @override
+  String get closetDrawerStoredCaption => 'For another season';
+
+  @override
+  String get closetDrawerEmpty => 'Empty';
+
+  @override
+  String closetDrawerAddTo(String name) {
+    return 'Add a piece to $name';
+  }
+
+  @override
+  String closetDrawerOpen(String name) {
+    return 'Open $name';
+  }
+
+  @override
+  String closetArmoireOutfits(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count outfits this season',
+      one: '1 outfit this season',
+      zero: 'No complete outfit this season',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closetArmoireHint =>
+      'Tap any shelf or drawer to open it — the + adds a piece straight to it.';
+
+  @override
+  String get closetSearchWardrobe => 'Search your wardrobe';
+
+  @override
+  String get closetCompartmentEmptyRail => 'Nothing hanging here yet';
+
+  @override
+  String get closetCompartmentEmptyShelf => 'This shelf is still empty';
+
+  @override
+  String get closetCompartmentEmptyDrawer => 'This drawer is still empty';
+
+  @override
+  String get closetCompartmentEmptyBody =>
+      'Add the first piece with a photo, and you\'ll find it here every time you open the wardrobe.';
+
+  @override
+  String get closetCompartmentAddFirst => 'Add the first piece';
+
+  @override
+  String get closetFavouritesEmptyTitle => 'No favourites yet';
+
+  @override
+  String get closetFavouritesEmptyBody =>
+      'Tap the heart on any piece to keep it in this box.';
+
+  @override
+  String get closetStoredEmptyTitle => 'The season box is empty';
+
+  @override
+  String get closetStoredEmptyBody =>
+      'Pieces you put away for another season wait here until their time comes back.';
+
+  @override
+  String get closetFavouritesOnlyOn => 'Show favourites only';
+
+  @override
+  String get closetFavouritesOnlyOff => 'Show every piece';
+
+  @override
+  String closetAddingTo(String name) {
+    return 'It will go into $name';
+  }
 }

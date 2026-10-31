@@ -1,5 +1,7 @@
 // Ohara screen patterns — page scaffolds, app chrome, product surfaces.
 export 'package:ohara/core/design_system/patterns/admin_console.dart';
+// Her closet: the armoire — lacquer, rails, shelves, drawers and brass.
+export 'package:ohara/core/design_system/patterns/armoire_stage.dart';
 // The seller's home: the atelier workbench — cloth, spool, seam, rail.
 export 'package:ohara/core/design_system/patterns/atelier_workbench.dart';
 // The sign-in journey's stage: aurora ground, arch emblem, frosted panel.

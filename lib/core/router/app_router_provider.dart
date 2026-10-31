@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/experience/role_experience.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/observability/breadcrumb_observers.dart';
@@ -50,6 +51,7 @@ import 'package:ohara/features/checkout/presentation/screens/checkout_screen.dar
 import 'package:ohara/features/checkout/presentation/screens/order_detail_screen.dart';
 import 'package:ohara/features/checkout/presentation/screens/orders_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/add_personal_item_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/closet_compartment_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_gap_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_item_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_look_screen.dart';
@@ -626,7 +628,45 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.closetAddItem,
         name: RouteNames.closetAddItem,
-        builder: (context, state) => const AddPersonalItemScreen(),
+        builder: (context, state) => AddPersonalItemScreen(
+          initialSlot: state.uri.queryParameters['slot'],
+        ),
+      ),
+      // A compartment opens like a drawer pulled towards her: it rises a
+      // little and comes into focus, rather than sliding in from the side
+      // like a page of a book.
+      GoRoute(
+        path: RoutePaths.closetCompartment,
+        name: RouteNames.closetCompartment,
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          transitionDuration: DsMotion.moderate,
+          reverseTransitionDuration: DsMotion.normal,
+          transitionsBuilder: (context, animation, secondary, child) {
+            final curved = CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+              reverseCurve: Curves.easeInCubic,
+            );
+            return FadeTransition(
+              opacity: curved,
+              child: SlideTransition(
+                position: Tween(
+                  begin: const Offset(0, .06),
+                  end: Offset.zero,
+                ).animate(curved),
+                child: ScaleTransition(
+                  scale: Tween(begin: .97, end: 1.0).animate(curved),
+                  child: child,
+                ),
+              ),
+            );
+          },
+          child: ClosetCompartmentScreen(
+            compartmentKey: state.pathParameters['key'] ?? '',
+            startWithSearch: state.uri.queryParameters['search'] == '1',
+          ),
+        ),
       ),
       GoRoute(
         path: RoutePaths.closetLooks,

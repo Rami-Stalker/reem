@@ -24900,6 +24900,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share invite'**
   String get referralShareInvite;
+
+  /// Wardrobe compartment for dresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Dresses'**
+  String get closetDrawerDress;
+
+  /// Wardrobe compartment for abayas.
+  ///
+  /// In en, this message translates to:
+  /// **'Abayas'**
+  String get closetDrawerAbaya;
+
+  /// Wardrobe compartment for coats and jackets.
+  ///
+  /// In en, this message translates to:
+  /// **'Coats'**
+  String get closetDrawerOuterwear;
+
+  /// Wardrobe shelf for tops and blouses.
+  ///
+  /// In en, this message translates to:
+  /// **'Tops'**
+  String get closetDrawerTop;
+
+  /// Wardrobe shelf for bottoms.
+  ///
+  /// In en, this message translates to:
+  /// **'Trousers & skirts'**
+  String get closetDrawerBottom;
+
+  /// Wardrobe shoe rack.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoes'**
+  String get closetDrawerShoes;
+
+  /// Wardrobe hooks for bags.
+  ///
+  /// In en, this message translates to:
+  /// **'Bags'**
+  String get closetDrawerBag;
+
+  /// Wardrobe jewellery drawer.
+  ///
+  /// In en, this message translates to:
+  /// **'Jewellery'**
+  String get closetDrawerJewelry;
+
+  /// Wardrobe hooks for accessories.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessories'**
+  String get closetDrawerAccessory;
+
+  /// Wardrobe drawer for perfumes.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfumes'**
+  String get closetDrawerPerfume;
+
+  /// Wardrobe drawer for beauty products.
+  ///
+  /// In en, this message translates to:
+  /// **'Beauty'**
+  String get closetDrawerBeauty;
+
+  /// The whole wardrobe at once.
+  ///
+  /// In en, this message translates to:
+  /// **'Every piece'**
+  String get closetDrawerAll;
+
+  /// Storage box holding favourite pieces.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourites'**
+  String get closetDrawerFavourites;
+
+  /// Caption under the favourites box.
+  ///
+  /// In en, this message translates to:
+  /// **'The ones you love'**
+  String get closetDrawerFavouritesCaption;
+
+  /// Storage box holding pieces put away for another season.
+  ///
+  /// In en, this message translates to:
+  /// **'Season box'**
+  String get closetDrawerStored;
+
+  /// Caption under the season box.
+  ///
+  /// In en, this message translates to:
+  /// **'For another season'**
+  String get closetDrawerStoredCaption;
+
+  /// A compartment with nothing in it.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty'**
+  String get closetDrawerEmpty;
+
+  /// The + on a compartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a piece to {name}'**
+  String closetDrawerAddTo(String name);
+
+  /// Screen-reader label for a compartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {name}'**
+  String closetDrawerOpen(String name);
+
+  /// Under the wardrobe's name plate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No complete outfit this season} =1{1 outfit this season} other{{count} outfits this season}}'**
+  String closetArmoireOutfits(int count);
+
+  /// Hint under the wardrobe.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap any shelf or drawer to open it — the + adds a piece straight to it.'**
+  String get closetArmoireHint;
+
+  /// Search button tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Search your wardrobe'**
+  String get closetSearchWardrobe;
+
+  /// Empty hanging compartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing hanging here yet'**
+  String get closetCompartmentEmptyRail;
+
+  /// Empty shelf.
+  ///
+  /// In en, this message translates to:
+  /// **'This shelf is still empty'**
+  String get closetCompartmentEmptyShelf;
+
+  /// Empty drawer.
+  ///
+  /// In en, this message translates to:
+  /// **'This drawer is still empty'**
+  String get closetCompartmentEmptyDrawer;
+
+  /// Body of an empty compartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first piece with a photo, and you\'ll find it here every time you open the wardrobe.'**
+  String get closetCompartmentEmptyBody;
+
+  /// Button in an empty compartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first piece'**
+  String get closetCompartmentAddFirst;
+
+  /// Empty favourites box.
+  ///
+  /// In en, this message translates to:
+  /// **'No favourites yet'**
+  String get closetFavouritesEmptyTitle;
+
+  /// Empty favourites box body.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the heart on any piece to keep it in this box.'**
+  String get closetFavouritesEmptyBody;
+
+  /// Empty season box.
+  ///
+  /// In en, this message translates to:
+  /// **'The season box is empty'**
+  String get closetStoredEmptyTitle;
+
+  /// Empty season box body.
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces you put away for another season wait here until their time comes back.'**
+  String get closetStoredEmptyBody;
+
+  /// Toggle favourites filter on.
+  ///
+  /// In en, this message translates to:
+  /// **'Show favourites only'**
+  String get closetFavouritesOnlyOn;
+
+  /// Toggle favourites filter off.
+  ///
+  /// In en, this message translates to:
+  /// **'Show every piece'**
+  String get closetFavouritesOnlyOff;
+
+  /// Add screen: which compartment the piece goes into.
+  ///
+  /// In en, this message translates to:
+  /// **'It will go into {name}'**
+  String closetAddingTo(String name);
 }
 
 class _AppLocalizationsDelegate

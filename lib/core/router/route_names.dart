@@ -80,6 +80,7 @@ abstract final class RouteNames {
   static const closetLook = 'closet-look';
   static const closetItem = 'closet-item';
   static const closetAddItem = 'closet-add-item';
+  static const closetCompartment = 'closet-compartment';
   static const closetGap = 'closet-gap';
   static const rooms = 'rooms';
   static const roomJoin = 'room-join';

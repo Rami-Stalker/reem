@@ -14,7 +14,10 @@
 // Beyond the screenshots it asserts what a screenshot cannot:
 //
 //   - the forgotten pieces the server sends reach the front page;
-//   - shelved pieces can be found again, through a filter that asks for them;
+//   - every slot she can own has a compartment in the wardrobe;
+//   - a compartment opens onto exactly its own slot;
+//   - the "+" on a compartment opens the form with that slot chosen;
+//   - shelved pieces can be found again, in the season box;
 //   - a wear logged from a tile can be taken back from its snackbar;
 //   - the grid's query is a stable family key, so a rebuild does not refetch.
 import 'dart:io';
@@ -40,12 +43,15 @@ import 'package:ohara/features/closet/domain/entities/closet_overview.dart';
 import 'package:ohara/features/closet/domain/repositories/closet_repository.dart';
 import 'package:ohara/features/closet/presentation/providers/closet_providers.dart';
 import 'package:ohara/features/closet/presentation/screens/add_personal_item_screen.dart';
+import 'package:ohara/features/closet/presentation/screens/closet_compartment_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_gap_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_item_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_look_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_looks_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/closet_today_screen.dart';
 import 'package:ohara/features/closet/presentation/screens/my_closet_screen.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_armoire.dart';
+import 'package:ohara/features/closet/presentation/widgets/closet_home_sections.dart';
 import 'package:ohara/features/market/presentation/providers/market_providers.dart';
 import 'package:ohara/l10n/app_localizations.dart' as gen;
 
@@ -121,6 +127,16 @@ void main() {
     'look': (const ClosetLookScreen(lookId: 'look-3'), Size(1125, 4200)),
     'today': (const ClosetTodayScreen(), Size(1125, 5400)),
     'gap': (const ClosetGapScreen(gapId: 'gap-1'), Size(1125, 3600)),
+    // One of each way a compartment keeps things.
+    'drawer_rail': (const ClosetCompartmentScreen(compartmentKey: 'DRESS'), _phone),
+    'drawer_shelf': (const ClosetCompartmentScreen(compartmentKey: 'TOP'), _phone),
+    'drawer_hooks': (const ClosetCompartmentScreen(compartmentKey: 'BAG'), _phone),
+    'drawer_velvet': (const ClosetCompartmentScreen(compartmentKey: 'JEWELRY'), _phone),
+    'drawer_rack': (const ClosetCompartmentScreen(compartmentKey: 'SHOES'), _phone),
+    'drawer_all': (const ClosetCompartmentScreen(compartmentKey: 'all'), Size(1125, 4200)),
+    'drawer_stored': (const ClosetCompartmentScreen(compartmentKey: 'stored'), _phone),
+    'drawer_empty': (const ClosetCompartmentScreen(compartmentKey: 'PERFUME'), _phone),
+    'add_to_drawer': (const AddPersonalItemScreen(initialSlot: 'JEWELRY'), Size(1125, 3600)),
   };
 
   for (final entry in screens.entries) {
@@ -186,7 +202,13 @@ void main() {
 
     final neglected = _overview().neglected;
     expect(neglected, isNotEmpty);
+    // The rail builds lazily; walk along it to each one.
+    final rail = find.descendant(
+      of: find.byType(ClosetRediscoverRail),
+      matching: find.byType(Scrollable),
+    );
     for (final item in neglected) {
+      await tester.scrollUntilVisible(find.text(item.title), 100, scrollable: rail);
       expect(
         find.text(item.title),
         findsWidgets,
@@ -195,7 +217,30 @@ void main() {
     }
   });
 
-  testWidgets('shelved pieces can be found again', (tester) async {
+  testWidgets('every slot she can own has a compartment', (tester) async {
+    tester.view.physicalSize = _tall;
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      const _Preview(themeMode: ThemeMode.light, screen: MyClosetScreen()),
+    );
+    await _settle(tester);
+
+    for (final slot in _slotLabels.keys) {
+      expect(
+        find.byKey(closetBayKey(slot)),
+        slot == 'GIFT' ? findsNothing : findsOneWidget,
+        reason: slot == 'GIFT'
+            ? 'a gift is a purchase intent, not something kept in a wardrobe'
+            : 'nothing in the wardrobe holds $slot',
+      );
+    }
+    expect(find.byKey(closetBayKey('favourites')), findsOneWidget);
+    expect(find.byKey(closetBayKey('stored')), findsOneWidget);
+  });
+
+  testWidgets('a compartment opens onto its own slot', (tester) async {
     tester.view.physicalSize = _tall;
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.reset);
@@ -210,28 +255,88 @@ void main() {
     );
     await _settle(tester);
 
+    await tester.tap(find.byKey(closetBayKey('JEWELRY')));
+    await _settle(tester);
+
+    expect(find.byType(ClosetCompartmentScreen), findsOneWidget);
+    expect(repository.queries.last.slot, 'JEWELRY');
+    expect(find.text('عقد لؤلؤ'), findsWidgets);
+    // Nothing from any other compartment is in the drawer.
+    expect(find.text('فستان سهرة كحلي'), findsNothing);
+  });
+
+  testWidgets('the + on a compartment files the new piece there', (tester) async {
+    tester.view.physicalSize = _tall;
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      const _Preview(themeMode: ThemeMode.light, screen: MyClosetScreen()),
+    );
+    await _settle(tester);
+
     final l10n = gen.AppLocalizations.of(
       tester.element(find.byType(MyClosetScreen)),
     )!;
-    // The shelf chip closes the filter rail, so it is built once scrolled to.
-    final chip = find.text(l10n.closetFilterShelved);
-    await tester.scrollUntilVisible(
-      chip,
-      200,
-      scrollable: find.descendant(
-        of: find.byKey(closetFilterRailKey),
-        matching: find.byType(Scrollable),
+    await tester.tap(find.byTooltip(l10n.closetDrawerAddTo(l10n.closetDrawerJewelry)));
+    await _settle(tester);
+
+    final form = tester.widget<AddPersonalItemScreen>(
+      find.byType(AddPersonalItemScreen),
+    );
+    expect(form.initialSlot, 'JEWELRY');
+    expect(find.text(l10n.closetAddingTo(l10n.closetDrawerJewelry)), findsOneWidget);
+  });
+
+  testWidgets('shelved pieces can be found again in the season box', (tester) async {
+    tester.view.physicalSize = _tall;
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+
+    final repository = _FakeClosetRepository();
+    await tester.pumpWidget(
+      _Preview(
+        themeMode: ThemeMode.light,
+        screen: const MyClosetScreen(),
+        repository: repository,
       ),
     );
-    expect(chip, findsOneWidget);
+    await _settle(tester);
 
-    await tester.tap(chip);
+    await tester.tap(find.byKey(closetBayKey('stored')));
     await _settle(tester);
 
     expect(repository.queries.last.status, ClosetItemStatus.archived);
     for (final item in _shelvedItems()) {
       expect(find.text(item.title), findsWidgets);
     }
+  });
+
+  testWidgets('a wear logged inside a compartment can be undone', (tester) async {
+    tester.view.physicalSize = _phone;
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+
+    final repository = _FakeClosetRepository();
+    await tester.pumpWidget(
+      _Preview(
+        themeMode: ThemeMode.light,
+        screen: const ClosetCompartmentScreen(compartmentKey: 'TOP'),
+        repository: repository,
+      ),
+    );
+    await _settle(tester);
+
+    final l10n = gen.AppLocalizations.of(
+      tester.element(find.byType(ClosetCompartmentScreen)),
+    )!;
+    await tester.tap(find.byTooltip(l10n.closetWoreToday).first);
+    await _settle(tester);
+    expect(repository.wears, hasLength(1));
+
+    await tester.tap(find.text(l10n.closetUndo));
+    await _settle(tester);
+    expect(repository.unwears, [repository.wears.single]);
   });
 
   testWidgets('a wear logged from a tile can be undone', (tester) async {
@@ -252,10 +357,13 @@ void main() {
     final l10n = gen.AppLocalizations.of(
       tester.element(find.byType(MyClosetScreen)),
     )!;
-    // The first tile in the grid that has not been worn today.
-    final wearButtons = find.byTooltip(l10n.closetWoreToday);
+    // The first forgotten piece on the front page — none is worn today.
+    final wearButtons = find.descendant(
+      of: find.byType(ClosetRediscoverRail),
+      matching: find.byTooltip(l10n.closetWoreToday),
+    );
     expect(wearButtons, findsWidgets);
-    await tester.tap(wearButtons.last);
+    await tester.tap(wearButtons.first);
     await _settle(tester);
 
     expect(repository.wears, hasLength(1));
@@ -320,6 +428,18 @@ class _Preview extends StatelessWidget {
             minScaleFactor: textScale,
             maxScaleFactor: textScale,
             child: RepaintBoundary(key: _captureKey, child: screen),
+          ),
+        ),
+        GoRoute(
+          path: '/closet/drawers/:key',
+          builder: (context, state) => ClosetCompartmentScreen(
+            compartmentKey: state.pathParameters['key']!,
+          ),
+        ),
+        GoRoute(
+          path: '/closet/add',
+          builder: (context, state) => AddPersonalItemScreen(
+            initialSlot: state.uri.queryParameters['slot'],
           ),
         ),
       ],
