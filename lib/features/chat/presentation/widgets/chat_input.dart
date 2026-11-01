@@ -11,6 +11,8 @@ class ChatInput extends StatefulWidget {
     this.onTyping,
     this.onImage,
     this.onVoice,
+    this.onProduct,
+    this.onOrder,
     this.isSending = false,
   });
 
@@ -18,6 +20,10 @@ class ChatInput extends StatefulWidget {
   final ValueChanged<bool>? onTyping;
   final VoidCallback? onImage;
   final VoidCallback? onVoice;
+
+  /// «أرسلي قطعة» and «أرسلي طلب». Null draws the action as unavailable.
+  final VoidCallback? onProduct;
+  final VoidCallback? onOrder;
   final bool isSending;
 
   @override
@@ -60,6 +66,15 @@ class _ChatInputState extends State<ChatInput>
   void toggle() {
     setState(() => expanded = !expanded);
     expanded ? controller.forward() : controller.reverse();
+  }
+
+  /// [action], after folding the tray away; null stays null.
+  VoidCallback? _closing(VoidCallback? action) {
+    if (action == null) return null;
+    return () {
+      if (expanded) toggle();
+      action();
+    };
   }
 
   void send() {
@@ -145,32 +160,30 @@ class _ChatInputState extends State<ChatInput>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // Product and Order still have no implementation behind
-                    // them, and `_action` draws that rather than offering a
-                    // button that swallows the tap.
+                    // Each closes the tray before it opens its own sheet.
                     _action(
                       context,
                       Icons.photo_rounded,
                       context.l10n.mediaImage,
-                      widget.onImage,
+                      _closing(widget.onImage),
                     ),
                     _action(
                       context,
                       Icons.mic_rounded,
                       context.l10n.chatVoice,
-                      widget.onVoice,
+                      _closing(widget.onVoice),
                     ),
                     _action(
                       context,
                       Icons.shopping_bag_rounded,
                       context.l10n.chatProduct,
-                      null,
+                      _closing(widget.onProduct),
                     ),
                     _action(
                       context,
                       Icons.receipt_long_rounded,
                       context.l10n.chatOrder,
-                      null,
+                      _closing(widget.onOrder),
                     ),
                   ],
                 ),

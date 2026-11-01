@@ -38,6 +38,38 @@ class ChatProductRef extends Equatable {
   List<Object?> get props => [id, title, imageUrl, price];
 }
 
+/// An order sent in a conversation — «أرسلي طلب». Built by the server from
+/// the parcel the two of them share; [id] is her order, [sellerOrderId] the
+/// boutique's parcel of it.
+class ChatOrderRef extends Equatable {
+  const ChatOrderRef({
+    required this.id,
+    required this.sellerOrderId,
+    required this.number,
+    required this.status,
+    this.total,
+    this.itemsCount = 0,
+    this.title,
+    this.imageUrl,
+    this.placedAt,
+  });
+
+  final String id;
+  final String sellerOrderId;
+  final String number;
+
+  /// The parcel's status on the wire, lower-cased (`new`, `delivered`, …).
+  final String status;
+  final Money? total;
+  final int itemsCount;
+  final String? title;
+  final String? imageUrl;
+  final DateTime? placedAt;
+
+  @override
+  List<Object?> get props => [id, sellerOrderId, number, status, total];
+}
+
 class ChatAttachmentEntity extends Equatable {
   const ChatAttachmentEntity({
     required this.id,
@@ -63,16 +95,16 @@ class ChatAttachmentEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        kind,
-        url,
-        mimeType,
-        fileName,
-        sizeBytes,
-        width,
-        height,
-        durationMs,
-      ];
+    id,
+    kind,
+    url,
+    mimeType,
+    fileName,
+    sizeBytes,
+    width,
+    height,
+    durationMs,
+  ];
 }
 
 /// Where one of her own messages is on its way to the other side.
@@ -102,6 +134,7 @@ class ChatMessageEntity extends Equatable {
     this.readAt,
     this.clientId,
     this.product,
+    this.order,
     this.deletedAt,
   });
 
@@ -125,14 +158,19 @@ class ChatMessageEntity extends Equatable {
   /// The piece this message asks about, when it was sent from a product.
   final ChatProductRef? product;
 
+  /// The order this message carries, when it was sent from «أرسلي طلب».
+  final ChatOrderRef? order;
+
   /// Taken back by its sender for everyone. The row stays, drawn as «تم حذف
   /// هذه الرسالة», so the conversation keeps its shape.
   final DateTime? deletedAt;
 
   bool get isDeleted => deletedAt != null;
 
-  bool get isImage => kind == 'image' || attachments.any((a) => a.kind == 'image');
-  bool get isVoice => kind == 'voice' || attachments.any((a) => a.kind == 'voice');
+  bool get isImage =>
+      kind == 'image' || attachments.any((a) => a.kind == 'image');
+  bool get isVoice =>
+      kind == 'voice' || attachments.any((a) => a.kind == 'voice');
   bool get isRead => status == ChatMessageStatus.read || readAt != null;
   bool get isDelivered =>
       status == ChatMessageStatus.delivered || isRead || deliveredAt != null;
@@ -166,6 +204,7 @@ class ChatMessageEntity extends Equatable {
       readAt: readAt ?? this.readAt,
       clientId: clientId,
       product: product,
+      order: order,
       deletedAt: deletedAt,
     );
   }
@@ -188,19 +227,20 @@ class ChatMessageEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        chatId,
-        senderId,
-        content,
-        sentAt,
-        isMine,
-        kind,
-        status,
-        attachments,
-        deliveredAt,
-        readAt,
-        clientId,
-        product,
-        deletedAt,
-      ];
+    id,
+    chatId,
+    senderId,
+    content,
+    sentAt,
+    isMine,
+    kind,
+    status,
+    attachments,
+    deliveredAt,
+    readAt,
+    clientId,
+    product,
+    order,
+    deletedAt,
+  ];
 }

@@ -1,12 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/experience/experience_labels.dart';
 import 'package:ohara/core/experience/role_experience.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
 import 'package:ohara/core/router/open_route.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/router/tab_reselect.dart';
@@ -73,6 +75,9 @@ class AppShell extends ConsumerWidget {
         navigationShell: navigationShell,
         destinations: destinations,
         selectedIndex: selectedIndex,
+        // The two long pages she reads rather than navigates: the bar steps
+        // aside while she scrolls them, so the looks get the whole screen.
+        autoHide: path == RoutePaths.home || path == RoutePaths.profile,
         onSelected: (index) => _go(context, ref, destinations[index]),
       ),
     };
@@ -111,12 +116,16 @@ class _CustomerProductShell extends StatefulWidget {
     required this.destinations,
     required this.selectedIndex,
     required this.onSelected,
+    this.autoHide = false,
   });
 
   final StatefulNavigationShell navigationShell;
   final List<RoleNavigationItem> destinations;
   final int selectedIndex;
   final ValueChanged<int> onSelected;
+
+  /// Whether scrolling the page folds the bar away into a single button.
+  final bool autoHide;
 
   @override
   State<_CustomerProductShell> createState() => _CustomerProductShellState();
@@ -130,14 +139,59 @@ class _CustomerProductShellState extends State<_CustomerProductShell> {
     DsSizes.bottomBarHeight + DsSpacing.sm,
   );
 
+  /// The bar folded away, leaving only [_RestoreBarButton].
+  final _collapsed = ValueNotifier<bool>(false);
+
+  /// Which way she is dragging the page, from the last user scroll.
+  ScrollDirection _direction = ScrollDirection.idle;
+
+  @override
+  void didUpdateWidget(covariant _CustomerProductShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Another tab, or a page that does not fold it: the bar comes back.
+    if (!widget.autoHide || oldWidget.selectedIndex != widget.selectedIndex) {
+      _collapsed.value = false;
+    }
+  }
+
   @override
   void dispose() {
     _barHeight.dispose();
+    _collapsed.dispose();
     super.dispose();
+  }
+
+  /// Folds the bar when she scrolls down into the page, and brings it back
+  /// when she is at the top again. Scrolling up alone does not bring it back:
+  /// that is the gesture of someone still reading, and the button is there.
+  bool _onScroll(ScrollNotification notification) {
+    if (!widget.autoHide) return false;
+    final metrics = notification.metrics;
+    if (metrics.axis != Axis.vertical) return false;
+    // The direction is announced once, as the drag begins — usually still
+    // at the top — so it is remembered and acted on as the page moves.
+    if (notification is UserScrollNotification) {
+      _direction = notification.direction;
+    }
+    if (metrics.pixels <= metrics.minScrollExtent + 24) {
+      _collapsed.value = false;
+    } else if (notification is ScrollUpdateNotification &&
+        _direction == ScrollDirection.reverse &&
+        metrics.pixels > 120 &&
+        metrics.maxScrollExtent > 320) {
+      _collapsed.value = true;
+    }
+    return false;
+  }
+
+  void _restore() {
+    AppHaptics.selection();
+    _collapsed.value = false;
   }
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
     return Scaffold(
       extendBody: true,
       backgroundColor: context.dsColors.background,
@@ -146,23 +200,132 @@ class _CustomerProductShellState extends State<_CustomerProductShell> {
           const CustomerBackdrop(),
           // The page is drawn under the glass rail on purpose; this is what
           // stops its *content* ending up under it. See [BottomBarInset].
-          ValueListenableBuilder<double>(
-            valueListenable: _barHeight,
-            builder: (context, height, child) =>
-                BottomBarInset(height: height, child: child!),
-            child: widget.navigationShell,
+          // Folded, only the small button needs the room.
+          ListenableBuilder(
+            listenable: Listenable.merge([_barHeight, _collapsed]),
+            builder: (context, child) => BottomBarInset(
+              height: _collapsed.value
+                  ? _RestoreBarButton.extent + DsSpacing.sm + bottomInset
+                  : _barHeight.value,
+              child: child!,
+            ),
+            child: NotificationListener<ScrollNotification>(
+              onNotification: _onScroll,
+              child: widget.navigationShell,
+            ),
           ),
         ],
       ),
       // No docked action: the buyer's only quick action is Search, which is
       // already a tab. A floating button duplicating a tab and half-covering
       // the bar was the single ugliest thing on the screen.
-      bottomNavigationBar: MeasuredHeight(
-        onHeight: (height) => _barHeight.value = height,
-        child: _CustomerNavigationBar(
-          destinations: widget.destinations,
-          selectedIndex: widget.selectedIndex,
-          onSelected: widget.onSelected,
+      bottomNavigationBar: ValueListenableBuilder<bool>(
+        valueListenable: _collapsed,
+        builder: (context, collapsed, _) => Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // The rail sinks and fades as one piece...
+            IgnorePointer(
+              ignoring: collapsed,
+              child: AnimatedSlide(
+                offset: collapsed ? const Offset(0, 1.15) : Offset.zero,
+                duration: DsMotion.moderate,
+                curve: collapsed ? DsMotion.emphasized : DsMotion.softSpring,
+                child: AnimatedOpacity(
+                  opacity: collapsed ? 0 : 1,
+                  duration: DsMotion.normal,
+                  curve: DsMotion.standard,
+                  child: MeasuredHeight(
+                    onHeight: (height) => _barHeight.value = height,
+                    child: _CustomerNavigationBar(
+                      destinations: widget.destinations,
+                      selectedIndex: widget.selectedIndex,
+                      onSelected: widget.onSelected,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // ...and the one button rises where its middle was.
+            Positioned(
+              bottom: DsSpacing.sm + bottomInset,
+              child: IgnorePointer(
+                ignoring: !collapsed,
+                child: AnimatedScale(
+                  scale: collapsed ? 1 : 0.4,
+                  duration: DsMotion.moderate,
+                  curve: collapsed ? DsMotion.softSpring : DsMotion.emphasized,
+                  child: AnimatedOpacity(
+                    opacity: collapsed ? 1 : 0,
+                    duration: DsMotion.normal,
+                    child: _RestoreBarButton(onTap: _restore),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// What is left of the bar while it is folded: one glass button in the
+/// middle. A tap brings the whole bar back.
+class _RestoreBarButton extends StatelessWidget {
+  const _RestoreBarButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  static const double extent = 52;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dsColors;
+    final label = context.l10n.navShowBar;
+    return Semantics(
+      button: true,
+      label: label,
+      child: ExcludeSemantics(
+        child: Tooltip(
+          message: label,
+          child: GestureDetector(
+            onTap: onTap,
+            child: ClipOval(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: DsBlur.heavy,
+                  sigmaY: DsBlur.heavy,
+                ),
+                child: Container(
+                  width: extent,
+                  height: extent,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: c.surfaceElevated.withValues(alpha: 0.86),
+                    border: Border.all(color: c.border.withValues(alpha: 0.7)),
+                  ),
+                  padding: const EdgeInsets.all(DsSpacing.xs),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: context.primaryGradient,
+                      boxShadow: context.glowShadow(
+                        c.primary,
+                        blur: 14,
+                        alpha: 0.34,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.grid_view_rounded,
+                      color: c.onPrimary,
+                      size: DsSizes.iconSm,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -391,7 +554,11 @@ class _CreateButton extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: context.primaryGradient,
                   shape: BoxShape.circle,
-                  boxShadow: context.glowShadow(c.primary, blur: 16, alpha: 0.4),
+                  boxShadow: context.glowShadow(
+                    c.primary,
+                    blur: 16,
+                    alpha: 0.4,
+                  ),
                 ),
                 child: Icon(Icons.add_rounded, color: c.onPrimary, size: 28),
               ),

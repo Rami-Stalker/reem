@@ -1,5 +1,6 @@
 import 'package:ohara/features/chat/data/models/chat_message_model.dart';
 import 'package:ohara/features/chat/data/models/chat_thread_model.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 
 abstract interface class ChatRemoteDataSource {
@@ -32,9 +33,12 @@ abstract interface class ChatRemoteDataSource {
     String? clientId,
     String? currentUserId,
     String? productId,
+    String? orderId,
   });
 
   Future<void> markRead(String chatId, {String? messageId});
+
+  Future<List<ChatOrderRef>> orders(String chatId);
 
   Future<void> deleteMessage(
     String chatId,

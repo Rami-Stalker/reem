@@ -4102,6 +4102,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkoutWalletFrozen => 'Your wallet is on hold';
 
   @override
+  String get chatPickProductTitle => 'Send a piece';
+
+  @override
+  String get chatPickOrderTitle => 'Send an order';
+
+  @override
+  String get chatNoProductsToSend => 'No pieces to send yet';
+
+  @override
+  String get chatNoOrdersToSend => 'No orders between you yet';
+
+  @override
+  String chatOrderMessage(String number) {
+    return 'Order $number';
+  }
+
+  @override
+  String chatOrderItems(int count) {
+    return '$count pieces';
+  }
+
+  @override
+  String get chatOpenOrder => 'Open order';
+
+  @override
   String get productDetailsSection => 'Details';
 
   @override
@@ -7534,6 +7559,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createStoryHint => 'Gone in 24 hours';
+
+  @override
+  String get navShowBar => 'Show navigation bar';
 
   @override
   String get createTooltip => 'Create';

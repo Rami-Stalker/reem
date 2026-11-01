@@ -7478,6 +7478,48 @@ abstract class AppLocalizations {
   /// **'Your wallet is on hold'**
   String get checkoutWalletFrozen;
 
+  /// Chat: sending a piece or an order
+  ///
+  /// In en, this message translates to:
+  /// **'Send a piece'**
+  String get chatPickProductTitle;
+
+  /// Chat: sending a piece or an order
+  ///
+  /// In en, this message translates to:
+  /// **'Send an order'**
+  String get chatPickOrderTitle;
+
+  /// Chat: sending a piece or an order
+  ///
+  /// In en, this message translates to:
+  /// **'No pieces to send yet'**
+  String get chatNoProductsToSend;
+
+  /// Chat: sending a piece or an order
+  ///
+  /// In en, this message translates to:
+  /// **'No orders between you yet'**
+  String get chatNoOrdersToSend;
+
+  /// Chat: sending a piece or an order
+  ///
+  /// In en, this message translates to:
+  /// **'Order {number}'**
+  String chatOrderMessage(String number);
+
+  /// Chat: sending a piece or an order
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pieces'**
+  String chatOrderItems(int count);
+
+  /// Chat: sending a piece or an order
+  ///
+  /// In en, this message translates to:
+  /// **'Open order'**
+  String get chatOpenOrder;
+
   /// No description provided for @productDetailsSection.
   ///
   /// In en, this message translates to:
@@ -13447,6 +13489,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gone in 24 hours'**
   String get createStoryHint;
+
+  /// No description provided for @navShowBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Show navigation bar'**
+  String get navShowBar;
 
   /// No description provided for @createTooltip.
   ///

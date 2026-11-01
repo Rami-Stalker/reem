@@ -87,6 +87,15 @@ export class ChatsController {
     return this.chats.unblockUser(userId, blockedId);
   }
 
+  /** The orders between these two, for «أرسلي طلب». */
+  @Get(':id/orders')
+  orders(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.chats.orders(id, userId);
+  }
+
   @Get(':id/messages')
   messages(
     @Param('id', ParseUUIDPipe) id: string,

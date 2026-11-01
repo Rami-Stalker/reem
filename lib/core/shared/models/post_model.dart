@@ -4,6 +4,7 @@ import 'package:ohara/core/shared/entities/post.dart';
 import 'package:ohara/core/shared/entities/product.dart';
 import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/entities/user.dart';
+import 'package:ohara/core/shared/models/media_model.dart';
 import 'package:ohara/core/shared/models/product_model.dart';
 import 'package:ohara/core/shared/models/user_model.dart';
 
@@ -13,6 +14,7 @@ class PostModel extends Post {
     required super.author,
     super.product,
     super.products,
+    super.photos,
     required super.caption,
     super.category,
     super.likesCount,
@@ -48,6 +50,10 @@ class PostModel extends Post {
         for (final item in (json['products'] as List?) ?? const [])
           if (item is Map<String, dynamic>) ProductModel.fromJson(item),
       ],
+      photos: [
+        for (final item in (json['media'] as List?) ?? const [])
+          if (item is Map<String, dynamic>) MediaModel.fromJson(item),
+      ].where((m) => m.url.isNotEmpty).toList(),
       caption: json['caption'] as String? ?? '',
       // Derive the display category from the underlying product. The API sends
       // a full category object, not a bare string — read the slug off the
@@ -65,41 +71,41 @@ class PostModel extends Post {
       createdAt: DateTime.parse(json['created_at'] as String),
       sponsoredOfferId:
           sponsoredOfferId is String && sponsoredOfferId.isNotEmpty
-              ? sponsoredOfferId
-              : null,
-      sponsoredStoreTier:
-          sponsored is Map ? sponsored['store_tier'] as String? : null,
+          ? sponsoredOfferId
+          : null,
+      sponsoredStoreTier: sponsored is Map
+          ? sponsored['store_tier'] as String?
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'author': UserModel.fromEntity(author).toJson(),
-        'product': product == null
-            ? null
-            : ProductModel.fromEntity(product!).toJson(),
-        'products': [
-          for (final p in products) ProductModel.fromEntity(p).toJson(),
-        ],
-        'caption': caption,
-        'category': category.name,
-        'likes_count': likesCount,
-        'comments_count': commentsCount,
-        'shares_count': sharesCount,
-        'saves_count': savesCount,
-        'is_liked': isLiked,
-        'my_reaction': myReaction,
-        'reaction_summary': ReactionCount.listToJson(reactionSummary),
-        'is_saved': isSaved,
-        'is_reshared': isReshared,
-        'created_at': createdAt.toIso8601String(),
-        if (sponsoredOfferId != null)
-          'sponsored': {
-            'offer_id': sponsoredOfferId,
-            'placement': 'feed_top',
-            'store_tier': sponsoredStoreTier,
-          },
-      };
+    'id': id,
+    'author': UserModel.fromEntity(author).toJson(),
+    'product': product == null
+        ? null
+        : ProductModel.fromEntity(product!).toJson(),
+    'products': [for (final p in products) ProductModel.fromEntity(p).toJson()],
+    'media': [for (final m in photos) MediaModel.fromEntity(m).toJson()],
+    'caption': caption,
+    'category': category.name,
+    'likes_count': likesCount,
+    'comments_count': commentsCount,
+    'shares_count': sharesCount,
+    'saves_count': savesCount,
+    'is_liked': isLiked,
+    'my_reaction': myReaction,
+    'reaction_summary': ReactionCount.listToJson(reactionSummary),
+    'is_saved': isSaved,
+    'is_reshared': isReshared,
+    'created_at': createdAt.toIso8601String(),
+    if (sponsoredOfferId != null)
+      'sponsored': {
+        'offer_id': sponsoredOfferId,
+        'placement': 'feed_top',
+        'store_tier': sponsoredStoreTier,
+      },
+  };
 
   PostModel copyWith({
     String? id,
@@ -121,6 +127,7 @@ class PostModel extends Post {
       author: author ?? this.author,
       product: product ?? this.product,
       products: products,
+      photos: photos,
       caption: caption ?? this.caption,
       category: category ?? this.category,
       likesCount: likesCount ?? this.likesCount,

@@ -58,6 +58,7 @@ class ChatMessageModel extends ChatMessageEntity {
     super.readAt,
     super.clientId,
     super.product,
+    super.order,
     super.deletedAt,
   });
 
@@ -88,14 +89,16 @@ class ChatMessageModel extends ChatMessageEntity {
       readAt: _date(json['read_at']),
       // The server speaks UTC. Parsed as-is, every clock time and every "today"
       // divider was drawn in UTC — three hours off in Damascus.
-      sentAt: _date(json['sent_at']) ??
-          _date(json['created_at']) ??
-          DateTime.now(),
+      sentAt:
+          _date(json['sent_at']) ?? _date(json['created_at']) ?? DateTime.now(),
       isMine: currentUserId != null && currentUserId.isNotEmpty
           ? senderId == currentUserId
           : json['is_mine'] as bool? ?? false,
       clientId: json['client_id'] as String?,
       product: _productRef(json['metadata']),
+      order: chatOrderRefFromJson(
+        json['metadata'] is Map ? (json['metadata'] as Map)['order'] : null,
+      ),
       deletedAt: _date(json['deleted_at']),
     );
   }
@@ -148,4 +151,24 @@ ChatProductRef? _productRef(dynamic metadata) {
 DateTime? _date(dynamic value) {
   if (value is! String || value.isEmpty) return null;
   return DateTime.tryParse(value)?.toLocal();
+}
+
+/// `metadata.order`, or a row of `GET /chats/:id/orders`.
+ChatOrderRef? chatOrderRefFromJson(Object? raw) {
+  if (raw is! Map) return null;
+  final id = raw['id'];
+  final parcel = raw['seller_order_id'];
+  final number = raw['number'];
+  if (id is! String || parcel is! String || number is! String) return null;
+  return ChatOrderRef(
+    id: id,
+    sellerOrderId: parcel,
+    number: number,
+    status: (raw['status'] as String? ?? '').toLowerCase(),
+    total: Money.tryFromJson(raw['total']),
+    itemsCount: (raw['items_count'] as num?)?.toInt() ?? 0,
+    title: raw['title'] as String?,
+    imageUrl: raw['image_url'] as String?,
+    placedAt: _date(raw['placed_at']),
+  );
 }

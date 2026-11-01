@@ -27,9 +27,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
     required GetThreadsUseCase getThreadsUseCase,
     required StartConversationUseCase startConversationUseCase,
     this.currentUserId,
-  })  : _getThreads = getThreadsUseCase,
-        _startConversation = startConversationUseCase,
-        super(const ChatState());
+  }) : _getThreads = getThreadsUseCase,
+       _startConversation = startConversationUseCase,
+       super(const ChatState());
 
   final GetThreadsUseCase _getThreads;
   final StartConversationUseCase _startConversation;
@@ -86,16 +86,16 @@ class ChatNotifier extends StateNotifier<ChatState> {
     if (!mounted || requestId != _requestId) return;
     state = switch (result) {
       Success(:final data) => state.copyWith(
-          isLoading: false,
-          hasLoadedOnce: true,
-          threads: data,
-          clearError: true,
-        ),
+        isLoading: false,
+        hasLoadedOnce: true,
+        threads: data,
+        clearError: true,
+      ),
       Error(:final failure) => state.copyWith(
-          isLoading: false,
-          hasLoadedOnce: true,
-          error: failure.message,
-        ),
+        isLoading: false,
+        hasLoadedOnce: true,
+        error: failure.message,
+      ),
     };
   }
 
@@ -108,13 +108,13 @@ class ChatNotifier extends StateNotifier<ChatState> {
     if (!mounted) return null;
     return switch (result) {
       Success(:final data) => () {
-          state = state.copyWith(threads: _upsert(data));
-          return data;
-        }(),
+        state = state.copyWith(threads: _upsert(data));
+        return data;
+      }(),
       Error(:final failure) => () {
-          state = state.copyWith(error: failure.message);
-          return null;
-        }(),
+        state = state.copyWith(error: failure.message);
+        return null;
+      }(),
     };
   }
 
@@ -149,7 +149,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
               ? message.content
               : thread.lastMessage,
           updatedAt: message.sentAt,
-          unreadCount: message.isMine ? thread.unreadCount : thread.unreadCount + 1,
+          unreadCount: message.isMine
+              ? thread.unreadCount
+              : thread.unreadCount + 1,
         );
         _clearTyping(chatId);
         state = state.copyWith(threads: _upsert(updated));
@@ -158,7 +160,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
       case 'messages.read':
         // Her own read, from this phone or another one, clears her badge.
         // The other side's read changes nothing in her inbox.
-        if (chatId is! String || event['user_id'] != currentUserId) return false;
+        if (chatId is! String || event['user_id'] != currentUserId) {
+          return false;
+        }
         state = state.copyWith(
           threads: [
             for (final thread in state.threads)
@@ -185,7 +189,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
         return false;
 
       case 'typing':
-        if (chatId is! String || event['user_id'] == currentUserId) return false;
+        if (chatId is! String || event['user_id'] == currentUserId) {
+          return false;
+        }
         if (event['is_typing'] == true) {
           _typingTimers[chatId]?.cancel();
           _typingTimers[chatId] = Timer(kPeerTypingTimeout, () {
@@ -228,8 +234,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 /// screen can be opened by deep link, with no list ever having been loaded.
 class ChatThreadNotifier extends StateNotifier<ChatThreadState> {
   ChatThreadNotifier({required GetThreadUseCase getThreadUseCase})
-      : _getThread = getThreadUseCase,
-        super(const ChatThreadState());
+    : _getThread = getThreadUseCase,
+      super(const ChatThreadState());
 
   final GetThreadUseCase _getThread;
 
@@ -265,12 +271,19 @@ class ChatThreadNotifier extends StateNotifier<ChatThreadState> {
 /// What a message she sent was, kept until the server has it — so a failed
 /// one can be sent again exactly as it was.
 class _Outgoing {
-  const _Outgoing(this.content, this.kind, this.attachments, this.product);
+  const _Outgoing(
+    this.content,
+    this.kind,
+    this.attachments,
+    this.product, [
+    this.order,
+  ]);
 
   final String content;
   final String kind;
   final List<Map<String, dynamic>> attachments;
   final ChatProductRef? product;
+  final ChatOrderRef? order;
 }
 
 /// One conversation's messages.
@@ -290,14 +303,14 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     this.currentUserId,
     Duration typingTimeout = kPeerTypingTimeout,
     Random? random,
-  })  : _chatId = chatId,
-        _getMessages = getMessagesUseCase,
-        _sendMessage = sendMessageUseCase,
-        _markRead = markChatReadUseCase,
-        _deleteMessage = deleteMessageUseCase,
-        _typingTimeout = typingTimeout,
-        _random = random ?? Random(),
-        super(ChatMessagesState(chatId: chatId));
+  }) : _chatId = chatId,
+       _getMessages = getMessagesUseCase,
+       _sendMessage = sendMessageUseCase,
+       _markRead = markChatReadUseCase,
+       _deleteMessage = deleteMessageUseCase,
+       _typingTimeout = typingTimeout,
+       _random = random ?? Random(),
+       super(ChatMessagesState(chatId: chatId));
 
   /// Messages per page — the server's default, said out loud.
   static const pageSize = 50;
@@ -333,10 +346,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   /// anything new is merged in.
   Future<void> load() async {
     final generation = ++_loadGeneration;
-    state = state.copyWith(
-      isLoading: state.messages.isEmpty,
-      clearError: true,
-    );
+    state = state.copyWith(isLoading: state.messages.isEmpty, clearError: true);
     final result = await _getMessages(
       _chatId,
       limit: pageSize,
@@ -345,18 +355,18 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     if (!mounted || generation != _loadGeneration) return;
     state = switch (result) {
       Success(:final data) => state.copyWith(
-          isLoading: false,
-          messages: _mergeAll(data),
-          // Only a first load decides this; a resync must not forget that
-          // older pages exist above what it fetched.
-          hasMore: state.messages.isEmpty
-              ? data.length >= pageSize
-              : state.hasMore || data.length >= pageSize,
-        ),
+        isLoading: false,
+        messages: _mergeAll(data),
+        // Only a first load decides this; a resync must not forget that
+        // older pages exist above what it fetched.
+        hasMore: state.messages.isEmpty
+            ? data.length >= pageSize
+            : state.hasMore || data.length >= pageSize,
+      ),
       Error(:final failure) => state.copyWith(
-          isLoading: false,
-          error: failure.message,
-        ),
+        isLoading: false,
+        error: failure.message,
+      ),
     };
   }
 
@@ -380,10 +390,10 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     if (!mounted) return;
     state = switch (result) {
       Success(:final data) => state.copyWith(
-          isLoadingOlder: false,
-          messages: _mergeAll(data),
-          hasMore: data.length >= pageSize,
-        ),
+        isLoadingOlder: false,
+        messages: _mergeAll(data),
+        hasMore: data.length >= pageSize,
+      ),
       // Kept as "more to load", so scrolling up again retries.
       Error() => state.copyWith(isLoadingOlder: false),
     };
@@ -406,12 +416,13 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     String kind = 'TEXT',
     List<Map<String, dynamic>> attachments = const [],
     ChatProductRef? about,
+    ChatOrderRef? order,
   }) async {
     final text = content.trim();
     if (_chatId.isEmpty || (text.isEmpty && attachments.isEmpty)) return false;
 
     final clientId = _newClientId();
-    _outbox[clientId] = _Outgoing(text, kind, attachments, about);
+    _outbox[clientId] = _Outgoing(text, kind, attachments, about, order);
     final local = ChatMessageEntity(
       id: 'local:$clientId',
       chatId: _chatId,
@@ -425,6 +436,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
       // Drawn with its card at once; the server's copy, built from the
       // catalogue, replaces it when it answers.
       product: about,
+      order: order,
       attachments: [
         for (final (index, attachment) in attachments.indexed)
           ChatAttachmentEntity(
@@ -447,7 +459,9 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   /// Sends a failed message again, as the same message.
   Future<bool> retry(ChatMessageEntity message) {
     final clientId = message.clientId;
-    if (!message.isFailed || clientId == null || !_outbox.containsKey(clientId)) {
+    if (!message.isFailed ||
+        clientId == null ||
+        !_outbox.containsKey(clientId)) {
       return Future.value(false);
     }
     state = state.copyWith(
@@ -467,6 +481,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
       clientId: clientId,
       currentUserId: currentUserId,
       productId: outgoing.product?.id,
+      orderId: outgoing.order?.sellerOrderId,
     );
     if (!mounted) return result is Success;
     switch (result) {
@@ -474,7 +489,9 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
         _outbox.remove(clientId);
         // Whatever the payload claims, the message she just sent is hers.
         final confirmed = data.isMine ? data : data.copyWith(isMine: true);
-        state = state.copyWith(messages: _mergeOne(confirmed, clientId: clientId));
+        state = state.copyWith(
+          messages: _mergeOne(confirmed, clientId: clientId),
+        );
         return true;
       case Error():
         state = state.copyWith(
@@ -499,7 +516,10 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
       final clientId = message.clientId;
       if (clientId != null) _outbox.remove(clientId);
       state = state.copyWith(
-        messages: [for (final m in before) if (m.id != message.id) m],
+        messages: [
+          for (final m in before)
+            if (m.id != message.id) m,
+        ],
       );
       return null;
     }
@@ -531,7 +551,9 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   /// from the other side. Over HTTP — see [MarkChatReadUseCase] — and once per
   /// message, however many events ask for it.
   Future<void> markRead() async {
-    final latest = state.messages.lastWhereOrNull((m) => !m.isMine && !m.isLocal);
+    final latest = state.messages.lastWhereOrNull(
+      (m) => !m.isMine && !m.isLocal,
+    );
     if (latest == null || latest.id == _reportedReadId) return;
     _reportedReadId = latest.id;
     final result = await _markRead(_chatId, messageId: latest.id);
@@ -632,7 +654,8 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     ChatMessageEntity? previous;
     final others = <ChatMessageEntity>[];
     for (final existing in state.messages) {
-      final same = existing.id == message.id ||
+      final same =
+          existing.id == message.id ||
           (key != null && existing.clientId == key);
       if (same) {
         previous ??= existing.isLocal ? null : existing;
@@ -660,9 +683,9 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   }
 
   List<ChatMessageEntity> _withLocalStatus(String clientId, String status) => [
-        for (final m in state.messages)
-          m.clientId == clientId && m.isLocal ? m.copyWith(status: status) : m,
-      ];
+    for (final m in state.messages)
+      m.clientId == clientId && m.isLocal ? m.copyWith(status: status) : m,
+  ];
 
   static ChatMessageEntity _furthest(
     ChatMessageEntity? previous,
@@ -677,21 +700,20 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   }
 
   static int _rank(ChatMessageEntity m) => switch (m.status) {
-        ChatMessageStatus.read => 3,
-        ChatMessageStatus.delivered => 2,
-        ChatMessageStatus.sent => 1,
-        _ => 0,
-      };
+    ChatMessageStatus.read => 3,
+    ChatMessageStatus.delivered => 2,
+    ChatMessageStatus.sent => 1,
+    _ => 0,
+  };
 
   /// Oldest first; her unsent messages after everything the server holds,
   /// since the server will stamp them later than anything it already has.
   static List<ChatMessageEntity> _sorted(List<ChatMessageEntity> list) {
-    return list
-      ..sort((a, b) {
-        if (a.isLocal != b.isLocal) return a.isLocal ? 1 : -1;
-        final byTime = a.sentAt.compareTo(b.sentAt);
-        return byTime != 0 ? byTime : a.id.compareTo(b.id);
-      });
+    return list..sort((a, b) {
+      if (a.isLocal != b.isLocal) return a.isLocal ? 1 : -1;
+      final byTime = a.sentAt.compareTo(b.sentAt);
+      return byTime != 0 ? byTime : a.id.compareTo(b.id);
+    });
   }
 
   String _newClientId() {

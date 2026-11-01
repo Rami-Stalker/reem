@@ -17,6 +17,7 @@ import 'package:ohara/core/utils/relative_time.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ohara/features/chat/data/services/chat_realtime_service.dart';
 import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
 import 'package:ohara/features/chat/presentation/providers/chat_notifier.dart';
 import 'package:ohara/features/chat/presentation/providers/chat_provider.dart';
 import 'package:ohara/features/chat/presentation/providers/chat_state.dart';
@@ -25,6 +26,7 @@ import 'package:ohara/features/chat/presentation/widgets/chat_app_bar.dart';
 import 'package:ohara/features/chat/presentation/widgets/chat_date_divider.dart';
 import 'package:ohara/features/chat/presentation/widgets/chat_input.dart';
 import 'package:ohara/features/chat/presentation/widgets/chat_product_card.dart';
+import 'package:ohara/features/chat/presentation/widgets/chat_send_sheets.dart';
 import 'package:ohara/features/chat/presentation/widgets/file_message_bubble.dart';
 import 'package:ohara/features/chat/presentation/widgets/image_message_bubble.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_actions_sheet.dart';
@@ -170,6 +172,37 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     if (!sent && mounted) _warn(context.l10n.chatSendFailed);
   }
 
+  /// The boutique in this conversation: herself when she is the seller, the
+  /// other side when she is the shopper.
+  String? _sellerOf(ChatThreadEntity? thread, bool isSeller) {
+    if (thread == null) return null;
+    return isSeller ? ref.read(authNotifierProvider).user?.id : thread.peerId;
+  }
+
+  /// «أرسلي قطعة» — a piece from the boutique's shelf, as a card.
+  Future<void> _sendProduct(String sellerId) async {
+    final product = await ChatProductPicker.show(context, sellerId: sellerId);
+    if (product == null || !mounted) return;
+    _jumpToNewest();
+    final sent = await _messages.sendMessage(
+      product.title,
+      about: ChatProductRef.of(product),
+    );
+    if (!sent && mounted) _warn(context.l10n.chatSendFailed);
+  }
+
+  /// «أرسلي طلب» — one of the orders between the two of them, as a card.
+  Future<void> _sendOrder() async {
+    final order = await ChatOrderPicker.show(context, chatId: widget.chatId);
+    if (order == null || !mounted) return;
+    _jumpToNewest();
+    final sent = await _messages.send(
+      content: context.l10n.chatOrderMessage(order.number),
+      order: order,
+    );
+    if (!sent && mounted) _warn(context.l10n.chatSendFailed);
+  }
+
   Future<void> _retry(ChatMessageEntity message) async {
     final sent = await _messages.retry(message);
     if (!sent && mounted) _warn(context.l10n.chatSendFailed);
@@ -226,12 +259,14 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   Future<void> _report(ChatMessageEntity message) async {
     final reason = await MessageActionsSheet.askReportReason(context);
     if (reason == null || !mounted) return;
-    final result = await ref.read(chatRepositoryProvider).reportUser(
-      chatId: widget.chatId,
-      reportedUserId: message.senderId,
-      reason: reason,
-      messageId: message.id,
-    );
+    final result = await ref
+        .read(chatRepositoryProvider)
+        .reportUser(
+          chatId: widget.chatId,
+          reportedUserId: message.senderId,
+          reason: reason,
+          messageId: message.id,
+        );
     if (!mounted) return;
     switch (result) {
       case Success():
@@ -330,6 +365,14 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                   onTyping: (typing) => realtime.typing(widget.chatId, typing),
                   onImage: _attach,
                   onVoice: () => setState(() => _recording = true),
+                  onProduct: _sellerOf(thread, isSeller) == null
+                      ? null
+                      : () => unawaited(
+                          _sendProduct(_sellerOf(thread, isSeller)!),
+                        ),
+                  onOrder: thread == null
+                      ? null
+                      : () => unawaited(_sendOrder()),
                   onSend: (text) => unawaited(_sendText(text)),
                 ),
               ],
@@ -424,6 +467,7 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
             endsRun: endsRun,
             onRetry: message.isFailed ? () => unawaited(_retry(message)) : null,
             onLongPress: () => unawaited(_onLongPress(message)),
+            forSeller: ref.read(authNotifierProvider).user?.isSeller ?? false,
           ),
         ),
       );
@@ -597,6 +641,7 @@ class _MessageRow extends StatelessWidget {
     this.endsRun = true,
     this.onRetry,
     this.onLongPress,
+    this.forSeller = false,
   });
 
   final ChatMessageEntity message;
@@ -609,6 +654,9 @@ class _MessageRow extends StatelessWidget {
 
   /// Opens the message's actions — copy, delete, report.
   final VoidCallback? onLongPress;
+
+  /// An order card opens the boutique's parcel screen on her side.
+  final bool forSeller;
 
   @override
   Widget build(BuildContext context) {
@@ -644,6 +692,7 @@ class _MessageRow extends StatelessWidget {
       ),
     };
     final product = message.isDeleted ? null : message.product;
+    final order = message.isDeleted ? null : message.order;
 
     final l10n = context.l10n;
     final colors = context.dsColors;
@@ -682,6 +731,14 @@ class _MessageRow extends StatelessWidget {
       children: [
         if (product != null) ...[
           ChatProductCard(product: product, isMe: message.isMine),
+          DsGaps.vXxs,
+        ],
+        if (order != null) ...[
+          ChatOrderCard(
+            order: order,
+            isMe: message.isMine,
+            forSeller: forSeller,
+          ),
           DsGaps.vXxs,
         ],
         Opacity(opacity: message.isPending ? 0.7 : 1, child: bubble),

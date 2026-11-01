@@ -125,6 +125,13 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen>
             hasScrollBody: false,
             child: DsLoadingIndicator(),
           )
+        else if (order == null && state.error != null)
+          // A dropped connection is not a missing order: say what went wrong
+          // and let her try again rather than telling her it does not exist.
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: DsErrorState(message: state.error, onRetry: notifier.load),
+          )
         else if (order == null)
           SliverFillRemaining(
             hasScrollBody: false,

@@ -4965,6 +4965,36 @@
   "@checkoutWalletFrozen": {
     "description": "Checkout: the wallet payment option"
   },
+  "chatPickProductTitle": "Send a piece",
+  "@chatPickProductTitle": {
+    "description": "Chat: sending a piece or an order"
+  },
+  "chatPickOrderTitle": "Send an order",
+  "@chatPickOrderTitle": {
+    "description": "Chat: sending a piece or an order"
+  },
+  "chatNoProductsToSend": "No pieces to send yet",
+  "@chatNoProductsToSend": {
+    "description": "Chat: sending a piece or an order"
+  },
+  "chatNoOrdersToSend": "No orders between you yet",
+  "@chatNoOrdersToSend": {
+    "description": "Chat: sending a piece or an order"
+  },
+  "chatOrderMessage": "Order {number}",
+  "@chatOrderMessage": {
+    "description": "Chat: sending a piece or an order",
+    "placeholders": {"number": {"type": "String"}}
+  },
+  "chatOrderItems": "{count} pieces",
+  "@chatOrderItems": {
+    "description": "Chat: sending a piece or an order",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "chatOpenOrder": "Open order",
+  "@chatOpenOrder": {
+    "description": "Chat: sending a piece or an order"
+  },
   "productDetailsSection": "Details",
   "productOffersFrom": "{count} boutiques list this",
   "productPause": "Pause",
@@ -8568,6 +8598,7 @@
   "createReelHint": "A short video, up to 30 seconds",
   "createStory": "Story",
   "createStoryHint": "Gone in 24 hours",
+  "navShowBar": "Show navigation bar",
   "createTooltip": "Create",
   "createBrowseCommunity": "Community",
   "createBrowseReels": "Reels",

@@ -67,9 +67,18 @@ export class OrdersRepository {
     });
   }
 
+  /**
+   * Her order by its own id — or by one of its parcels' ids, which is what an
+   * older notification or a shared parcel link carries.
+   */
   findDetail(id: string, buyer: Buyer) {
     return this.prisma.order.findFirst({
-      where: { id, ...ownedByBuyer(buyer) },
+      where: {
+        AND: [
+          ownedByBuyer(buyer),
+          { OR: [{ id }, { sellerOrders: { some: { id } } }] },
+        ],
+      },
       include: ORDER_DETAIL_INCLUDE,
     });
   }
