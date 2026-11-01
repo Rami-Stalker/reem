@@ -18113,6 +18113,60 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
+  /// **'Online · your personal stylist'**
+  String get stylistOnlineStatus;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ohara is styling for you…'**
+  String get stylistThinking;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Got it:'**
+  String get stylistUnderstood;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Hi, I’m Ohara'**
+  String get stylistWelcomeGreeting;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Styling advice'**
+  String get stylistCapAdviceTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Ask what goes with what, and what suits each occasion'**
+  String get stylistCapAdviceBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Your taste, through Ohara’s eyes'**
+  String get stylistTasteHeroTitle;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The more you choose and tell me, the better I know you — and the sharper my picks.'**
+  String get stylistTasteHeroBody;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'The pieces'**
+  String get stylistLookPieces;
+
+  ///
+  ///
+  /// In en, this message translates to:
   /// **'A complete look'**
   String get stylistCapLookTitle;
 

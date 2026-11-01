@@ -31,7 +31,6 @@ class StylistRecommendationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     final product = recommendation.product;
-    final price = recommendation.displayPrice;
     final seller = product.displaySeller;
 
     return AnimatedOpacity(
@@ -39,8 +38,19 @@ class StylistRecommendationCard extends StatelessWidget {
       // A dismissed card fades rather than disappearing: she can see that her
       // "لا يعجبني" registered, and undo it.
       opacity: recommendation.isDismissed ? 0.45 : 1,
-      child: SizedBox(
+      child: Container(
         width: width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(DsRadius.card),
+          boxShadow: [
+            BoxShadow(
+              color: colors.primary.withValues(alpha: 0.10),
+              blurRadius: DsSpacing.lg,
+              spreadRadius: -DsSpacing.xxs,
+              offset: const Offset(0, DsSpacing.xxs),
+            ),
+          ],
+        ),
         child: Material(
           color: colors.card,
           borderRadius: BorderRadius.circular(DsRadius.card),
@@ -58,60 +68,64 @@ class StylistRecommendationCard extends StatelessWidget {
                 // overflow waiting for a long enough explanation.
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(DsSpacing.sm),
+                    padding: const EdgeInsets.fromLTRB(
+                      DsSpacing.sm,
+                      DsSpacing.sm,
+                      DsSpacing.sm,
+                      DsSpacing.sm,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                      Text(
-                        product.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.dsText.body.semibold.tint(colors.onSurface).copyWith(height: 1.35),
-                      ),
-                      const SizedBox(height: DsSpacing.xxs),
-                      Row(
-                        children: [
-                          if (price != null)
-                            Text(
-                              price.format(),
-                              style: context.dsText.body.bold.tint(colors.primary),
-                            ),
-                          const Spacer(),
-                          if (product.rating > 0) ...[
-                            Icon(
-                              Icons.star_rounded,
-                              size: 14,
-                              color: colors.warning,
-                            ),
-                            DsGaps.hXxxs,
-                            Text(
-                              product.rating.toStringAsFixed(1),
-                              style: context.dsText.caption.tint(colors.onSurfaceVariant),
-                            ),
-                          ],
-                        ],
-                      ),
-                      if (seller != null) ...[
-                        const SizedBox(height: DsSpacing.xxs),
                         Text(
-                          seller.name,
-                          maxLines: 1,
+                          product.title,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                          style: context.dsText.body.semibold
+                              .tint(colors.onSurface)
+                              .copyWith(height: 1.35),
                         ),
-                      ],
-                      const SizedBox(height: DsSpacing.xs),
-                      // The flexible element, so a long reason is trimmed
-                      // rather than pushing the feedback row off the card.
-                      Expanded(child: _Reason(text: recommendation.reason)),
-                      if (onLike != null || onDismiss != null) ...[
-                        const SizedBox(height: DsSpacing.xs),
-                        _FeedbackRow(
-                          recommendation: recommendation,
-                          onLike: onLike,
-                          onDismiss: onDismiss,
-                        ),
-                      ],
+                        if (seller != null) ...[
+                          DsGaps.vXxxs,
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.storefront_outlined,
+                                size: 12,
+                                color: colors.onSurfaceVariant,
+                              ),
+                              DsGaps.hXxs,
+                              Expanded(
+                                child: Text(
+                                  seller.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                                ),
+                              ),
+                              if (product.rating > 0) ...[
+                                Icon(Icons.star_rounded, size: 13, color: colors.warning),
+                                DsGaps.hXxxs,
+                                Text(
+                                  product.rating.toStringAsFixed(1),
+                                  style: context.dsText.caption.semibold.tint(colors.onSurface),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ],
+                        DsGaps.vXs,
+                        // The flexible element, so a long reason is trimmed
+                        // rather than pushing the feedback row off the card.
+                        Expanded(child: _Reason(text: recommendation.reason)),
+                        if (onLike != null || onDismiss != null) ...[
+                          DsGaps.vXs,
+                          _FeedbackRow(
+                            recommendation: recommendation,
+                            onLike: onLike,
+                            onDismiss: onDismiss,
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -134,43 +148,70 @@ class _Cover extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
     final product = recommendation.product;
+    final price = recommendation.displayPrice;
 
-    return Stack(
-      children: [
-        AspectRatio(
-          aspectRatio: 1,
-          child: product.coverUrl != null
-              ? AuthorizedMediaImage(
-                  url: product.coverUrl!,
-                  blurHash: product.coverBlurHash,
-                  variantWidth: MediaVariants.thumbnail,
-                )
-              : Container(color: colors.surfaceVariant),
-        ),
-        if (recommendation.slotLabel != null)
-          Positioned(
-            top: DsSpacing.xs,
-            right: DsSpacing.xs,
-            child: _Pill(
-              label: recommendation.slotLabel!,
-              background: colors.primary,
-              foreground: colors.onPrimary,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (product.coverUrl != null)
+            AuthorizedMediaImage(
+              url: product.coverUrl!,
+              blurHash: product.coverBlurHash,
+              variantWidth: MediaVariants.thumbnail,
+            )
+          else
+            DecoratedBox(
+              decoration: BoxDecoration(gradient: context.boutique.signatureGradient),
+              child: const Icon(Icons.checkroom_rounded, color: DsColors.onMedia, size: 36),
+            ),
+          // A soft wash at the foot of the photo, so the price reads on any
+          // picture without a hard band across it.
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: 72,
+            child: DecoratedBox(
+              decoration: BoxDecoration(gradient: DsGradients.imageScrim),
             ),
           ),
-        // Availability is stated, never implied. The stylist only ever offers
-        // live offers, so this is the rare case where one sold out between
-        // the answer and the render.
-        if (!recommendation.inStock)
-          Positioned(
-            bottom: DsSpacing.xs,
-            right: DsSpacing.xs,
-            child: _Pill(
-              label: context.l10n.stylistSoldOut,
-              background: colors.error,
-              foreground: colors.onError,
+          if (recommendation.slotLabel != null)
+            PositionedDirectional(
+              top: DsSpacing.xs,
+              start: DsSpacing.xs,
+              child: _Pill(
+                label: recommendation.slotLabel!,
+                background: colors.surface.withValues(alpha: 0.92),
+                foreground: colors.primary,
+                icon: Icons.auto_awesome_rounded,
+              ),
             ),
-          ),
-      ],
+          if (price != null)
+            PositionedDirectional(
+              bottom: DsSpacing.xs,
+              start: DsSpacing.sm,
+              child: Text(
+                price.format(),
+                style: context.dsText.labelLarge.bold.tint(DsColors.onMedia),
+              ),
+            ),
+          // Availability is stated, never implied. The stylist only ever offers
+          // live offers, so this is the rare case where one sold out between
+          // the answer and the render.
+          if (!recommendation.inStock)
+            PositionedDirectional(
+              bottom: DsSpacing.xs,
+              end: DsSpacing.xs,
+              child: _Pill(
+                label: context.l10n.stylistSoldOut,
+                background: colors.error,
+                foreground: colors.onError,
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -180,11 +221,13 @@ class _Pill extends StatelessWidget {
     required this.label,
     required this.background,
     required this.foreground,
+    this.icon,
   });
 
   final String label;
   final Color background;
   final Color foreground;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -197,9 +240,15 @@ class _Pill extends StatelessWidget {
         color: background,
         borderRadius: BorderRadius.circular(DsRadius.pill),
       ),
-      child: Text(
-        label,
-        style: context.dsText.caption.semibold.tint(foreground),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 11, color: foreground),
+            DsGaps.hXxxs,
+          ],
+          Text(label, style: context.dsText.caption.semibold.tint(foreground)),
+        ],
       ),
     );
   }
@@ -217,26 +266,35 @@ class _Reason extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(DsSpacing.xs),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: colors.primaryContainer.withValues(alpha: 0.45),
+        color: colors.primaryContainer.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(DsRadius.md),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.auto_awesome_rounded, size: 13, color: colors.primary),
-          const SizedBox(width: DsSpacing.xxs),
-          Expanded(
-            child: Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 4,
-              style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.45),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // A thin rule in the brand gradient marks this as Ohara speaking.
+            Container(
+              width: 3,
+              decoration: BoxDecoration(gradient: context.boutique.signatureGradient),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(DsSpacing.xs),
+                child: Text(
+                  text,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 4,
+                  style: context.dsText.caption
+                      .tint(colors.onSurfaceVariant)
+                      .copyWith(height: 1.5),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -310,16 +368,25 @@ class _FeedbackButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(DsRadius.pill),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
+        child: AnimatedContainer(
+          duration: DsDurations.fast,
+          padding: const EdgeInsets.symmetric(vertical: DsSpacing.xs),
           decoration: BoxDecoration(
-            border: Border.all(color: colors.border),
+            color: active ? activeColor.withValues(alpha: 0.12) : null,
+            border: Border.all(
+              color: active ? activeColor.withValues(alpha: 0.4) : colors.border,
+            ),
             borderRadius: BorderRadius.circular(DsRadius.pill),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 13, color: foreground),
+              AnimatedScale(
+                duration: DsDurations.normal,
+                curve: Curves.elasticOut,
+                scale: active ? 1.2 : 1,
+                child: Icon(icon, size: 14, color: foreground),
+              ),
               const SizedBox(width: DsSpacing.xxs),
               Flexible(
                 child: Text(

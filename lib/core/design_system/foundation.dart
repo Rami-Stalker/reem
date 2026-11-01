@@ -27,6 +27,7 @@ export 'package:ohara/core/design_system/foundation/tokens/ds_colors.dart';
 export 'package:ohara/core/design_system/foundation/tokens/ds_constraints.dart';
 export 'package:ohara/core/design_system/foundation/tokens/ds_durations.dart';
 export 'package:ohara/core/design_system/foundation/tokens/ds_elevations.dart';
+export 'package:ohara/core/design_system/foundation/tokens/ds_fabric_swatches.dart';
 export 'package:ohara/core/design_system/foundation/tokens/ds_gaps.dart';
 export 'package:ohara/core/design_system/foundation/tokens/ds_gradients.dart';
 export 'package:ohara/core/design_system/foundation/tokens/ds_grid.dart';
