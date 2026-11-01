@@ -84,6 +84,17 @@ export function serializeLegacyPost(
     // Every piece, in order — `product` above stays for builds that read only
     // one. A post tagging three pieces used to show the first and lose two.
     products: tags.map((t) => serializeProduct(t.product)),
+    // The photographs she posted. The home feed drew the tagged piece's
+    // catalogue shots instead, so a shopper's own photo never reached it.
+    media: (content.media ?? [])
+      .slice()
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+      .map((m) => ({
+        url: m.url,
+        type: m.type,
+        thumbnail_url: m.thumbnailUrl ?? null,
+        blur_hash: m.blurHash ?? null,
+      })),
     caption: content.body ?? '',
     likes_count: Number(content.reactionsCount),
     comments_count: Number(content.repliesCount),

@@ -15,14 +15,15 @@ class SendMessageUseCase {
     String? clientId,
     String? currentUserId,
     String? productId,
-  }) =>
-      _repository.sendMessage(
-        chatId: chatId,
-        content: content,
-        kind: kind,
-        attachments: attachments,
-        clientId: clientId,
-        currentUserId: currentUserId,
-        productId: productId,
-      );
+    String? orderId,
+  }) => _repository.sendMessage(
+    chatId: chatId,
+    content: content,
+    kind: kind,
+    attachments: attachments,
+    clientId: clientId,
+    currentUserId: currentUserId,
+    productId: productId,
+    orderId: orderId,
+  );
 }

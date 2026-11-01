@@ -3,6 +3,7 @@ import 'package:ohara/core/network/base_remote_datasource.dart';
 import 'package:ohara/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:ohara/features/chat/data/models/chat_message_model.dart';
 import 'package:ohara/features/chat/data/models/chat_thread_model.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 
 final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
@@ -71,6 +72,7 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
     String? clientId,
     String? currentUserId,
     String? productId,
+    String? orderId,
   }) async {
     final json = await postJson(
       ApiEndpoints.chatMessages(chatId),
@@ -79,6 +81,7 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
         'kind': kind,
         'client_id': ?clientId,
         'product_id': ?productId,
+        'order_id': ?orderId,
         if (attachments.isNotEmpty) 'attachments': attachments,
       },
     );
@@ -90,6 +93,12 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
       chatId: chatId,
       currentUserId: currentUserId,
     );
+  }
+
+  @override
+  Future<List<ChatOrderRef>> orders(String chatId) async {
+    final list = await getList(ApiEndpoints.chatOrders(chatId));
+    return [for (final row in list) ?chatOrderRefFromJson(row)];
   }
 
   @override
@@ -105,18 +114,14 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
     String chatId,
     String messageId, {
     required bool forEveryone,
-  }) =>
-      deleteRequest(
-        '${ApiEndpoints.chatMessage(chatId, messageId)}'
-        '?scope=${forEveryone ? 'everyone' : 'me'}',
-      );
+  }) => deleteRequest(
+    '${ApiEndpoints.chatMessage(chatId, messageId)}'
+    '?scope=${forEveryone ? 'everyone' : 'me'}',
+  );
 
   @override
   Future<void> blockUser(String userId, {String? reason}) async {
-    await postJson(
-      ApiEndpoints.chatBlock(userId),
-      body: {'reason': ?reason},
-    );
+    await postJson(ApiEndpoints.chatBlock(userId), body: {'reason': ?reason});
   }
 
   @override

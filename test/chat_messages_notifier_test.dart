@@ -89,6 +89,7 @@ class _FakeRepository implements ChatRepository {
     String? clientId,
     String? currentUserId,
     String? productId,
+    String? orderId,
   }) {
     sends.add({
       'content': content,

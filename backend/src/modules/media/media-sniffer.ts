@@ -49,6 +49,14 @@ export function sniffMedia(bytes: Buffer): SniffedMedia | null {
   if (isWebp(bytes)) {
     return { mimeType: 'image/webp', extension: 'webp', kind: MediaType.image, ...webpSize(bytes) };
   }
+  // A voice note recorded on Android is AAC in an MP4 box with the generic
+  // `isom`/`mp42` brand — the same brand a video carries. Read by brand alone
+  // it was a video, and chat refuses video, so every voice note sent from an
+  // Android phone failed to upload. What decides it is the tracks: sound and
+  // no picture is audio.
+  if (isMp4(bytes) && isSoundOnly(bytes)) {
+    return { mimeType: 'audio/mp4', extension: 'm4a', kind: MediaType.audio };
+  }
   if (isMp4(bytes)) {
     return { mimeType: 'video/mp4', extension: 'mp4', kind: MediaType.video };
   }
@@ -109,6 +117,21 @@ const isMp4 = (b: Buffer) => {
 };
 
 const isQuickTime = (b: Buffer) => brandOf(b) === 'qt  ';
+
+/**
+ * Whether an ISO-BMFF file's tracks are all sound: some `hdlr` box names a
+ * `soun` handler and none names `vide`. The handler type sits eight bytes
+ * after the box type (version, flags, pre_defined).
+ */
+function isSoundOnly(b: Buffer): boolean {
+  let sound = false;
+  for (let at = b.indexOf('hdlr'); at !== -1; at = b.indexOf('hdlr', at + 4)) {
+    const handler = b.subarray(at + 12, at + 16).toString('latin1');
+    if (handler === 'vide') return false;
+    if (handler === 'soun') sound = true;
+  }
+  return sound;
+}
 
 // ── Audio ───────────────────────────────────────────────────────────────────
 

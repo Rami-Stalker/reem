@@ -22,8 +22,7 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
   @override
   Future<Result<ChatThreadEntity>> startConversation(
     ChatStartRequest request,
-  ) =>
-      guard(() => remote.startConversation(request));
+  ) => guard(() => remote.startConversation(request));
 
   @override
   Future<Result<List<ChatMessageEntity>>> getMessages(
@@ -31,15 +30,14 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
     DateTime? before,
     int limit = 50,
     String? currentUserId,
-  }) =>
-      guard(
-        () => remote.getMessages(
-          chatId,
-          before: before,
-          limit: limit,
-          currentUserId: currentUserId,
-        ),
-      );
+  }) => guard(
+    () => remote.getMessages(
+      chatId,
+      before: before,
+      limit: limit,
+      currentUserId: currentUserId,
+    ),
+  );
 
   @override
   Future<Result<ChatMessageEntity>> sendMessage({
@@ -50,18 +48,23 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
     String? clientId,
     String? currentUserId,
     String? productId,
-  }) =>
-      guard(
-        () => remote.sendMessage(
-          chatId: chatId,
-          content: content,
-          kind: kind,
-          attachments: attachments,
-          clientId: clientId,
-          currentUserId: currentUserId,
-          productId: productId,
-        ),
-      );
+    String? orderId,
+  }) => guard(
+    () => remote.sendMessage(
+      chatId: chatId,
+      content: content,
+      kind: kind,
+      attachments: attachments,
+      clientId: clientId,
+      currentUserId: currentUserId,
+      productId: productId,
+      orderId: orderId,
+    ),
+  );
+
+  @override
+  Future<Result<List<ChatOrderRef>>> orders(String chatId) =>
+      guard(() => remote.orders(chatId));
 
   @override
   Future<Result<void>> markRead(String chatId, {String? messageId}) =>
@@ -72,14 +75,9 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
     String chatId,
     String messageId, {
     required bool forEveryone,
-  }) =>
-      guard(
-        () => remote.deleteMessage(
-          chatId,
-          messageId,
-          forEveryone: forEveryone,
-        ),
-      );
+  }) => guard(
+    () => remote.deleteMessage(chatId, messageId, forEveryone: forEveryone),
+  );
 
   @override
   Future<Result<void>> blockUser(String userId, {String? reason}) =>
@@ -92,14 +90,13 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
     required String reason,
     String? messageId,
     String? description,
-  }) =>
-      guard(
-        () => remote.reportUser(
-          chatId: chatId,
-          reportedUserId: reportedUserId,
-          reason: reason,
-          messageId: messageId,
-          description: description,
-        ),
-      );
+  }) => guard(
+    () => remote.reportUser(
+      chatId: chatId,
+      reportedUserId: reportedUserId,
+      reason: reason,
+      messageId: messageId,
+      description: description,
+    ),
+  );
 }

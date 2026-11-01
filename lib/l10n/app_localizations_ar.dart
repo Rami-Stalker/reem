@@ -4122,6 +4122,45 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String checkoutWalletBalance(String amount) {
+    return 'رصيدكِ: $amount';
+  }
+
+  @override
+  String get checkoutWalletEmpty => 'محفظتكِ فاضية';
+
+  @override
+  String get checkoutWalletShort => 'الرصيد ما بيكفي لهالطلب';
+
+  @override
+  String get checkoutWalletFrozen => 'محفظتكِ موقوفة مؤقتاً';
+
+  @override
+  String get chatPickProductTitle => 'أرسلي قطعة';
+
+  @override
+  String get chatPickOrderTitle => 'أرسلي طلب';
+
+  @override
+  String get chatNoProductsToSend => 'ما في قطع لترسليها لسّا';
+
+  @override
+  String get chatNoOrdersToSend => 'ما في طلبات بينكن لسّا';
+
+  @override
+  String chatOrderMessage(String number) {
+    return 'طلب $number';
+  }
+
+  @override
+  String chatOrderItems(int count) {
+    return '$count قطع';
+  }
+
+  @override
+  String get chatOpenOrder => 'افتحي الطلب';
+
+  @override
   String get productDetailsSection => 'التفاصيل';
 
   @override
@@ -7601,6 +7640,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createStoryHint => 'بتختفي بعد 24 ساعة';
+
+  @override
+  String get navShowBar => 'إظهار شريط التنقّل';
 
   @override
   String get createTooltip => 'إنشاء';

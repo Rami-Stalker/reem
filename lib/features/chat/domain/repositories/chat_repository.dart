@@ -28,9 +28,13 @@ abstract interface class ChatRepository {
     String? clientId,
     String? currentUserId,
     String? productId,
+    String? orderId,
   });
 
   Future<Result<void>> markRead(String chatId, {String? messageId});
+
+  /// The orders between the two people in this conversation, newest first.
+  Future<Result<List<ChatOrderRef>>> orders(String chatId);
 
   /// «حذف لدي», or with [forEveryone] «حذف عند الجميع».
   Future<Result<void>> deleteMessage(

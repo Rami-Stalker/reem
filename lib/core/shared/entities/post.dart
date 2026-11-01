@@ -21,16 +21,16 @@ enum CategoryType {
 
 extension CategoryTypeX on CategoryType {
   String get label => switch (this) {
-        CategoryType.clothing => 'Clothing',
-        CategoryType.makeup => 'Makeup',
-        CategoryType.perfumes => 'Perfumes',
-        CategoryType.bags => 'Bags',
-        CategoryType.flowers => 'Flowers',
-        CategoryType.shoes => 'Shoes',
-        CategoryType.chocolate => 'Chocolate',
-        CategoryType.bathBody => 'Bath & Body',
-        CategoryType.gifts => 'Gifts',
-      };
+    CategoryType.clothing => 'Clothing',
+    CategoryType.makeup => 'Makeup',
+    CategoryType.perfumes => 'Perfumes',
+    CategoryType.bags => 'Bags',
+    CategoryType.flowers => 'Flowers',
+    CategoryType.shoes => 'Shoes',
+    CategoryType.chocolate => 'Chocolate',
+    CategoryType.bathBody => 'Bath & Body',
+    CategoryType.gifts => 'Gifts',
+  };
 
   /// Maps a free-form product category string onto a display category.
   static CategoryType fromString(String? value) {
@@ -83,6 +83,10 @@ class Post extends Equatable {
   /// Every piece tagged, in order; [product] is the first. Empty from a server
   /// that sends only the one.
   final List<Product> products;
+
+  /// The photographs the author posted. Empty from an older server, and for
+  /// a boutique post that only shows its piece.
+  final List<MediaItem> photos;
   final String caption;
   final CategoryType category;
 
@@ -118,6 +122,7 @@ class Post extends Equatable {
     required this.author,
     this.product,
     this.products = const [],
+    this.photos = const [],
     required this.caption,
     this.category = CategoryType.gifts,
     this.likesCount = 0,
@@ -140,30 +145,33 @@ class Post extends Equatable {
   /// Tagged pieces beyond the first.
   int get morePieces => products.length > 1 ? products.length - 1 : 0;
 
-  /// A post's media is its product's gallery — exposed directly for
-  /// convenience, and empty for a post that tags nothing.
-  List<MediaItem> get media => product?.media ?? const [];
-  MediaItem? get cover => product?.cover;
+  /// What the post shows: the author's own photographs, or — for a post
+  /// that has none — its piece's gallery. A shopper's photo of herself in
+  /// the dress is the post; the catalogue shot is only the tag under it.
+  List<MediaItem> get media =>
+      photos.isNotEmpty ? photos : (product?.media ?? const []);
+  MediaItem? get cover => photos.isNotEmpty ? photos.first : product?.cover;
 
   @override
   List<Object?> get props => [
-        id,
-        author,
-        product,
-        products,
-        myReaction,
-        reactionSummary,
-        caption,
-        category,
-        likesCount,
-        commentsCount,
-        sharesCount,
-        savesCount,
-        isLiked,
-        isSaved,
-        isReshared,
-        createdAt,
-        sponsoredOfferId,
-        sponsoredStoreTier,
-      ];
+    id,
+    author,
+    product,
+    products,
+    photos,
+    myReaction,
+    reactionSummary,
+    caption,
+    category,
+    likesCount,
+    commentsCount,
+    sharesCount,
+    savesCount,
+    isLiked,
+    isSaved,
+    isReshared,
+    createdAt,
+    sponsoredOfferId,
+    sponsoredStoreTier,
+  ];
 }

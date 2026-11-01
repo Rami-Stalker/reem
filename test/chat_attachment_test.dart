@@ -793,6 +793,7 @@ class _FakeChatRepository implements ChatRepository {
     String? clientId,
     String? currentUserId,
     String? productId,
+    String? orderId,
   }) async {
     clientIds.add(clientId);
     if (failSends) return const Error(NetworkFailure('لا يوجد اتصال'));

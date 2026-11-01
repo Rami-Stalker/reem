@@ -616,6 +616,7 @@ abstract final class ApiEndpoints {
   static String chatMessage(String chatId, String messageId) =>
       '/chats/$chatId/messages/$messageId';
   static String chatRead(String chatId) => '/chats/$chatId/read';
+  static String chatOrders(String chatId) => '/chats/$chatId/orders';
   static String chatReports(String chatId) => '/chats/$chatId/reports';
   static String chatBlock(String userId) => '/chats/blocks/$userId';
 

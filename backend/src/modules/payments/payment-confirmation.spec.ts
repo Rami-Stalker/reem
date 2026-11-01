@@ -187,16 +187,16 @@ function catalogueWith(payments: Record<string, unknown>): PaymentsService {
   );
 }
 
-test('only rails a customer can finish paying on are offered', () => {
+test('only rails a customer can finish paying on are offered', async () => {
   // Production as it stands: no gateway can attest, no transfer details set.
-  const offered = catalogueWith({ sandboxConfirmation: false })
-    .methods()
-    .map((method) => method.method);
+  const offered = (
+    await catalogueWith({ sandboxConfirmation: false }).methods()
+  ).map((method) => method.method);
   assert.deepEqual(offered, ['cod', 'courier_collect', 'platform_wallet']);
 });
 
-test('a transfer rail is offered once finance says who to pay, with those words', () => {
-  const methods = catalogueWith({
+test('a transfer rail is offered once finance says who to pay, with those words', async () => {
+  const methods = await catalogueWith({
     sandboxConfirmation: false,
     manualInstructions: { HAWALA: 'مكتب الهرم — باسم أوهارا للتجارة' },
   }).methods();
@@ -239,4 +239,11 @@ test('checking a transfer answers where it stands instead of refusing', async ()
     'pay-1',
   );
   assert.equal(result.status, 'pending');
+});
+
+test('a guest is not offered the wallet she does not have', async () => {
+  const offered = (
+    await catalogueWith({ sandboxConfirmation: false }).methods({ signedIn: false })
+  ).map((method) => method.method);
+  assert.deepEqual(offered, ['cod', 'courier_collect']);
 });

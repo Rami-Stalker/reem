@@ -67,11 +67,34 @@ class PaymentMethodOption extends Equatable {
   /// server only offers a transfer rail once this is set.
   final String? instructions;
 
+  /// For the platform wallet: what she holds, per currency, and whether it is
+  /// on hold — so checkout can say so before she commits.
+  final List<Money> walletBalances;
+  final bool walletFrozen;
+
+  bool get isWallet => method == 'platform_wallet';
+
+  /// Her balance in [currency], zero when she holds none.
+  Money walletBalanceIn(Currency currency) =>
+      walletBalances.where((m) => m.currency == currency).firstOrNull ??
+      Money(raw: '0', currency: currency);
+
+  /// Whether the wallet can pay [total]. Always true for any other method.
+  bool canCover(Money? total) {
+    if (!isWallet) return true;
+    if (walletFrozen) return false;
+    if (total == null) return true;
+    return walletBalanceIn(total.currency).approximateValue >=
+        total.approximateValue;
+  }
+
   const PaymentMethodOption({
     required this.method,
     required this.label,
     required this.requiresOnlineConfirmation,
     this.instructions,
+    this.walletBalances = const [],
+    this.walletFrozen = false,
   });
 
   @override
@@ -80,6 +103,8 @@ class PaymentMethodOption extends Equatable {
     label,
     requiresOnlineConfirmation,
     instructions,
+    walletBalances,
+    walletFrozen,
   ];
 }
 

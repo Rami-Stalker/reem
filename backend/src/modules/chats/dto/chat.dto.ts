@@ -96,6 +96,15 @@ export class SendMessageDto {
   @IsUUID()
   product_id?: string;
 
+  /**
+   * «أرسلي طلب» — a parcel between these two. Resolved on the server into an
+   * order card (number, status, total, photo); only an order the two of them
+   * share can be sent.
+   */
+  @IsOptional()
+  @IsUUID()
+  order_id?: string;
+
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })

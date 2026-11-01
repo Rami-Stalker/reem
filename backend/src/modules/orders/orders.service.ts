@@ -126,7 +126,7 @@ export class OrdersService {
     // A basket she called off before it moved is not a refusal, and a trust
     // engine that never learned the difference would read every change of mind
     // as a parcel sent back at the door.
-    await this.codTrust.observe(id, 'cancelled');
+    await this.codTrust.observe(order.id, 'cancelled');
 
     return this.detail(buyer, id);
   }

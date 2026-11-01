@@ -78,8 +78,8 @@ void main() {
       expect(HttpCacheRules.policyFor('/wallet'), isNull);
     });
 
-    test('the payments catalogue is allowed through the payments block', () {
-      expect(HttpCacheRules.policyFor('/payments/methods'), isNotNull);
+    test('payment methods come off the wire — they carry her balance', () {
+      expect(HttpCacheRules.policyFor('/payments/methods'), isNull);
       expect(HttpCacheRules.policyFor('/payments/intents/42'), isNull);
     });
 

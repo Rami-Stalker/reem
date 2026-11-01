@@ -50,15 +50,11 @@ abstract final class HttpCacheRules {
     ),
 
     // ── Reference data ───────────────────────────────────────────────────
-    // Governorates and payment methods change a few times a year. Caching
-    // them for a day also means checkout still opens on a dead connection.
+    // Governorates change a few times a year. Caching them for a day also
+    // means the address form still opens on a dead connection.
     '/delivery/governorates': CachePolicy(
       strategy: CacheStrategy.cacheFirst,
       ttl: Duration(days: 1),
-    ),
-    '/payments/methods': CachePolicy(
-      strategy: CacheStrategy.cacheFirst,
-      ttl: Duration(hours: 12),
     ),
 
     // ── Identity ─────────────────────────────────────────────────────────
@@ -95,7 +91,9 @@ abstract final class HttpCacheRules {
   static const List<String> _never = [
     '/cart',
     '/orders',
-    '/payments/', // the catalogue at `/payments/methods` is allowed above
+    // Every payment route, the methods included: they carry her wallet
+    // balance now, and a twelve-hour-old balance is a wrong one.
+    '/payments/',
     '/chats',
     '/auth',
     '/seller/',
@@ -120,8 +118,7 @@ abstract final class HttpCacheRules {
 
     for (final blocked in _never) {
       if (normalised == blocked || normalised.startsWith(blocked)) {
-        // `/payments/methods` is explicitly allowed; the blanket `/payments/`
-        // rule exists to keep every other payment route off the disk.
+        // A route listed above wins over the blanket rule.
         if (_byPrefix.containsKey(normalised)) break;
         return null;
       }

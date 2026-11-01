@@ -1,4 +1,7 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import assert from 'node:assert/strict';
+import { MediaType } from '@prisma/client';
 import test from 'node:test';
 import { sniffMedia } from './media-sniffer';
 
@@ -212,4 +215,25 @@ test('a JPEG magic number followed by rubbish yields no dimensions', () => {
   assert.equal(sniffed?.mimeType, 'image/jpeg');
   assert.equal(sniffed?.width, undefined);
   assert.equal(sniffed?.height, undefined);
+});
+
+// ── Real recordings ─────────────────────────────────────────────────────────
+// Encoded with ffmpeg the way each phone writes them: Android's recorder puts
+// AAC in an MP4 box with the generic `mp42` brand, iOS writes `M4A `.
+
+const fixture = (name: string) =>
+  readFileSync(join(__dirname, '__fixtures__', name));
+
+test('an Android voice note — AAC under a generic MP4 brand — is audio', () => {
+  const sniffed = sniffMedia(fixture('voice-android.m4a'));
+  assert.equal(sniffed?.kind, MediaType.audio);
+  assert.equal(sniffed?.mimeType, 'audio/mp4');
+});
+
+test('an iPhone voice note is audio', () => {
+  assert.equal(sniffMedia(fixture('voice-ios.m4a'))?.kind, MediaType.audio);
+});
+
+test('a clip with a picture track is still a video', () => {
+  assert.equal(sniffMedia(fixture('clip.mp4'))?.kind, MediaType.video);
 });

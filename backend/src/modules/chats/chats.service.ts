@@ -411,9 +411,17 @@ export class ChatsService {
     const product = dto.product_id
       ? await this.productReference(dto.product_id, chat.sellerId)
       : null;
-    const metadata = product
-      ? { ...asRecord(dto.metadata), product }
-      : dto.metadata;
+    const order = dto.order_id
+      ? await this.orderReference(dto.order_id, chat.buyerId, chat.sellerId)
+      : null;
+    const metadata =
+      product || order
+        ? {
+            ...asRecord(dto.metadata),
+            ...(product ? { product } : {}),
+            ...(order ? { order } : {}),
+          }
+        : dto.metadata;
 
     const message = await this.prisma.message.create({
       data: {
@@ -803,6 +811,75 @@ export class ChatsService {
       title: product.title,
       image_url: product.media[0]?.url ?? null,
       price: offer ? Money.of(offer.price, offer.currency).toJSON() : null,
+    };
+  }
+
+  /**
+   * The parcels between the two people in this conversation, newest first —
+   * what «أرسلي طلب» offers to send.
+   */
+  async orders(chatId: string, userId: string) {
+    const chat = await this.assertMember(chatId, userId);
+    if (!chat.buyerId || !chat.sellerId) return [];
+    const parcels = await this.prisma.sellerOrder.findMany({
+      where: { sellerId: chat.sellerId, order: { userId: chat.buyerId } },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      select: { id: true },
+    });
+    return Promise.all(
+      parcels.map((parcel) =>
+        this.orderReference(parcel.id, chat.buyerId, chat.sellerId),
+      ),
+    );
+  }
+
+  /** An order card, built from the parcel itself — never from the phone. */
+  private async orderReference(
+    sellerOrderId: string,
+    buyerId: string | null,
+    sellerId: string | null,
+  ) {
+    const parcel = await this.prisma.sellerOrder.findUnique({
+      where: { id: sellerOrderId },
+      select: {
+        id: true,
+        number: true,
+        status: true,
+        sellerId: true,
+        currency: true,
+        itemsSubtotal: true,
+        discountTotal: true,
+        shippingCost: true,
+        createdAt: true,
+        order: { select: { id: true, userId: true } },
+        items: {
+          select: { imageSnapshot: true, titleSnapshot: true, quantity: true },
+        },
+      },
+    });
+    // Only a parcel these two share: a stranger's order number must not
+    // become a card in somebody else's conversation.
+    if (
+      !parcel ||
+      parcel.sellerId !== sellerId ||
+      parcel.order.userId !== buyerId
+    ) {
+      throw new NotFoundException('الطلب غير موجود');
+    }
+    const total = Money.of(parcel.itemsSubtotal, parcel.currency)
+      .minus(Money.of(parcel.discountTotal, parcel.currency))
+      .plus(Money.of(parcel.shippingCost, parcel.currency));
+    return {
+      id: parcel.order.id,
+      seller_order_id: parcel.id,
+      number: parcel.number,
+      status: parcel.status.toLowerCase(),
+      total: total.toJSON(),
+      items_count: parcel.items.reduce((sum, item) => sum + item.quantity, 0),
+      title: parcel.items[0]?.titleSnapshot ?? null,
+      image_url: parcel.items.find((item) => item.imageSnapshot)?.imageSnapshot ?? null,
+      placed_at: parcel.createdAt.toISOString(),
     };
   }
 

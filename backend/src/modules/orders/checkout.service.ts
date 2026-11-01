@@ -899,9 +899,7 @@ export class CheckoutService {
     grandTotal: Money,
   ): Promise<void> {
     if (!userId) {
-      throw new BadRequestException(
-        'Paying from the wallet requires a signed-in account',
-      );
+      throw new BadRequestException('الدفع من المحفظة يحتاج تسجيل الدخول');
     }
     const wallet = await this.prisma.wallet.findUnique({
       where: { userId_currency: { userId, currency: grandTotal.currency } },
@@ -910,14 +908,14 @@ export class CheckoutService {
     if (wallet?.frozen) {
       throw new BadRequestException({
         code: 'WALLET_FROZEN',
-        message: 'This wallet is frozen',
+        message: 'محفظتكِ موقوفة مؤقتاً، اختاري طريقة دفع تانية',
       });
     }
     const balance = Money.of(wallet?.balance ?? 0, grandTotal.currency);
     if (grandTotal.greaterThan(balance)) {
       throw new BadRequestException({
         code: 'INSUFFICIENT_WALLET_BALANCE',
-        message: `Insufficient wallet balance: have ${balance.toString()}, need ${grandTotal.toString()}`,
+        message: `رصيد محفظتكِ (${balance.toString()}) ما بيكفي لهالطلب (${grandTotal.toString()})، اختاري طريقة دفع تانية`,
       });
     }
   }
