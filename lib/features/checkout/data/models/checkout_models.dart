@@ -51,6 +51,8 @@ class PaymentMethodOptionModel extends PaymentMethodOption {
     required super.label,
     required super.requiresOnlineConfirmation,
     super.instructions,
+    super.walletBalances,
+    super.walletFrozen,
   });
 
   factory PaymentMethodOptionModel.fromJson(Map<String, dynamic> json) {
@@ -60,6 +62,11 @@ class PaymentMethodOptionModel extends PaymentMethodOption {
       requiresOnlineConfirmation:
           json['requires_online_confirmation'] as bool? ?? false,
       instructions: json['instructions'] as String?,
+      walletBalances: [
+        for (final item in (json['balances'] as List?) ?? const [])
+          ?Money.tryFromJson(item),
+      ],
+      walletFrozen: json['frozen'] as bool? ?? false,
     );
   }
 }

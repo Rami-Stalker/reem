@@ -4088,6 +4088,20 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String checkoutWalletBalance(String amount) {
+    return 'Balance: $amount';
+  }
+
+  @override
+  String get checkoutWalletEmpty => 'Your wallet is empty';
+
+  @override
+  String get checkoutWalletShort => 'Not enough for this order';
+
+  @override
+  String get checkoutWalletFrozen => 'Your wallet is on hold';
+
+  @override
   String get productDetailsSection => 'Details';
 
   @override

@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { SelfScoped } from '../../common/decorators/self-scoped.decorator';
 import { SubmitPaymentReferenceDto } from './dto/submit-payment-reference.dto';
@@ -26,9 +27,16 @@ import { PaymentsService } from './payments.service';
 export class PaymentsController {
   constructor(private readonly payments: PaymentsService) {}
 
+  /**
+   * How she can pay. Open to a guest, because a guest may buy (Q46 P1) — it
+   * used to demand an account, so a visitor reached checkout, found no way to
+   * pay, and could not place the order she had filled a bag for. A guest is
+   * not offered the platform wallet: she has none.
+   */
+  @OptionalAuth()
   @Get('methods')
-  methods() {
-    return this.payments.methods();
+  methods(@CurrentUser('id') userId?: string) {
+    return this.payments.methods({ signedIn: userId !== undefined, userId });
   }
 
   // ── Finance: bank transfers and hawala (Q51) ──────────────────────────

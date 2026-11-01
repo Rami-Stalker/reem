@@ -4948,6 +4948,23 @@
     "description": "Reactions (long-press on the heart)",
     "placeholders": {"count": {"type": "String"}}
   },
+  "checkoutWalletBalance": "Balance: {amount}",
+  "@checkoutWalletBalance": {
+    "description": "Checkout: the wallet payment option",
+    "placeholders": {"amount": {"type": "String"}}
+  },
+  "checkoutWalletEmpty": "Your wallet is empty",
+  "@checkoutWalletEmpty": {
+    "description": "Checkout: the wallet payment option"
+  },
+  "checkoutWalletShort": "Not enough for this order",
+  "@checkoutWalletShort": {
+    "description": "Checkout: the wallet payment option"
+  },
+  "checkoutWalletFrozen": "Your wallet is on hold",
+  "@checkoutWalletFrozen": {
+    "description": "Checkout: the wallet payment option"
+  },
   "productDetailsSection": "Details",
   "productOffersFrom": "{count} boutiques list this",
   "productPause": "Pause",

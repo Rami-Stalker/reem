@@ -173,17 +173,41 @@ export class PaymentsService {
    * exist or told to transfer to nobody, and her order expired an hour or
    * three days later. Cash and the wallet always work.
    */
-  methods() {
+  async methods(
+    viewer: { signedIn: boolean; userId?: string } = { signedIn: true },
+  ) {
+    // The wallet's balances, so checkout can show what she has and not offer
+    // a wallet that cannot cover the bag — she used to learn that only after
+    // pressing confirm.
+    const wallets = viewer.userId
+      ? await this.prisma.wallet.findMany({
+          where: { userId: viewer.userId },
+          select: { currency: true, balance: true, frozen: true },
+        })
+      : [];
     return Object.values(PaymentMethodType)
       .filter((method) => this.isAvailable(method))
+      // A guest has no wallet.
+      .filter(
+        (method) => viewer.signedIn || railOf(method) !== PaymentRail.WALLET,
+      )
       .map((method) => {
         const provider = this.registry.get(method);
+        const isWallet = railOf(method) === PaymentRail.WALLET;
         return {
           method: method.toLowerCase(),
           label: provider.displayName,
           requires_online_confirmation: provider.requiresOnlineConfirmation,
           rail: railOf(method),
           instructions: this.instructionsFor(method),
+          ...(isWallet
+            ? {
+                balances: wallets
+                  .filter((wallet) => !wallet.frozen)
+                  .map((wallet) => Money.of(wallet.balance, wallet.currency).toJSON()),
+                frozen: wallets.some((wallet) => wallet.frozen),
+              }
+            : {}),
         };
       });
   }

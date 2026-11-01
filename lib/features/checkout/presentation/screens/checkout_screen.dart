@@ -224,6 +224,20 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     _requote();
   }
 
+  /// What she will pay — the bag and the quoted delivery — for telling
+  /// whether the wallet covers it. An estimate for that one decision; the
+  /// server charges the exact figure.
+  Money? _payableTotal(Money? subtotal, CheckoutState state) {
+    if (subtotal == null) return null;
+    final delivery = state.quote?.deliveryFee;
+    final sum =
+        subtotal.approximateValue +
+        (delivery != null && delivery.currency == subtotal.currency
+            ? delivery.approximateValue
+            : 0);
+    return Money(raw: sum.toString(), currency: subtotal.currency);
+  }
+
   Future<void> _place() async {
     final l10n = context.l10n;
 
@@ -243,6 +257,23 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       DsSnackbar.show(
         context,
         message: l10n.checkoutChoosePayment,
+        type: DsSnackbarType.error,
+      );
+      return;
+    }
+    // The bag or the delivery may have changed since she picked the wallet.
+    final state = ref.read(checkoutControllerProvider);
+    final chosen = state.paymentMethods
+        .where((m) => m.method == _paymentMethod)
+        .firstOrNull;
+    final total = _payableTotal(
+      ref.read(cartNotifierProvider).cart.summary.subtotal,
+      state,
+    );
+    if (chosen != null && !chosen.canCover(total)) {
+      DsSnackbar.show(
+        context,
+        message: l10n.checkoutWalletShort,
         type: DsSnackbarType.error,
       );
       return;
@@ -453,6 +484,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             _PaymentTile(
                               option: method,
                               selected: _paymentMethod == method.method,
+                              total: _payableTotal(
+                                cart.summary.subtotal,
+                                state,
+                              ),
                               onTap: () => setState(
                                 () => _paymentMethod = method.method,
                               ),
@@ -996,11 +1031,15 @@ class _PaymentTile extends StatelessWidget {
     required this.option,
     required this.selected,
     required this.onTap,
+    this.total,
   });
 
   final PaymentMethodOption option;
   final bool selected;
   final VoidCallback onTap;
+
+  /// What the order will cost, to tell whether the wallet can pay it.
+  final Money? total;
 
   static IconData _iconOf(String method) => switch (method) {
     'cod' || 'courier_collect' => Icons.payments_rounded,
@@ -1015,45 +1054,77 @@ class _PaymentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    return _ChoiceCard(
-      icon: _iconOf(option.method),
-      selected: selected,
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: DsSpacing.sm),
-            child: Text(
-              // The app's own name for a known method, so checkout and the
-              // order page agree («محفظة أوهارا»); the server's label for one the
-              // app does not know yet.
-              switch (context.l10n.paymentMethodName(option.method)) {
-                final name when name != option.method => name,
-                _ => option.label,
-              },
-              style: context.dsText.body.semibold.tint(colors.onSurface),
+    final l10n = context.l10n;
+    // The wallet says what she holds, and is not offered when it cannot pay
+    // — she used to learn that from an error after pressing confirm.
+    final covers = option.canCover(total);
+    final walletNote = !option.isWallet
+        ? null
+        : option.walletFrozen
+        ? l10n.checkoutWalletFrozen
+        : switch (total) {
+            final t? when option.walletBalanceIn(t.currency).isZero =>
+              l10n.checkoutWalletEmpty,
+            final t? => [
+              l10n.checkoutWalletBalance(
+                option.walletBalanceIn(t.currency).format(),
+              ),
+              if (!covers) l10n.checkoutWalletShort,
+            ].join(' · '),
+            null => null,
+          };
+    return Opacity(
+      opacity: covers ? 1 : 0.55,
+      child: _ChoiceCard(
+        icon: _iconOf(option.method),
+        selected: selected && covers,
+        onTap: covers ? onTap : () {},
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: DsSpacing.sm),
+              child: Text(
+                // The app's own name for a known method, so checkout and the
+                // order page agree («محفظة أوهارا»); the server's label for one the
+                // app does not know yet.
+                switch (context.l10n.paymentMethodName(option.method)) {
+                  final name when name != option.method => name,
+                  _ => option.label,
+                },
+                style: context.dsText.body.semibold.tint(colors.onSurface),
+              ),
             ),
-          ),
-          // Who to pay, before she commits to the order — not after, when she
-          // is already standing at the office.
-          AnimatedSize(
-            duration: DsMotion.moderate,
-            curve: DsMotion.gentle,
-            alignment: AlignmentDirectional.topStart,
-            child: selected && (option.instructions ?? '').isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.only(top: DsSpacing.xs),
-                    child: Text(
-                      option.instructions!,
-                      style: context.dsText.bodySmall.tint(
-                        colors.onSurfaceVariant,
+            if (walletNote != null)
+              Padding(
+                padding: const EdgeInsets.only(top: DsSpacing.xxs),
+                child: Text(
+                  walletNote,
+                  style: context.dsText.caption.tint(
+                    covers ? colors.onSurfaceVariant : colors.errorInk,
+                  ),
+                ),
+              ),
+            // Who to pay, before she commits to the order — not after, when she
+            // is already standing at the office.
+            AnimatedSize(
+              duration: DsMotion.moderate,
+              curve: DsMotion.gentle,
+              alignment: AlignmentDirectional.topStart,
+              child: selected && (option.instructions ?? '').isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: DsSpacing.xs),
+                      child: Text(
+                        option.instructions!,
+                        style: context.dsText.bodySmall.tint(
+                          colors.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                  )
-                : const SizedBox(width: double.infinity),
-          ),
-        ],
+                    )
+                  : const SizedBox(width: double.infinity),
+            ),
+          ],
+        ),
       ),
     );
   }

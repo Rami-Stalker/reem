@@ -4122,6 +4122,20 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String checkoutWalletBalance(String amount) {
+    return 'رصيدكِ: $amount';
+  }
+
+  @override
+  String get checkoutWalletEmpty => 'محفظتكِ فاضية';
+
+  @override
+  String get checkoutWalletShort => 'الرصيد ما بيكفي لهالطلب';
+
+  @override
+  String get checkoutWalletFrozen => 'محفظتكِ موقوفة مؤقتاً';
+
+  @override
   String get productDetailsSection => 'التفاصيل';
 
   @override

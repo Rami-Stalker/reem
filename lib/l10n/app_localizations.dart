@@ -7454,6 +7454,30 @@ abstract class AppLocalizations {
   /// **'{count} reactions'**
   String reactionsCount(String count);
 
+  /// Checkout: the wallet payment option
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: {amount}'**
+  String checkoutWalletBalance(String amount);
+
+  /// Checkout: the wallet payment option
+  ///
+  /// In en, this message translates to:
+  /// **'Your wallet is empty'**
+  String get checkoutWalletEmpty;
+
+  /// Checkout: the wallet payment option
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough for this order'**
+  String get checkoutWalletShort;
+
+  /// Checkout: the wallet payment option
+  ///
+  /// In en, this message translates to:
+  /// **'Your wallet is on hold'**
+  String get checkoutWalletFrozen;
+
   /// No description provided for @productDetailsSection.
   ///
   /// In en, this message translates to:
