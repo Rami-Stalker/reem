@@ -43,6 +43,8 @@ import {
   missingSlotQuestion,
 } from './understanding/style-brief';
 import { formatSyp } from './understanding/style-brief';
+import { applyPriceRefinement, detectRefinement } from './understanding/refinement';
+import { adviceFor } from './reply/style-advice';
 
 export interface StylistTurn {
   conversation: AiStylistConversation;
@@ -150,9 +152,10 @@ export class StylistConversationService {
       ? await this.requireConversation(input.userId, input.conversationId)
       : await this.startConversation(input.userId);
 
-    const [history, profile] = await Promise.all([
+    const [history, profile, shown] = await Promise.all([
       this.recentTurns(conversation.id),
       this.preferences.buildProfile(input.userId),
+      this.shownSoFar(conversation.id),
     ]);
 
     const currentBrief = this.seedBrief(conversation, profile);
@@ -163,10 +166,15 @@ export class StylistConversationService {
       currentBrief,
       history,
     });
-    const brief = extraction.brief;
+    // "أرخص" and "كمان" only mean something against the last answer, so
+    // they are read against it here rather than by the sentence parser.
+    const refinement = detectRefinement(input.content);
+    const brief = applyPriceRefinement(extraction.brief, refinement, shown.lastPrices);
 
     // 2 — Answer it out of the catalog.
-    const answer = await this.answer(brief, profile);
+    const answer = await this.answer(brief, profile, {
+      exclude: refinement.more ? shown.productIds : new Set<string>(),
+    });
 
     // 3 — Write everything down before phrasing anything, so the reply is
     //     rendered from what was actually stored.
@@ -181,7 +189,7 @@ export class StylistConversationService {
     });
 
     // 4 — Phrase.
-    const reply = await this.phrase(input.content, brief, answer);
+    const reply = await this.phrase(input.content, brief, answer, history);
 
     const assistantMessage = await this.prisma.aiStylistMessage.create({
       data: {
@@ -249,6 +257,7 @@ export class StylistConversationService {
   private async answer(
     brief: StyleBrief,
     profile: StyleProfile,
+    options: { exclude: ReadonlySet<string> } = { exclude: new Set() },
   ): Promise<StylistAnswer> {
     if (brief.intent === 'SMALL_TALK' || !briefIsActionable(brief)) {
       return { kind: 'conversation', results: [], outfit: null, relaxations: [] };
@@ -280,8 +289,13 @@ export class StylistConversationService {
     }
 
     const retrieved = await this.retrieval.retrieve(brief);
+    // "وريني المزيد": leave out what is already on her screen — unless that
+    // would leave nothing, in which case the same rail beats an empty answer.
+    const fresh = retrieved.candidates.filter(
+      (candidate) => !options.exclude.has(candidate.id),
+    );
     const ranked = rankProducts(
-      retrieved.candidates,
+      fresh.length ? fresh : retrieved.candidates,
       { brief, profile, diversity: { perCategory: 3, perSeller: 2 } },
       StylistConversationService.RESULT_LIMIT,
     );
@@ -310,12 +324,16 @@ export class StylistConversationService {
     message: string,
     brief: StyleBrief,
     answer: StylistAnswer,
+    history: Array<{ role: 'user' | 'assistant'; content: string }> = [],
   ): Promise<ComposedReply> {
+    const advice = adviceFor(brief, message);
     const deterministic =
       answer.kind === 'conversation'
         ? composeConversationalReply({
             brief,
             greeting: brief.intent === 'SMALL_TALK',
+            message,
+            advice,
           })
         : answer.kind === 'outfit' && answer.outfit
           ? composeOutfitReply({ brief, outfit: answer.outfit })
@@ -323,13 +341,26 @@ export class StylistConversationService {
               brief,
               results: answer.results,
               relaxations: answer.relaxations,
+              advice,
             });
 
-    if (!this.llm.enabled || answer.kind === 'conversation') return deterministic;
+    // Greetings and thanks are better from the templates; an opinion question
+    // is where a model earns its place, even with no cards to talk about.
+    const wantsAdvice = brief.intent === 'ADVICE';
+    if (!this.llm.enabled) return deterministic;
+    if (answer.kind === 'conversation' && !wantsAdvice) return deterministic;
 
     try {
       const text = await this.llm.composeReply({
+        mode:
+          answer.kind === 'conversation'
+            ? 'advice'
+            : answer.kind === 'outfit'
+              ? 'outfit'
+              : 'products',
         message,
+        history,
+        advice,
         brief,
         products: answer.results.map((entry) => {
           const offer = defaultOffer(entry.product);
@@ -546,6 +577,27 @@ export class StylistConversationService {
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────
+
+  /**
+   * What this conversation has already put in front of her: every product id
+   * (so "كمان" can leave them out) and the prices of the last answer (so
+   * "أرخص" has something to be cheaper than).
+   */
+  private async shownSoFar(conversationId: string) {
+    const rows = await this.prisma.aiStylistRecommendation.findMany({
+      where: { conversationId },
+      orderBy: { createdAt: 'desc' },
+      take: 60,
+      select: { productId: true, messageId: true, quotedPriceSyp: true },
+    });
+    const lastMessageId = rows[0]?.messageId ?? null;
+    return {
+      productIds: new Set(rows.map((row) => row.productId)),
+      lastPrices: rows
+        .filter((row) => row.messageId === lastMessageId && row.quotedPriceSyp !== null)
+        .map((row) => Number(row.quotedPriceSyp)),
+    };
+  }
 
   private async recentTurns(conversationId: string) {
     const rows = await this.prisma.aiStylistMessage.findMany({

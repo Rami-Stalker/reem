@@ -10507,6 +10507,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stylistTryAsking => 'Try asking me:';
 
   @override
+  String get stylistOnlineStatus => 'Online · your personal stylist';
+
+  @override
+  String get stylistThinking => 'Ohara is styling for you…';
+
+  @override
+  String get stylistUnderstood => 'Got it:';
+
+  @override
+  String get stylistWelcomeGreeting => 'Hi, I’m Ohara';
+
+  @override
+  String get stylistCapAdviceTitle => 'Styling advice';
+
+  @override
+  String get stylistCapAdviceBody =>
+      'Ask what goes with what, and what suits each occasion';
+
+  @override
+  String get stylistTasteHeroTitle => 'Your taste, through Ohara’s eyes';
+
+  @override
+  String get stylistTasteHeroBody =>
+      'The more you choose and tell me, the better I know you — and the sharper my picks.';
+
+  @override
+  String get stylistLookPieces => 'The pieces';
+
+  @override
   String get stylistCapLookTitle => 'A complete look';
 
   @override

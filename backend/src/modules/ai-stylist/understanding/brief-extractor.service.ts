@@ -199,10 +199,16 @@ export class BriefExtractorService {
     if (context.gift) return 'FIND_GIFT';
     if (looksLikeOutfit(message)) return 'BUILD_OUTFIT';
 
-    const advice = /شو رايك|شو بتنصحي|ينفع|بليق|يناسب|هل تنصحين|what do you think/i;
-    if (advice.test(message) && !context.slots.length) return 'ADVICE';
+    const advice =
+      /شو رايك|شو رأيك|شو بتنصحي|انصحيني|نصيحة|نصيحه|ينفع|بليق|بيليق|يليق|بيلبق|يلبق|يناسب|بيناسب|يتناسق|بيمشي مع|شو بلبس|شو ألبس|شو البس|ماذا ألبس|هل تنصحين|what do you think|what goes with/i;
+    // An opinion question is answered as one even mid-conversation; when the
+    // brief is actionable the cards still come, under the advice.
+    if (advice.test(message)) return 'ADVICE';
 
-    const smallTalk = /^(?:مرحبا|هلا|السلام|صباح|مساء|شكرا|hi|hello|thanks)\b/i;
+    // Not `\b`: in JavaScript a word boundary only exists next to an ASCII
+    // letter, so `/^مرحبا\b/` never matched an Arabic greeting at all.
+    const smallTalk =
+      /^(?:مرحبا|مرحباً|هلا|هلو|اهلين|أهلين|السلام|سلام|صباح|مساء|شكرا|شكراً|مشكورة|يسلمو|hi|hello|hey|thanks)(?=[\s!.,،؟?]|$)/i;
     if (smallTalk.test(message.trim()) && context.signals === 0) return 'SMALL_TALK';
 
     const refine = /كمان|غير|بدل|ارخص|أرخص|اغلى|أغلى|ثاني|تانيه|شي تاني|بس/i;

@@ -8,6 +8,8 @@ import 'package:ohara/core/media/media_variants.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
 import 'package:ohara/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_aura.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_outfit_board.dart';
 
 /// One look, full screen.
 ///
@@ -27,13 +29,15 @@ class StylistOutfitScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: colors.background,
       appBar: OharaAppBar(title: context.l10n.stylistOutfitTitle),
-      body: outfitAsync.when(
-        loading: () => const Center(child: DsLoadingIndicator()),
-        error: (_, _) => DsErrorState(
-          message: context.l10n.stylistLookFailed,
-          onRetry: () => ref.invalidate(stylistOutfitProvider(outfitId)),
+      body: StylistBackdrop(
+        child: outfitAsync.when(
+          loading: () => const Center(child: OharaOrb(size: 64, thinking: true)),
+          error: (_, _) => DsErrorState(
+            message: context.l10n.stylistLookFailed,
+            onRetry: () => ref.invalidate(stylistOutfitProvider(outfitId)),
+          ),
+          data: (outfit) => _OutfitBody(outfit: outfit),
         ),
-        data: (outfit) => _OutfitBody(outfit: outfit),
       ),
     );
   }
@@ -53,36 +57,93 @@ class _OutfitBody extends ConsumerWidget {
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(DsSpacing.md),
+            padding: const EdgeInsets.fromLTRB(
+              DsSpacing.md,
+              DsSpacing.md,
+              DsSpacing.md,
+              DsSpacing.xl,
+            ),
             children: [
-              Text(
-                outfit.title,
-                style: context.dsText.screenTitle.bold.tint(colors.onSurface),
+              StylistAppear(child: _Collage(outfit: outfit)),
+              DsGaps.vLg,
+              StylistAppear(
+                index: 1,
+                child: StylistGradientText(
+                  outfit.title,
+                  style: context.dsText.pageTitle.bold,
+                ),
               ),
               if (outfit.occasionLabel != null) ...[
-                const SizedBox(height: DsSpacing.xxs),
-                Text(
-                  outfit.occasionLabel!,
-                  style: context.dsText.body.tint(colors.primary),
+                DsGaps.vXs,
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DsSpacing.sm,
+                      vertical: DsSpacing.xxs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.primaryContainer.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(DsRadius.pill),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.event_rounded, size: 14, color: colors.primary),
+                        DsGaps.hXxs,
+                        Text(
+                          outfit.occasionLabel!,
+                          style: context.dsText.labelMedium.semibold
+                              .tint(colors.onPrimaryContainer),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
               if (outfit.note != null && outfit.note!.isNotEmpty) ...[
-                const SizedBox(height: DsSpacing.sm),
-                Text(
-                  outfit.note!,
-                  style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.65),
+                DsGaps.vMd,
+                StylistAppear(
+                  index: 2,
+                  child: StylistPanel(
+                    padding: const EdgeInsets.all(DsSpacing.sm),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const OharaOrb(size: 28),
+                        DsGaps.hSm,
+                        Expanded(
+                          child: Text(
+                            outfit.note!,
+                            style: context.dsText.body
+                                .tint(colors.onSurfaceVariant)
+                                .copyWith(height: 1.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
-              const SizedBox(height: DsSpacing.lg),
-              for (final piece in outfit.items) ...[
-                _PieceRow(piece: piece),
-                const SizedBox(height: DsSpacing.sm),
+              if (outfit.palette.isNotEmpty) ...[
+                DsGaps.vMd,
+                StylistPalette(palette: outfit.palette),
+              ],
+              DsGaps.vXl,
+              Text(
+                context.l10n.stylistLookPieces,
+                style: context.dsText.sectionTitle.tint(colors.onSurface),
+              ),
+              DsGaps.vSm,
+              for (var i = 0; i < outfit.items.length; i++) ...[
+                StylistAppear(index: i + 3, child: _PieceRow(piece: outfit.items[i])),
+                DsGaps.vSm,
               ],
               // Stated rather than hidden: a saved look outlives the offers it
               // was built from, and she should know which piece went away
               // before she plans an outfit around it.
               if (!outfit.isComplete) ...[
-                const SizedBox(height: DsSpacing.xs),
+                DsGaps.vXs,
                 Row(
                   children: [
                     Icon(
@@ -90,7 +151,7 @@ class _OutfitBody extends ConsumerWidget {
                       size: 15,
                       color: colors.warning,
                     ),
-                    const SizedBox(width: DsSpacing.xs),
+                    DsGaps.hXs,
                     Expanded(
                       child: Text(
                         context.l10n.stylistLookPartlyUnavailable,
@@ -111,6 +172,66 @@ class _OutfitBody extends ConsumerWidget {
   }
 }
 
+/// The look at a glance: up to four of its pieces as one editorial board,
+/// the first one large, the way a stylist lays a look out on a table.
+class _Collage extends StatelessWidget {
+  const _Collage({required this.outfit});
+
+  final StylistOutfit outfit;
+
+  @override
+  Widget build(BuildContext context) {
+    final covers = outfit.items
+        .map((piece) => piece.product)
+        .where((product) => product?.coverUrl != null)
+        .take(4)
+        .toList();
+    if (covers.isEmpty) return const SizedBox.shrink();
+
+    Widget tile(int index) {
+      final product = covers[index]!;
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(DsRadius.lg),
+        child: AuthorizedMediaImage(
+          url: product.coverUrl!,
+          blurHash: product.coverBlurHash,
+          variantWidth: MediaVariants.thumbnail,
+        ),
+      );
+    }
+
+    final side = covers.length - 1;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(DsRadius.card),
+        boxShadow: context.luxuryShadow,
+      ),
+      child: AspectRatio(
+        aspectRatio: covers.length == 1 ? 1 : 1.25,
+        child: Row(
+          children: [
+            Expanded(flex: 3, child: SizedBox.expand(child: tile(0))),
+            if (side > 0) ...[
+              DsGaps.hXs,
+              Expanded(
+                flex: 2,
+                child: Column(
+                  children: [
+                    for (var i = 1; i <= side; i++) ...[
+                      if (i > 1) DsGaps.vXs,
+                      Expanded(child: SizedBox.expand(child: tile(i))),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _PieceRow extends StatelessWidget {
   const _PieceRow({required this.piece});
 
@@ -127,10 +248,12 @@ class _PieceRow extends StatelessWidget {
         : DsProductActions.of(context, product, DsProductSurface.rail);
 
     return Material(
-      color: colors.card,
-      borderRadius: BorderRadius.circular(DsRadius.lg),
+      color: colors.card.withValues(alpha: 0.94),
+      borderRadius: BorderRadius.circular(DsRadius.xl),
+      clipBehavior: Clip.antiAlias,
+      shadowColor: colors.primary.withValues(alpha: 0.18),
+      elevation: 2,
       child: InkWell(
-        borderRadius: BorderRadius.circular(DsRadius.lg),
         onTap: product == null
             ? null
             : () => context.push(RoutePaths.productDetailsOf(product.id)),
@@ -142,8 +265,8 @@ class _PieceRow extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(DsRadius.md),
                 child: SizedBox(
-                  width: 76,
-                  height: 76,
+                  width: 84,
+                  height: 84,
                   child: product?.coverUrl != null
                       ? AuthorizedMediaImage(
                           url: product!.coverUrl!,
@@ -196,7 +319,7 @@ class _PieceRow extends StatelessWidget {
                 const SizedBox(width: DsSpacing.xs),
                 Text(
                   piece.price!.format(),
-                  style: context.dsText.labelLarge.bold.tint(colors.primary),
+                  style: context.dsText.labelLarge.bold.tint(colors.onSurface),
                 ),
               ],
               // «التنسيقات» were named by the client as a surface that must
@@ -225,15 +348,23 @@ class _Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(top: BorderSide(color: colors.divider)),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.sm,
+        DsSpacing.none,
+        DsSpacing.sm,
+        DsSpacing.sm,
       ),
       child: SafeArea(
         top: false,
-        child: Padding(
-          padding: const EdgeInsets.all(DsSpacing.md),
+        child: StylistPanel(
+          radius: DsRadius.xxl,
+          padding: const EdgeInsets.fromLTRB(
+            DsSpacing.md,
+            DsSpacing.sm,
+            DsSpacing.sm,
+            DsSpacing.sm,
+          ),
           child: Row(
             children: [
               if (outfit.total != null)
@@ -244,20 +375,18 @@ class _Footer extends StatelessWidget {
                     children: [
                       Text(
                         context.l10n.stylistTotal,
-                        style: context.dsText.caption.tint(
-                          colors.onSurfaceVariant,
-                        ),
+                        style: context.dsText.caption.tint(colors.onSurfaceVariant),
                       ),
-                      Text(
+                      StylistGradientText(
                         outfit.total!.format(),
-                        style: context.dsText.cardTitle.bold.tint(colors.primary),
+                        style: context.dsText.metric.bold,
                       ),
                     ],
                   ),
                 )
               else
                 const Spacer(),
-              const SizedBox(width: DsSpacing.sm),
+              DsGaps.hSm,
               PrimaryButton(
                 isExpanded: false,
                 label: outfit.isSaved

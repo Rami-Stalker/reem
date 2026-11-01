@@ -12060,6 +12060,42 @@
   "@stylistTryAsking": {
     "description": ""
   },
+  "stylistOnlineStatus": "Online · your personal stylist",
+  "@stylistOnlineStatus": {
+    "description": ""
+  },
+  "stylistThinking": "Ohara is styling for you…",
+  "@stylistThinking": {
+    "description": ""
+  },
+  "stylistUnderstood": "Got it:",
+  "@stylistUnderstood": {
+    "description": ""
+  },
+  "stylistWelcomeGreeting": "Hi, I’m Ohara",
+  "@stylistWelcomeGreeting": {
+    "description": ""
+  },
+  "stylistCapAdviceTitle": "Styling advice",
+  "@stylistCapAdviceTitle": {
+    "description": ""
+  },
+  "stylistCapAdviceBody": "Ask what goes with what, and what suits each occasion",
+  "@stylistCapAdviceBody": {
+    "description": ""
+  },
+  "stylistTasteHeroTitle": "Your taste, through Ohara’s eyes",
+  "@stylistTasteHeroTitle": {
+    "description": ""
+  },
+  "stylistTasteHeroBody": "The more you choose and tell me, the better I know you — and the sharper my picks.",
+  "@stylistTasteHeroBody": {
+    "description": ""
+  },
+  "stylistLookPieces": "The pieces",
+  "@stylistLookPieces": {
+    "description": ""
+  },
   "stylistCapLookTitle": "A complete look",
   "@stylistCapLookTitle": {
     "description": ""

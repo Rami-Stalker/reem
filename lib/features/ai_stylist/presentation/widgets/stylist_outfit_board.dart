@@ -3,7 +3,9 @@ import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/media/authorized_media_image.dart';
 import 'package:ohara/core/media/media_variants.dart';
+import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
 import 'package:ohara/features/ai_stylist/domain/entities/stylist_outfit.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_aura.dart';
 
 /// A complete look, shown as a board rather than a list.
 ///
@@ -29,51 +31,57 @@ class StylistOutfitBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.dsColors;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surfaceElevated,
-        borderRadius: BorderRadius.circular(DsRadius.card),
-        border: Border.all(color: colors.border),
-      ),
-      padding: const EdgeInsets.all(DsSpacing.sm),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _Header(outfit: outfit, onOpen: onOpen),
-          const SizedBox(height: DsSpacing.sm),
-          SizedBox(
-            // Room for a square cover, the slot name, two lines of title and
-            // a price. The tile below trims the title rather than overflowing
-            // when a product name runs long.
-            height: 192,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: outfit.items.length,
-              separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.xs),
-              itemBuilder: (context, index) {
-                final piece = outfit.items[index];
-                return _PieceTile(
-                  piece: piece,
-                  onTap: onPieceTap == null ? null : () => onPieceTap!(piece),
-                );
-              },
+    return StylistAppear(
+      index: 1,
+      offset: 20,
+      child: StylistPanel(
+        highlighted: true,
+        padding: const EdgeInsets.all(DsSpacing.sm),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _Header(outfit: outfit, onOpen: onOpen),
+            DsGaps.vSm,
+            SizedBox(
+              // Room for a square cover, the slot name, two lines of title and
+              // a price. The tile below trims the title rather than overflowing
+              // when a product name runs long.
+              height: 196,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: outfit.items.length,
+                separatorBuilder: (_, _) => DsGaps.hXs,
+                itemBuilder: (context, index) {
+                  final piece = outfit.items[index];
+                  return StylistAppear(
+                    index: index + 2,
+                    offset: 16,
+                    child: _PieceTile(
+                      piece: piece,
+                      onTap: onPieceTap == null ? null : () => onPieceTap!(piece),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          if (outfit.palette.isNotEmpty) ...[
-            const SizedBox(height: DsSpacing.sm),
-            _Palette(outfit: outfit),
+            if (outfit.palette.isNotEmpty) ...[
+              DsGaps.vSm,
+              StylistPalette(palette: outfit.palette),
+            ],
+            if (outfit.note != null && outfit.note!.isNotEmpty) ...[
+              DsGaps.vXs,
+              Text(
+                outfit.note!,
+                style: context.dsText.labelMedium
+                    .tint(colors.onSurfaceVariant)
+                    .copyWith(height: 1.55),
+              ),
+            ],
+            DsGaps.vSm,
+            _Footer(outfit: outfit, onSave: onSave),
           ],
-          if (outfit.note != null && outfit.note!.isNotEmpty) ...[
-            const SizedBox(height: DsSpacing.xs),
-            Text(
-              outfit.note!,
-              style: context.dsText.labelMedium.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
-            ),
-          ],
-          const SizedBox(height: DsSpacing.sm),
-          _Footer(outfit: outfit, onSave: onSave),
-        ],
+        ),
       ),
     );
   }
@@ -91,25 +99,42 @@ class _Header extends StatelessWidget {
 
     return Row(
       children: [
-        Icon(Icons.checkroom_rounded, size: 18, color: colors.primary),
-        const SizedBox(width: DsSpacing.xs),
+        Container(
+          width: 34,
+          height: 34,
+          decoration: BoxDecoration(
+            gradient: context.boutique.signatureGradient,
+            borderRadius: BorderRadius.circular(DsRadius.md),
+          ),
+          child: const Icon(Icons.checkroom_rounded, size: 18, color: DsColors.onMedia),
+        ),
+        DsGaps.hXs,
         Expanded(
-          child: Text(
-            outfit.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.dsText.tileTitle.bold.tint(colors.onSurface),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                outfit.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.dsText.tileTitle.bold.tint(colors.onSurface),
+              ),
+              if (outfit.occasionLabel != null)
+                Text(
+                  outfit.occasionLabel!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.dsText.caption.tint(colors.primary),
+                ),
+            ],
           ),
         ),
         if (onOpen != null)
-          IconButton(
+          IconButton.filledTonal(
             onPressed: onOpen,
             visualDensity: VisualDensity.compact,
-            icon: Icon(
-              Icons.open_in_full_rounded,
-              size: 16,
-              color: colors.primary,
-            ),
+            icon: Icon(Icons.open_in_full_rounded, size: 16, color: colors.primary),
             tooltip: context.l10n.stylistOpenLook,
           ),
       ],
@@ -186,10 +211,12 @@ class _PieceTile extends StatelessWidget {
   }
 }
 
-class _Palette extends StatelessWidget {
-  const _Palette({required this.outfit});
+/// A look's colours as real swatches with their names — the eye reads a dot
+/// of olive faster than the word.
+class StylistPalette extends StatelessWidget {
+  const StylistPalette({super.key, required this.palette});
 
-  final StylistOutfit outfit;
+  final List<StyleTerm> palette;
 
   @override
   Widget build(BuildContext context) {
@@ -200,20 +227,38 @@ class _Palette extends StatelessWidget {
       runSpacing: DsSpacing.xxs,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Icon(Icons.palette_outlined, size: 14, color: colors.onSurfaceVariant),
-        for (final colour in outfit.palette)
+        Icon(Icons.palette_outlined, size: 15, color: colors.onSurfaceVariant),
+        DsGaps.hXxxs,
+        for (final colour in palette)
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: DsSpacing.xs,
-              vertical: DsSpacing.xxxs,
+            padding: const EdgeInsetsDirectional.fromSTEB(
+              DsSpacing.xxs,
+              DsSpacing.xxs,
+              DsSpacing.xs,
+              DsSpacing.xxs,
             ),
             decoration: BoxDecoration(
-              color: colors.surfaceVariant,
+              color: colors.surfaceVariant.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(DsRadius.pill),
             ),
-            child: Text(
-              colour.label,
-              style: context.dsText.caption.tint(colors.onSurfaceVariant),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: DsFabricSwatches.forKey(colour.key) ?? colors.outline,
+                    border: Border.all(color: colors.border),
+                  ),
+                ),
+                DsGaps.hXxs,
+                Text(
+                  colour.label,
+                  style: context.dsText.caption.tint(colors.onSurface),
+                ),
+              ],
             ),
           ),
       ],
@@ -243,9 +288,9 @@ class _Footer extends StatelessWidget {
                   context.l10n.stylistLookTotal,
                   style: context.dsText.caption.tint(colors.onSurfaceVariant),
                 ),
-                Text(
+                StylistGradientText(
                   outfit.total!.format(),
-                  style: context.dsText.tileTitle.bold.tint(colors.primary),
+                  style: context.dsText.metricSmall.bold,
                 ),
               ],
             ),
@@ -253,13 +298,24 @@ class _Footer extends StatelessWidget {
         else
           const Spacer(),
         if (onSave != null)
-          TextButton.icon(
+          FilledButton.tonalIcon(
             onPressed: outfit.isSaved ? null : onSave,
-            icon: Icon(
-              outfit.isSaved
-                  ? Icons.bookmark_rounded
-                  : Icons.bookmark_border_rounded,
-              size: 16,
+            style: FilledButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              backgroundColor: colors.primaryContainer,
+              foregroundColor: colors.onPrimaryContainer,
+            ),
+            icon: AnimatedSwitcher(
+              duration: DsDurations.normal,
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
+              child: Icon(
+                outfit.isSaved
+                    ? Icons.bookmark_rounded
+                    : Icons.bookmark_border_rounded,
+                key: ValueKey(outfit.isSaved),
+                size: 16,
+              ),
             ),
             label: Text(
               outfit.isSaved

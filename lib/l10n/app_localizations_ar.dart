@@ -10660,6 +10660,35 @@ class AppLocalizationsAr extends AppLocalizations {
   String get stylistTryAsking => 'جرّبي اسأليني:';
 
   @override
+  String get stylistOnlineStatus => 'متصلة · منسّقتكِ الشخصية';
+
+  @override
+  String get stylistThinking => 'أوهارا عم تنسّقلك…';
+
+  @override
+  String get stylistUnderstood => 'فهمت:';
+
+  @override
+  String get stylistWelcomeGreeting => 'أهلين، أنا أوهارا';
+
+  @override
+  String get stylistCapAdviceTitle => 'نصايح تنسيق';
+
+  @override
+  String get stylistCapAdviceBody =>
+      'اسأليني شو بيلبق مع شو، وشو بيناسب كل مناسبة';
+
+  @override
+  String get stylistTasteHeroTitle => 'ذوقكِ بعيون أوهارا';
+
+  @override
+  String get stylistTasteHeroBody =>
+      'كل ما بتختاري وبتحكيلي أكتر، بصير أعرفك أكتر وبتصير اقتراحاتي أدق.';
+
+  @override
+  String get stylistLookPieces => 'قطع الإطلالة';
+
+  @override
   String get stylistCapLookTitle => 'إطلالة كاملة';
 
   @override

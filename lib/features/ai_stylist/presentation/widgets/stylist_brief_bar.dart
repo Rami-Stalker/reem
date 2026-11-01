@@ -1,6 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_aura.dart';
 
 /// What the stylist understood, shown back to her.
 ///
@@ -17,50 +21,63 @@ class StylistBriefBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
-    if (brief.chips.isEmpty) return const SizedBox.shrink();
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.sm,
-        vertical: DsSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(bottom: BorderSide(color: colors.divider)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.tune_rounded, size: 14, color: colors.onSurfaceVariant),
-          const SizedBox(width: DsSpacing.xs),
-          Expanded(
-            child: SizedBox(
-              height: 26,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: brief.chips.length,
-                separatorBuilder: (_, _) => const SizedBox(width: DsSpacing.xxs),
-                itemBuilder: (context, index) => _Chip(
-                  label: brief.chips[index].label,
+    return AnimatedSize(
+      duration: DsDurations.normal,
+      curve: DsCurves.emphasized,
+      alignment: Alignment.topCenter,
+      child: brief.chips.isEmpty
+          ? const SizedBox(width: double.infinity)
+          : Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpacing.sm,
+                DsSpacing.xs,
+                DsSpacing.sm,
+                DsSpacing.none,
+              ),
+              child: StylistPanel(
+                radius: DsRadius.pill,
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                  DsSpacing.sm,
+                  DsSpacing.xxs,
+                  DsSpacing.xxs,
+                  DsSpacing.xxs,
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.auto_awesome_rounded, size: 14, color: colors.primary),
+                    DsGaps.hXxs,
+                    Text(
+                      context.l10n.stylistUnderstood,
+                      style: context.dsText.caption.semibold.tint(colors.onSurface),
+                    ),
+                    DsGaps.hXs,
+                    Expanded(
+                      child: SizedBox(
+                        height: 28,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: brief.chips.length,
+                          separatorBuilder: (_, _) => DsGaps.hXxs,
+                          itemBuilder: (context, index) => StylistAppear(
+                            index: index,
+                            offset: 6,
+                            child: _Chip(label: brief.chips[index].label),
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (onEdit != null)
+                      IconButton(
+                        onPressed: onEdit,
+                        visualDensity: VisualDensity.compact,
+                        tooltip: context.l10n.stylistMyPreferences,
+                        icon: Icon(Icons.tune_rounded, size: 17, color: colors.primary),
+                      ),
+                  ],
                 ),
               ),
             ),
-          ),
-          if (onEdit != null)
-            InkWell(
-              onTap: onEdit,
-              borderRadius: BorderRadius.circular(DsRadius.pill),
-              child: Padding(
-                padding: const EdgeInsets.all(DsSpacing.xxs),
-                child: Icon(
-                  Icons.edit_outlined,
-                  size: 15,
-                  color: colors.primary,
-                ),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
@@ -78,25 +95,27 @@ class _Chip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: DsSpacing.xs,
-          vertical: DsSpacing.xxs,
+          vertical: DsSpacing.xxxs,
         ),
         decoration: BoxDecoration(
-          color: colors.secondaryContainer.withValues(alpha: 0.6),
+          color: colors.primaryContainer.withValues(alpha: 0.65),
           borderRadius: BorderRadius.circular(DsRadius.pill),
+          border: Border.all(color: colors.primary.withValues(alpha: 0.18)),
         ),
         child: Text(
           label,
-          style: context.dsText.caption.tint(colors.onSecondaryContainer),
+          style: context.dsText.caption.medium.tint(colors.onPrimaryContainer),
         ),
       ),
     );
   }
 }
 
-/// The three dots while a turn is in flight.
+/// The wait while a turn is in flight.
 ///
-/// Shown instead of a spinner because the wait is a *reply* being written, and
-/// a spinner reads as the app being stuck.
+/// Ohara's orb quickens beside a bubble of rising dots and a line saying what
+/// she is doing — a reply being put together reads as care, where a spinner
+/// reads as the app being stuck.
 class StylistTypingIndicator extends StatefulWidget {
   const StylistTypingIndicator({super.key});
 
@@ -108,8 +127,14 @@ class _StylistTypingIndicatorState extends State<StylistTypingIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1200),
-  )..repeat();
+    duration: const Duration(milliseconds: 1300),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (!DsReducedMotion.isEnabled) _controller.repeat();
+  }
 
   @override
   void dispose() {
@@ -120,50 +145,74 @@ class _StylistTypingIndicatorState extends State<StylistTypingIndicator>
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
+    final boutique = context.boutique;
 
-    return Align(
-      alignment: AlignmentDirectional.centerStart,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: DsSpacing.sm,
-          vertical: DsSpacing.xs + DsSpacing.xxxs,
-        ),
-        decoration: BoxDecoration(
-          color: colors.surfaceElevated,
-          border: Border.all(color: colors.border),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(DsRadius.lg),
-            topRight: Radius.circular(DsRadius.lg),
-            bottomRight: Radius.circular(DsRadius.lg),
-            bottomLeft: Radius.circular(DsRadius.xs),
-          ),
-        ),
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, _) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(3, (index) {
-                // Each dot leads the one before it by a third of a cycle.
-                final phase = (_controller.value + index / 3) % 1;
-                final scale = 0.6 + 0.4 * (1 - (phase * 2 - 1).abs());
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xxxs),
-                  child: Transform.scale(
-                    scale: scale,
-                    child: Container(
-                      width: 7,
-                      height: 7,
-                      decoration: BoxDecoration(
-                        color: colors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
+    return StylistAppear(
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const OharaOrb(size: 30, thinking: true),
+            DsGaps.hXs,
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: DsSpacing.md,
+                vertical: DsSpacing.sm,
+              ),
+              decoration: BoxDecoration(
+                color: colors.surfaceElevated.withValues(alpha: 0.92),
+                border: Border.all(color: colors.border.withValues(alpha: 0.7)),
+                borderRadius: const BorderRadiusDirectional.only(
+                  topStart: Radius.circular(DsRadius.xl),
+                  topEnd: Radius.circular(DsRadius.xl),
+                  bottomEnd: Radius.circular(DsRadius.xl),
+                  bottomStart: Radius.circular(DsRadius.xs),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, _) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(3, (index) {
+                          // Each dot trails the one before by a fifth of a cycle.
+                          final phase = (_controller.value - index * 0.2) % 1;
+                          final lift = math.max(0.0, math.sin(phase * math.pi * 2));
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: DsSpacing.xxxs,
+                            ),
+                            child: Transform.translate(
+                              offset: Offset(0, -4 * lift),
+                              child: Container(
+                                width: 7,
+                                height: 7,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color.lerp(colors.primary, boutique.gold, index / 2)!
+                                      .withValues(alpha: 0.55 + 0.45 * lift),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      );
+                    },
                   ),
-                );
-              }),
-            );
-          },
+                  DsGaps.hXs,
+                  Text(
+                    context.l10n.stylistThinking,
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
