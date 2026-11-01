@@ -200,13 +200,13 @@ export class ProductsService {
       where: { id, ...visibility },
       select: { id: true },
     });
-    if (!visible) throw new NotFoundException('Product not found');
+    if (!visible) throw new NotFoundException('هذا المنتج غير متوفر');
 
     const stored = await this.prisma.product.findUnique({
       where: { id },
       include: PRODUCT_INCLUDE,
     });
-    if (!stored) throw new NotFoundException('Product not found');
+    if (!stored) throw new NotFoundException('هذا المنتج غير متوفر');
 
     const [counted, live] = await Promise.all([
       this.registerView(stored, viewerId, 'product.detail'),
@@ -227,10 +227,53 @@ export class ProductsService {
       ? await this.favoriteSet(viewerId, [product.id])
       : new Set<string>();
 
-    return serializeProduct(product, {
-      isLiked: favSet.has(product.id),
-      includeOffers: true,
-    });
+    return {
+      ...serializeProduct(product, {
+        isLiked: favSet.has(product.id),
+        includeOffers: true,
+      }),
+      attribute_labels: await this.attributeLabels(product.categoryId),
+    };
+  }
+
+  /**
+   * What each specification is called — «الخامة» for `material` — from the
+   * category's attribute schema, inherited from the nearest ancestor that
+   * declares one (a leaf usually does not). The page used to print the raw
+   * keys, so an Arabic product read «material: حرير».
+   */
+  private async attributeLabels(
+    categoryId: string | null,
+  ): Promise<Record<string, string>> {
+    let id = categoryId;
+    // The tree is three levels deep; the bound is against a cycle.
+    for (let hop = 0; id && hop < 8; hop += 1) {
+      const category: {
+        attributeSchema: Prisma.JsonValue;
+        parentId: string | null;
+      } | null = await this.prisma.category.findUnique({
+        where: { id },
+        select: { attributeSchema: true, parentId: true },
+      });
+      if (!category) return {};
+      const schema = category.attributeSchema;
+      if (schema && typeof schema === 'object' && !Array.isArray(schema)) {
+        const properties = (schema as Prisma.JsonObject).properties;
+        const labels: Record<string, string> = {};
+        if (properties && typeof properties === 'object' && !Array.isArray(properties)) {
+          for (const [key, spec] of Object.entries(properties)) {
+            const title =
+              spec && typeof spec === 'object' && !Array.isArray(spec)
+                ? (spec as Prisma.JsonObject).title
+                : undefined;
+            if (typeof title === 'string' && title.trim()) labels[key] = title.trim();
+          }
+        }
+        return labels;
+      }
+      id = category.parentId;
+    }
+    return {};
   }
 
   async recordView(id: string, viewerId?: string) {
@@ -379,7 +422,7 @@ export class ProductsService {
 
   private async requireProduct(id: string) {
     const product = await this.prisma.product.findUnique({ where: { id } });
-    if (!product) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('هذا المنتج غير متوفر');
     return product;
   }
 

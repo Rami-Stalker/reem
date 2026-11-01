@@ -36,6 +36,12 @@ abstract interface class ChatRemoteDataSource {
 
   Future<void> markRead(String chatId, {String? messageId});
 
+  Future<void> deleteMessage(
+    String chatId,
+    String messageId, {
+    required bool forEveryone,
+  });
+
   Future<void> blockUser(String userId, {String? reason});
 
   Future<void> reportUser({

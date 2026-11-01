@@ -312,6 +312,18 @@ export class ChatRealtimeGateway implements OnModuleInit, BeforeApplicationShutd
     });
   }
 
+  @OnEvent('chat.message.deleted')
+  handleDeleted(event: { chatId: string; messageId: string; deletedAt: string }) {
+    void this.chats.participantIds(event.chatId).then((participantIds) => {
+      this.broadcastToUsers(participantIds, {
+        event: 'message.deleted',
+        chat_id: event.chatId,
+        message_id: event.messageId,
+        deleted_at: event.deletedAt,
+      });
+    });
+  }
+
   @OnEvent('chat.messages.delivered')
   handleDelivered(event: ChatDeliveredEvent) {
     void this.chats.participantIds(event.chatId).then((participantIds) => {

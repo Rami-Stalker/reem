@@ -351,16 +351,10 @@ class _ProductBuyBarState extends ConsumerState<ProductBuyBar> {
                 ),
               ),
               DsGaps.hXs,
-              IconButton(
-                tooltip: l10n.productAskBoutique,
-                icon: _opening
-                    ? const SizedBox.square(
-                        dimension: DsSizes.iconSm,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.chat_bubble_outline_rounded),
-                onPressed: _opening ? null : _ask,
-              ),
+              // No chat icon here: «راسلي المتجر» on the seller card is the one
+              // way in. Two buttons for the same conversation, one of them an
+              // unlabelled icon squeezed beside the total, read as two
+              // different things.
               // Ohara Rooms, beside the cart rather than instead of it. The two
               // are different gestures: the cart is "I am taking this", a room
               // is "I am thinking about this" — and a shop that only offers the

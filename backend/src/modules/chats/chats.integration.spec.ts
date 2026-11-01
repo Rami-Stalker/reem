@@ -481,3 +481,76 @@ dbTest('blocking someone who does not exist is a 404, not a crash', async (world
     /غير موجودة/,
   );
 });
+
+// -- Long-press delete ------------------------------------------------------
+
+async function openPair(world: World) {
+  const buyer = await makeUser(world.tx, 'dl-b', UserRole.CUSTOMER);
+  const seller = await makeUser(world.tx, 'dl-s', UserRole.SELLER);
+  const thread = await world.chats.startConversation(buyer.id, {
+    participant_id: seller.id,
+  });
+  return { buyer, seller, chatId: thread.id };
+}
+
+dbTest('delete for me hides the message from her side only', async (world) => {
+  const { buyer, seller, chatId } = await openPair(world);
+  const sent = await world.chats.send(chatId, seller.id, { content: 'أهلا' });
+
+  await world.chats.deleteMessage(chatId, buyer.id, sent.id, 'me');
+
+  const hers = await world.chats.messages(chatId, buyer.id);
+  const theirs = await world.chats.messages(chatId, seller.id);
+  assert.equal(hers.some((m) => m.id === sent.id), false);
+  assert.equal(theirs.find((m) => m.id === sent.id)?.content, 'أهلا');
+});
+
+dbTest('delete for everyone leaves a tombstone on both sides', async (world) => {
+  const { buyer, seller, chatId } = await openPair(world);
+  const sent = await world.chats.send(chatId, buyer.id, { content: 'سر' });
+
+  await world.chats.deleteMessage(chatId, buyer.id, sent.id, 'everyone');
+
+  for (const viewer of [buyer.id, seller.id]) {
+    const row = (await world.chats.messages(chatId, viewer)).find(
+      (m) => m.id === sent.id,
+    );
+    assert.ok(row?.deleted_at, 'still in the thread, marked deleted');
+    assert.equal(row?.content, '');
+    assert.deepEqual(row?.attachments, []);
+  }
+});
+
+dbTest('only the sender can delete for everyone', async (world) => {
+  const { buyer, seller, chatId } = await openPair(world);
+  const sent = await world.chats.send(chatId, buyer.id, { content: 'مرحبا' });
+  await assert.rejects(
+    world.chats.deleteMessage(chatId, seller.id, sent.id, 'everyone'),
+    /رسائلكِ أنتِ فقط/,
+  );
+});
+
+dbTest('an old message can no longer be taken back from both sides', async (world) => {
+  const { buyer, chatId } = await openPair(world);
+  const sent = await world.chats.send(chatId, buyer.id, { content: 'قديمة' });
+  await world.tx.message.update({
+    where: { id: sent.id },
+    data: { createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
+  });
+  await assert.rejects(
+    world.chats.deleteMessage(chatId, buyer.id, sent.id, 'everyone'),
+    /لديكِ فقط/,
+  );
+  // For herself it still works.
+  await world.chats.deleteMessage(chatId, buyer.id, sent.id, 'me');
+});
+
+dbTest('a stranger cannot delete in a conversation she is not in', async (world) => {
+  const { buyer, chatId } = await openPair(world);
+  const stranger = await makeUser(world.tx, 'dl-x', UserRole.CUSTOMER);
+  const sent = await world.chats.send(chatId, buyer.id, { content: 'x' });
+  await assert.rejects(
+    world.chats.deleteMessage(chatId, stranger.id, sent.id, 'me'),
+    /لستِ طرفًا/,
+  );
+});

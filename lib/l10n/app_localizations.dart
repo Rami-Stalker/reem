@@ -7232,6 +7232,144 @@ abstract class AppLocalizations {
   /// **'Product details'**
   String get productDetails;
 
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Material'**
+  String get productAttrMaterial;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Sleeve length'**
+  String get productAttrSleeveLength;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Skin type'**
+  String get productAttrSkinType;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get productAttrColor;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Fit'**
+  String get productAttrFit;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get productAttrLength;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get productAttrPattern;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Care'**
+  String get productAttrCare;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Made in'**
+  String get productAttrOrigin;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get productAttrYes;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get productAttrNo;
+
+  /// Shown while the product photo is fetched before the share sheet opens
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing to share…'**
+  String get sharePreparing;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Message copied'**
+  String get chatMessageCopied;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Send again'**
+  String get chatResend;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for me'**
+  String get chatDeleteForMe;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for everyone'**
+  String get chatDeleteForEveryone;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for everyone?'**
+  String get chatDeleteForEveryoneTitle;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'It will disappear for both of you, and «This message was deleted» will show in its place.'**
+  String get chatDeleteForEveryoneBody;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'This message was deleted'**
+  String get chatMessageDeleted;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'You deleted this message'**
+  String get chatMessageDeletedByMe;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t delete the message. Try again.'**
+  String get chatDeleteFailed;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Report message'**
+  String get chatReportMessage;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Fraud or scam'**
+  String get chatReportFraud;
+
   /// No description provided for @productDetailsSection.
   ///
   /// In en, this message translates to:

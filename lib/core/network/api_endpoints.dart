@@ -611,6 +611,8 @@ abstract final class ApiEndpoints {
   static const chatSearch = '/chats/search';
   static String chatThread(String chatId) => '/chats/$chatId';
   static String chatMessages(String chatId) => '/chats/$chatId/messages';
+  static String chatMessage(String chatId, String messageId) =>
+      '/chats/$chatId/messages/$messageId';
   static String chatRead(String chatId) => '/chats/$chatId/read';
   static String chatReports(String chatId) => '/chats/$chatId/reports';
   static String chatBlock(String userId) => '/chats/blocks/$userId';

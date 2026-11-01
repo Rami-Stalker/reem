@@ -5269,6 +5269,8 @@ model MessageReadReceipt {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   deliveredAt DateTime? @map("delivered_at")
   readAt      DateTime? @map("read_at")
+  /// «حذف لدي» — gone from this person's side of the conversation only.
+  hiddenAt    DateTime? @map("hidden_at")
   createdAt   DateTime  @default(now()) @map("created_at")
 
   @@unique([messageId, userId])

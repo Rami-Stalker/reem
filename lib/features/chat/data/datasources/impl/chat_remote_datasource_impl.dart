@@ -101,6 +101,17 @@ final class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
+  Future<void> deleteMessage(
+    String chatId,
+    String messageId, {
+    required bool forEveryone,
+  }) =>
+      deleteRequest(
+        '${ApiEndpoints.chatMessage(chatId, messageId)}'
+        '?scope=${forEveryone ? 'everyone' : 'me'}',
+      );
+
+  @override
   Future<void> blockUser(String userId, {String? reason}) async {
     await postJson(
       ApiEndpoints.chatBlock(userId),
