@@ -1,3 +1,4 @@
+import { PRODUCT_CARD_INCLUDE } from '../../common/catalog/product-include';
 import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { CommerceContentStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -5,6 +6,7 @@ import {
   LegacyViewerState,
   NO_LEGACY_VIEWER,
   serializeLegacyStory,
+  serializeProduct,
 } from '../../common/serializers';
 import { TrendSignalService } from '../trends/collection/trend-signal.service';
 import { contentVisibilityWhere } from '../commerce-content/feed/content-feed.service';
@@ -56,10 +58,12 @@ export class StoriesService {
       include: {
         author: true,
         media: { orderBy: { sortOrder: 'asc' } },
+        // Every piece the story tags, not only the first: a story about an
+        // outfit tags each piece of it, and the viewer offers them all.
         productTags: {
           orderBy: { sortOrder: 'asc' },
-          take: 1,
-          select: { productId: true },
+          take: 12,
+          include: { product: { include: PRODUCT_CARD_INCLUDE } },
         },
       },
     });
@@ -74,6 +78,7 @@ export class StoriesService {
     return ordered.map(({ productTags, ...story }) => ({
       ...serializeLegacyStory(story, viewer),
       product_id: productTags[0]?.productId ?? null,
+      products: productTags.map((tag) => serializeProduct(tag.product)),
     }));
   }
 

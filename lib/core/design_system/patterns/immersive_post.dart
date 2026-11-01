@@ -6,6 +6,7 @@ import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/shared/entities/media.dart';
 import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/value_objects/money_format.dart';
 
 /// Ohara's post: the photograph is the card.
@@ -56,6 +57,12 @@ class DsImmersivePost extends StatefulWidget {
     this.product,
     this.onOpenProduct,
     this.onAddToBag,
+    this.morePieces = 0,
+    this.onShowAllPieces,
+    this.onOpenMedia,
+    this.reaction,
+    this.reactionSummary = const [],
+    this.onReact,
     this.picked = false,
     this.onPick,
     this.isFresh = false,
@@ -88,6 +95,25 @@ class DsImmersivePost extends StatefulWidget {
 
   /// Null when nothing is in stock to add; the ticket then only navigates.
   final VoidCallback? onAddToBag;
+
+  /// Pieces tagged beyond [product]. A post can carry several; the ticket
+  /// shows the first and a «+N» that opens them all through
+  /// [onShowAllPieces]. Only the first used to reach the screen.
+  final int morePieces;
+  final VoidCallback? onShowAllPieces;
+
+  /// A tap on the picture of a post with no piece in it opens the photo, as
+  /// on any social app; with a piece, the tap still opens the piece. Given
+  /// the index of the photo on screen.
+  final ValueChanged<int>? onOpenMedia;
+
+  /// Reactions, Facebook's way: when [onReact] is set the heart becomes a
+  /// reaction button — a tap for ❤️ or to take hers back, a long press for
+  /// the bar — and shows the glyph she left ([reaction]). [onReact] receives
+  /// the chosen glyph, or null to clear. Without it the heart only likes.
+  final String? reaction;
+  final List<ReactionCount> reactionSummary;
+  final ValueChanged<String?>? onReact;
 
   final String caption;
 
@@ -160,7 +186,13 @@ class _DsImmersivePostState extends State<DsImmersivePost> {
     final card = AspectRatio(
       aspectRatio: _aspect,
       child: GestureDetector(
-        onTap: widget.onOpenProduct,
+        onTap: widget.product != null
+            ? widget.onOpenProduct
+            : widget.onOpenMedia == null ||
+                  widget.mediaOverride != null ||
+                  _media.isEmpty
+            ? null
+            : () => widget.onOpenMedia!(_index),
         onDoubleTap: widget.onDoubleTap,
         child: Stack(
           fit: StackFit.expand,
@@ -261,6 +293,8 @@ class _DsImmersivePostState extends State<DsImmersivePost> {
                         product: product,
                         onTap: widget.onOpenProduct,
                         onAddToBag: widget.onAddToBag,
+                        morePieces: widget.morePieces,
+                        onShowAll: widget.onShowAllPieces,
                       ),
                     ),
                   ],
@@ -313,6 +347,7 @@ class _DsImmersivePostState extends State<DsImmersivePost> {
           likes: widget.likes,
           comments: widget.comments,
           onComments: widget.onComment,
+          reactionSummary: widget.onReact == null ? null : widget.reactionSummary,
         ),
         if (widget.footer != null) widget.footer!,
       ],
@@ -401,16 +436,39 @@ class _DsImmersivePostState extends State<DsImmersivePost> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _RailButton(
-          icon: widget.liked
-              ? Icons.favorite_rounded
-              : Icons.favorite_border_rounded,
-          active: widget.liked,
-          activeColor: c.favorite,
-          count: widget.likes,
-          label: l10n.a11yLike,
-          onTap: widget.onLike,
-        ),
+        if (widget.onReact case final onReact?)
+          _RailButton(
+            icon: Icons.favorite_border_rounded,
+            glyph: widget.reaction,
+            active: widget.reaction != null,
+            activeColor: c.favorite,
+            count: widget.likes,
+            label: widget.reaction == null
+                ? l10n.reactionLove
+                : DsReactions.label(l10n, widget.reaction!),
+            onTap: () =>
+                onReact(widget.reaction == null ? DsReactions.like : null),
+            onLongPress: (anchor) async {
+              final chosen = await DsReactionPicker.show(
+                context,
+                anchor: anchor,
+                current: widget.reaction,
+              );
+              if (chosen == null) return;
+              onReact(chosen == widget.reaction ? null : chosen);
+            },
+          )
+        else
+          _RailButton(
+            icon: widget.liked
+                ? Icons.favorite_rounded
+                : Icons.favorite_border_rounded,
+            active: widget.liked,
+            activeColor: c.favorite,
+            count: widget.likes,
+            label: l10n.a11yLike,
+            onTap: widget.onLike,
+          ),
         _RailButton(
           icon: Icons.mode_comment_outlined,
           count: widget.comments,
@@ -624,9 +682,17 @@ class _RailButton extends StatelessWidget {
     this.active = false,
     this.activeColor,
     this.last = false,
+    this.glyph,
+    this.onLongPress,
   });
 
   final IconData icon;
+
+  /// An emoji drawn instead of [icon] — the reaction she left.
+  final String? glyph;
+
+  /// Given the button's rect on screen, to anchor a picker to it.
+  final ValueChanged<Rect>? onLongPress;
   final String label;
   final VoidCallback onTap;
   final int? count;
@@ -645,6 +711,13 @@ class _RailButton extends StatelessWidget {
         label: label,
         child: GestureDetector(
           onTap: onTap,
+          onLongPress: onLongPress == null
+              ? null
+              : () {
+                  final box = context.findRenderObject() as RenderBox?;
+                  if (box == null || !box.hasSize) return;
+                  onLongPress!(box.localToGlobal(Offset.zero) & box.size);
+                },
           behavior: HitTestBehavior.opaque,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -674,7 +747,13 @@ class _RailButton extends StatelessWidget {
                       scale: active ? 1.12 : 1,
                       duration: DsMotion.fast,
                       curve: DsMotion.softSpring,
-                      child: Icon(icon, size: DsSizes.iconSm + 2, color: color),
+                      child: glyph != null
+                          ? Text(
+                              glyph!,
+                              style: const TextStyle(fontSize: 20, height: 1.1),
+                              textScaler: TextScaler.noScaling,
+                            )
+                          : Icon(icon, size: DsSizes.iconSm + 2, color: color),
                     ),
                   ),
                 ),
@@ -709,11 +788,15 @@ class _Ticket extends StatelessWidget {
     required this.product,
     required this.onTap,
     required this.onAddToBag,
+    this.morePieces = 0,
+    this.onShowAll,
   });
 
   final Product product;
   final VoidCallback? onTap;
   final VoidCallback? onAddToBag;
+  final int morePieces;
+  final VoidCallback? onShowAll;
 
   @override
   Widget build(BuildContext context) {
@@ -786,6 +869,36 @@ class _Ticket extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (morePieces > 0 && onShowAll != null) ...[
+                  DsGaps.hXs,
+                  Semantics(
+                    button: true,
+                    label: l10n.postTaggedPiecesTitle,
+                    child: GestureDetector(
+                      onTap: onShowAll,
+                      child: Container(
+                        height: DsSizes.controlMd,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: DsSpacing.sm,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: DsColors.white.withValues(alpha: 0.22),
+                          borderRadius: DsRadius.borderLg,
+                          border: Border.all(
+                            color: DsColors.white.withValues(alpha: 0.4),
+                          ),
+                        ),
+                        child: Text(
+                          l10n.postMorePieces(morePieces),
+                          style: context.dsText.labelStrong.tint(
+                            DsColors.onMedia,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
                 DsGaps.hXs,
                 Semantics(
                   button: true,
@@ -890,8 +1003,11 @@ class _Meta extends StatelessWidget {
     required this.likes,
     required this.comments,
     required this.onComments,
+    this.reactionSummary,
   });
 
+  /// Set for a post with reactions: drawn as «❤️😍🔥 ١٢» instead of hearts.
+  final List<ReactionCount>? reactionSummary;
   final int likes;
   final int comments;
   final VoidCallback onComments;
@@ -909,7 +1025,10 @@ class _Meta extends StatelessWidget {
       ),
       child: Row(
         children: [
-          if (likes > 0) ...[
+          if (likes > 0 && reactionSummary != null) ...[
+            DsReactionSummary(summary: reactionSummary!, total: likes),
+            DsGaps.hSm,
+          ] else if (likes > 0) ...[
             _HeartStack(color: c.favorite),
             DsGaps.hXs,
             Text(

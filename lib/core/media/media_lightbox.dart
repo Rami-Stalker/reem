@@ -49,3 +49,73 @@ class MediaLightbox extends StatelessWidget {
     );
   }
 }
+
+/// Several photos, swiped through full screen — a post's carousel opened at
+/// the one she tapped.
+class MediaGalleryLightbox extends StatefulWidget {
+  const MediaGalleryLightbox({
+    super.key,
+    required this.urls,
+    this.initialIndex = 0,
+  });
+
+  final List<String> urls;
+  final int initialIndex;
+
+  static Future<void> open(
+    BuildContext context, {
+    required List<String> urls,
+    int initialIndex = 0,
+  }) {
+    if (urls.isEmpty) return Future.value();
+    if (urls.length == 1) return MediaLightbox.open(context, url: urls.first);
+    return Navigator.of(context, rootNavigator: true).push<void>(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) => MediaGalleryLightbox(
+          urls: urls,
+          initialIndex: initialIndex.clamp(0, urls.length - 1),
+        ),
+      ),
+    );
+  }
+
+  @override
+  State<MediaGalleryLightbox> createState() => _MediaGalleryLightboxState();
+}
+
+class _MediaGalleryLightboxState extends State<MediaGalleryLightbox> {
+  late final PageController _pages = PageController(
+    initialPage: widget.initialIndex,
+  );
+  late int _index = widget.initialIndex;
+
+  @override
+  void dispose() {
+    _pages.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: DsColors.mediaGround,
+      extendBodyBehindAppBar: true,
+      appBar: OharaAppBar(
+        title: '${_index + 1} / ${widget.urls.length}',
+        transparent: true,
+      ),
+      body: PageView.builder(
+        controller: _pages,
+        itemCount: widget.urls.length,
+        onPageChanged: (i) => setState(() => _index = i),
+        itemBuilder: (_, i) => Center(
+          child: InteractiveViewer(
+            maxScale: 4,
+            child: AuthorizedMediaImage(url: widget.urls[i], fit: BoxFit.contain),
+          ),
+        ),
+      ),
+    );
+  }
+}

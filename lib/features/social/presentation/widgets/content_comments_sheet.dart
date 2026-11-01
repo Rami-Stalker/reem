@@ -108,7 +108,8 @@ class _ContentCommentsSheetState extends ConsumerState<_ContentCommentsSheet> {
                         notifier.replyTo(comment);
                         _focus.requestFocus();
                       },
-                      onRemove: () => notifier.remove(comment),
+                      onRemove: notifier.remove,
+                      onReact: notifier.react,
                       onShowReplies: () => notifier.loadReplies(comment.id),
                       onOpenAuthor: (userId) =>
                           openProfileFromSheet(context, userId),
@@ -144,6 +145,7 @@ class _CommentTile extends StatelessWidget {
     required this.onRemove,
     required this.onShowReplies,
     required this.onOpenAuthor,
+    required this.onReact,
     this.currentUserId,
     this.isReply = false,
   });
@@ -151,7 +153,14 @@ class _CommentTile extends StatelessWidget {
   final ContentComment comment;
   final bool canRemove;
   final VoidCallback onReply;
-  final VoidCallback onRemove;
+
+  /// Given the comment to remove — a reply removes itself, not its thread.
+  /// It used to be handed the thread head's callback, so deleting a reply
+  /// deleted the comment it answered.
+  final ValueChanged<ContentComment> onRemove;
+
+  /// A reaction on this comment (or one of its replies); null takes it back.
+  final void Function(ContentComment comment, String? glyph) onReact;
   final VoidCallback onShowReplies;
 
   /// Her face and her name open her page.
@@ -207,6 +216,12 @@ class _CommentTile extends StatelessWidget {
                     DsGaps.vXxs,
                     Row(
                       children: [
+                        DsReactionButton(
+                          reaction: comment.myReaction,
+                          compact: true,
+                          onReact: (glyph) => onReact(comment, glyph),
+                        ),
+                        DsGaps.hSm,
                         if (!isReply)
                           GestureDetector(
                             onTap: onReply,
@@ -218,7 +233,7 @@ class _CommentTile extends StatelessWidget {
                         if (canRemove) ...[
                           DsGaps.hMd,
                           GestureDetector(
-                            onTap: onRemove,
+                            onTap: () => onRemove(comment),
                             child: Text(
                               context.l10n.deleteComment,
                               style: context.dsText.micro.tint(
@@ -227,6 +242,12 @@ class _CommentTile extends StatelessWidget {
                             ),
                           ),
                         ],
+                        const Spacer(),
+                        DsReactionSummary(
+                          summary: comment.reactionSummary,
+                          total: comment.reactionsCount,
+                          dense: true,
+                        ),
                       ],
                     ),
                   ],
@@ -246,6 +267,7 @@ class _CommentTile extends StatelessWidget {
                   onRemove: onRemove,
                   onShowReplies: onShowReplies,
                   onOpenAuthor: onOpenAuthor,
+                  onReact: onReact,
                   currentUserId: currentUserId,
                   isReply: true,
                 ),

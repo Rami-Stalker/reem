@@ -1,8 +1,8 @@
 // shared/entities/story.dart
 
 import 'package:equatable/equatable.dart';
-
 import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/entities/product.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 
 class Story extends Equatable {
@@ -16,6 +16,10 @@ class Story extends Equatable {
 
   /// The piece the story is about, when it tags one — «تسوّقي القطعة».
   final String? productId;
+
+  /// Every piece the story tags, first one first. Empty from a server that
+  /// sends only [productId].
+  final List<Product> products;
   final bool isViewed;
 
   /// The current viewer's reaction emoji, if any.
@@ -30,6 +34,7 @@ class Story extends Equatable {
     this.media = const [],
     this.link,
     this.productId,
+    this.products = const [],
     this.isViewed = false,
     this.myReaction,
     required this.expiresAt,
@@ -50,6 +55,7 @@ class Story extends Equatable {
         media,
         link,
         productId,
+        products,
         isViewed,
         myReaction,
         expiresAt,

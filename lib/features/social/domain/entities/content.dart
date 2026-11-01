@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:ohara/core/shared/entities/media.dart';
 import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 
 /// What a piece of content *is* — the format, not the table.
@@ -160,10 +161,20 @@ class ContentViewerState extends Equatable {
     this.myReaction,
     this.isSaved = false,
     this.isReshared = false,
+    this.reactionSummary = const [],
   });
 
   final bool isLiked;
+
+  /// The glyph she chose, null for the plain heart (or for none — see
+  /// [isLiked]).
   final String? myReaction;
+
+  /// Everyone's most chosen reactions, most first.
+  final List<ReactionCount> reactionSummary;
+
+  /// The glyph to draw for her reaction, or null when she has none.
+  String? get reactionGlyph => isLiked ? (myReaction ?? '❤️') : null;
   final bool isSaved;
   final bool isReshared;
 
@@ -173,17 +184,25 @@ class ContentViewerState extends Equatable {
     bool clearReaction = false,
     bool? isSaved,
     bool? isReshared,
+    List<ReactionCount>? reactionSummary,
   }) {
     return ContentViewerState(
       isLiked: isLiked ?? this.isLiked,
       myReaction: clearReaction ? null : (myReaction ?? this.myReaction),
       isSaved: isSaved ?? this.isSaved,
       isReshared: isReshared ?? this.isReshared,
+      reactionSummary: reactionSummary ?? this.reactionSummary,
     );
   }
 
   @override
-  List<Object?> get props => [isLiked, myReaction, isSaved, isReshared];
+  List<Object?> get props => [
+    isLiked,
+    myReaction,
+    isSaved,
+    isReshared,
+    reactionSummary,
+  ];
 }
 
 /// The numbers under a piece.

@@ -158,6 +158,12 @@ class SocialRepositoryImpl with RepositoryHandler implements SocialRepository {
       guard(() => remote.deleteComment(commentId));
 
   @override
+  Future<Result<CommentReactionState>> reactToComment(
+    String commentId, {
+    String? emoji,
+  }) => guard(() => remote.reactToComment(commentId, emoji: emoji));
+
+  @override
   Future<Result<void>> report(
     String contentId,
     String reason, {

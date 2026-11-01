@@ -1120,6 +1120,7 @@ model User {
   contentReactions          CommerceContentReaction[]    @relation("CommerceContentReactions")
   contentSaves              CommerceContentSave[]        @relation("CommerceContentSaves")
   contentComments           CommerceContentComment[]     @relation("CommerceContentComments")
+  contentCommentReactions   CommerceContentCommentReaction[]
   removedContentComments    CommerceContentComment[]     @relation("CommerceCommentRemovers")
   contentReshares           CommerceContentReshare[]     @relation("CommerceContentReshares")
   resharesOfMyContent       CommerceContentReshare[]     @relation("ResharedFromAuthor")
@@ -3263,6 +3264,7 @@ model CommerceContentComment {
   parentId String?                  @map("parent_id") @db.Uuid
   parent   CommerceContentComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies  CommerceContentComment[] @relation("CommentReplies")
+  reactions CommerceContentCommentReaction[]
 
   body String
 
@@ -3288,6 +3290,23 @@ model CommerceContentComment {
   @@index([parentId, createdAt])
   @@index([removedById])
   @@map("commerce_content_comments")
+}
+
+/// A reaction on a comment — ❤️ by default, or one of the reaction glyphs.
+/// One per woman per comment, like the reactions on the piece itself.
+model CommerceContentCommentReaction {
+  id        String                 @id @default(uuid()) @db.Uuid
+  commentId String                 @map("comment_id") @db.Uuid
+  comment   CommerceContentComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String                 @map("user_id") @db.Uuid
+  user      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Null for the plain heart.
+  emoji     String?
+  createdAt DateTime               @default(now()) @map("created_at")
+
+  @@unique([commentId, userId])
+  @@index([userId, commentId])
+  @@map("commerce_content_comment_reactions")
 }
 
 /// She put somebody else's post on her own page.

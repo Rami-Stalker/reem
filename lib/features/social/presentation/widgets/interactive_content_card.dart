@@ -13,6 +13,7 @@ import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart'
 import 'package:ohara/features/discovery/presentation/providers/sponsored_providers.dart';
 import 'package:ohara/features/profile/presentation/widgets/save_to_collection_sheet.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/presentation/content_reaction.dart';
 import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 import 'package:ohara/features/social/presentation/widgets/content_card.dart';
 import 'package:ohara/features/social/presentation/widgets/content_comments_sheet.dart';
@@ -77,6 +78,25 @@ class _InteractiveContentCardState
       ),
     );
     final result = await ref.read(socialRepositoryProvider).react(before.id);
+    if (!mounted) return;
+    setState(() {
+      _content = switch (result) {
+        Success(:final data) => _content.copyWith(viewer: data),
+        Error() => before,
+      };
+    });
+  }
+
+  /// A reaction — the glyph from the bar or the heart, or null to take hers
+  /// back. Drawn at once and settled by the server; put back if refused.
+  Future<void> _react(String? glyph) async {
+    if (!await _signedIn() || !mounted) return;
+    final before = _content;
+    final change = applyReaction(before, glyph);
+    setState(() => _content = change.optimistic);
+    final result = await ref
+        .read(socialRepositoryProvider)
+        .react(before.id, emoji: change.wire);
     if (!mounted) return;
     setState(() {
       _content = switch (result) {
@@ -238,6 +258,7 @@ class _InteractiveContentCardState
         unawaited(context.push(RoutePaths.productDetailsOf(productId)));
       },
       onLike: _like,
+      onReact: _react,
       onSave: _save,
       onComment: _comment,
       onShare: _share,

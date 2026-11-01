@@ -175,7 +175,9 @@ export function scoreProduct(
   }
 
   // ── Modesty ───────────────────────────────────────────────────────────
-  const wanted = brief.modesty !== ModestyLevel.UNSPECIFIED ? brief.modesty : profile.modesty;
+  // Only what she asked for in this conversation — see `briefFor`: the saved
+  // setting is no longer shown or editable, so it no longer decides anything.
+  const wanted = brief.modesty;
   if (wanted !== ModestyLevel.UNSPECIFIED) {
     const actual = garmentModesty({
       categorySlug: product.category.slug,

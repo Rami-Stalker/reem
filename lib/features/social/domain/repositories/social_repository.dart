@@ -149,6 +149,13 @@ abstract interface class SocialRepository {
 
   Future<Result<void>> deleteComment(String commentId);
 
+  /// A reaction on a comment: [emoji] null for the heart. The same reaction
+  /// again takes it back.
+  Future<Result<CommentReactionState>> reactToComment(
+    String commentId, {
+    String? emoji,
+  });
+
   Future<Result<void>> report(String contentId, String reason, {String? detail});
 
   /// Impressions, watch time, product clicks — the ledger behind the numbers a

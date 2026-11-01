@@ -3,6 +3,7 @@ import 'package:ohara/core/presentation/state/paginated_state.dart';
 import 'package:ohara/core/result/result.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
 import 'package:ohara/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/features/social/presentation/content_reaction.dart';
 
 typedef ContentFeedState = PaginatedState<Content>;
 
@@ -85,6 +86,24 @@ abstract class InteractiveFeedNotifier<T> extends PaginatedNotifier<T> {
         // The server's numbers win: she may have liked it on another device,
         // and a local guess that disagrees is a number she will see change for
         // no reason on the next refresh.
+        _patch(contentId, (item) => item.copyWith(viewer: data));
+      case Error():
+        _patch(
+          contentId,
+          (item) => item.copyWith(viewer: before.viewer, counts: before.counts),
+        );
+    }
+  }
+
+  /// A reaction from the bar or the heart; [glyph] null takes hers back.
+  Future<void> react(String contentId, String? glyph) async {
+    final before = _find(contentId);
+    if (before == null) return;
+    final change = applyReaction(before, glyph);
+    _patch(contentId, (_) => change.optimistic);
+    final result = await _repository.react(contentId, emoji: change.wire);
+    switch (result) {
+      case Success(:final data):
         _patch(contentId, (item) => item.copyWith(viewer: data));
       case Error():
         _patch(

@@ -69,6 +69,7 @@ abstract interface class SocialRemoteDataSource {
     String? parentId,
   });
   Future<void> deleteComment(String commentId);
+  Future<CommentReactionState> reactToComment(String commentId, {String? emoji});
   Future<void> report(String contentId, String reason, {String? detail});
   Future<void> recordEvent(
     String contentId,

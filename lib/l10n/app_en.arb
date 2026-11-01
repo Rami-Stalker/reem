@@ -4889,6 +4889,65 @@
   "@chatReportFraud": {
     "description": "Chat message long-press actions"
   },
+  "postMorePieces": "+{count} pieces",
+  "@postMorePieces": {
+    "description": "Post with several tagged pieces / photo viewer",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "postTaggedPiecesTitle": "Pieces in this post",
+  "@postTaggedPiecesTitle": {
+    "description": "Post with several tagged pieces / photo viewer"
+  },
+  "postOpenPhoto": "Open photo",
+  "@postOpenPhoto": {
+    "description": "Post with several tagged pieces / photo viewer"
+  },
+  "storyShopPieces": "Shop the {count} pieces",
+  "@storyShopPieces": {
+    "description": "Story viewer button when the story tags several pieces",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "profileStoryBadge": "Story",
+  "@profileStoryBadge": {
+    "description": "Tag on a profile photo that has a live story; tapping the photo opens it"
+  },
+  "reactionLove": "Love",
+  "@reactionLove": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionGorgeous": "Gorgeous",
+  "@reactionGorgeous": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionFire": "Fire",
+  "@reactionFire": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionBravo": "Bravo",
+  "@reactionBravo": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionHaha": "Haha",
+  "@reactionHaha": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionWow": "Wow",
+  "@reactionWow": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionSad": "Sad",
+  "@reactionSad": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionPickerHint": "Hold to choose a reaction",
+  "@reactionPickerHint": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionsCount": "{count} reactions",
+  "@reactionsCount": {
+    "description": "Reactions (long-press on the heart)",
+    "placeholders": {"count": {"type": "String"}}
+  },
   "productDetailsSection": "Details",
   "productOffersFrom": "{count} boutiques list this",
   "productPause": "Pause",

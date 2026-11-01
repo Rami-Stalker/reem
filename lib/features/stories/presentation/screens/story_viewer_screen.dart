@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/media/media_decode.dart';
@@ -20,6 +19,7 @@ import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart'
 import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 import 'package:ohara/features/social/presentation/widgets/content_audience_sheet.dart';
 import 'package:ohara/features/social/presentation/widgets/report_sheet.dart';
+import 'package:ohara/features/social/presentation/widgets/tagged_pieces_sheet.dart';
 import 'package:ohara/features/stories/presentation/providers/stories_providers.dart';
 
 /// Arguments for the story viewer route (passed via GoRouter `extra`).
@@ -29,7 +29,9 @@ class StoryViewerArgs {
   const StoryViewerArgs({required this.stories, this.initialIndex = 0});
 }
 
-const _reactions = ['❤️', '🔥', '😍', '👏', '😮', '🎉'];
+/// The same reactions offered on posts, reels and comments — see
+/// [DsReactions]; one list, so a new reaction appears everywhere at once.
+const _reactions = DsReactions.all;
 
 /// A clip is held for as long as it runs, up to this. A story that claimed a
 /// ten-minute video would otherwise hold the viewer for ten minutes.
@@ -312,20 +314,30 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
     }
   }
 
-  Future<void> _openProduct(String productId) async {
-    final router = GoRouter.of(context);
-    _close();
-    unawaited(router.push(RoutePaths.productDetailsOf(productId)));
+  Future<void> _openProduct(String productId) =>
+      _closeThenOpen(RoutePaths.productDetailsOf(productId));
+
+  Future<void> _openProfile(String userId) async {
+    if (userId.isEmpty) return;
+    await _closeThenOpen(RoutePaths.userProfileOf(userId));
   }
 
-  void _openProfile(String userId) {
-    if (userId.isEmpty) return;
-    // The viewer closes first — it is opened both as a route and as a plain
-    // page from the home rail — so back from her page returns to wherever
-    // the stories were opened rather than into a finished story.
+  /// Closes the viewer, then opens [location] — in that order, one after the
+  /// other.
+  ///
+  /// The viewer closes first — it is opened both as a route and as a plain
+  /// page from the home rail — so back from the page returns to wherever the
+  /// stories were opened rather than into a finished story. It used to pop
+  /// and push in the same instant, and the router settled on the pop: «تسوّقي
+  /// القطعة» closed the story and went nowhere. The push now waits for the
+  /// pop to land.
+  Future<void> _closeThenOpen(String location) async {
     final router = GoRouter.of(context);
-    _close();
-    unawaited(router.push(RoutePaths.userProfileOf(userId)));
+    final navigator = Navigator.of(context);
+    _hold('leaving');
+    await navigator.maybePop();
+    await WidgetsBinding.instance.endOfFrame;
+    unawaited(router.push(location));
   }
 
   Future<void> _audience(Story story) => _heldWhile(
@@ -593,7 +605,24 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                       onClose: _close,
                     ),
                     const Spacer(),
-                    if (productId != null) ...[
+                    if (story.products.length > 1) ...[
+                      // Several pieces: the list of them, the story held
+                      // while she looks, and closed before the piece opens.
+                      _Pill(
+                        icon: Icons.shopping_bag_outlined,
+                        label: context.l10n.storyShopPieces(
+                          story.products.length,
+                        ),
+                        onTap: () => _heldWhile(
+                          () => TaggedPiecesSheet.show(
+                            context,
+                            story.products,
+                            onOpen: (product) => _openProduct(product.id),
+                          ),
+                        ),
+                      ),
+                      DsGaps.vSm,
+                    ] else if (productId != null) ...[
                       _Pill(
                         icon: Icons.shopping_bag_outlined,
                         label: context.l10n.storyShopThis,
@@ -810,7 +839,7 @@ class _ReactionBar extends StatelessWidget {
             Semantics(
               button: true,
               selected: selected == e,
-              label: e,
+              label: DsReactions.label(context.l10n, e),
               child: GestureDetector(
                 onTap: () => onReact(e),
                 child: AnimatedScale(

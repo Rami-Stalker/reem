@@ -4,6 +4,7 @@ import 'package:ohara/core/shared/entities/media.dart';
 import 'package:ohara/core/shared/entities/story.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/core/shared/models/media_model.dart';
+import 'package:ohara/core/shared/models/product_model.dart';
 import 'package:ohara/core/shared/models/user_model.dart';
 
 class StoryModel extends Story {
@@ -13,6 +14,7 @@ class StoryModel extends Story {
     super.media,
     super.link,
     super.productId,
+    super.products,
     super.isViewed,
     super.myReaction,
     required super.expiresAt,
@@ -26,6 +28,10 @@ class StoryModel extends Story {
       media: _parseMedia(json['media']),
       link: json['link'] as String?,
       productId: json['product_id'] as String?,
+      products: [
+        for (final item in (json['products'] as List?) ?? const [])
+          if (item is Map<String, dynamic>) ProductModel.fromJson(item),
+      ],
       isViewed: json['is_viewed'] as bool? ?? false,
       myReaction: json['my_reaction'] as String?,
       expiresAt: DateTime.parse(json['expires_at'] as String),
@@ -77,6 +83,7 @@ class StoryModel extends Story {
       media: media ?? this.media,
       link: link ?? this.link,
       productId: productId ?? this.productId,
+      products: products,
       isViewed: isViewed ?? this.isViewed,
       myReaction: myReaction ?? this.myReaction,
       expiresAt: expiresAt ?? this.expiresAt,

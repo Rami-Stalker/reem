@@ -4040,6 +4040,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatReportFraud => 'Fraud or scam';
 
   @override
+  String postMorePieces(int count) {
+    return '+$count pieces';
+  }
+
+  @override
+  String get postTaggedPiecesTitle => 'Pieces in this post';
+
+  @override
+  String get postOpenPhoto => 'Open photo';
+
+  @override
+  String storyShopPieces(int count) {
+    return 'Shop the $count pieces';
+  }
+
+  @override
+  String get profileStoryBadge => 'Story';
+
+  @override
+  String get reactionLove => 'Love';
+
+  @override
+  String get reactionGorgeous => 'Gorgeous';
+
+  @override
+  String get reactionFire => 'Fire';
+
+  @override
+  String get reactionBravo => 'Bravo';
+
+  @override
+  String get reactionHaha => 'Haha';
+
+  @override
+  String get reactionWow => 'Wow';
+
+  @override
+  String get reactionSad => 'Sad';
+
+  @override
+  String get reactionPickerHint => 'Hold to choose a reaction';
+
+  @override
+  String reactionsCount(String count) {
+    return '$count reactions';
+  }
+
+  @override
   String get productDetailsSection => 'Details';
 
   @override

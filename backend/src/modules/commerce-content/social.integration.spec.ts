@@ -556,3 +556,54 @@ dbTest('a takedown reaches every page the post was added to', async ({
   });
   assert.equal(stillThere, false, 'removed content survived on a resharer page');
 });
+
+// ── Reactions ─────────────────────────────────────────────────────────────
+
+dbTest('a reaction is chosen, changed and taken back, and summarised', async ({ db, interactions }) => {
+  const post = await aSellerPost(db);
+  const shopper = await aShopper(db, post.authorId);
+  const me = asUser(shopper.id, UserRole.CUSTOMER);
+  await db.commerceContentReaction.deleteMany({
+    where: { contentId: post.id, userId: shopper.id },
+  });
+
+  let state = await interactions.react(me, post.id, '🔥');
+  assert.equal(state.is_liked, true);
+  assert.equal(state.my_reaction, '🔥');
+  assert.ok(state.reaction_summary.some((r) => r.emoji === '🔥'));
+
+  // A different glyph replaces it, it does not add a second reaction.
+  const before = state.likes_count;
+  state = await interactions.react(me, post.id, '😍');
+  assert.equal(state.my_reaction, '😍');
+  assert.equal(state.likes_count, before);
+
+  // The same glyph again takes it back.
+  state = await interactions.react(me, post.id, '😍');
+  assert.equal(state.is_liked, false);
+  assert.equal(state.likes_count, before - 1);
+});
+
+dbTest('comments take reactions too, one per woman', async ({ db, interactions }) => {
+  const post = await aSellerPost(db);
+  const shopper = await aShopper(db, post.authorId);
+  const me = asUser(shopper.id, UserRole.CUSTOMER);
+  const comment = await interactions.comment(me, post.id, 'بتجنن');
+
+  let state = await interactions.reactToComment(me, comment.id, '😍');
+  assert.equal(state.reactions_count, 1);
+  assert.equal(state.my_reaction, '😍');
+  assert.deepEqual(state.reaction_summary, [{ emoji: '😍', count: 1 }]);
+
+  state = await interactions.reactToComment(me, comment.id);
+  assert.equal(state.reactions_count, 1, 'changing her reaction is not a second one');
+  assert.equal(state.my_reaction, null);
+  assert.equal(state.is_reacted, true);
+
+  state = await interactions.reactToComment(me, comment.id);
+  assert.equal(state.reactions_count, 0);
+  assert.equal(state.is_reacted, false);
+
+  const listed = await interactions.commentReactions([comment.id], shopper.id);
+  assert.equal(listed.get(comment.id)?.reactions_count, 0);
+});

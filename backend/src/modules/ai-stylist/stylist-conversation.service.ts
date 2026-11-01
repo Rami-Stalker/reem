@@ -575,7 +575,10 @@ export class StylistConversationService {
     if (conversation.brief) return briefFromJson(conversation.brief);
 
     const brief = emptyBrief();
-    brief.modesty = profile.modesty;
+    // Not seeded from her saved preferences any more: the setting was taken
+    // out of «ذوقك», and a value saved before then would otherwise go on
+    // steering results with nothing on screen to change it. What she asks
+    // for in the conversation itself still counts.
     brief.personas = profile.personas.slice(0, 2);
     brief.sizes = { ...profile.sizes };
     brief.budgetMin = profile.budgetMinSyp;

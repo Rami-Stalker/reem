@@ -49,6 +49,7 @@ Story storyFromContent(Content content, [bool seen = false]) {
     user: content.author,
     media: content.media,
     productId: content.primaryTag?.product.id,
+    products: [for (final tag in content.productTags) tag.product],
     isViewed: seen,
     myReaction: content.viewer.myReaction,
     // A story without an expiry is a data fault, not a permanent story: the

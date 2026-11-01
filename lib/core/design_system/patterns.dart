@@ -31,6 +31,8 @@ export 'package:ohara/core/design_system/patterns/product_rail.dart';
 export 'package:ohara/core/design_system/patterns/product_shape.dart';
 // Every profile, a shopper's or a boutique's: the portrait in an arch.
 export 'package:ohara/core/design_system/patterns/profile_stage.dart';
+// Reactions: the catalogue, the long-press bar, the summary, the button.
+export 'package:ohara/core/design_system/patterns/reactions.dart';
 export 'package:ohara/core/design_system/patterns/seller_atelier.dart';
 // Publishing: the studio's mode dial and viewfinder.
 export 'package:ohara/core/design_system/patterns/studio_stage.dart';

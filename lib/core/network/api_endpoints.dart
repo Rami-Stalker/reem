@@ -189,6 +189,8 @@ abstract final class ApiEndpoints {
   static String contentMuteAuthor(String userId) =>
       '/content/authors/$userId/mute';
   static const contentMuted = '/content/muted';
+  static String contentCommentReact(String commentId) =>
+      '/content/comments/$commentId/react';
   static String contentCommentReport(String commentId) =>
       '/content/comments/$commentId/report';
 

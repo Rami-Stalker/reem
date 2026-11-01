@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/media/media_decode.dart';
+import 'package:ohara/core/media/media_lightbox.dart';
 import 'package:ohara/core/media/media_variants.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
+import 'package:ohara/features/social/presentation/widgets/tagged_pieces_sheet.dart';
 import 'package:ohara/features/store_ads/presentation/widgets/store_tier.dart';
 import 'package:ohara/l10n/app_localizations.dart';
 
@@ -60,6 +62,7 @@ class ContentCard extends StatefulWidget {
     required this.onShare,
     this.onReshare,
     this.onMore,
+    this.onReact,
     this.featured = false,
   });
 
@@ -75,6 +78,10 @@ class ContentCard extends StatefulWidget {
   /// «أضيفي إلى صفحتي». Null on her own content — she cannot reshare herself.
   final VoidCallback? onReshare;
   final VoidCallback? onMore;
+
+  /// A reaction from the long-press bar, or a tap on the heart; the glyph,
+  /// or null to clear hers. Without it the heart only likes.
+  final ValueChanged<String?>? onReact;
 
   /// The first card in an editorial run gets the wider ornament ring.
   final bool featured;
@@ -143,8 +150,10 @@ class _ContentCardState extends State<ContentCard>
           ]
           // Why the feed brought her something she does not follow. Someone
           // she follows needs no explanation, and a guest's feed has none.
-          else if (rankReasonChip(l10n, content.rankReason)
-              case (final label, final icon))
+          else if (rankReasonChip(l10n, content.rankReason) case (
+            final label,
+            final icon,
+          ))
             DsBadge(label: label, tone: DsBadgeTone.info, icon: icon),
         ],
         // A reel plays in the feed, muted, and only while it is on screen.
@@ -161,8 +170,29 @@ class _ContentCardState extends State<ContentCard>
         onOpenProduct: tag == null
             ? null
             : () => widget.onOpenProduct(tag.product.id),
+        morePieces: content.productTags.length - 1,
+        onShowAllPieces: content.productTags.length > 1
+            ? () => TaggedPiecesSheet.show(context, [
+                for (final t in content.productTags) t.product,
+              ])
+            : null,
+        onOpenMedia: (index) {
+          final photos = [
+            for (final item in content.media)
+              if (!item.isVideo) item.url,
+          ];
+          // The photo she tapped, counted among photos only.
+          final at = content.media
+              .take(index)
+              .where((item) => !item.isVideo)
+              .length;
+          MediaGalleryLightbox.open(context, urls: photos, initialIndex: at);
+        },
         caption: content.caption,
         liked: content.viewer.isLiked,
+        reaction: content.viewer.reactionGlyph,
+        reactionSummary: content.viewer.reactionSummary,
+        onReact: widget.onReact,
         saved: content.viewer.isSaved,
         picked: content.viewer.isReshared,
         likes: content.counts.likes,

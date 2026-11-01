@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/result/result.dart';
 import 'package:ohara/features/social/domain/entities/content_comment.dart';
 import 'package:ohara/features/social/domain/repositories/social_repository.dart';
+import 'package:ohara/features/social/presentation/content_reaction.dart';
 
 class ContentCommentsState {
   const ContentCommentsState({
@@ -148,6 +150,57 @@ class ContentCommentsNotifier extends StateNotifier<ContentCommentsState> {
         error: failure.message,
       ),
     };
+  }
+
+  /// A reaction on a comment or a reply; [glyph] null takes hers back.
+  /// Drawn at once, settled by the server, put back if refused.
+  Future<void> react(ContentComment comment, String? glyph) async {
+    final had = comment.myReaction;
+    final optimistic = comment.withReaction(
+      glyph: glyph,
+      count: (comment.reactionsCount +
+              (glyph != null ? 1 : 0) -
+              (had != null ? 1 : 0))
+          .clamp(0, 1 << 30),
+      summary: shiftReaction(comment.reactionSummary, had, glyph),
+    );
+    _replaceComment(optimistic);
+    final wire = glyph == null
+        ? (had == null ? null : DsReactions.toWire(had))
+        : DsReactions.toWire(glyph);
+    final result = await _repository.reactToComment(comment.id, emoji: wire);
+    if (!mounted) return;
+    switch (result) {
+      case Success(:final data):
+        _replaceComment(
+          comment.withReaction(
+            glyph: data.glyph,
+            count: data.count,
+            summary: data.summary,
+          ),
+        );
+      case Error(:final failure):
+        _replaceComment(comment);
+        state = state.copyWith(error: failure.message);
+    }
+  }
+
+  /// Puts [updated] where the comment with its id is — a head or a reply.
+  void _replaceComment(ContentComment updated) {
+    state = state.copyWith(
+      comments: [
+        for (final head in state.comments)
+          if (head.id == updated.id)
+            updated.copyWith(replies: head.replies)
+          else
+            head.copyWith(
+              replies: [
+                for (final reply in head.replies)
+                  reply.id == updated.id ? updated : reply,
+              ],
+            ),
+      ],
+    );
   }
 
   Future<void> remove(ContentComment comment) async {

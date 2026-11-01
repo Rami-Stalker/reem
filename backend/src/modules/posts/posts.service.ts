@@ -1,3 +1,7 @@
+import {
+  commentReactionStates,
+  contentReactionSummaries,
+} from '../commerce-content/interactions/reaction-summary';
 import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import {
   CommerceContentCommentStatus,
@@ -313,7 +317,7 @@ export class PostsService {
     return this.single(postId, user.id);
   }
 
-  async listComments(postId: string, page: PaginationDto) {
+  async listComments(postId: string, page: PaginationDto, viewerId?: string) {
     await this.ensureExists(postId);
     // Flat, as this contract always was. The platform threads replies; the old
     // client renders a list, so replies are folded into it in time order
@@ -333,8 +337,15 @@ export class PostsService {
       }),
       this.prisma.commerceContentComment.count({ where }),
     ]);
+    const reactions = await commentReactionStates(
+      this.prisma,
+      comments.map((comment) => comment.id),
+      viewerId,
+    );
     return {
-      data: comments.map(serializeLegacyComment),
+      data: comments.map((comment) =>
+        serializeLegacyComment(comment, reactions.get(comment.id)),
+      ),
       pagination: buildMeta(page.page, page.limit, total, comments.length),
     };
   }
@@ -342,7 +353,7 @@ export class PostsService {
   async addComment(user: AuthUser, postId: string, content: string) {
     await this.ensureExists(postId);
     const comment = await this.interactions.comment(user, postId, content);
-    return serializeLegacyComment(comment);
+    return serializeLegacyComment(comment, undefined);
   }
 
   async deleteComment(user: AuthUser, postId: string, commentId: string) {
@@ -363,7 +374,9 @@ export class PostsService {
     contentIds: string[],
     userId?: string,
   ): Promise<LegacyViewerState> {
-    if (!userId || contentIds.length === 0) return NO_LEGACY_VIEWER;
+    if (contentIds.length === 0) return NO_LEGACY_VIEWER;
+    const summaries = await contentReactionSummaries(this.prisma, contentIds);
+    if (!userId) return { ...NO_LEGACY_VIEWER, summaries };
     const [reactions, saves, reshares] = await Promise.all([
       this.prisma.commerceContentReaction.findMany({
         where: { userId, contentId: { in: contentIds } },
@@ -384,6 +397,7 @@ export class PostsService {
       reshared: new Set(reshares.map((r) => r.sourceContentId)),
       viewed: new Set(),
       reactions: new Map(reactions.map((r) => [r.contentId, r.emoji])),
+      summaries,
     };
   }
 

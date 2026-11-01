@@ -82,53 +82,65 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
       }
     });
 
-    return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.82,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              DsSpacing.lg,
-              DsSpacing.xs,
-              DsSpacing.lg,
-              DsSpacing.sm,
-            ),
-            child: Row(
-              children: [
-                Text(
-                  context.l10n.comments,
-                  style: context.dsText.sectionTitle.copyWith(
-                    fontWeight: DsTypography.bold,
-                  ),
-                ),
-                if (state.comments.isNotEmpty) ...[
-                  const SizedBox(width: DsSpacing.xs),
+    // The field rides on the keyboard. The sheet had a fixed height and paid
+    // nothing for the inset, so when she tapped to comment the keyboard rose
+    // over the field and she typed blind. Now the sheet is lifted by the
+    // keyboard and gives up height to it, keeping the list and the field on
+    // screen.
+    final media = MediaQuery.of(context);
+    final keyboard = media.viewInsets.bottom;
+    final room = media.size.height - media.padding.top - keyboard;
+    final height = (media.size.height * 0.82).clamp(0.0, room);
+    return Padding(
+      padding: EdgeInsets.only(bottom: keyboard),
+      child: SizedBox(
+        height: height,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsSpacing.lg,
+                DsSpacing.xs,
+                DsSpacing.lg,
+                DsSpacing.sm,
+              ),
+              child: Row(
+                children: [
                   Text(
-                    '${state.comments.length}',
-                    style: context.dsText.cardTitle.copyWith(
-                      color: c.onSurfaceVariant,
+                    context.l10n.comments,
+                    style: context.dsText.sectionTitle.copyWith(
+                      fontWeight: DsTypography.bold,
                     ),
                   ),
+                  if (state.comments.isNotEmpty) ...[
+                    const SizedBox(width: DsSpacing.xs),
+                    Text(
+                      '${state.comments.length}',
+                      style: context.dsText.cardTitle.copyWith(
+                        color: c.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-          Divider(height: 1, color: c.divider),
-          Expanded(
-            child: _List(
-              state: state,
-              myId: myId,
-              thread: widget.thread,
-              onCountChanged: widget.onCountChanged,
+            Divider(height: 1, color: c.divider),
+            Expanded(
+              child: _List(
+                state: state,
+                myId: myId,
+                thread: widget.thread,
+                onCountChanged: widget.onCountChanged,
+              ),
             ),
-          ),
-          _InputBar(
-            controller: _controller,
-            focusNode: _focus,
-            onSend: _send,
-            sending: state.isSubmitting,
-          ),
-        ],
+            _InputBar(
+              controller: _controller,
+              focusNode: _focus,
+              onSend: _send,
+              sending: state.isSubmitting,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -169,9 +181,13 @@ class _List extends ConsumerWidget {
       itemBuilder: (_, i) {
         final comment = state.comments[i];
         final isMine = comment.user.id == myId;
+        final notifier = ref.read(commentsNotifierProvider(thread).notifier);
         return _CommentTile(
           comment: comment,
           isMine: isMine,
+          onReact: notifier.canReact
+              ? (glyph) => notifier.react(comment, glyph)
+              : null,
           // Her face and her name are the way to her page — the one gesture
           // everybody tries first on a comment.
           onOpenAuthor: () => openProfileFromSheet(context, comment.user.id),
@@ -208,12 +224,16 @@ class _CommentTile extends StatelessWidget {
     required this.isMine,
     required this.onOpenAuthor,
     this.onDelete,
+    this.onReact,
   });
 
   final Comment comment;
   final bool isMine;
   final VoidCallback onOpenAuthor;
   final Future<void> Function()? onDelete;
+
+  /// A reaction on the comment; null where comments take none.
+  final ValueChanged<String?>? onReact;
 
   @override
   Widget build(BuildContext context) {
@@ -256,16 +276,16 @@ class _CommentTile extends StatelessWidget {
                             child: GestureDetector(
                               onTap: onOpenAuthor,
                               child: Text(
-                              comment.user.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: context.dsText.labelLarge.copyWith(
-                                fontWeight: DsTypography.semiBold,
-                                color: isMine
-                                    ? c.onPrimaryContainer
-                                    : c.onSurface,
+                                comment.user.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.dsText.labelLarge.copyWith(
+                                  fontWeight: DsTypography.semiBold,
+                                  color: isMine
+                                      ? c.onPrimaryContainer
+                                      : c.onSurface,
+                                ),
                               ),
-                            ),
                             ),
                           ),
                           if (comment.user.isVerified) ...[
@@ -289,10 +309,8 @@ class _CommentTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                // A "Reply" label and a heart used to sit here. Neither did
-                // anything — there is no comment threading and no comment
-                // like on the server — so they were decoration that read as
-                // broken. The timestamp is the only true thing in this row.
+                // The time, her reaction (a tap for ❤️, a long press for the
+                // bar) and everyone's — comments on a post carry reactions.
                 Padding(
                   padding: const EdgeInsetsDirectional.only(
                     start: DsSpacing.sm,
@@ -306,6 +324,14 @@ class _CommentTile extends StatelessWidget {
                           color: c.onSurfaceVariant,
                         ),
                       ),
+                      if (onReact case final react?) ...[
+                        const SizedBox(width: DsSpacing.sm),
+                        DsReactionButton(
+                          reaction: comment.myReaction,
+                          compact: true,
+                          onReact: react,
+                        ),
+                      ],
                       if (isMine && onDelete != null) ...[
                         const SizedBox(width: DsSpacing.md),
                         GestureDetector(
@@ -317,6 +343,14 @@ class _CommentTile extends StatelessWidget {
                               fontWeight: DsTypography.semiBold,
                             ),
                           ),
+                        ),
+                      ],
+                      if (onReact != null) ...[
+                        const Spacer(),
+                        DsReactionSummary(
+                          summary: comment.reactionSummary,
+                          total: comment.likesCount,
+                          dense: true,
                         ),
                       ],
                     ],

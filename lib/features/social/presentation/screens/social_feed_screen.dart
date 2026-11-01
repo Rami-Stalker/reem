@@ -424,6 +424,7 @@ class _FeedPageState extends ConsumerState<_FeedPage>
         unawaited(context.push(RoutePaths.productDetailsOf(productId)));
       },
       onLike: () => _like(content),
+      onReact: (glyph) => _react(content, glyph),
       onSave: () => _save(content),
       onComment: () => _comment(content),
       onShare: () => _share(content),
@@ -431,6 +432,11 @@ class _FeedPageState extends ConsumerState<_FeedPage>
       onReshare: mine ? null : () => _reshare(content),
       onMore: () => _openMenu(content, me),
     );
+  }
+
+  Future<void> _react(Content content, String? glyph) async {
+    if (!await _signedIn() || !mounted) return;
+    await _notifier.react(content.id, glyph);
   }
 
   Future<void> _like(Content content) async {

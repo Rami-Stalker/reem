@@ -7370,6 +7370,90 @@ abstract class AppLocalizations {
   /// **'Fraud or scam'**
   String get chatReportFraud;
 
+  /// Post with several tagged pieces / photo viewer
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} pieces'**
+  String postMorePieces(int count);
+
+  /// Post with several tagged pieces / photo viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces in this post'**
+  String get postTaggedPiecesTitle;
+
+  /// Post with several tagged pieces / photo viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Open photo'**
+  String get postOpenPhoto;
+
+  /// Story viewer button when the story tags several pieces
+  ///
+  /// In en, this message translates to:
+  /// **'Shop the {count} pieces'**
+  String storyShopPieces(int count);
+
+  /// Tag on a profile photo that has a live story; tapping the photo opens it
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get profileStoryBadge;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Love'**
+  String get reactionLove;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Gorgeous'**
+  String get reactionGorgeous;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get reactionFire;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Bravo'**
+  String get reactionBravo;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Haha'**
+  String get reactionHaha;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Wow'**
+  String get reactionWow;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Sad'**
+  String get reactionSad;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to choose a reaction'**
+  String get reactionPickerHint;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reactions'**
+  String reactionsCount(String count);
+
   /// No description provided for @productDetailsSection.
   ///
   /// In en, this message translates to:

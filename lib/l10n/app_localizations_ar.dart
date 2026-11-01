@@ -4074,6 +4074,54 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatReportFraud => 'احتيال أو نصب';
 
   @override
+  String postMorePieces(int count) {
+    return '+$count قطع';
+  }
+
+  @override
+  String get postTaggedPiecesTitle => 'القطع بهالمنشور';
+
+  @override
+  String get postOpenPhoto => 'افتحي الصورة';
+
+  @override
+  String storyShopPieces(int count) {
+    return 'تسوّقي القطع ($count)';
+  }
+
+  @override
+  String get profileStoryBadge => 'قصة';
+
+  @override
+  String get reactionLove => 'حبّيته';
+
+  @override
+  String get reactionGorgeous => 'بيجنن';
+
+  @override
+  String get reactionFire => 'نار';
+
+  @override
+  String get reactionBravo => 'برافو';
+
+  @override
+  String get reactionHaha => 'بيضحّك';
+
+  @override
+  String get reactionWow => 'واو';
+
+  @override
+  String get reactionSad => 'زعلت';
+
+  @override
+  String get reactionPickerHint => 'اضغطي مطوّلاً لتختاري تفاعل';
+
+  @override
+  String reactionsCount(String count) {
+    return '$count تفاعل';
+  }
+
+  @override
   String get productDetailsSection => 'التفاصيل';
 
   @override
