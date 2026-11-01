@@ -429,14 +429,16 @@ export default () => ({
     provider: process.env.AI_STYLIST_PROVIDER ?? 'none',
     apiKey: process.env.AI_STYLIST_API_KEY ?? '',
     baseUrl: process.env.AI_STYLIST_BASE_URL ?? 'https://api.anthropic.com',
-    model: process.env.AI_STYLIST_MODEL ?? 'claude-sonnet-5',
+    model: process.env.AI_STYLIST_MODEL ?? 'claude-opus-5-5',
+    /** How much the model thinks before a reply: `low` (default) | `medium` | `high`. */
+    effort: process.env.AI_STYLIST_EFFORT ?? 'low',
     /**
      * A turn that has not answered in this long is abandoned and the rules
      * path answers instead. She is waiting on a chat bubble, so the ceiling is
      * what a person will sit through, not what the provider's p99 is.
      */
-    timeoutMs: parseInt(process.env.AI_STYLIST_TIMEOUT_MS ?? '8000', 10),
-    maxOutputTokens: parseInt(process.env.AI_STYLIST_MAX_TOKENS ?? '1024', 10),
+    timeoutMs: parseInt(process.env.AI_STYLIST_TIMEOUT_MS ?? '15000', 10),
+    maxOutputTokens: parseInt(process.env.AI_STYLIST_MAX_TOKENS ?? '2048', 10),
     /**
      * Let the model phrase the reply sentence. Extraction and phrasing are
      * separate switches because they carry different risk: a misread brief
