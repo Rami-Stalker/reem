@@ -4004,6 +4004,124 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productDetails => 'تفاصيل المنتج';
 
   @override
+  String get productAttrMaterial => 'الخامة';
+
+  @override
+  String get productAttrSleeveLength => 'طول الكم';
+
+  @override
+  String get productAttrSkinType => 'نوع البشرة';
+
+  @override
+  String get productAttrColor => 'اللون';
+
+  @override
+  String get productAttrFit => 'القصّة';
+
+  @override
+  String get productAttrLength => 'الطول';
+
+  @override
+  String get productAttrPattern => 'النقشة';
+
+  @override
+  String get productAttrCare => 'العناية';
+
+  @override
+  String get productAttrOrigin => 'بلد الصنع';
+
+  @override
+  String get productAttrYes => 'نعم';
+
+  @override
+  String get productAttrNo => 'لا';
+
+  @override
+  String get sharePreparing => 'عم نجهّز المشاركة…';
+
+  @override
+  String get chatMessageCopied => 'انسخت الرسالة';
+
+  @override
+  String get chatResend => 'إعادة الإرسال';
+
+  @override
+  String get chatDeleteForMe => 'حذف لدي';
+
+  @override
+  String get chatDeleteForEveryone => 'حذف عند الجميع';
+
+  @override
+  String get chatDeleteForEveryoneTitle => 'حذف الرسالة عند الجميع؟';
+
+  @override
+  String get chatDeleteForEveryoneBody =>
+      'رح تختفي عندكِ وعند الطرف التاني، ورح تظهر مكانها «تم حذف هذه الرسالة».';
+
+  @override
+  String get chatMessageDeleted => 'تم حذف هذه الرسالة';
+
+  @override
+  String get chatMessageDeletedByMe => 'حذفتِ هذه الرسالة';
+
+  @override
+  String get chatDeleteFailed => 'ما قدرنا نحذف الرسالة، جرّبي مرة تانية.';
+
+  @override
+  String get chatReportMessage => 'الإبلاغ عن الرسالة';
+
+  @override
+  String get chatReportFraud => 'احتيال أو نصب';
+
+  @override
+  String postMorePieces(int count) {
+    return '+$count قطع';
+  }
+
+  @override
+  String get postTaggedPiecesTitle => 'القطع بهالمنشور';
+
+  @override
+  String get postOpenPhoto => 'افتحي الصورة';
+
+  @override
+  String storyShopPieces(int count) {
+    return 'تسوّقي القطع ($count)';
+  }
+
+  @override
+  String get profileStoryBadge => 'قصة';
+
+  @override
+  String get reactionLove => 'حبّيته';
+
+  @override
+  String get reactionGorgeous => 'بيجنن';
+
+  @override
+  String get reactionFire => 'نار';
+
+  @override
+  String get reactionBravo => 'برافو';
+
+  @override
+  String get reactionHaha => 'بيضحّك';
+
+  @override
+  String get reactionWow => 'واو';
+
+  @override
+  String get reactionSad => 'زعلت';
+
+  @override
+  String get reactionPickerHint => 'اضغطي مطوّلاً لتختاري تفاعل';
+
+  @override
+  String reactionsCount(String count) {
+    return '$count تفاعل';
+  }
+
+  @override
   String get productDetailsSection => 'التفاصيل';
 
   @override

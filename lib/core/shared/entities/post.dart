@@ -1,9 +1,9 @@
 // shared/entities/post.dart
 
 import 'package:equatable/equatable.dart';
-
 import 'package:ohara/core/shared/entities/media.dart';
 import 'package:ohara/core/shared/entities/product.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 
 /// High-level merchandising category, used for feed filtering and iconography.
@@ -79,6 +79,10 @@ class Post extends Equatable {
   final String id;
   final User author;
   final Product? product;
+
+  /// Every piece tagged, in order; [product] is the first. Empty from a server
+  /// that sends only the one.
+  final List<Product> products;
   final String caption;
   final CategoryType category;
 
@@ -88,6 +92,12 @@ class Post extends Equatable {
   final int savesCount;
 
   final bool isLiked;
+
+  /// The glyph she reacted with; null for the plain heart (see [isLiked]).
+  final String? myReaction;
+
+  /// Everyone's most chosen reactions, most first.
+  final List<ReactionCount> reactionSummary;
   final bool isSaved;
 
   /// She added it to her own page («أضيفي إلى صفحتي»).
@@ -107,6 +117,7 @@ class Post extends Equatable {
     required this.id,
     required this.author,
     this.product,
+    this.products = const [],
     required this.caption,
     this.category = CategoryType.gifts,
     this.likesCount = 0,
@@ -114,6 +125,8 @@ class Post extends Equatable {
     this.sharesCount = 0,
     this.savesCount = 0,
     this.isLiked = false,
+    this.myReaction,
+    this.reactionSummary = const [],
     this.isSaved = false,
     this.isReshared = false,
     required this.createdAt,
@@ -123,6 +136,9 @@ class Post extends Equatable {
 
   /// True when there is something to shop behind this post.
   bool get hasProduct => product != null;
+
+  /// Tagged pieces beyond the first.
+  int get morePieces => products.length > 1 ? products.length - 1 : 0;
 
   /// A post's media is its product's gallery — exposed directly for
   /// convenience, and empty for a post that tags nothing.
@@ -134,6 +150,9 @@ class Post extends Equatable {
         id,
         author,
         product,
+        products,
+        myReaction,
+        reactionSummary,
         caption,
         category,
         likesCount,

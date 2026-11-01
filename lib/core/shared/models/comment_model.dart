@@ -1,6 +1,7 @@
 // shared/models/comment_model.dart
 
 import 'package:ohara/core/shared/entities/comment.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/core/shared/models/user_model.dart';
 
@@ -11,6 +12,8 @@ class CommentModel extends Comment {
     required super.content,
     super.likesCount,
     required super.createdAt,
+    super.myReaction,
+    super.reactionSummary,
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +23,8 @@ class CommentModel extends Comment {
       content: json['content'] as String,
       likesCount: json['likes_count'] as int? ?? 0,
       createdAt: DateTime.parse(json['created_at'] as String),
+      myReaction: reactionGlyphFromJson(json),
+      reactionSummary: ReactionCount.listFromJson(json['reaction_summary']),
     );
   }
 
@@ -37,6 +42,9 @@ class CommentModel extends Comment {
     String? content,
     int? likesCount,
     DateTime? createdAt,
+    String? myReaction,
+    bool clearReaction = false,
+    List<ReactionCount>? reactionSummary,
   }) {
     return CommentModel(
       id: id ?? this.id,
@@ -44,6 +52,8 @@ class CommentModel extends Comment {
       content: content ?? this.content,
       likesCount: likesCount ?? this.likesCount,
       createdAt: createdAt ?? this.createdAt,
+      myReaction: clearReaction ? null : (myReaction ?? this.myReaction),
+      reactionSummary: reactionSummary ?? this.reactionSummary,
     );
   }
 }

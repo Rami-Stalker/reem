@@ -1,4 +1,9 @@
 import {
+  commentReactionStates,
+  contentReactionSummaries,
+  NO_COMMENT_REACTIONS,
+} from './reaction-summary';
+import {
   BadRequestException,
   ForbiddenException,
   Injectable,
@@ -139,6 +144,57 @@ export class ContentInteractionsService {
     }
 
     return this.viewerState(contentId, user.id);
+  }
+
+  /**
+   * A reaction on a comment — the heart by default, or a glyph from the
+   * long-press bar. Same rules as on the piece: one per woman, the same one
+   * again takes it back, a different one replaces it.
+   */
+  async reactToComment(user: AuthUser, commentId: string, emoji?: string) {
+    const comment = await this.prisma.commerceContentComment.findUnique({
+      where: { id: commentId },
+      select: { id: true, contentId: true, status: true },
+    });
+    if (!comment || comment.status !== CommerceContentCommentStatus.VISIBLE) {
+      throw new NotFoundException('التعليق غير موجود');
+    }
+    await this.assertReadable(comment.contentId, user.id);
+
+    const existing = await this.prisma.commerceContentCommentReaction.findUnique({
+      where: { commentId_userId: { commentId, userId: user.id } },
+      select: { id: true, emoji: true },
+    });
+    const glyph = emoji ?? null;
+    if (existing && existing.emoji === glyph) {
+      await this.prisma.commerceContentCommentReaction.delete({
+        where: { id: existing.id },
+      });
+    } else if (existing) {
+      await this.prisma.commerceContentCommentReaction.update({
+        where: { id: existing.id },
+        data: { emoji: glyph },
+      });
+    } else {
+      await this.prisma.commerceContentCommentReaction
+        .create({ data: { commentId, userId: user.id, emoji: glyph } })
+        // A double tap racing itself: the other request already made it.
+        .catch((error: unknown) => {
+          if (
+            !(error instanceof Prisma.PrismaClientKnownRequestError) ||
+            error.code !== 'P2002'
+          ) {
+            throw error;
+          }
+        });
+    }
+    const states = await commentReactionStates(this.prisma, [commentId], user.id);
+    return { id: commentId, ...(states.get(commentId) ?? NO_COMMENT_REACTIONS) };
+  }
+
+  /** The reactions on a page of comments and their replies, for this viewer. */
+  commentReactions(commentIds: string[], viewerId?: string) {
+    return commentReactionStates(this.prisma, commentIds, viewerId);
   }
 
   // ── Saves ─────────────────────────────────────────────────────────────────
@@ -621,7 +677,7 @@ export class ContentInteractionsService {
 
   /** What the card should render for this viewer, right now. */
   async viewerState(contentId: string, userId: string) {
-    const [content, reaction, save, reshare] = await Promise.all([
+    const [content, reaction, save, reshare, summaries] = await Promise.all([
       this.prisma.commerceContent.findUnique({
         where: { id: contentId },
         select: {
@@ -645,11 +701,13 @@ export class ContentInteractionsService {
         },
         select: { id: true },
       }),
+      contentReactionSummaries(this.prisma, [contentId]),
     ]);
 
     return {
       is_liked: reaction !== null,
       my_reaction: reaction?.emoji ?? null,
+      reaction_summary: summaries.get(contentId) ?? [],
       is_saved: save !== null,
       is_reshared: reshare !== null,
       likes_count: Number(content?.reactionsCount ?? 0),

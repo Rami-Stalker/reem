@@ -1,3 +1,4 @@
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/models/user_model.dart';
 import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
@@ -20,6 +21,9 @@ class ContentCommentModel extends ContentComment {
     super.parentId,
     super.repliesCount,
     super.replies,
+    super.reactionsCount,
+    super.myReaction,
+    super.reactionSummary,
   });
 
   factory ContentCommentModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,9 @@ class ContentCommentModel extends ContentComment {
                 .toList(growable: false)
           : const [],
       createdAt: _date(json['created_at']),
+      reactionsCount: _int(json['reactions_count']),
+      myReaction: reactionGlyphFromJson(json),
+      reactionSummary: ReactionCount.listFromJson(json['reaction_summary']),
     );
   }
 }
@@ -47,6 +54,7 @@ class ContentViewerStateModel extends ContentViewerState {
     super.myReaction,
     super.isSaved,
     super.isReshared,
+    super.reactionSummary,
   });
 
   /// The interaction endpoints answer with the viewer's state *and* the fresh
@@ -57,6 +65,7 @@ class ContentViewerStateModel extends ContentViewerState {
       myReaction: json['my_reaction'] as String?,
       isSaved: json['is_saved'] as bool? ?? false,
       isReshared: json['is_reshared'] as bool? ?? false,
+      reactionSummary: ReactionCount.listFromJson(json['reaction_summary']),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:ohara/core/domain/pagination/paginated_data.dart';
 import 'package:ohara/core/network/api_endpoints.dart';
 import 'package:ohara/core/network/base_remote_datasource.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/core/shared/models/user_model.dart';
 import 'package:ohara/features/social/data/datasources/social_remote_datasource.dart';
@@ -345,6 +346,22 @@ final class SocialRemoteDataSourceImpl extends BaseRemoteDataSource
   @override
   Future<void> deleteComment(String commentId) =>
       deleteRequest(ApiEndpoints.contentComment(commentId));
+
+  @override
+  Future<CommentReactionState> reactToComment(
+    String commentId, {
+    String? emoji,
+  }) async {
+    final json = await postJson(
+      ApiEndpoints.contentCommentReact(commentId),
+      body: {'emoji': ?emoji},
+    );
+    return CommentReactionState(
+      count: (json['reactions_count'] as num?)?.toInt() ?? 0,
+      glyph: reactionGlyphFromJson(json),
+      summary: ReactionCount.listFromJson(json['reaction_summary']),
+    );
+  }
 
   @override
   Future<void> report(

@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/media/media_decode.dart';
 import 'package:ohara/core/media/media_variants.dart';
 
@@ -228,7 +228,11 @@ class _ProfilePortraitState extends State<ProfilePortrait>
       archWidth,
       archHeight,
     );
-    final thread = widget.hasStory ? 4.5 : 3.0;
+    // A story has to be *seen* on the portrait. The thread used to be the
+    // same animated gradient either way, 1.5 px thicker with a story — nobody
+    // could tell. Now: a plain hairline without, a thick living ring and a
+    // «قصة» tag with, as every social app has taught her to read it.
+    final thread = widget.hasStory ? 5.5 : 2.0;
     final photo = arch.deflate(thread + 2);
 
     final portrait = SizedBox.fromSize(
@@ -241,11 +245,15 @@ class _ProfilePortraitState extends State<ProfilePortrait>
                 animation: _controller,
                 arch: arch,
                 thread: thread,
-                speed: widget.hasStory ? 3 : 1,
-                colors: boutique ? _boutiqueThread : _shopperThread,
-                glow: (boutique ? DsColors.gold400 : colors.primary).withValues(
-                  alpha: isDark ? 0.42 : 0.34,
-                ),
+                speed: widget.hasStory ? 3 : 0,
+                colors: widget.hasStory
+                    ? (boutique ? _boutiqueThread : _shopperThread)
+                    : [colors.border, colors.border],
+                glow: widget.hasStory
+                    ? (boutique ? DsColors.gold400 : colors.primary).withValues(
+                        alpha: isDark ? 0.5 : 0.42,
+                      )
+                    : DsColors.transparent,
                 gap: colors.background,
               ),
             ),
@@ -275,6 +283,31 @@ class _ProfilePortraitState extends State<ProfilePortrait>
               ),
             ),
           ),
+          if (widget.hasStory)
+            Positioned(
+              left: 0,
+              right: 0,
+              top: arch.bottom - DsSpacing.md,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DsSpacing.sm,
+                    vertical: DsSpacing.xxxs,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: boutique ? _boutiqueThread : _shopperThread,
+                    ),
+                    borderRadius: DsRadius.borderFull,
+                    border: Border.all(color: colors.background, width: 2),
+                  ),
+                  child: Text(
+                    context.l10n.profileStoryBadge,
+                    style: context.dsText.captionStrong.tint(DsColors.white),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

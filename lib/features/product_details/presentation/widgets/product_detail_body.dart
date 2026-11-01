@@ -30,8 +30,8 @@ class _ProductDetailBodyState extends State<ProductDetailBody> {
     final text = context.dsText;
     final l10n = context.l10n;
     final product = widget.product;
-    final attributes = product.attributes.entries
-        .where((e) => e.value != null && '${e.value}'.trim().isNotEmpty)
+    final attributes = _ordered(product)
+        .where((e) => _valueText(context, e.value).isNotEmpty)
         .toList();
 
     if (product.description.trim().isEmpty && attributes.isEmpty) {
@@ -74,24 +74,35 @@ class _ProductDetailBodyState extends State<ProductDetailBody> {
                   Divider(color: context.dsColors.divider, height: 1),
                   DsGaps.vSm,
                 ],
-                for (final entry in attributes)
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: DsSizes.thumbLg,
-                          child: Text(entry.key, style: text.caption),
-                        ),
-                        DsGaps.hSm,
-                        Expanded(
-                          child: Text('${entry.value}', style: text.bodySmall),
-                        ),
-                      ],
+                for (var i = 0; i < attributes.length; i++) ...[
+                  if (i > 0)
+                    Divider(
+                      color: context.dsColors.divider.withValues(alpha: 0.5),
+                      height: DsSpacing.md,
                     ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          _label(context, product, attributes[i].key),
+                          style: text.caption.tint(
+                            context.dsColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      DsGaps.hSm,
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          _valueText(context, attributes[i].value),
+                          style: text.bodySmall.semibold,
+                        ),
+                      ),
+                    ],
                   ),
+                ],
               ],
             ],
           ),
@@ -99,4 +110,53 @@ class _ProductDetailBodyState extends State<ProductDetailBody> {
       ],
     );
   }
+
+  /// The schema's order — what a category lists first is what matters most
+  /// about it — then anything the schema does not name.
+  static List<MapEntry<String, dynamic>> _ordered(Product product) {
+    final keys = [
+      for (final key in product.attributeLabels.keys)
+        if (product.attributes.containsKey(key)) key,
+      for (final key in product.attributes.keys)
+        if (!product.attributeLabels.containsKey(key)) key,
+    ];
+    return [for (final key in keys) MapEntry(key, product.attributes[key])];
+  }
+
+  /// What a specification is called, in the reader's language.
+  ///
+  /// The category schema's own title first — an admin can add any attribute
+  /// and name it. Then the app's names for the common ones, for a payload that
+  /// carried no titles. Never the raw key: «material» and «sleeve_length» on
+  /// an Arabic page is what this replaced.
+  static String _label(BuildContext context, Product product, String key) {
+    final fromSchema = product.attributeLabels[key];
+    if (fromSchema != null && fromSchema.isNotEmpty) return fromSchema;
+    final l10n = context.l10n;
+    return switch (key) {
+      'material' || 'fabric' => l10n.productAttrMaterial,
+      'sleeve_length' => l10n.productAttrSleeveLength,
+      'skin_type' => l10n.productAttrSkinType,
+      'color' || 'colour' => l10n.productAttrColor,
+      'fit' => l10n.productAttrFit,
+      'length' => l10n.productAttrLength,
+      'pattern' => l10n.productAttrPattern,
+      'care' => l10n.productAttrCare,
+      'origin' || 'made_in' => l10n.productAttrOrigin,
+      // An unnamed key, made readable rather than shown as code.
+      _ => key.replaceAll('_', ' '),
+    };
+  }
+
+  /// A value as a sentence: a list joined, a yes/no said in words.
+  static String _valueText(BuildContext context, Object? value) => switch (value) {
+    null => '',
+    true => context.l10n.productAttrYes,
+    false => context.l10n.productAttrNo,
+    final List<dynamic> list => list
+        .map((item) => '$item'.trim())
+        .where((item) => item.isNotEmpty)
+        .join('، '),
+    _ => '$value'.trim(),
+  };
 }

@@ -102,6 +102,7 @@ class ChatMessageEntity extends Equatable {
     this.readAt,
     this.clientId,
     this.product,
+    this.deletedAt,
   });
 
   final String id;
@@ -123,6 +124,12 @@ class ChatMessageEntity extends Equatable {
 
   /// The piece this message asks about, when it was sent from a product.
   final ChatProductRef? product;
+
+  /// Taken back by its sender for everyone. The row stays, drawn as «تم حذف
+  /// هذه الرسالة», so the conversation keeps its shape.
+  final DateTime? deletedAt;
+
+  bool get isDeleted => deletedAt != null;
 
   bool get isImage => kind == 'image' || attachments.any((a) => a.kind == 'image');
   bool get isVoice => kind == 'voice' || attachments.any((a) => a.kind == 'voice');
@@ -159,8 +166,25 @@ class ChatMessageEntity extends Equatable {
       readAt: readAt ?? this.readAt,
       clientId: clientId,
       product: product,
+      deletedAt: deletedAt,
     );
   }
+
+  /// What is left once it has been deleted for everyone: who sent it and
+  /// when, nothing of what it said.
+  ChatMessageEntity asDeleted(DateTime at) => ChatMessageEntity(
+    id: id,
+    chatId: chatId,
+    senderId: senderId,
+    content: '',
+    sentAt: sentAt,
+    isMine: isMine,
+    status: status,
+    deliveredAt: deliveredAt,
+    readAt: readAt,
+    clientId: clientId,
+    deletedAt: at,
+  );
 
   @override
   List<Object?> get props => [
@@ -177,5 +201,6 @@ class ChatMessageEntity extends Equatable {
         readAt,
         clientId,
         product,
+        deletedAt,
       ];
 }

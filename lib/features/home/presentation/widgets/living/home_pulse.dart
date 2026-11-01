@@ -33,7 +33,7 @@ class _HomePulseState extends ConsumerState<HomePulse> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 3600), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 5000), (_) {
       if (mounted) setState(() => _index++);
     });
   }
@@ -93,87 +93,100 @@ class _HomePulseState extends ConsumerState<HomePulse> {
       padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
       child: GestureDetector(
         onTap: () => context.push(RoutePaths.productDetailsOf(beat.productId)),
-        child: Container(
-          height: DsSizes.controlLg,
-          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm),
-          decoration: BoxDecoration(
-            color: colors.surface,
-            borderRadius: DsRadius.borderFull,
-            border: Border.all(color: colors.border),
-            boxShadow: context.shadowSoft,
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: DsSpacing.xs,
-                  vertical: DsSpacing.xxs,
-                ),
-                decoration: BoxDecoration(
-                  color: colors.discount.withValues(alpha: 0.12),
-                  borderRadius: DsRadius.borderFull,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PulseDotIndicator(color: colors.discount),
-                    DsGaps.hXxs,
-                    Text(
-                      l10n.homePulseLive,
-                      style: context.dsText.captionStrong.tint(colors.discount),
-                    ),
-                  ],
-                ),
-              ),
-              DsGaps.hSm,
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: DsMotion.slow,
-                  transitionBuilder: (child, animation) => FadeTransition(
-                    opacity: animation,
-                    child: SlideTransition(
-                      position:
-                          Tween(
-                            begin: const Offset(0, 0.6),
-                            end: Offset.zero,
-                          ).animate(
-                            CurvedAnimation(
-                              parent: animation,
-                              curve: DsMotion.emphasized,
-                            ),
-                          ),
-                      child: child,
-                    ),
+        // Up to two lines, so the piece's name is read whole — cut to one line
+        // it ended mid-word in «…», which gave her no reason to tap. The pill
+        // grows to fit and settles back when the next line is short.
+        child: AnimatedSize(
+          duration: DsMotion.normal,
+          curve: DsMotion.gentle,
+          alignment: Alignment.topCenter,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: DsSizes.controlLg),
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsSpacing.sm,
+              vertical: DsSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: colors.surface,
+              borderRadius: DsRadius.borderXl,
+              border: Border.all(color: colors.border),
+              boxShadow: context.shadowSoft,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DsSpacing.xs,
+                    vertical: DsSpacing.xxs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.discount.withValues(alpha: 0.12),
+                    borderRadius: DsRadius.borderFull,
                   ),
                   child: Row(
-                    key: ValueKey(_index % beats.length),
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        beat.icon,
-                        size: DsSizes.iconXs,
-                        color: colors.primary,
-                      ),
-                      DsGaps.hXs,
-                      Expanded(
-                        child: beat.endsAt == null
-                            ? _line(context, beat.line(''))
-                            : LiveCountdown(
-                                endsAt: beat.endsAt!,
-                                builder: (context, left) =>
-                                    _line(context, beat.line(left)),
-                              ),
+                      PulseDotIndicator(color: colors.discount),
+                      DsGaps.hXxs,
+                      Text(
+                        l10n.homePulseLive,
+                        style: context.dsText.captionStrong.tint(
+                          colors.discount,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              // Mirrors itself under RTL: it points the way the page reads.
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: DsSizes.iconXs,
-                color: colors.onSurfaceVariant,
-              ),
-            ],
+                DsGaps.hSm,
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: DsMotion.slow,
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position:
+                            Tween(
+                              begin: const Offset(0, 0.6),
+                              end: Offset.zero,
+                            ).animate(
+                              CurvedAnimation(
+                                parent: animation,
+                                curve: DsMotion.emphasized,
+                              ),
+                            ),
+                        child: child,
+                      ),
+                    ),
+                    child: Row(
+                      key: ValueKey(_index % beats.length),
+                      children: [
+                        Icon(
+                          beat.icon,
+                          size: DsSizes.iconXs,
+                          color: colors.primary,
+                        ),
+                        DsGaps.hXs,
+                        Expanded(
+                          child: beat.endsAt == null
+                              ? _line(context, beat.line(''))
+                              : LiveCountdown(
+                                  endsAt: beat.endsAt!,
+                                  builder: (context, left) =>
+                                      _line(context, beat.line(left)),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Mirrors itself under RTL: it points the way the page reads.
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: DsSizes.iconXs,
+                  color: colors.onSurfaceVariant,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -182,7 +195,7 @@ class _HomePulseState extends ConsumerState<HomePulse> {
 
   Widget _line(BuildContext context, String text) => Text(
     text,
-    maxLines: 1,
+    maxLines: 2,
     overflow: TextOverflow.ellipsis,
     style: context.dsText.bodySmall.tabular.tint(context.dsColors.onSurface),
   );

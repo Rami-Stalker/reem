@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-
 import 'package:ohara/core/presentation/providers/core_providers.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
+import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 import 'package:ohara/features/social_posts/data/datasources/impl/post_social_remote_datasource_impl.dart';
 import 'package:ohara/features/social_posts/data/datasources/post_social_remote_datasource.dart';
 import 'package:ohara/features/social_posts/data/repositories/post_social_repository_impl.dart';
@@ -52,5 +52,8 @@ final commentsNotifierProvider = StateNotifierProvider.autoDispose
         addComment: ref.watch(addCommentUseCaseProvider),
         deleteComment: ref.watch(deleteCommentUseCaseProvider),
         currentUser: ref.watch(authNotifierProvider.select((s) => s.user)),
+        reactToComment: thread.kind == CommentThreadKind.post
+            ? ref.watch(socialRepositoryProvider).reactToComment
+            : null,
       )..load();
     });

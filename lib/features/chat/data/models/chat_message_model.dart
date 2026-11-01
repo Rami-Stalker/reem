@@ -58,6 +58,7 @@ class ChatMessageModel extends ChatMessageEntity {
     super.readAt,
     super.clientId,
     super.product,
+    super.deletedAt,
   });
 
   /// [currentUserId], when known, decides [isMine] by comparing it with the
@@ -95,6 +96,7 @@ class ChatMessageModel extends ChatMessageEntity {
           : json['is_mine'] as bool? ?? false,
       clientId: json['client_id'] as String?,
       product: _productRef(json['metadata']),
+      deletedAt: _date(json['deleted_at']),
     );
   }
 

@@ -6,7 +6,6 @@ import 'package:ohara/features/ai_stylist/domain/entities/style_brief.dart';
 import 'package:ohara/features/ai_stylist/domain/entities/stylist_conversation.dart';
 import 'package:ohara/features/ai_stylist/domain/repositories/ai_stylist_repository.dart';
 import 'package:ohara/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
-import 'package:ohara/l10n/app_localizations.dart';
 
 /// Her taste, editable.
 ///
@@ -50,16 +49,6 @@ class _PreferencesBody extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(DsSpacing.md),
       children: [
-        _Section(
-          title: context.l10n.stylistModesty,
-          subtitle: context.l10n.stylistModestyHelp,
-          child: _ModestyPicker(
-            selected: preferences.modesty,
-            onSelected: (value) => actions.updatePreferences(
-              PreferencesPatch(modesty: value),
-            ),
-          ),
-        ),
         _Section(
           title: context.l10n.stylistFavouriteColours,
           subtitle: context.l10n.stylistFavouriteColoursHelp,
@@ -139,37 +128,6 @@ class _Section extends StatelessWidget {
           child,
         ],
       ),
-    );
-  }
-}
-
-class _ModestyPicker extends StatelessWidget {
-  const _ModestyPicker({required this.selected, required this.onSelected});
-
-  final String selected;
-  final ValueChanged<String> onSelected;
-
-  static List<(String, String)> _options(AppLocalizations l10n) => [
-    ('UNSPECIFIED', l10n.stylistModestyUnspecified),
-    ('FULL_COVERAGE', l10n.stylistModestyFull),
-    ('MODEST', l10n.stylistModestyModest),
-    ('BALANCED', l10n.stylistModestyBalanced),
-    ('EXPRESSIVE', l10n.stylistModestyExpressive),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: DsSpacing.xs,
-      runSpacing: DsSpacing.xs,
-      children: [
-        for (final (key, label) in _options(context.l10n))
-          DsChip(
-            label: label,
-            selected: selected == key,
-            onTap: () => onSelected(key),
-          ),
-      ],
     );
   }
 }

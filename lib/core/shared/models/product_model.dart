@@ -24,6 +24,7 @@ class ProductModel extends Product {
     required super.createdAt,
     super.brand,
     super.attributes,
+    super.attributeLabels,
     super.gtin,
     super.media,
     super.variants,
@@ -72,6 +73,11 @@ class ProductModel extends Product {
           ? BrandModel.fromJson(json['brand'] as Map<String, dynamic>)
           : null,
       attributes: (json['attributes'] as Map?)?.cast<String, dynamic>() ?? {},
+      attributeLabels: {
+        for (final entry
+            in ((json['attribute_labels'] as Map?) ?? const {}).entries)
+          if (entry.value is String) '${entry.key}': entry.value as String,
+      },
       gtin: json['gtin'] as String?,
       media: (json['media'] as List? ?? [])
           .map((e) => MediaModel.fromJson(e as Map<String, dynamic>))
@@ -122,6 +128,7 @@ class ProductModel extends Product {
         category: p.category,
         brand: p.brand,
         attributes: p.attributes,
+        attributeLabels: p.attributeLabels,
         gtin: p.gtin,
         media: p.media,
         variants: p.variants,
@@ -152,6 +159,7 @@ class ProductModel extends Product {
         'category': CategoryModel.fromEntity(category).toJson(),
         'brand': brand == null ? null : BrandModel.fromEntity(brand!).toJson(),
         'attributes': attributes,
+        'attribute_labels': attributeLabels,
         'gtin': gtin,
         'media': media.map((m) => MediaModel.fromEntity(m).toJson()).toList(),
         'variants': variants
@@ -209,6 +217,7 @@ class ProductModel extends Product {
       category: category ?? this.category,
       brand: brand ?? this.brand,
       attributes: attributes ?? this.attributes,
+      attributeLabels: attributeLabels,
       gtin: gtin ?? this.gtin,
       media: media ?? this.media,
       variants: variants ?? this.variants,

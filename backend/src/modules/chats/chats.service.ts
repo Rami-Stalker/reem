@@ -71,6 +71,9 @@ const chatInclude = {
  */
 const MAX_INBOX_THREADS = 300;
 
+/** How long a message can still be taken back from both sides. */
+export const DELETE_FOR_EVERYONE_WINDOW_MS = 48 * 60 * 60 * 1000;
+
 /** Receipts one read call writes; anything older is caught by the next. */
 const MAX_RECEIPTS_PER_READ = 1000;
 
@@ -279,10 +282,13 @@ export class ChatsService {
     const messages = await this.prisma.message.findMany({
       where: {
         chatId,
-        deletedAt: null,
+        // A message deleted for everyone stays in the thread as «تم حذف هذه
+        // الرسالة» (the serializer empties it); one she deleted for herself
+        // is gone from her side only.
+        NOT: { receipts: { some: { userId, hiddenAt: { not: null } } } },
         ...(before ? { createdAt: { lt: before } } : {}),
         ...(query.q
-          ? { content: { contains: query.q, mode: 'insensitive' } }
+          ? { deletedAt: null, content: { contains: query.q, mode: 'insensitive' } }
           : {}),
       },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
@@ -292,6 +298,67 @@ export class ChatsService {
     });
     await this.markDelivered(chatId, userId, messages);
     return messages.reverse().map((message) => serializeMessage(message, userId));
+  }
+
+  /**
+   * Long-press → «حذف لدي» or «حذف عند الجميع».
+   *
+   * For herself: any message in the conversation, hidden from her side only.
+   * For everyone: only her own, and only within [DELETE_FOR_EVERYONE_WINDOW_MS]
+   * — after that the other side has long since read it, and quietly taking it
+   * back would rewrite a conversation two people relied on. The text and the
+   * attachments go; the row stays as a tombstone, and both screens are told.
+   */
+  async deleteMessage(
+    chatId: string,
+    userId: string,
+    messageId: string,
+    scope: 'me' | 'everyone',
+  ) {
+    await this.assertMember(chatId, userId);
+    const message = await this.prisma.message.findFirst({
+      where: { id: messageId, chatId },
+      select: { id: true, senderId: true, createdAt: true, deletedAt: true },
+    });
+    if (!message) throw new NotFoundException('الرسالة غير موجودة');
+
+    if (scope === 'me') {
+      const now = new Date();
+      await this.prisma.messageReadReceipt.upsert({
+        where: { messageId_userId: { messageId, userId } },
+        // Hidden counts as read: a message she removed must not keep a badge.
+        create: { messageId, userId, deliveredAt: now, readAt: now, hiddenAt: now },
+        update: { hiddenAt: now, readAt: now },
+      });
+      return { id: messageId, scope };
+    }
+
+    if (message.senderId !== userId) {
+      throw new ForbiddenException('يمكنكِ حذف رسائلكِ أنتِ فقط عند الجميع');
+    }
+    if (message.deletedAt) return { id: messageId, scope };
+    if (Date.now() - message.createdAt.getTime() > DELETE_FOR_EVERYONE_WINDOW_MS) {
+      throw new BadRequestException(
+        'مضى وقت طويل على هذه الرسالة، يمكنكِ حذفها لديكِ فقط',
+      );
+    }
+
+    const deletedAt = new Date();
+    await this.prisma.$transaction(async (tx) => {
+      // The attachment rows are what makes an upload readable through this
+      // chat; removing them closes that door.
+      await tx.messageAttachment.deleteMany({ where: { messageId } });
+      await tx.message.update({
+        where: { id: messageId },
+        data: { deletedAt, content: '', metadata: Prisma.DbNull },
+      });
+    });
+    this.events.emit('chat.message.deleted', {
+      chatId,
+      messageId,
+      deletedAt: deletedAt.toISOString(),
+    });
+    return { id: messageId, scope };
   }
 
   async send(chatId: string, userId: string, dto: SendMessageDto) {

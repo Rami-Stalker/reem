@@ -4797,6 +4797,157 @@
   "@productDetails": {
     "description": "Screen title"
   },
+  "productAttrMaterial": "Material",
+  "@productAttrMaterial": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrSleeveLength": "Sleeve length",
+  "@productAttrSleeveLength": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrSkinType": "Skin type",
+  "@productAttrSkinType": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrColor": "Colour",
+  "@productAttrColor": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrFit": "Fit",
+  "@productAttrFit": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrLength": "Length",
+  "@productAttrLength": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrPattern": "Pattern",
+  "@productAttrPattern": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrCare": "Care",
+  "@productAttrCare": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrOrigin": "Made in",
+  "@productAttrOrigin": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrYes": "Yes",
+  "@productAttrYes": {
+    "description": "Product details: specification label or value"
+  },
+  "productAttrNo": "No",
+  "@productAttrNo": {
+    "description": "Product details: specification label or value"
+  },
+  "sharePreparing": "Preparing to share…",
+  "@sharePreparing": {
+    "description": "Shown while the product photo is fetched before the share sheet opens"
+  },
+  "chatMessageCopied": "Message copied",
+  "@chatMessageCopied": {
+    "description": "Chat message long-press actions"
+  },
+  "chatResend": "Send again",
+  "@chatResend": {
+    "description": "Chat message long-press actions"
+  },
+  "chatDeleteForMe": "Delete for me",
+  "@chatDeleteForMe": {
+    "description": "Chat message long-press actions"
+  },
+  "chatDeleteForEveryone": "Delete for everyone",
+  "@chatDeleteForEveryone": {
+    "description": "Chat message long-press actions"
+  },
+  "chatDeleteForEveryoneTitle": "Delete for everyone?",
+  "@chatDeleteForEveryoneTitle": {
+    "description": "Chat message long-press actions"
+  },
+  "chatDeleteForEveryoneBody": "It will disappear for both of you, and «This message was deleted» will show in its place.",
+  "@chatDeleteForEveryoneBody": {
+    "description": "Chat message long-press actions"
+  },
+  "chatMessageDeleted": "This message was deleted",
+  "@chatMessageDeleted": {
+    "description": "Chat message long-press actions"
+  },
+  "chatMessageDeletedByMe": "You deleted this message",
+  "@chatMessageDeletedByMe": {
+    "description": "Chat message long-press actions"
+  },
+  "chatDeleteFailed": "Couldn't delete the message. Try again.",
+  "@chatDeleteFailed": {
+    "description": "Chat message long-press actions"
+  },
+  "chatReportMessage": "Report message",
+  "@chatReportMessage": {
+    "description": "Chat message long-press actions"
+  },
+  "chatReportFraud": "Fraud or scam",
+  "@chatReportFraud": {
+    "description": "Chat message long-press actions"
+  },
+  "postMorePieces": "+{count} pieces",
+  "@postMorePieces": {
+    "description": "Post with several tagged pieces / photo viewer",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "postTaggedPiecesTitle": "Pieces in this post",
+  "@postTaggedPiecesTitle": {
+    "description": "Post with several tagged pieces / photo viewer"
+  },
+  "postOpenPhoto": "Open photo",
+  "@postOpenPhoto": {
+    "description": "Post with several tagged pieces / photo viewer"
+  },
+  "storyShopPieces": "Shop the {count} pieces",
+  "@storyShopPieces": {
+    "description": "Story viewer button when the story tags several pieces",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "profileStoryBadge": "Story",
+  "@profileStoryBadge": {
+    "description": "Tag on a profile photo that has a live story; tapping the photo opens it"
+  },
+  "reactionLove": "Love",
+  "@reactionLove": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionGorgeous": "Gorgeous",
+  "@reactionGorgeous": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionFire": "Fire",
+  "@reactionFire": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionBravo": "Bravo",
+  "@reactionBravo": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionHaha": "Haha",
+  "@reactionHaha": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionWow": "Wow",
+  "@reactionWow": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionSad": "Sad",
+  "@reactionSad": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionPickerHint": "Hold to choose a reaction",
+  "@reactionPickerHint": {
+    "description": "Reactions (long-press on the heart)"
+  },
+  "reactionsCount": "{count} reactions",
+  "@reactionsCount": {
+    "description": "Reactions (long-press on the heart)",
+    "placeholders": {"count": {"type": "String"}}
+  },
   "productDetailsSection": "Details",
   "productOffersFrom": "{count} boutiques list this",
   "productPause": "Pause",

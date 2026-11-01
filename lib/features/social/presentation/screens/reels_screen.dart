@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/router/route_paths.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/services/share_service.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ohara/features/auth/presentation/widgets/auth_prompt_sheet.dart';
@@ -17,6 +18,7 @@ import 'package:ohara/features/social/presentation/widgets/content_audience_shee
 import 'package:ohara/features/social/presentation/widgets/content_comments_sheet.dart';
 import 'package:ohara/features/social/presentation/widgets/post_options_sheet.dart';
 import 'package:ohara/features/social/presentation/widgets/reshare_sheet.dart';
+import 'package:ohara/features/social/presentation/widgets/tagged_pieces_sheet.dart';
 
 /// Reels: one clip at a time, full bleed, with the way to buy on the glass.
 ///
@@ -126,6 +128,11 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
     // liked must not take the like back.
     if (onlyAdd && reel.viewer.isLiked) return;
     await _notifier.toggleLike(reel.id);
+  }
+
+  Future<void> _react(Content reel, String? glyph) async {
+    if (!await _signedIn()) return;
+    await _notifier.react(reel.id, glyph);
   }
 
   Future<void> _save(Content reel) async {
@@ -265,6 +272,7 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
                 content: reel,
                 isMine: mine,
                 onLike: () => _like(reel),
+                onReact: (glyph) => _react(reel, glyph),
                 onDoubleTap: () => _like(reel, onlyAdd: true),
                 onSave: () => _save(reel),
                 onComment: () => _comment(reel),
@@ -294,6 +302,7 @@ class _Reel extends StatefulWidget {
     required this.content,
     required this.isMine,
     required this.onLike,
+    required this.onReact,
     required this.onDoubleTap,
     required this.onSave,
     required this.onComment,
@@ -307,6 +316,9 @@ class _Reel extends StatefulWidget {
   final Content content;
   final bool isMine;
   final VoidCallback onLike;
+
+  /// A reaction from the long-press bar or the heart; null takes hers back.
+  final ValueChanged<String?> onReact;
   final VoidCallback onDoubleTap;
   final VoidCallback onSave;
   final VoidCallback onComment;
@@ -455,6 +467,14 @@ class _ReelState extends State<_Reel> with SingleTickerProviderStateMixin {
                   onTap: () =>
                       context.push(RoutePaths.productDetailsOf(tag.product.id)),
                 ),
+                // The rest of the pieces in the reel; only the first used to
+                // show.
+                if (content.productTags.length > 1) ...[
+                  DsGaps.vXs,
+                  MorePiecesChip(
+                    products: [for (final t in content.productTags) t.product],
+                  ),
+                ],
               ],
             ],
           ),
@@ -466,14 +486,11 @@ class _ReelState extends State<_Reel> with SingleTickerProviderStateMixin {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _RailAction(
-                icon: content.viewer.isLiked
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                label: content.counts.likes,
-                tooltip: context.l10n.a11yLike,
-                active: content.viewer.isLiked,
-                onTap: widget.onLike,
+              _ReelReaction(
+                reaction: content.viewer.reactionGlyph,
+                summary: content.viewer.reactionSummary,
+                count: content.counts.likes,
+                onReact: widget.onReact,
               ),
               _RailAction(
                 icon: Icons.mode_comment_outlined,
@@ -561,6 +578,81 @@ class _RailAction extends StatelessWidget {
           ),
           if (count != null && count > 0)
             Text('$count', style: context.dsText.micro.tint(DsColors.onMedia)),
+        ],
+      ),
+    );
+  }
+}
+
+/// The reel's heart, as a reaction: a tap for ❤️ (or to take hers back), a
+/// long press for the bar; the glyph she left in its place, and the top
+/// reactions under the count.
+class _ReelReaction extends StatelessWidget {
+  const _ReelReaction({
+    required this.reaction,
+    required this.summary,
+    required this.count,
+    required this.onReact,
+  });
+
+  final String? reaction;
+  final List<ReactionCount> summary;
+  final int count;
+  final ValueChanged<String?> onReact;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final current = reaction;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpacing.md),
+      child: Column(
+        children: [
+          Builder(
+            builder: (iconContext) => Semantics(
+              button: true,
+              selected: current != null,
+              label: current == null
+                  ? l10n.reactionLove
+                  : DsReactions.label(l10n, current),
+              hint: l10n.reactionPickerHint,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () =>
+                    onReact(current == null ? DsReactions.like : null),
+                onLongPress: () async {
+                  final box = iconContext.findRenderObject() as RenderBox?;
+                  if (box == null || !box.hasSize) return;
+                  final chosen = await DsReactionPicker.show(
+                    iconContext,
+                    anchor: box.localToGlobal(Offset.zero) & box.size,
+                    current: current,
+                  );
+                  if (chosen == null) return;
+                  onReact(chosen == current ? null : chosen);
+                },
+                child: SizedBox.square(
+                  dimension: DsSizes.iconLg + DsSpacing.xs,
+                  child: Center(
+                    child: current == null
+                        ? const Icon(
+                            Icons.favorite_border_rounded,
+                            size: DsSizes.iconLg,
+                            color: DsColors.onMedia,
+                          )
+                        : DsReactionGlyph(current),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (count > 0)
+            DsReactionSummary(
+              summary: summary,
+              total: count,
+              onMedia: true,
+              dense: true,
+            ),
         ],
       ),
     );

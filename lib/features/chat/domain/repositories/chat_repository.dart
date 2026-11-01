@@ -32,6 +32,13 @@ abstract interface class ChatRepository {
 
   Future<Result<void>> markRead(String chatId, {String? messageId});
 
+  /// «حذف لدي», or with [forEveryone] «حذف عند الجميع».
+  Future<Result<void>> deleteMessage(
+    String chatId,
+    String messageId, {
+    required bool forEveryone,
+  });
+
   Future<Result<void>> blockUser(String userId, {String? reason});
 
   Future<Result<void>> reportUser({

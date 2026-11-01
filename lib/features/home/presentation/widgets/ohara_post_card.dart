@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/errors/failure.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
@@ -12,6 +11,7 @@ import 'package:ohara/core/result/result.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/entities/media.dart';
 import 'package:ohara/core/shared/entities/post.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/services/share_service.dart';
 import 'package:ohara/core/sync/outbox_providers.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
@@ -21,8 +21,10 @@ import 'package:ohara/features/discovery/presentation/providers/sponsored_provid
 import 'package:ohara/features/home/presentation/providers/home_provider.dart';
 import 'package:ohara/features/home/presentation/widgets/post_closet_strip.dart';
 import 'package:ohara/features/profile/presentation/widgets/save_to_collection_sheet.dart';
+import 'package:ohara/features/social/presentation/content_reaction.dart';
 import 'package:ohara/features/social/presentation/providers/social_providers.dart';
 import 'package:ohara/features/social/presentation/widgets/post_options_sheet.dart';
+import 'package:ohara/features/social/presentation/widgets/tagged_pieces_sheet.dart';
 import 'package:ohara/features/social_posts/data/outbox_handlers.dart';
 import 'package:ohara/features/social_posts/domain/entities/comment_thread.dart';
 import 'package:ohara/features/social_posts/presentation/providers/social_posts_providers.dart';
@@ -54,6 +56,12 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
   late bool _saved = widget.post.isSaved;
   late bool _reshared = widget.post.isReshared;
   late int _likes = widget.post.likesCount;
+
+  /// The glyph she reacted with, or null — see [DsReactions].
+  late String? _reaction = widget.post.isLiked
+      ? (widget.post.myReaction ?? DsReactions.like)
+      : null;
+  late List<ReactionCount> _summary = widget.post.reactionSummary;
   late int _shares = widget.post.sharesCount;
   late int _comments = widget.post.commentsCount;
   bool _addingToBag = false;
@@ -162,6 +170,52 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
           _likes = wasLikes;
         },
       );
+    }
+  }
+
+  /// A reaction from the bar or the heart; [glyph] null takes hers back.
+  ///
+  /// Through the content endpoint — a post is a piece of content with the
+  /// same id — which carries the glyph; the post endpoint only toggles the
+  /// heart.
+  Future<void> _react(String? glyph) async {
+    AppHaptics.selection();
+    if (!await _requireAccount()) return;
+    if (!mounted) return;
+
+    final had = _reaction;
+    final wasLiked = _liked;
+    final wasLikes = _likes;
+    final wasSummary = _summary;
+    setState(() {
+      _likes += (glyph != null ? 1 : 0) - (had != null ? 1 : 0);
+      _liked = glyph != null;
+      _reaction = glyph;
+      _summary = shiftReaction(_summary, had, glyph);
+    });
+
+    final wire = glyph == null
+        ? (had == null ? null : DsReactions.toWire(had))
+        : DsReactions.toWire(glyph);
+    final result = await ref
+        .read(socialRepositoryProvider)
+        .react(post.id, emoji: wire);
+    if (!mounted) return;
+    switch (result) {
+      case Success(:final data):
+        setState(() {
+          _liked = data.isLiked;
+          _reaction = data.reactionGlyph;
+          _summary = data.reactionSummary;
+        });
+      case Error():
+        setState(() {
+          _reaction = had;
+          _liked = wasLiked;
+          _likes = wasLikes;
+          _summary = wasSummary;
+        });
+        DsSnackbar.error(context, context.l10n.actionDidNotSave);
     }
   }
 
@@ -409,10 +463,17 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
       media: media,
       product: post.product,
       onOpenProduct: post.product == null ? null : _openProduct,
+      morePieces: post.morePieces,
+      onShowAllPieces: post.morePieces > 0
+          ? () => TaggedPiecesSheet.show(context, post.products)
+          : null,
       onAddToBag: _addableOfferId == null ? null : _addToBag,
       caption: post.caption,
       isFresh: _isFresh,
       liked: _liked,
+      reaction: _reaction,
+      reactionSummary: _summary,
+      onReact: _react,
       saved: _saved,
       picked: _reshared,
       likes: _likes,
@@ -420,7 +481,13 @@ class _OharaPostCardState extends ConsumerState<OharaPostCard>
       shares: _shares,
       burst: _burst,
       onLike: _toggleLike,
-      onDoubleTap: () => _toggleLike(fromDoubleTap: true),
+      // Double tap only ever loves, and through the same path as the heart,
+      // so the button shows ❤️ afterwards.
+      onDoubleTap: () {
+        unawaited(_burst.forward(from: 0));
+        AppHaptics.light();
+        if (_reaction == null) unawaited(_react(DsReactions.like));
+      },
       onComment: _openComments,
       onShare: _share,
       onSave: _toggleSave,

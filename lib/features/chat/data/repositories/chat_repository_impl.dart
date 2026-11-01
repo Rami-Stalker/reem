@@ -68,6 +68,20 @@ class ChatRepositoryImpl with RepositoryHandler implements ChatRepository {
       guard(() => remote.markRead(chatId, messageId: messageId));
 
   @override
+  Future<Result<void>> deleteMessage(
+    String chatId,
+    String messageId, {
+    required bool forEveryone,
+  }) =>
+      guard(
+        () => remote.deleteMessage(
+          chatId,
+          messageId,
+          forEveryone: forEveryone,
+        ),
+      );
+
+  @override
   Future<Result<void>> blockUser(String userId, {String? reason}) =>
       guard(() => remote.blockUser(userId, reason: reason));
 

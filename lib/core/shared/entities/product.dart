@@ -26,6 +26,10 @@ class Product extends Equatable {
 
   /// Category-specific fields — الخامة، طول الكم، درجة اللون (Q27).
   final Map<String, dynamic> attributes;
+
+  /// What each key in [attributes] is called — «الخامة» for `material` — from
+  /// the category's schema. Empty on list payloads; the detail read sends it.
+  final Map<String, String> attributeLabels;
   final String? gtin;
 
   final List<MediaItem> media;
@@ -76,6 +80,7 @@ class Product extends Equatable {
     required this.createdAt,
     this.brand,
     this.attributes = const {},
+    this.attributeLabels = const {},
     this.gtin,
     this.media = const [],
     this.variants = const [],
@@ -168,6 +173,7 @@ class Product extends Equatable {
         category,
         brand,
         attributes,
+        attributeLabels,
         gtin,
         media,
         variants,

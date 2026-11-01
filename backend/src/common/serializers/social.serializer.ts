@@ -9,6 +9,8 @@ import {
 export interface ViewerState {
   is_liked: boolean;
   my_reaction: string | null;
+  /** The most chosen reactions, most first — not hers, everyone's. */
+  reaction_summary?: { emoji: string; count: number }[];
   is_saved: boolean;
   is_reshared: boolean;
 }
@@ -31,7 +33,22 @@ type CommentRecord = {
   replies?: CommentRecord[];
 };
 
-export interface SerializedComment {
+/** A comment's reactions as the viewer sees them; see `commentReactionStates`. */
+export interface CommentReactions {
+  reactions_count: number;
+  my_reaction: string | null;
+  is_reacted: boolean;
+  reaction_summary: { emoji: string; count: number }[];
+}
+
+const NO_REACTIONS: CommentReactions = {
+  reactions_count: 0,
+  my_reaction: null,
+  is_reacted: false,
+  reaction_summary: [],
+};
+
+export interface SerializedComment extends CommentReactions {
   id: string;
   user: ReturnType<typeof serializePublicUser>;
   body: string;
@@ -44,6 +61,7 @@ export interface SerializedComment {
 /** Recursive by one level: a thread head and its replies, never deeper. */
 export function serializeContentComment(
   comment: CommentRecord,
+  reactions?: Map<string, CommentReactions>,
 ): SerializedComment {
   return {
     id: comment.id,
@@ -51,9 +69,20 @@ export function serializeContentComment(
     body: comment.body,
     parent_id: comment.parentId,
     replies_count: comment.repliesCount,
-    replies: (comment.replies ?? []).map(serializeContentComment),
+    replies: (comment.replies ?? []).map((reply) =>
+      serializeContentComment(reply, reactions),
+    ),
     created_at: comment.createdAt.toISOString(),
+    ...(reactions?.get(comment.id) ?? NO_REACTIONS),
   };
+}
+
+/** Every comment id in a page, replies included — to load their reactions. */
+export function commentIdsOf(comments: CommentRecord[]): string[] {
+  return comments.flatMap((comment) => [
+    comment.id,
+    ...(comment.replies ?? []).map((reply) => reply.id),
+  ]);
 }
 
 /**

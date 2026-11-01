@@ -97,8 +97,9 @@ export class PostsController {
   comments(
     @Param('id', ParseUUIDPipe) id: string,
     @Query() page: PaginationDto,
+    @CurrentUser('id') viewerId?: string,
   ) {
-    return this.posts.listComments(id, page);
+    return this.posts.listComments(id, page, viewerId);
   }
 
   @Post(':id/comments')

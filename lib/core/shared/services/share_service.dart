@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:ohara/core/design_system/design_system.dart';
+import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/shared/services/share_links.dart';
 import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:path/path.dart' as p;
@@ -34,7 +36,10 @@ import 'package:share_plus/share_plus.dart';
 abstract final class ShareService {
   /// Long enough for a product photograph on a Syrian mobile connection, short
   /// enough that she does not think the button is broken.
-  static const Duration _imageTimeout = Duration(seconds: 6);
+  static const Duration _imageTimeout = Duration(seconds: 4);
+
+  /// Photographs already fetched for a share this session, by URL.
+  static final Map<String, XFile> _prepared = {};
 
   /// Well under WhatsApp's own limit, and under what is polite to send on a
   /// metered connection. Anything larger is shared as text with a link.
@@ -211,7 +216,49 @@ abstract final class ShareService {
         ? box.localToGlobal(Offset.zero) & box.size
         : null;
 
-    final file = await _download(imageUrl);
+    // Fetching the photograph to attach can take a few seconds on a mobile
+    // line, and nothing on screen used to say so: she tapped share, saw
+    // nothing, and tapped again. A small «عم نجهّز المشاركة…» covers that
+    // wait — only when there is one: a photo already fetched this session is
+    // reused at once.
+    var cached = imageUrl == null ? null : _prepared[imageUrl];
+    // The OS clears its temporary directory when it likes.
+    if (cached != null && !File(cached.path).existsSync()) cached = null;
+    final XFile? file;
+    if (cached != null || imageUrl == null || !context.mounted) {
+      file = cached ?? (imageUrl == null ? null : await _download(imageUrl));
+    } else {
+      final navigator = Navigator.of(context, rootNavigator: true);
+      var showing = true;
+      unawaited(
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          useRootNavigator: true,
+          builder: (dialogContext) => PopScope(
+            canPop: false,
+            child: Center(
+              child: SurfaceCard(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const DsLoadingIndicator.inline(),
+                    DsGaps.hMd,
+                    Text(
+                      dialogContext.l10n.sharePreparing,
+                      style: dialogContext.dsText.body,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ).whenComplete(() => showing = false),
+      );
+      file = await _download(imageUrl);
+      if (showing && navigator.mounted) navigator.pop();
+    }
+    if (imageUrl != null && file != null) _prepared[imageUrl] = file;
 
     final body = text.trim().isEmpty ? uri : '${text.trim()}\n\n$uri';
     try {

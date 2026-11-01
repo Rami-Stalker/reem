@@ -7232,6 +7232,228 @@ abstract class AppLocalizations {
   /// **'Product details'**
   String get productDetails;
 
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Material'**
+  String get productAttrMaterial;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Sleeve length'**
+  String get productAttrSleeveLength;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Skin type'**
+  String get productAttrSkinType;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get productAttrColor;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Fit'**
+  String get productAttrFit;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get productAttrLength;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get productAttrPattern;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Care'**
+  String get productAttrCare;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Made in'**
+  String get productAttrOrigin;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get productAttrYes;
+
+  /// Product details: specification label or value
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get productAttrNo;
+
+  /// Shown while the product photo is fetched before the share sheet opens
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing to share…'**
+  String get sharePreparing;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Message copied'**
+  String get chatMessageCopied;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Send again'**
+  String get chatResend;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for me'**
+  String get chatDeleteForMe;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for everyone'**
+  String get chatDeleteForEveryone;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for everyone?'**
+  String get chatDeleteForEveryoneTitle;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'It will disappear for both of you, and «This message was deleted» will show in its place.'**
+  String get chatDeleteForEveryoneBody;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'This message was deleted'**
+  String get chatMessageDeleted;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'You deleted this message'**
+  String get chatMessageDeletedByMe;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t delete the message. Try again.'**
+  String get chatDeleteFailed;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Report message'**
+  String get chatReportMessage;
+
+  /// Chat message long-press actions
+  ///
+  /// In en, this message translates to:
+  /// **'Fraud or scam'**
+  String get chatReportFraud;
+
+  /// Post with several tagged pieces / photo viewer
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} pieces'**
+  String postMorePieces(int count);
+
+  /// Post with several tagged pieces / photo viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Pieces in this post'**
+  String get postTaggedPiecesTitle;
+
+  /// Post with several tagged pieces / photo viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Open photo'**
+  String get postOpenPhoto;
+
+  /// Story viewer button when the story tags several pieces
+  ///
+  /// In en, this message translates to:
+  /// **'Shop the {count} pieces'**
+  String storyShopPieces(int count);
+
+  /// Tag on a profile photo that has a live story; tapping the photo opens it
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get profileStoryBadge;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Love'**
+  String get reactionLove;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Gorgeous'**
+  String get reactionGorgeous;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get reactionFire;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Bravo'**
+  String get reactionBravo;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Haha'**
+  String get reactionHaha;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Wow'**
+  String get reactionWow;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Sad'**
+  String get reactionSad;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to choose a reaction'**
+  String get reactionPickerHint;
+
+  /// Reactions (long-press on the heart)
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reactions'**
+  String reactionsCount(String count);
+
   /// No description provided for @productDetailsSection.
   ///
   /// In en, this message translates to:

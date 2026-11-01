@@ -2,6 +2,7 @@ import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
+  IsIn,
   IsInt,
   IsISO8601,
   IsOptional,
@@ -167,6 +168,12 @@ export class MessageQueryDto {
   @IsOptional()
   @IsISO8601()
   before?: string;
+}
+
+export class DeleteMessageDto {
+  /** `me` hides it from her side; `everyone` takes her own message back. */
+  @IsIn(['me', 'everyone'])
+  scope!: 'me' | 'everyone';
 }
 
 export class MarkReadDto {

@@ -9,6 +9,7 @@ import 'package:ohara/features/chat/data/datasources/impl/chat_remote_datasource
 import 'package:ohara/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:ohara/features/chat/data/services/chat_realtime_service.dart';
 import 'package:ohara/features/chat/domain/repositories/chat_repository.dart';
+import 'package:ohara/features/chat/domain/usecases/delete_message_usecase.dart';
 import 'package:ohara/features/chat/domain/usecases/get_messages_usecase.dart';
 import 'package:ohara/features/chat/domain/usecases/get_thread_usecase.dart';
 import 'package:ohara/features/chat/domain/usecases/get_threads_usecase.dart';
@@ -58,6 +59,10 @@ final sendMessageUseCaseProvider = Provider(
   (ref) => SendMessageUseCase(ref.watch(chatRepositoryProvider)),
 );
 
+final deleteMessageUseCaseProvider = Provider(
+  (ref) => DeleteMessageUseCase(ref.watch(chatRepositoryProvider)),
+);
+
 final markChatReadUseCaseProvider = Provider(
   (ref) => MarkChatReadUseCase(ref.watch(chatRepositoryProvider)),
 );
@@ -95,6 +100,7 @@ final chatMessagesNotifierProvider = StateNotifierProvider.autoDispose
     getMessagesUseCase: ref.watch(getMessagesUseCaseProvider),
     sendMessageUseCase: ref.watch(sendMessageUseCaseProvider),
     markChatReadUseCase: ref.watch(markChatReadUseCaseProvider),
+    deleteMessageUseCase: ref.watch(deleteMessageUseCaseProvider),
     currentUserId: ref.watch(chatCurrentUserIdProvider),
   );
 });

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,8 @@ import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/media/media_asset.dart';
 import 'package:ohara/core/media/media_limits.dart';
 import 'package:ohara/core/media/media_providers.dart';
+import 'package:ohara/core/platform/app_haptics.dart';
+import 'package:ohara/core/result/result.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/utils/relative_time.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
@@ -24,6 +27,7 @@ import 'package:ohara/features/chat/presentation/widgets/chat_input.dart';
 import 'package:ohara/features/chat/presentation/widgets/chat_product_card.dart';
 import 'package:ohara/features/chat/presentation/widgets/file_message_bubble.dart';
 import 'package:ohara/features/chat/presentation/widgets/image_message_bubble.dart';
+import 'package:ohara/features/chat/presentation/widgets/message_actions_sheet.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_bubble.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_delivery_status.dart';
 import 'package:ohara/features/chat/presentation/widgets/typing_indicator.dart';
@@ -169,6 +173,76 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   Future<void> _retry(ChatMessageEntity message) async {
     final sent = await _messages.retry(message);
     if (!sent && mounted) _warn(context.l10n.chatSendFailed);
+  }
+
+  /// Long press on a message: copy, resend, delete for her or for both,
+  /// report.
+  Future<void> _onLongPress(ChatMessageEntity message) async {
+    AppHaptics.selection();
+    final action = await MessageActionsSheet.show(context, message);
+    if (action == null || !mounted) return;
+    final l10n = context.l10n;
+    switch (action) {
+      case MessageAction.copy:
+        await Clipboard.setData(ClipboardData(text: message.content));
+        if (mounted) {
+          DsSnackbar.show(
+            context,
+            message: l10n.chatMessageCopied,
+            type: DsSnackbarType.success,
+          );
+        }
+      case MessageAction.resend:
+        await _retry(message);
+      case MessageAction.deleteForMe:
+        await _delete(message, forEveryone: false);
+      case MessageAction.deleteForEveryone:
+        final confirmed = await DsDialog.confirm(
+          context,
+          title: l10n.chatDeleteForEveryoneTitle,
+          message: l10n.chatDeleteForEveryoneBody,
+          confirmLabel: l10n.chatDeleteForEveryone,
+          cancelLabel: l10n.cancel,
+          destructive: true,
+        );
+        if (confirmed && mounted) await _delete(message, forEveryone: true);
+      case MessageAction.report:
+        await _report(message);
+    }
+  }
+
+  Future<void> _delete(
+    ChatMessageEntity message, {
+    required bool forEveryone,
+  }) async {
+    final failure = await _messages.deleteMessage(
+      message,
+      forEveryone: forEveryone,
+    );
+    if (failure == null || !mounted) return;
+    _warn(failure.isEmpty ? context.l10n.chatDeleteFailed : failure);
+  }
+
+  Future<void> _report(ChatMessageEntity message) async {
+    final reason = await MessageActionsSheet.askReportReason(context);
+    if (reason == null || !mounted) return;
+    final result = await ref.read(chatRepositoryProvider).reportUser(
+      chatId: widget.chatId,
+      reportedUserId: message.senderId,
+      reason: reason,
+      messageId: message.id,
+    );
+    if (!mounted) return;
+    switch (result) {
+      case Success():
+        DsSnackbar.show(
+          context,
+          message: context.l10n.reportSent,
+          type: DsSnackbarType.success,
+        );
+      case Error(:final failure):
+        _warn(failure.message);
+    }
   }
 
   @override
@@ -349,6 +423,7 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
             message: message,
             endsRun: endsRun,
             onRetry: message.isFailed ? () => unawaited(_retry(message)) : null,
+            onLongPress: () => unawaited(_onLongPress(message)),
           ),
         ),
       );
@@ -517,7 +592,12 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
 }
 
 class _MessageRow extends StatelessWidget {
-  const _MessageRow({required this.message, this.endsRun = true, this.onRetry});
+  const _MessageRow({
+    required this.message,
+    this.endsRun = true,
+    this.onRetry,
+    this.onLongPress,
+  });
 
   final ChatMessageEntity message;
 
@@ -527,9 +607,13 @@ class _MessageRow extends StatelessWidget {
   /// Set only for a message of hers that failed to send.
   final VoidCallback? onRetry;
 
+  /// Opens the message's actions — copy, delete, report.
+  final VoidCallback? onLongPress;
+
   @override
   Widget build(BuildContext context) {
     final bubble = switch (message.kind) {
+      _ when message.isDeleted => DeletedMessageBubble(isMe: message.isMine),
       'image' when message.attachments.isNotEmpty => ImageMessageBubble(
         isMe: message.isMine,
         image: message.attachments.first.url,
@@ -559,7 +643,7 @@ class _MessageRow extends StatelessWidget {
         tail: endsRun,
       ),
     };
-    final product = message.product;
+    final product = message.isDeleted ? null : message.product;
 
     final l10n = context.l10n;
     final colors = context.dsColors;
@@ -610,13 +694,14 @@ class _MessageRow extends StatelessWidget {
         ],
       ],
     );
-    if (onRetry == null) return row;
+    if (onRetry == null && onLongPress == null) return row;
     return Semantics(
-      button: true,
-      label: l10n.chatMessageNotSent,
+      button: onRetry != null,
+      label: onRetry != null ? l10n.chatMessageNotSent : null,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onRetry,
+        onLongPress: onLongPress,
         child: row,
       ),
     );

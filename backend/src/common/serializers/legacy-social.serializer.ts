@@ -53,6 +53,8 @@ export interface LegacyViewerState {
    * need it — a story or a saved-shelf row has nothing to add.
    */
   reshared?: Set<string>;
+  /** Everyone's most chosen reactions per post, for «❤️😍🔥» on the card. */
+  summaries?: Map<string, { emoji: string; count: number }[]>;
 }
 
 export const NO_LEGACY_VIEWER: LegacyViewerState = {
@@ -70,20 +72,28 @@ export function serializeLegacyPost(
   // A legacy post carried at most one product. The platform allows many, so
   // the first tag is the one this contract can express — sorted, so "first"
   // means the same thing on every read rather than whatever the join returned.
-  const tag = (content.productTags ?? [])
+  const tags = (content.productTags ?? [])
     .slice()
-    .sort((a, b) => a.sortOrder - b.sortOrder)[0];
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+  const tag = tags[0];
 
   return {
     id: content.id,
     author: serializePublicUser(content.author),
     product: tag ? serializeProduct(tag.product) : null,
+    // Every piece, in order — `product` above stays for builds that read only
+    // one. A post tagging three pieces used to show the first and lose two.
+    products: tags.map((t) => serializeProduct(t.product)),
     caption: content.body ?? '',
     likes_count: Number(content.reactionsCount),
     comments_count: Number(content.repliesCount),
     shares_count: Number(content.sharesCount),
     saves_count: Number(content.savesCount),
     is_liked: viewer.liked.has(content.id),
+    // Which reaction she chose (null for the plain heart), and everyone's
+    // most chosen — additive keys, older builds ignore them.
+    my_reaction: viewer.reactions.get(content.id) ?? null,
+    reaction_summary: viewer.summaries?.get(content.id) ?? [],
     is_saved: viewer.saved.has(content.id),
     // «أضيفي إلى صفحتي» on the post card. Without it the button could only
     // guess, and a guess of "not added" offers to add what is already there.
@@ -133,12 +143,22 @@ export function serializeLegacyStory(
  */
 export function serializeLegacyComment(
   comment: CommerceContentComment & { user: User },
+  reactions?: {
+    reactions_count: number;
+    my_reaction: string | null;
+    is_reacted: boolean;
+    reaction_summary: { emoji: string; count: number }[];
+  },
 ) {
   return {
     id: comment.id,
     user: serializePublicUser(comment.user),
     content: comment.body,
-    likes_count: 0,
+    // Real now: comments carry reactions.
+    likes_count: reactions?.reactions_count ?? 0,
+    my_reaction: reactions?.my_reaction ?? null,
+    is_reacted: reactions?.is_reacted ?? false,
+    reaction_summary: reactions?.reaction_summary ?? [],
     created_at: comment.createdAt.toISOString(),
   };
 }

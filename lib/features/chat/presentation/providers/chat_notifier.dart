@@ -8,6 +8,7 @@ import 'package:ohara/features/chat/data/models/chat_message_model.dart';
 import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 import 'package:ohara/features/chat/domain/entities/chat_thread_entity.dart';
+import 'package:ohara/features/chat/domain/usecases/delete_message_usecase.dart';
 import 'package:ohara/features/chat/domain/usecases/get_messages_usecase.dart';
 import 'package:ohara/features/chat/domain/usecases/get_thread_usecase.dart';
 import 'package:ohara/features/chat/domain/usecases/get_threads_usecase.dart';
@@ -285,6 +286,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     required GetMessagesUseCase getMessagesUseCase,
     required SendMessageUseCase sendMessageUseCase,
     required MarkChatReadUseCase markChatReadUseCase,
+    DeleteMessageUseCase? deleteMessageUseCase,
     this.currentUserId,
     Duration typingTimeout = kPeerTypingTimeout,
     Random? random,
@@ -292,6 +294,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
         _getMessages = getMessagesUseCase,
         _sendMessage = sendMessageUseCase,
         _markRead = markChatReadUseCase,
+        _deleteMessage = deleteMessageUseCase,
         _typingTimeout = typingTimeout,
         _random = random ?? Random(),
         super(ChatMessagesState(chatId: chatId));
@@ -303,6 +306,7 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
   final GetMessagesUseCase _getMessages;
   final SendMessageUseCase _sendMessage;
   final MarkChatReadUseCase _markRead;
+  final DeleteMessageUseCase? _deleteMessage;
   final Duration _typingTimeout;
   final Random _random;
 
@@ -480,6 +484,49 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
     }
   }
 
+  /// Long-press → «حذف لدي» / «حذف عند الجميع».
+  ///
+  /// Applied at once — the bubble goes, or becomes «حذفتِ هذه الرسالة» — and
+  /// put back exactly as it was if the server refuses. A message that never
+  /// reached the server is simply dropped from this phone.
+  /// Returns the server's reason on failure, null on success.
+  Future<String?> deleteMessage(
+    ChatMessageEntity message, {
+    required bool forEveryone,
+  }) async {
+    final before = state.messages;
+    if (message.isLocal) {
+      final clientId = message.clientId;
+      if (clientId != null) _outbox.remove(clientId);
+      state = state.copyWith(
+        messages: [for (final m in before) if (m.id != message.id) m],
+      );
+      return null;
+    }
+    final delete = _deleteMessage;
+    if (delete == null) return '';
+
+    state = state.copyWith(
+      messages: [
+        for (final m in before)
+          if (m.id != message.id)
+            m
+          else if (forEveryone)
+            m.asDeleted(DateTime.now()),
+      ],
+    );
+    final result = await delete(_chatId, message.id, forEveryone: forEveryone);
+    if (!mounted) return null;
+    if (result case Error(:final failure)) {
+      // Put back only that message, so anything that arrived meanwhile stays.
+      final current = {for (final m in state.messages) m.id: m};
+      current[message.id] = message;
+      state = state.copyWith(messages: _sorted(current.values.toList()));
+      return failure.message;
+    }
+    return null;
+  }
+
   /// Tells the server she has read the conversation up to the newest message
   /// from the other side. Over HTTP — see [MarkChatReadUseCase] — and once per
   /// message, however many events ask for it.
@@ -537,6 +584,19 @@ class ChatMessagesNotifier extends StateNotifier<ChatMessagesState> {
               m.isMine && !m.isLocal && !m.isRead && !m.sentAt.isAfter(upTo)
                   ? m.copyWith(status: ChatMessageStatus.read, readAt: readAt)
                   : m,
+          ],
+        );
+
+      case 'message.deleted':
+        // Taken back by its sender — from the other side, or from another
+        // phone of hers.
+        final id = event['message_id'];
+        if (id is! String) return;
+        final at = _parseDate(event['deleted_at']) ?? DateTime.now();
+        state = state.copyWith(
+          messages: [
+            for (final m in state.messages)
+              m.id == id && !m.isDeleted ? m.asDeleted(at) : m,
           ],
         );
 

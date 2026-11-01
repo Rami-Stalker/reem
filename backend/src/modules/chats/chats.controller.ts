@@ -17,6 +17,7 @@ import { ChatsService } from './chats.service';
 import {
   BlockUserDto,
   ChatListQueryDto,
+  DeleteMessageDto,
   MarkReadDto,
   MessageQueryDto,
   ReportUserDto,
@@ -103,6 +104,17 @@ export class ChatsController {
     @Body() dto: SendMessageDto,
   ) {
     return this.chats.send(id, userId, dto);
+  }
+
+  @Delete(':id/messages/:messageId')
+  @HttpCode(HttpStatus.OK)
+  deleteMessage(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('messageId', ParseUUIDPipe) messageId: string,
+    @CurrentUser('id') userId: string,
+    @Query() query: DeleteMessageDto,
+  ) {
+    return this.chats.deleteMessage(id, userId, messageId, query.scope);
   }
 
   @Patch(':id/read')

@@ -3970,6 +3970,124 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productDetails => 'Product details';
 
   @override
+  String get productAttrMaterial => 'Material';
+
+  @override
+  String get productAttrSleeveLength => 'Sleeve length';
+
+  @override
+  String get productAttrSkinType => 'Skin type';
+
+  @override
+  String get productAttrColor => 'Colour';
+
+  @override
+  String get productAttrFit => 'Fit';
+
+  @override
+  String get productAttrLength => 'Length';
+
+  @override
+  String get productAttrPattern => 'Pattern';
+
+  @override
+  String get productAttrCare => 'Care';
+
+  @override
+  String get productAttrOrigin => 'Made in';
+
+  @override
+  String get productAttrYes => 'Yes';
+
+  @override
+  String get productAttrNo => 'No';
+
+  @override
+  String get sharePreparing => 'Preparing to share…';
+
+  @override
+  String get chatMessageCopied => 'Message copied';
+
+  @override
+  String get chatResend => 'Send again';
+
+  @override
+  String get chatDeleteForMe => 'Delete for me';
+
+  @override
+  String get chatDeleteForEveryone => 'Delete for everyone';
+
+  @override
+  String get chatDeleteForEveryoneTitle => 'Delete for everyone?';
+
+  @override
+  String get chatDeleteForEveryoneBody =>
+      'It will disappear for both of you, and «This message was deleted» will show in its place.';
+
+  @override
+  String get chatMessageDeleted => 'This message was deleted';
+
+  @override
+  String get chatMessageDeletedByMe => 'You deleted this message';
+
+  @override
+  String get chatDeleteFailed => 'Couldn\'t delete the message. Try again.';
+
+  @override
+  String get chatReportMessage => 'Report message';
+
+  @override
+  String get chatReportFraud => 'Fraud or scam';
+
+  @override
+  String postMorePieces(int count) {
+    return '+$count pieces';
+  }
+
+  @override
+  String get postTaggedPiecesTitle => 'Pieces in this post';
+
+  @override
+  String get postOpenPhoto => 'Open photo';
+
+  @override
+  String storyShopPieces(int count) {
+    return 'Shop the $count pieces';
+  }
+
+  @override
+  String get profileStoryBadge => 'Story';
+
+  @override
+  String get reactionLove => 'Love';
+
+  @override
+  String get reactionGorgeous => 'Gorgeous';
+
+  @override
+  String get reactionFire => 'Fire';
+
+  @override
+  String get reactionBravo => 'Bravo';
+
+  @override
+  String get reactionHaha => 'Haha';
+
+  @override
+  String get reactionWow => 'Wow';
+
+  @override
+  String get reactionSad => 'Sad';
+
+  @override
+  String get reactionPickerHint => 'Hold to choose a reaction';
+
+  @override
+  String reactionsCount(String count) {
+    return '$count reactions';
+  }
+
+  @override
   String get productDetailsSection => 'Details';
 
   @override

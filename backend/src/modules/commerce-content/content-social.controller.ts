@@ -1,3 +1,4 @@
+import { contentReactionSummaries } from './interactions/reaction-summary';
 import {
   Body,
   Controller,
@@ -21,6 +22,7 @@ import { AppPermission } from '../../common/permissions';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { CursorPageDto } from '../../common/dto/cursor-pagination.dto';
 import {
+  commentIdsOf,
   serializeContentComment,
   serializeFeedContent,
   serializeTimelineEntry,
@@ -469,8 +471,14 @@ export class ContentSocialController {
     @Query() page: PaginationDto,
   ) {
     const result = await this.interactions.listComments(id, page, user?.id);
+    const reactions = await this.interactions.commentReactions(
+      commentIdsOf(result.roots),
+      user?.id,
+    );
     return {
-      data: result.roots.map(serializeContentComment),
+      data: result.roots.map((comment) =>
+        serializeContentComment(comment, reactions),
+      ),
       pagination: result.meta,
     };
   }
@@ -479,13 +487,36 @@ export class ContentSocialController {
   @OptionalAuth()
   async replies(
     @Param('commentId', ParseUUIDPipe) commentId: string,
+    @CurrentUser() user: AuthUser | undefined,
     @Query() page: PaginationDto,
   ) {
     const result = await this.interactions.listReplies(commentId, page);
+    const reactions = await this.interactions.commentReactions(
+      commentIdsOf(result.items),
+      user?.id,
+    );
     return {
-      data: result.items.map(serializeContentComment),
+      data: result.items.map((comment) =>
+        serializeContentComment(comment, reactions),
+      ),
       pagination: result.meta,
     };
+  }
+
+  @Post('comments/:commentId/react')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'interact',
+    resource: 'content',
+    roles: [UserRole.CUSTOMER, UserRole.SELLER],
+    permissions: [AppPermission.contentInteract],
+  })
+  reactToComment(
+    @CurrentUser() user: AuthUser,
+    @Param('commentId', ParseUUIDPipe) commentId: string,
+    @Body() dto: ReactToContentDto,
+  ) {
+    return this.interactions.reactToComment(user, commentId, dto.emoji);
   }
 
   @Post(':id/comments')
@@ -685,7 +716,16 @@ export class ContentSocialController {
    * this read.
    */
   private async viewerStates(contentIds: string[], userId?: string) {
-    if (!userId || contentIds.length === 0) return () => NO_VIEWER;
+    if (contentIds.length === 0) return () => NO_VIEWER;
+    // Everyone's reactions, for the «❤️😍🔥» beside the counter — a guest
+    // sees them too.
+    const summaries = await contentReactionSummaries(this.prisma, contentIds);
+    if (!userId) {
+      return (contentId: string): ViewerState => ({
+        ...NO_VIEWER,
+        reaction_summary: summaries.get(contentId) ?? [],
+      });
+    }
 
     const [reactions, saves, reshares] = await Promise.all([
       this.prisma.commerceContentReaction.findMany({
@@ -709,6 +749,7 @@ export class ContentSocialController {
     return (contentId: string): ViewerState => ({
       is_liked: liked.has(contentId),
       my_reaction: liked.get(contentId) ?? null,
+      reaction_summary: summaries.get(contentId) ?? [],
       is_saved: saved.has(contentId),
       is_reshared: reshared.has(contentId),
     });

@@ -1,4 +1,5 @@
 import 'package:ohara/core/shared/entities/media.dart';
+import 'package:ohara/core/shared/entities/reaction_count.dart';
 import 'package:ohara/core/shared/models/media_model.dart';
 import 'package:ohara/core/shared/models/product_model.dart';
 import 'package:ohara/core/shared/models/user_model.dart';
@@ -67,6 +68,7 @@ class ContentModel extends Content {
         myReaction: viewer['my_reaction'] as String?,
         isSaved: viewer['is_saved'] as bool? ?? false,
         isReshared: viewer['is_reshared'] as bool? ?? false,
+        reactionSummary: ReactionCount.listFromJson(viewer['reaction_summary']),
       ),
       createdAt: _date(json['created_at']) ?? DateTime.now(),
       publishedAt: _date(json['published_at']),

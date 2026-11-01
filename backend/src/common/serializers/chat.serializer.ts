@@ -63,14 +63,17 @@ export function serializeMessage(
   message: MessageWithRelations,
   currentUserId: string,
 ) {
+  // «حُذفت عند الجميع» — the row stays so the conversation keeps its shape,
+  // but nothing of what was said travels any more.
+  const deleted = message.deletedAt !== null && message.deletedAt !== undefined;
   return {
     id: message.id,
     chat_id: message.chatId,
     sender_id: message.senderId,
     client_id: message.clientId,
-    kind: message.kind.toLowerCase(),
-    content: message.content,
-    metadata: message.metadata ?? null,
+    kind: deleted ? 'text' : message.kind.toLowerCase(),
+    content: deleted ? '' : message.content,
+    metadata: deleted ? null : (message.metadata ?? null),
     status: message.status.toLowerCase(),
     delivered_at: message.deliveredAt?.toISOString() ?? null,
     read_at: message.readAt?.toISOString() ?? null,
@@ -79,7 +82,7 @@ export function serializeMessage(
     edited_at: message.editedAt?.toISOString() ?? null,
     deleted_at: message.deletedAt?.toISOString() ?? null,
     is_mine: message.senderId === currentUserId,
-    attachments: (message.attachments ?? []).map((attachment) => ({
+    attachments: (deleted ? [] : (message.attachments ?? [])).map((attachment) => ({
       id: attachment.id,
       kind: attachment.kind.toLowerCase(),
       url: attachment.url,
