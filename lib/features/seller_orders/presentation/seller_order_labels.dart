@@ -44,7 +44,10 @@ extension SellerOrderLabels on AppLocalizations {
     SellerOrderAction.confirm => sellerOrderActionConfirm,
     SellerOrderAction.ready => sellerOrderActionReady,
     SellerOrderAction.handOver => sellerOrderActionHandOver,
+    SellerOrderAction.carrierPickedUp => sellerOrderActionCarrierPickedUp,
+    SellerOrderAction.outForDelivery => sellerOrderActionOutForDelivery,
     SellerOrderAction.deliver => sellerOrderActionDeliver,
+    SellerOrderAction.fail => sellerOrderActionFail,
     SellerOrderAction.cancel => sellerOrderActionCancel,
   };
 
@@ -56,7 +59,10 @@ extension SellerOrderLabels on AppLocalizations {
     SellerOrderAction.confirm => sellerOrderConfirmed,
     SellerOrderAction.ready => sellerOrderMarkedReady,
     SellerOrderAction.handOver => sellerOrderHandedOver,
+    SellerOrderAction.carrierPickedUp => sellerOrderCarrierPickedUp,
+    SellerOrderAction.outForDelivery => sellerOrderOutForDelivery,
     SellerOrderAction.deliver => sellerOrderDelivered,
+    SellerOrderAction.fail => sellerOrderFailed,
     SellerOrderAction.cancel => sellerOrderCancelled,
   };
 

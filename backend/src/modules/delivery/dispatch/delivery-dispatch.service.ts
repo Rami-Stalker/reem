@@ -13,6 +13,8 @@ import {
   ShipmentStatus,
 } from '@prisma/client';
 
+import { randomBytes } from 'node:crypto';
+
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Money } from '../../../common/money';
 import { ShipmentsService } from '../shipments.service';
@@ -276,13 +278,24 @@ export class DeliveryDispatchService {
       // The in-house fleet names the rider carrying the parcel; a delivery
       // company has no rider of ours to name. One line, rather than a second
       // code path for our own couriers.
+      //
+      // A company worked by phone is a courier row too, so the cash its driver
+      // collects is held against it — and it gets a driver link, because it has
+      // no API to report through.
       if (
-        account.kind === DeliveryProviderKind.INTERNAL &&
+        (account.kind === DeliveryProviderKind.INTERNAL ||
+          account.kind === DeliveryProviderKind.MANUAL) &&
         result.internalCourierId
       ) {
         await this.prisma.shipment.update({
           where: { id: shipment.id },
           data: { courierId: result.internalCourierId },
+        });
+      }
+      if (account.kind === DeliveryProviderKind.MANUAL && !updated.carrierLinkToken) {
+        await this.prisma.deliveryDispatch.update({
+          where: { id: dispatch.id },
+          data: { carrierLinkToken: randomBytes(24).toString('base64url') },
         });
       }
 
@@ -475,6 +488,7 @@ export class DeliveryDispatchService {
   async applyStatus(
     dispatch: DeliveryDispatch,
     event: Omit<DeliveryWebhookEventInput, 'externalEventId'>,
+    options: { handoverVerified?: boolean } = {},
   ): Promise<void> {
     const shouldMove =
       dispatch.status !== event.status &&
@@ -513,6 +527,7 @@ export class DeliveryDispatchService {
         at: event.occurredAt ?? null,
         failureReason: event.failureReason ?? null,
         collectedAmount: event.collectedAmount ?? null,
+        handoverVerified: options.handoverVerified,
       });
     } catch (error) {
       // The carrier's record stays; ours refused. That is a reconciliation

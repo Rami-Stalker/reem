@@ -47,6 +47,13 @@ class SellerOrdersScreen extends ConsumerWidget {
           icon: Icons.receipt_long_rounded,
           title: l10n.sellerOrdersTitle,
           showBack: true,
+          actions: [
+            IconButton(
+              tooltip: l10n.deliverySettingsEntry,
+              icon: const Icon(Icons.local_shipping_outlined),
+              onPressed: () => context.push(RoutePaths.sellerDeliverySettings),
+            ),
+          ],
         ),
         // Air between the banner and the page.
         DsGaps.sliverMd,
@@ -130,6 +137,7 @@ class SellerOrdersScreen extends ConsumerWidget {
           reason: input.reason,
           collected: input.collected,
           carrier: input.carrier,
+          handoverCode: input.handoverCode,
         );
 
     if (ok && context.mounted) {

@@ -22,7 +22,7 @@ const ref = (prefix: string) =>
 @Injectable()
 export class CodProvider implements PaymentProvider {
   readonly method = PaymentMethodType.COD;
-  readonly displayName = 'الدفع عند الاستلام';
+  readonly displayName = 'الدفع نقدًا عند الاستلام';
   readonly requiresOnlineConfirmation = false;
   readonly attestsSettlement = false;
 

@@ -7,6 +7,8 @@ import {
 } from '@nestjs/common';
 import {
   CodAssuranceState,
+  DeliveryFailureReason,
+  DeliveryProviderKind,
   FulfilmentMode,
   PaymentStatus,
   Prisma,
@@ -23,6 +25,12 @@ import { OrderEventCopy } from '../../common/orders/order-event-copy';
 import { CommissionsService } from '../commissions/commissions.service';
 import { CustomerRefundsService } from '../finance/customer-refunds.service';
 import { DeliveryDispatchService } from '../delivery/dispatch/delivery-dispatch.service';
+import {
+  CarrierLinkService,
+  CarrierStep,
+  CarrierStepInput,
+} from '../delivery/dispatch/carrier-link.service';
+import { ShipmentsService } from '../delivery/shipments.service';
 import { sellerLabelFor } from '../cod-trust/cod-trust.service';
 import {
   SellerOrderWorkflowService,
@@ -103,6 +111,8 @@ export class SellerOrdersService {
     private readonly commissions: CommissionsService,
     private readonly refunds: CustomerRefundsService,
     private readonly dispatches: DeliveryDispatchService,
+    private readonly shipments: ShipmentsService,
+    private readonly carrierLinks: CarrierLinkService,
   ) {}
 
   // ── Reading ───────────────────────────────────────────────────────────
@@ -227,6 +237,16 @@ export class SellerOrdersService {
       'التسليم من هنا للطلبات التي تشحنينها بنفسكِ فقط — مندوب المنصة يسجّل الاستلام لباقي الطلبات',
     );
 
+    if (parcel.shipment) {
+      await this.shipments.selfDeliveryStep({
+        sellerOrderId,
+        sellerUserId: user.id,
+        step: 'hand_over',
+        note: carrier,
+      });
+      return this.detail(user, sellerOrderId);
+    }
+
     await this.prisma.$transaction((tx) =>
       this.workflow.move(
         tx,
@@ -244,6 +264,62 @@ export class SellerOrdersService {
   }
 
   /**
+   * «في الطريق» — on her own parcel, or on one a company worked by phone is
+   * carrying and has told her about.
+   */
+  async outForDelivery(user: AuthUser, sellerOrderId: string) {
+    const parcel = await this.load(sellerOrderId, user.id);
+    if (parcel.fulfilmentMode === FulfilmentMode.SELLER_SHIPS) {
+      await this.requireShipment(parcel).then(() =>
+        this.shipments.selfDeliveryStep({
+          sellerOrderId,
+          sellerUserId: user.id,
+          step: 'out_for_delivery',
+        }),
+      );
+    } else {
+      await this.carrierLinks.relayForSeller(sellerOrderId, 'out_for_delivery', {});
+    }
+    return this.detail(user, sellerOrderId);
+  }
+
+  /** The company worked by phone told her it has collected the parcel. */
+  async carrierPickedUp(user: AuthUser, sellerOrderId: string) {
+    await this.load(sellerOrderId, user.id);
+    await this.carrierLinks.relayForSeller(sellerOrderId, 'pick_up', {});
+    return this.detail(user, sellerOrderId);
+  }
+
+  /** «فشل التسليم» — with the reason, which decides what happens next. */
+  async failDelivery(
+    user: AuthUser,
+    sellerOrderId: string,
+    reason: DeliveryFailureReason,
+    note?: string,
+  ) {
+    const parcel = await this.load(sellerOrderId, user.id);
+    if (parcel.fulfilmentMode === FulfilmentMode.SELLER_SHIPS) {
+      await this.requireShipment(parcel);
+      await this.shipments.selfDeliveryStep({
+        sellerOrderId,
+        sellerUserId: user.id,
+        step: 'fail',
+        failureReason: reason,
+        note,
+      });
+    } else {
+      await this.carrierLinks.relayForSeller(sellerOrderId, 'fail', { reason, note });
+    }
+    return this.detail(user, sellerOrderId);
+  }
+
+  private async requireShipment(parcel: { shipment: unknown | null }) {
+    if (!parcel.shipment) {
+      throw new BadRequestException('هذا الطلب قديم ولا يملك شحنة — استخدمي «تم التسليم» مباشرة');
+    }
+  }
+
+  /**
    * Q57 — she delivered it herself.
    *
    * Delivery is what makes the sale revenue-bearing, so settlement runs from
@@ -254,9 +330,41 @@ export class SellerOrdersService {
   async deliver(
     user: AuthUser,
     sellerOrderId: string,
-    options: { collected?: string; note?: string } = {},
+    options: { collected?: string; note?: string; handoverCode?: string } = {},
   ) {
     const parcel = await this.load(sellerOrderId, user.id);
+
+    // A company worked by phone told her it delivered: she relays it, with the
+    // customer's code the driver collected at the door.
+    if (parcel.fulfilmentMode !== FulfilmentMode.SELLER_SHIPS) {
+      const relay: CarrierStepInput = {
+        collected: options.collected,
+        note: options.note,
+        handoverCode: options.handoverCode,
+      };
+      if (await this.carrierLinks.manualDispatchFor(sellerOrderId)) {
+        await this.carrierLinks.relayForSeller(sellerOrderId, 'deliver', relay);
+        return this.detail(user, sellerOrderId);
+      }
+    }
+
+    // Her own parcel, with a shipment: the shipment path settles, pays the
+    // order down and closes the trust loop exactly as a courier's does.
+    if (parcel.fulfilmentMode === FulfilmentMode.SELLER_SHIPS && parcel.shipment) {
+      if (options.collected !== undefined && Money.of(options.collected, parcel.currency).isNegative()) {
+        throw new BadRequestException('المبلغ المُحصّل لا يمكن أن يكون سالبًا');
+      }
+      await this.shipments.selfDeliveryStep({
+        sellerOrderId,
+        sellerUserId: user.id,
+        step: 'deliver',
+        collected: options.collected,
+        handoverCode: options.handoverCode,
+        note: options.note,
+      });
+      return this.detail(user, sellerOrderId);
+    }
+
     this.assertSelfCarried(
       parcel.fulfilmentMode,
       'الطلب الذي يشحنه مندوب المنصة يُعلَّم كمُسلَّم من قِبل المندوب',
@@ -409,9 +517,13 @@ export class SellerOrdersService {
               trackingNumber: true,
               providerCode: true,
               lastError: true,
-              provider: { select: { displayName: true } },
+              carrierLinkToken: true,
+              externalDeliveryId: true,
+              provider: { select: { displayName: true, kind: true } },
             },
           },
+          handoverVerifiedAt: true,
+          codAmount: true,
         },
       },
       order: {
@@ -619,8 +731,19 @@ export class SellerOrdersService {
                   // Only the seller and the admin see why a dispatch failed;
                   // it is an operations fact, not something the customer needs.
                   last_error: parcel.shipment.dispatch.lastError,
+                  // A company worked by phone: she forwards this to its
+                  // driver, who reports from it without an account.
+                  reports_by_link:
+                    parcel.shipment.dispatch.provider?.kind === DeliveryProviderKind.MANUAL,
+                  driver_link_path: parcel.shipment.dispatch.carrierLinkToken
+                    ? `/carrier/${parcel.shipment.dispatch.carrierLinkToken}`
+                    : null,
                 }
               : null,
+            handover_verified: parcel.shipment.handoverVerifiedAt != null,
+            // On a prepaid parcel the customer's code is the only proof of
+            // delivery; the client asks for it before it lets the button go.
+            handover_code_required: parcel.shipment.codAmount == null,
           }
         : null,
       items: parcel.items.map((item) => ({
@@ -715,6 +838,13 @@ export class SellerOrdersService {
   private actionsFor(parcel: {
     status: SellerOrderStatus;
     fulfilmentMode: FulfilmentMode;
+    shipment?: {
+      status: ShipmentStatus;
+      dispatch: {
+        externalDeliveryId: string | null;
+        provider: { kind: DeliveryProviderKind } | null;
+      } | null;
+    } | null;
   }): string[] {
     const allowed = nextStatuses(parcel.status, 'SELLER');
     const selfCarried = parcel.fulfilmentMode === FulfilmentMode.SELLER_SHIPS;
@@ -734,9 +864,41 @@ export class SellerOrdersService {
       const asCourier = nextStatuses(parcel.status, 'COURIER');
       const reachable =
         asCourier.includes(SellerOrderStatus.DELIVERED) ||
-        (parcel.status === SellerOrderStatus.HANDED_TO_COURIER &&
+        ((parcel.status === SellerOrderStatus.HANDED_TO_COURIER ||
+          // A missed attempt goes back on the road from here.
+          (parcel.shipment != null &&
+            parcel.status === SellerOrderStatus.DELIVERY_FAILED)) &&
           asCourier.includes(SellerOrderStatus.IN_TRANSIT));
-      if (reachable) actions.push('deliver');
+      if (reachable) {
+        // With a shipment she reports the road too, like any courier.
+        if (
+          parcel.shipment &&
+          (parcel.status === SellerOrderStatus.HANDED_TO_COURIER ||
+            parcel.status === SellerOrderStatus.DELIVERY_FAILED)
+        ) {
+          actions.push('out_for_delivery');
+        }
+        actions.push('deliver');
+        if (parcel.shipment) actions.push('fail');
+      }
+    }
+
+    // A company worked by phone: she relays what it tells her.
+    const dispatch = parcel.shipment?.dispatch;
+    if (
+      !selfCarried &&
+      parcel.shipment &&
+      dispatch?.externalDeliveryId &&
+      dispatch.provider?.kind === DeliveryProviderKind.MANUAL
+    ) {
+      const steps: CarrierStep[] = this.carrierLinks.stepsFrom(parcel.shipment.status);
+      const relay: Record<CarrierStep, string> = {
+        pick_up: 'carrier_picked_up',
+        out_for_delivery: 'out_for_delivery',
+        deliver: 'deliver',
+        fail: 'fail',
+      };
+      for (const step of steps) actions.push(relay[step]);
     }
     if (allowed.includes(SellerOrderStatus.CANCELLED_BY_SELLER)) {
       actions.push('cancel');

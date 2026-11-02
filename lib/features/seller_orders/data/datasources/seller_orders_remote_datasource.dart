@@ -14,7 +14,20 @@ abstract interface class SellerOrdersRemoteDataSource {
 
   Future<SellerOrderDetail> handOver(String id, {String? carrier});
 
-  Future<SellerOrderDetail> deliver(String id, {String? collected, String? note});
+  Future<SellerOrderDetail> deliver(
+    String id, {
+    String? collected,
+    String? note,
+    String? handoverCode,
+  });
+
+  Future<SellerOrderDetail> outForDelivery(String id);
+
+  Future<SellerOrderDetail> carrierPickedUp(String id);
+
+  /// [reason] is the wire value: no_answer | wrong_address | customer_refused
+  /// | postponed | unreachable_area | other.
+  Future<SellerOrderDetail> fail(String id, {required String reason, String? note});
 
   Future<SellerOrderDetail> cancel(String id, {required String reason});
 }

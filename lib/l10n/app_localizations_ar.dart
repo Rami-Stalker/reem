@@ -15121,4 +15121,112 @@ class AppLocalizationsAr extends AppLocalizations {
   String closetFinishTooltip(String name) {
     return 'لون الخزانة: $name';
   }
+
+  @override
+  String get sellerOrderActionOutForDelivery => 'بالطريق';
+
+  @override
+  String get sellerOrderActionFail => 'ما تسلّم';
+
+  @override
+  String get sellerOrderActionCarrierPickedUp => 'استلمته شركة التوصيل';
+
+  @override
+  String get sellerOrderOutForDelivery => 'انسجّل إنو بالطريق';
+
+  @override
+  String get sellerOrderFailed => 'انسجّلت محاولة التسليم';
+
+  @override
+  String get sellerOrderCarrierPickedUp => 'انسجّل استلام الشركة';
+
+  @override
+  String get sellerDeliverCodeLabel => 'رمز الاستلام من الزبونة';
+
+  @override
+  String get sellerDeliverCodeHint => '٤ أرقام بتشوفها بصفحة طلبها';
+
+  @override
+  String get sellerDeliverCodeRequired => 'الطلب مدفوع مسبقاً، فالرمز مطلوب';
+
+  @override
+  String get sellerDeliverCodeInvalid => 'الرمز ٤ أرقام';
+
+  @override
+  String get sellerFailTitle => 'ليش ما وصل الطلب؟';
+
+  @override
+  String get sellerFailReasonNoAnswer => 'ما ردّت';
+
+  @override
+  String get sellerFailReasonWrongAddress => 'العنوان غلط';
+
+  @override
+  String get sellerFailReasonRefused => 'رفضت الاستلام';
+
+  @override
+  String get sellerFailReasonPostponed => 'طلبت تأجيل';
+
+  @override
+  String get sellerFailReasonUnreachable => 'المنطقة ما بينوصللها';
+
+  @override
+  String get sellerFailReasonOther => 'سبب تاني';
+
+  @override
+  String get sellerFailConfirm => 'سجّلي المحاولة';
+
+  @override
+  String get sellerDriverLinkTitle => 'رابط السائق';
+
+  @override
+  String get sellerDriverLinkBody => 'ابعتيه لسائق شركة التوصيل — بيحدّث حالة الطلب منه بدون تطبيق.';
+
+  @override
+  String get sellerDriverLinkCopy => 'نسخ الرابط';
+
+  @override
+  String get sellerDriverLinkShare => 'إرسال';
+
+  @override
+  String get sellerDriverLinkCopied => 'انتسخ الرابط';
+
+  @override
+  String get orderHandoverCodeTitle => 'رمز الاستلام';
+
+  @override
+  String get orderHandoverCodeBody => 'أعطي هالرمز للي عم يوصّلك الطلب — بس لما يصير بإيدك.';
+
+  @override
+  String get deliverySettingsTitle => 'التوصيل';
+
+  @override
+  String get deliverySettingsEntry => 'إعدادات التوصيل';
+
+  @override
+  String get deliverySettingsSelfLabel => 'بوصّل الطلبات بنفسي';
+
+  @override
+  String get deliverySettingsSelfBody => 'الطلبات ضمن منطقتكِ بتوصليها إنتِ، وشركة التوصيل بتاخد الباقي.';
+
+  @override
+  String get deliverySettingsOffBody => 'كل الطلبات بتروح لشركة التوصيل المتعاقدة معنا.';
+
+  @override
+  String get deliverySettingsGovernorates => 'المحافظات اللي بتوصلي إلها';
+
+  @override
+  String get deliverySettingsGovernoratesHint => 'إذا ما اخترتي ولا وحدة، بتوصلي لكل مكان';
+
+  @override
+  String get deliverySettingsCities => 'بس هالمدن (اختياري)';
+
+  @override
+  String get deliverySettingsCitiesHint => 'افصلي بفاصلة، مثلاً: المزة، جرمانا';
+
+  @override
+  String get deliverySettingsSave => 'حفظ';
+
+  @override
+  String get deliverySettingsSaved => 'انحفظ';
 }

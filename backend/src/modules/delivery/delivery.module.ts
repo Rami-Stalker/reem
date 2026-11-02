@@ -11,6 +11,9 @@ import { DELIVERY_PROVIDER } from './providers/delivery-provider.interface';
 import { DeliveryProviderRegistry } from './providers/delivery-provider.registry';
 import { HttpDeliveryProvider } from './providers/http-delivery.provider';
 import { InternalCourierProvider } from './providers/internal-courier.provider';
+import { ManualCarrierProvider } from './providers/manual-carrier.provider';
+import { CarrierLinkController } from './dispatch/carrier-link.controller';
+import { CarrierLinkService } from './dispatch/carrier-link.service';
 import { ProviderCredentialsService } from './providers/provider-credentials.service';
 import { DeliveryAdminController } from './dispatch/delivery-admin.controller';
 import { DeliveryAdminService } from './dispatch/delivery-admin.service';
@@ -38,7 +41,7 @@ import { DeliveryWebhookService } from './dispatch/delivery-webhook.service';
  * revenue-bearing, and on the order workflow because the same moment has to
  * land on the sub-order — which is what returns, escrow and reviews all read.
  */
-const ADAPTERS = [InternalCourierProvider, HttpDeliveryProvider];
+const ADAPTERS = [InternalCourierProvider, HttpDeliveryProvider, ManualCarrierProvider];
 
 @Module({
   imports: [CommissionsModule, OrderWorkflowModule, FinanceModule, CodTrustModule],
@@ -47,6 +50,7 @@ const ADAPTERS = [InternalCourierProvider, HttpDeliveryProvider];
     ShipmentsController,
     DeliveryWebhookController,
     DeliveryAdminController,
+    CarrierLinkController,
   ],
   providers: [
     DeliveryService,
@@ -64,11 +68,12 @@ const ADAPTERS = [InternalCourierProvider, HttpDeliveryProvider];
     DeliveryDispatchService,
     DeliveryWebhookService,
     DeliveryAdminService,
+    CarrierLinkService,
     DeliveryProviderBootstrap,
     // The retry endpoint existed and nothing called it, so a parcel the carrier
     // refused once was never collected at all.
     DeliveryDispatchScheduler,
   ],
-  exports: [DeliveryService, ShipmentsService, DeliveryDispatchService],
+  exports: [DeliveryService, ShipmentsService, DeliveryDispatchService, CarrierLinkService],
 })
 export class DeliveryModule {}

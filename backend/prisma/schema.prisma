@@ -1271,6 +1271,10 @@ model User {
   feedback         CustomerFeedback[] @relation("CustomerFeedbackAuthor")
   feedbackHandled  CustomerFeedback[] @relation("CustomerFeedbackHandler")
 
+  /// How her boutique gets parcels to the door: herself, the platform's
+  /// contracted carriers, or herself near home and a carrier further away.
+  deliverySettings SellerDeliverySettings? @relation("SellerDeliverySettings")
+
   @@index([role])
   @@index([email])
   @@index([phone])
@@ -4064,6 +4068,15 @@ model Shipment {
 
   /// Q44 P1 — proxy number shown to the seller when masking is enabled.
   maskedPhone String? @map("masked_phone")
+
+  /// Proof of delivery. A short code only the customer sees in her order; the
+  /// person at the door asks for it before handing the parcel over, so a
+  /// parcel cannot be marked delivered that never reached her.
+  handoverCode       String?   @map("handover_code")
+  /// Wrong codes entered so far. Capped, so the code cannot be guessed.
+  handoverAttempts   Int       @default(0) @map("handover_attempts")
+  /// Set when the delivery was confirmed with her code.
+  handoverVerifiedAt DateTime? @map("handover_verified_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -10297,6 +10310,11 @@ model DeliveryDispatch {
   attemptCount  Int                    @default(0) @map("attempt_count")
   cancelReason  String?                @map("cancel_reason")
 
+  /// The secret in the driver link of a carrier worked by phone (MANUAL).
+  /// Whoever holds the link can move this one parcel and nothing else, so a
+  /// contracted company needs no account and no integration to report.
+  carrierLinkToken String? @unique @map("carrier_link_token")
+
   /// Last transport failure, for the ops screen. Never a credential.
   lastError    String?   @map("last_error")
   lastSyncedAt DateTime? @map("last_synced_at")
@@ -11241,4 +11259,27 @@ model FitProfile {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("fit_profiles")
+}
+
+/// Q57 — a boutique that delivers its own parcels.
+///
+/// Off, every parcel goes to the platform's contracted carriers. On, the
+/// seller carries the parcels whose address falls in her own area and the
+/// carriers take the rest — the usual shape of a Syrian boutique, which
+/// delivers in its own city and ships everywhere else.
+model SellerDeliverySettings {
+  sellerId String @id @map("seller_id") @db.Uuid
+  seller   User   @relation("SellerDeliverySettings", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  selfDeliveryEnabled Boolean @default(false) @map("self_delivery_enabled")
+  /// Governorates she delivers to herself. Empty with self-delivery on means
+  /// she delivers everything herself.
+  selfDeliveryGovernorates String[] @map("self_delivery_governorates")
+  /// Narrows the above to these cities when set.
+  selfDeliveryCities String[] @map("self_delivery_cities")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("seller_delivery_settings")
 }
