@@ -86,6 +86,24 @@ jobs:
             --dart-define=API_BASE_URL="$API_BASE_URL"
           ls -lh build/app/outputs/flutter-apk/*.apk
 
+      # One APK for every phone, old or new: both processors in one file.
+      # Larger to download, but nobody has to know which phone they hold.
+      - name: Build universal APK
+        env:
+          API_BASE_URL: ${{ vars.API_BASE_URL || 'https://reem-api.onrender.com' }}
+        run: |
+          flutter build apk --release \
+            --obfuscate --split-debug-info=build/symbols-universal \
+            --dart-define=APP_ENV=production \
+            --dart-define=API_BASE_URL="$API_BASE_URL"
+          ls -lh build/app/outputs/flutter-apk/app-release.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reem-apk-universal
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14
+
       # Every phone from the last several years is arm64. The 32-bit one is
       # for old or very cheap devices.
       - uses: actions/upload-artifact@v4
