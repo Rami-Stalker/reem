@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:share_plus/share_plus.dart';
-
 import 'package:ohara/core/config/app_env.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
@@ -17,6 +15,7 @@ import 'package:ohara/features/seller_orders/presentation/seller_order_labels.da
 import 'package:ohara/features/seller_orders/presentation/widgets/seller_customer_panel.dart';
 import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_action_prompt.dart';
 import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_status_chip.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// One parcel, everything about it, and the next thing to do with it.
 ///

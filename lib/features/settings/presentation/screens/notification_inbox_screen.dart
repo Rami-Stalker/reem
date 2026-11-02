@@ -153,6 +153,8 @@ class NotificationInboxScreen extends ConsumerWidget {
     // «إعلانات المتاجر»: her plan and her campaigns live in the ads centre;
     // a plan payment waiting on finance lives on the finance desk.
     switch (id('kind')) {
+      case 'store_team_invite' || 'store_team_removed':
+        return RoutePaths.storeMemberships;
       case 'ad_plan' || 'ad_campaign':
         return RoutePaths.sellerAds;
       case 'ad_plan_purchase':

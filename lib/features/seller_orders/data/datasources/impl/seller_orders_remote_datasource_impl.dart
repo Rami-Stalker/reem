@@ -13,11 +13,13 @@ final class SellerOrdersRemoteDataSourceImpl extends BaseRemoteDataSource
     SellerQueueTab? tab,
     int page = 1,
     int limit = 20,
+    bool today = false,
   }) async {
     final json = await getJson(
       ApiEndpoints.sellerOrders,
       query: {
         if (tab != null) 'tab': tab.wire,
+        if (today) 'today': 'true',
         'page': page,
         'limit': limit,
       },

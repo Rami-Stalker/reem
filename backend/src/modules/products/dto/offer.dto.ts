@@ -119,7 +119,7 @@ export class UpdateOfferDto {
 
   @IsOptional()
   @IsNumberString({ no_symbols: false })
-  compare_at_price?: string;
+  compare_at_price?: string | null;
 
   @IsOptional()
   @IsNumberString({ no_symbols: false })

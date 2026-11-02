@@ -58,12 +58,23 @@ export class SellerOffersService {
       );
     }
 
+    // «إعدادات الشحن»: a listing that names no preparation time takes the
+    // shop's default rather than a flat day.
+    const handlingDays =
+      dto.handling_days ??
+      (
+        await this.prisma.sellerStoreSettings.findUnique({
+          where: { sellerId: user.id },
+          select: { defaultHandlingDays: true },
+        })
+      )?.defaultHandlingDays;
+
     const offer = await this.prisma.$transaction(async (tx) => {
       const created = await tx.sellerOffer.create({
         data: {
           product: { connect: { id: dto.product_id } },
           seller: { connect: { id: user.id } },
-          ...this.priceData(dto),
+          ...this.priceData({ ...dto, handling_days: handlingDays }),
           variants: dto.variants?.length
             ? { create: await this.variantRows(tx, dto.product_id, dto.variants) }
             : undefined,
@@ -83,8 +94,12 @@ export class SellerOffersService {
     const data: Prisma.SellerOfferUpdateInput = {
       ...(dto.currency !== undefined && { currency: dto.currency }),
       ...(dto.price !== undefined && { price: this.decimal(dto.price, 'price') }),
+      // Null ends a sale: the crossed-out price goes away.
       ...(dto.compare_at_price !== undefined && {
-        compareAtPrice: this.decimal(dto.compare_at_price, 'compare_at_price'),
+        compareAtPrice:
+          dto.compare_at_price === null
+            ? null
+            : this.decimal(dto.compare_at_price, 'compare_at_price'),
       }),
       ...(dto.wholesale_price !== undefined && {
         wholesalePrice: this.decimal(dto.wholesale_price, 'wholesale_price'),

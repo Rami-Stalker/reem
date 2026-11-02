@@ -1,7 +1,13 @@
 import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
 
 abstract interface class SellerOrdersRemoteDataSource {
-  Future<SellerOrderQueue> queue({SellerQueueTab? tab, int page, int limit});
+  /// [today] keeps only parcels placed today («طلبات اليوم»).
+  Future<SellerOrderQueue> queue({
+    SellerQueueTab? tab,
+    int page,
+    int limit,
+    bool today,
+  });
 
   Future<SellerOrderDetail> detail(String id);
 

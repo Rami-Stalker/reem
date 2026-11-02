@@ -12,6 +12,9 @@ import { SchedulingModule } from './common/scheduling/scheduling.module';
 
 import { IdempotencyInterceptor } from './common/idempotency/idempotency.interceptor';
 import { AdminAuditInterceptor } from './common/audit/admin-audit.interceptor';
+import { SellerActivityInterceptor } from './modules/seller-store/seller-activity.interceptor';
+import { SellerStoreModule } from './modules/seller-store/seller-store.module';
+import { StoreDelegationGuard } from './modules/seller-store/store-delegation.guard';
 import { IdempotencySweeper } from './common/idempotency/idempotency.sweeper';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { DeviceProofGuard } from './common/guards/device-proof.guard';
@@ -177,6 +180,7 @@ import { LinksModule } from './modules/links/links.module';
     SellerCommerceModule,
     ExperienceModule,
     HealthModule,
+    SellerStoreModule,
     // Last on purpose. Its routes carry no controller prefix — `/product/:id`,
     // `/p/:id`, `/user/:id`, `/` — so every JSON endpoint above is matched
     // first and a landing page can never shadow one.
@@ -191,6 +195,9 @@ import { LinksModule } from './modules/links/links.module';
     { provide: APP_GUARD, useClass: DeviceProofGuard },
     // After the proof guard, which is what populates `request.provenDevice`.
     { provide: APP_GUARD, useClass: StepUpGuard },
+    // A team member acting for a shop becomes the shop here — after her own
+    // session and device are proven, before anything is authorized.
+    { provide: APP_GUARD, useClass: StoreDelegationGuard },
     AuthorizationService,
     { provide: APP_GUARD, useClass: AuthorizationGuard },
     // After the guards, so the principal is resolved before the key is scoped
@@ -206,6 +213,7 @@ import { LinksModule } from './modules/links/links.module';
     // What this catches is the refusal thrown *inside* a handler, which is
     // where most of this platform's ownership checks live.
     { provide: APP_INTERCEPTOR, useClass: AdminAuditInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: SellerActivityInterceptor },
   ],
 })
 export class AppModule {}

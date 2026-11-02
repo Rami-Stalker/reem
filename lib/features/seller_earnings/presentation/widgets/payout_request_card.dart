@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/utils/relative_time.dart';
 import 'package:ohara/features/seller_earnings/domain/entities/seller_earnings.dart';
 import 'package:ohara/features/seller_earnings/presentation/providers/seller_earnings_provider.dart';
@@ -79,6 +81,13 @@ class _Ask extends ConsumerWidget {
             ),
 
           const SizedBox(height: DsSpacing.md),
+          if (availability.payoutAccount case final account?) ...[
+            _Destination(
+              label:
+                  '${account.method == PayoutMethod.visa ? l10n.payoutMethodVisa : l10n.payoutMethodShamCash} · \u2066${account.masked}\u2069',
+            ),
+            const SizedBox(height: DsSpacing.sm),
+          ],
           if (availability.canRequest)
             DsButton(
               label: l10n.payoutRequestAction,
@@ -184,6 +193,10 @@ class _OpenRequest extends ConsumerWidget {
               l10n.payoutRequestedOn(formatCalendarDate(l10n, at)),
               style: context.dsText.caption.tint(palette.muted),
             ),
+          if (request.destination case final destination?) ...[
+            const SizedBox(height: DsSpacing.sm),
+            _Destination(label: destination, editable: false),
+          ],
 
           if (request.status.isCancellable) ...[
             const SizedBox(height: DsSpacing.md),
@@ -259,10 +272,33 @@ class _Blocked extends StatelessWidget {
               ),
       // The open-request case never reaches here; the card shows the request.
       PayoutBlocker.requestOpen => l10n.payoutPendingTitle,
+      PayoutBlocker.offsetByRefunds => l10n.payoutBlockedOffset,
+      PayoutBlocker.noPayoutAccount => l10n.payoutBlockedNoAccount,
       PayoutBlocker.nothingReleased || null => l10n.payoutBlockedNothing,
     };
 
     final isFreeze = availability.blockedBy == PayoutBlocker.frozen;
+
+    // Nowhere to send it: the one blocker she can lift herself, right here.
+    if (availability.blockedBy == PayoutBlocker.noPayoutAccount) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            message,
+            style: context.dsText.labelMedium
+                .tint(palette.muted)
+                .copyWith(height: 1.5),
+          ),
+          const SizedBox(height: DsSpacing.sm),
+          DsButton(
+            label: l10n.payoutSetAccountAction,
+            icon: Icons.credit_card_rounded,
+            onPressed: () => context.push(RoutePaths.sellerPayoutSettings),
+          ),
+        ],
+      );
+    }
 
     return Container(
       padding: const EdgeInsets.all(DsSpacing.md),
@@ -288,6 +324,37 @@ class _Blocked extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// «رح ينحوّل على: شام كاش · •••• 4567», with the way to change it.
+class _Destination extends StatelessWidget {
+  const _Destination({required this.label, this.editable = true});
+
+  final String label;
+  final bool editable;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final palette = context.atelier;
+    return Row(
+      children: [
+        Icon(Icons.call_made_rounded, size: 16, color: palette.muted),
+        const SizedBox(width: DsSpacing.xs),
+        Expanded(
+          child: Text(
+            l10n.payoutSendTo(label),
+            style: context.dsText.caption.tint(palette.ink),
+          ),
+        ),
+        if (editable)
+          TextButton(
+            onPressed: () => context.push(RoutePaths.sellerPayoutSettings),
+            child: Text(l10n.payoutChange),
+          ),
+      ],
     );
   }
 }

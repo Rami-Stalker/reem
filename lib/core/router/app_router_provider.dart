@@ -112,18 +112,29 @@ import 'package:ohara/features/seller_analytics/presentation/screens/seller_anal
 import 'package:ohara/features/seller_dashboard/presentation/screens/seller_home_screen.dart';
 import 'package:ohara/features/seller_dashboard/presentation/screens/seller_profile_screen.dart';
 import 'package:ohara/features/seller_earnings/presentation/screens/seller_earnings_screen.dart';
+import 'package:ohara/features/seller_earnings/presentation/screens/seller_financial_reports_screen.dart';
+import 'package:ohara/features/seller_earnings/presentation/screens/seller_payout_settings_screen.dart';
+import 'package:ohara/features/seller_earnings/presentation/screens/seller_withdrawals_screen.dart';
 import 'package:ohara/features/seller_intelligence/presentation/screens/demand_radar_screen.dart';
 import 'package:ohara/features/seller_intelligence/presentation/screens/product_intelligence_screen.dart';
 import 'package:ohara/features/seller_intelligence/presentation/screens/seller_health_screen.dart';
 import 'package:ohara/features/seller_orders/presentation/screens/seller_delivery_settings_screen.dart';
 import 'package:ohara/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
 import 'package:ohara/features/seller_orders/presentation/screens/seller_orders_screen.dart';
+import 'package:ohara/features/seller_orders/presentation/screens/seller_today_orders_screen.dart';
 import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
 import 'package:ohara/features/seller_products/presentation/screens/my_products_screen.dart';
 import 'package:ohara/features/seller_products/presentation/screens/product_form_screen.dart';
 import 'package:ohara/features/seller_returns/presentation/screens/seller_return_detail_screen.dart';
 import 'package:ohara/features/seller_returns/presentation/screens/seller_returns_screen.dart';
 import 'package:ohara/features/seller_reviews/presentation/screens/seller_reviews_screen.dart';
+import 'package:ohara/features/seller_store/domain/entities/seller_store.dart';
+import 'package:ohara/features/seller_store/presentation/screens/my_offers_screen.dart';
+import 'package:ohara/features/seller_store/presentation/screens/shipping_settings_screen.dart';
+import 'package:ohara/features/seller_store/presentation/screens/store_activity_screen.dart';
+import 'package:ohara/features/seller_store/presentation/screens/store_memberships_screen.dart';
+import 'package:ohara/features/seller_store/presentation/screens/store_policies_screen.dart';
+import 'package:ohara/features/seller_store/presentation/screens/store_team_screen.dart';
 import 'package:ohara/features/settings/presentation/screens/adresses_screen.dart';
 import 'package:ohara/features/settings/presentation/screens/appearance_screen.dart';
 import 'package:ohara/features/settings/presentation/screens/coupons_screen.dart';
@@ -884,6 +895,77 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: RoutePaths.sellerEarnings,
         name: RouteNames.sellerEarnings,
         builder: (context, state) => const SellerEarningsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerPayoutSettings,
+        name: RouteNames.sellerPayoutSettings,
+        builder: (context, state) => const SellerPayoutSettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerWithdrawals,
+        name: RouteNames.sellerWithdrawals,
+        builder: (context, state) => const SellerWithdrawalsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerFinancialReports,
+        name: RouteNames.sellerFinancialReports,
+        builder: (context, state) => const SellerFinancialReportsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerStorePolicies,
+        name: RouteNames.sellerStorePolicies,
+        builder: (context, state) => const StorePoliciesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerShippingSettings,
+        name: RouteNames.sellerShippingSettings,
+        builder: (context, state) => const ShippingSettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerTeam,
+        name: RouteNames.sellerTeam,
+        builder: (context, state) => const StoreTeamScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerActivityLog,
+        name: RouteNames.sellerActivityLog,
+        builder: (context, state) => const StoreActivityScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerTodayOrders,
+        name: RouteNames.sellerTodayOrders,
+        builder: (context, state) => const SellerTodayOrdersScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerMyOffers,
+        name: RouteNames.sellerMyOffers,
+        builder: (context, state) => const MyOffersScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.storeMemberships,
+        name: RouteNames.storeMemberships,
+        builder: (context, state) => const StoreMembershipsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.storeWorkspace,
+        name: RouteNames.storeWorkspace,
+        // Opened from her list, which hands the membership over; a cold
+        // start without it has nothing to open and goes back to the list.
+        redirect: (context, state) =>
+            state.extra is StoreMembership ? null : RoutePaths.storeMemberships,
+        builder: (context, state) => StoreWorkspaceScreen(
+          membership: state.extra! as StoreMembership,
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.storeWorkspaceOrders,
+        name: RouteNames.storeWorkspaceOrders,
+        builder: (context, state) => const SellerOrdersScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.storeWorkspaceProducts,
+        name: RouteNames.storeWorkspaceProducts,
+        builder: (context, state) => const MyProductsScreen(),
       ),
       GoRoute(
         path: RoutePaths.sellerReviews,

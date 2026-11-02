@@ -25,6 +25,7 @@ import {
   UserRole,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { openText } from '../../common/crypto/sealed-text';
 import { Money, REVENUE_STATUSES } from '../../common/money';
 import { LedgerService, PostingLine } from '../ledger/ledger.service';
 import { LoyaltyService } from '../finance/loyalty.service';
@@ -866,7 +867,7 @@ export class CommissionsService {
         count: row._count._all,
       })),
       ledgers: ledgers.map((ledger) => this.serializeLedger(ledger)),
-      payouts: payouts.map((payout) => this.serializePayout(payout)),
+      payouts: payouts.map((payout) => this.serializePayout(payout, true)),
     };
   }
 
@@ -958,7 +959,7 @@ export class CommissionsService {
         },
       });
     });
-    return this.serializePayout(payout);
+    return this.serializePayout(payout, true);
   }
 
   /**
@@ -1001,7 +1002,7 @@ export class CommissionsService {
     // Re-sending the status a payout already has is answered, not refused —
     // a retried request must not turn into an error after the money moved.
     if (payout.status === dto.status) {
-      return this.serializePayout(payout);
+      return this.serializePayout(payout, true);
     }
     assertPayoutTransition(payout.status, dto.status);
 
@@ -1115,7 +1116,7 @@ export class CommissionsService {
       },
     });
 
-    return this.serializePayout(updated);
+    return this.serializePayout(updated, true);
   }
 
   async updateLedgerStatus(id: string, dto: CommissionLedgerStatusDto) {
@@ -1306,7 +1307,7 @@ export class CommissionsService {
     };
   }
 
-  private serializePayout(payout: SellerPayout) {
+  private serializePayout(payout: SellerPayout, reveal = false) {
     return {
       id: payout.id,
       seller_id: payout.sellerId,
@@ -1323,6 +1324,11 @@ export class CommissionsService {
       created_at: payout.createdAt.toISOString(),
       approved_at: payout.approvedAt?.toISOString() ?? null,
       paid_at: payout.paidAt?.toISOString() ?? null,
+      // Whoever pays it needs the whole destination — the finance console
+      // only. The seller's own statement keeps the masked label.
+      method: payout.method?.toLowerCase() ?? null,
+      destination_label: payout.destinationLabel,
+      destination: reveal ? openText(payout.destinationSealed) : null,
     };
   }
 }

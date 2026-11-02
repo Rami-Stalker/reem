@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ohara/core/experience/role_experience.dart';
+import 'package:ohara/core/network/interceptors/store_context_interceptor.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/entities/user.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_state.dart';
@@ -104,6 +105,17 @@ const _sellerToolRoutes = <String>{
   RoutePaths.sellerHealth,
   RoutePaths.sellerStore,
   RoutePaths.sellerEarnings,
+  RoutePaths.sellerPayoutSettings,
+  RoutePaths.sellerWithdrawals,
+  RoutePaths.sellerFinancialReports,
+  RoutePaths.sellerStorePolicies,
+  RoutePaths.sellerShippingSettings,
+  RoutePaths.sellerTeam,
+  RoutePaths.sellerActivityLog,
+  RoutePaths.sellerTodayOrders,
+  RoutePaths.sellerMyOffers,
+  RoutePaths.storeWorkspaceOrders,
+  RoutePaths.storeWorkspaceProducts,
   RoutePaths.sellerOrders,
   RoutePaths.sellerDeliverySettings,
   RoutePaths.sellerReturns,
@@ -193,7 +205,10 @@ String? authGuard(BuildContext context, GoRouterState state, AuthState auth) {
   // Seller tools are explicit so `/seller-verification` remains available to
   // customers who are applying for seller access.
   final isSellerToolRoute = _matchesRouteGroup(location, _sellerToolRoutes);
-  if (isSellerToolRoute && !_canUseSellerTools(role)) {
+  // A team member with a shop open works its tools; the server checks her
+  // role on every request.
+  final actingForShop = StoreActingContext.storeId != null;
+  if (isSellerToolRoute && !_canUseSellerTools(role) && !actingForShop) {
     return RoutePaths.home;
   }
 

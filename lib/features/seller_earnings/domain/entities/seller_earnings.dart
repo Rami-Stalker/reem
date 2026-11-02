@@ -106,6 +106,45 @@ enum PayoutStatus {
   bool get isCancellable => this == PayoutStatus.pending;
 }
 
+/// The two ways a boutique is paid.
+enum PayoutMethod {
+  shamCash,
+  visa;
+
+  static PayoutMethod? fromWire(String? value) =>
+      switch (value?.toLowerCase()) {
+        'sham_cash' => PayoutMethod.shamCash,
+        'visa' => PayoutMethod.visa,
+        _ => null,
+      };
+
+  String get wire => switch (this) {
+    PayoutMethod.shamCash => 'SHAM_CASH',
+    PayoutMethod.visa => 'VISA',
+  };
+}
+
+/// «إعدادات الدفع» — where her withdrawals are sent. Only ever masked here:
+/// the full card number never comes back from the server.
+class PayoutAccount extends Equatable {
+  const PayoutAccount({
+    required this.method,
+    required this.holderName,
+    required this.masked,
+    this.updatedAt,
+  });
+
+  final PayoutMethod method;
+  final String holderName;
+
+  /// «•••• 4567».
+  final String masked;
+  final DateTime? updatedAt;
+
+  @override
+  List<Object?> get props => [method, holderName, masked, updatedAt];
+}
+
 /// A withdrawal request — «طلب سحب».
 class PendingPayout extends Equatable {
   const PendingPayout({
@@ -116,6 +155,8 @@ class PendingPayout extends Equatable {
     required this.periodEnd,
     this.createdAt,
     this.paidAt,
+    this.method,
+    this.destination,
   });
 
   final String id;
@@ -128,6 +169,10 @@ class PendingPayout extends Equatable {
   final DateTime periodEnd;
   final DateTime? createdAt;
   final DateTime? paidAt;
+
+  /// Where it is sent, as it was when she asked: «شام كاش · •••• 4567».
+  final PayoutMethod? method;
+  final String? destination;
 
   bool get isApproved => status == PayoutStatus.approved;
 
@@ -145,12 +190,20 @@ enum PayoutBlocker {
   requestOpen,
 
   /// Nothing has come out of escrow yet.
-  nothingReleased;
+  nothingReleased,
+
+  /// What was released is matched by refunds or disputes.
+  offsetByRefunds,
+
+  /// She has not said where to be paid — Sham Cash or Visa.
+  noPayoutAccount;
 
   static PayoutBlocker? fromWire(String? value) => switch (value) {
     'payout_frozen' => PayoutBlocker.frozen,
     'request_open' => PayoutBlocker.requestOpen,
     'nothing_released' => PayoutBlocker.nothingReleased,
+    'offset_by_refunds' => PayoutBlocker.offsetByRefunds,
+    'no_payout_account' => PayoutBlocker.noPayoutAccount,
     _ => null,
   };
 }
@@ -167,6 +220,7 @@ class PayoutAvailability extends Equatable {
     this.blockedBy,
     this.frozenUntil,
     this.openRequest,
+    this.payoutAccount,
   });
 
   final Money claimable;
@@ -178,8 +232,12 @@ class PayoutAvailability extends Equatable {
   final DateTime? frozenUntil;
   final PendingPayout? openRequest;
 
+  /// Where a request made now would be sent; null until she sets one.
+  final PayoutAccount? payoutAccount;
+
   @override
   List<Object?> get props => [
+    payoutAccount,
     claimable,
     ordersIncluded,
     canRequest,
@@ -240,4 +298,60 @@ class SellerEarnings extends Equatable {
     lifetimePaid,
     movements,
   ];
+}
+
+/// One month of «التقارير المالية».
+class SellerReportMonth extends Equatable {
+  const SellerReportMonth({
+    required this.month,
+    required this.orders,
+    required this.gross,
+    required this.commission,
+    required this.platformFees,
+    required this.net,
+    required this.reversedOrders,
+    required this.reversed,
+    required this.paidOut,
+  });
+
+  /// The first day of the month.
+  final DateTime month;
+
+  /// Sales settled that month, and what they came to.
+  final int orders;
+  final Money gross;
+
+  /// What the platform kept: its commission and any fees.
+  final Money commission;
+  final Money platformFees;
+
+  /// Hers, after commission and fees.
+  final Money net;
+
+  /// Sales reversed — returned or cancelled after settling.
+  final int reversedOrders;
+  final Money reversed;
+
+  /// What actually reached her Sham Cash or Visa that month.
+  final Money paidOut;
+
+  bool get isEmpty => orders == 0 && reversedOrders == 0 && paidOut.isZero;
+
+  @override
+  List<Object?> get props => [month, orders, gross, net, paidOut];
+}
+
+/// «التقارير المالية» — month by month, newest first, with the totals.
+class SellerReport extends Equatable {
+  const SellerReport({required this.months, required this.totals});
+
+  final List<SellerReportMonth> months;
+
+  /// The whole span, summed; its `month` is the oldest month.
+  final SellerReportMonth totals;
+
+  bool get isEmpty => months.every((m) => m.isEmpty);
+
+  @override
+  List<Object?> get props => [months, totals];
 }

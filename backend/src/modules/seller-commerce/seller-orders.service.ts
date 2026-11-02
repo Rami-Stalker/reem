@@ -118,10 +118,15 @@ export class SellerOrdersService {
   // ── Reading ───────────────────────────────────────────────────────────
 
   /** Her queue, plus the counts every tab needs to render its badge. */
-  async queue(user: AuthUser, tab: QueueTab | undefined, page: PaginationDto) {
+  async queue(
+    user: AuthUser,
+    tab: QueueTab | undefined,
+    page: PaginationDto & { today?: boolean },
+  ) {
     const where: Prisma.SellerOrderWhereInput = {
       sellerId: user.id,
       ...(tab ? { status: { in: [...QUEUE_TABS[tab]] } } : {}),
+      ...(page.today ? { createdAt: { gte: startOfDamascusDay() } } : {}),
     };
 
     const [rows, total, counts] = await Promise.all([
@@ -908,3 +913,20 @@ export class SellerOrdersService {
 }
 
 export const SELLER_QUEUE_TABS = Object.keys(QUEUE_TABS) as QueueTab[];
+
+/** Midnight today in Damascus, as an instant. */
+export function startOfDamascusDay(now = new Date()): Date {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Damascus',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(now);
+  const part = (type: string) =>
+    Number(parts.find((p) => p.type === type)?.value ?? 0);
+  const elapsed =
+    (part('hour') * 3600 + part('minute') * 60 + part('second')) * 1000 +
+    now.getMilliseconds();
+  return new Date(now.getTime() - elapsed);
+}

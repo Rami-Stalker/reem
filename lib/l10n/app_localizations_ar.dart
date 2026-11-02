@@ -15123,6 +15123,793 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get payoutSettingsSubtitle => 'وين بتوصلكِ أرباحكِ';
+
+  @override
+  String get payoutSettingsIntro =>
+      'أرباحكِ بتنحوّل على محفظة شام كاش أو بطاقة فيزا فقط. كل طلب سحب بيروح للحساب المحفوظ هون.';
+
+  @override
+  String get payoutMethodShamCash => 'شام كاش';
+
+  @override
+  String get payoutMethodVisa => 'فيزا';
+
+  @override
+  String get payoutMethodShamCashHint => 'تحويل لمحفظتكِ';
+
+  @override
+  String get payoutMethodVisaHint => 'تحويل لبطاقتكِ';
+
+  @override
+  String get payoutHolderName => 'اسم صاحبة الحساب';
+
+  @override
+  String get payoutHolderNameHint => 'متل ما هو مسجّل بالمحفظة أو على البطاقة';
+
+  @override
+  String get payoutShamCashNumber => 'رقم محفظة شام كاش';
+
+  @override
+  String get payoutShamCashNumberHint => '09xxxxxxxx أو رمز الحساب';
+
+  @override
+  String get payoutCardNumber => 'رقم بطاقة الفيزا';
+
+  @override
+  String payoutCardNumberKeep(Object masked) {
+    return 'اتركيه فاضي لتبقى نفس البطاقة $masked';
+  }
+
+  @override
+  String get payoutSave => 'حفظ طريقة الاستلام';
+
+  @override
+  String get payoutSaved => 'انحفظت طريقة استلام أرباحكِ';
+
+  @override
+  String get payoutChange => 'تغيير';
+
+  @override
+  String get payoutRemove => 'حذف';
+
+  @override
+  String get payoutRemoveConfirm => 'حذف طريقة الاستلام؟';
+
+  @override
+  String get payoutRemoveBlurb =>
+      'ما رح تقدري تطلبي سحب لحتى تحددي طريقة جديدة. الطلبات اللي قدّمتيها قبل بتضل رايحة للحساب القديم.';
+
+  @override
+  String get payoutRemoved => 'انحذفت طريقة الاستلام';
+
+  @override
+  String get payoutCurrentTitle => 'أرباحكِ بتوصل على';
+
+  @override
+  String get payoutSecureNote =>
+      'رقم البطاقة بيتخزّن مشفّر، وما بيظهر إلا آخر ٤ أرقام.';
+
+  @override
+  String get payoutErrorHolder => 'اكتبي الاسم الكامل';
+
+  @override
+  String get payoutErrorShamCash =>
+      'اكتبي رقم المحفظة 09xxxxxxxx أو رمز الحساب';
+
+  @override
+  String get payoutErrorVisa =>
+      'رقم البطاقة غير صحيح — لازم تكون بطاقة فيزا (بتبلّش بـ4)';
+
+  @override
+  String get payoutBlockedNoAccount =>
+      'حدّدي وين بدكِ تستلمي أرباحكِ — شام كاش أو فيزا — لتقدري تطلبي سحب.';
+
+  @override
+  String get payoutSetAccountAction => 'تحديد طريقة الاستلام';
+
+  @override
+  String get payoutBlockedOffset =>
+      'أرباحكِ المتاحة مقابلها مرتجعات أو نزاعات، لهيك ما في مبلغ للسحب هلق.';
+
+  @override
+  String payoutSendTo(Object destination) {
+    return 'رح ينحوّل على: $destination';
+  }
+
+  @override
+  String get withdrawalSubtitle => 'اطلبي أرباحكِ وتابعي التحويلات';
+
+  @override
+  String get withdrawalHistory => 'سجلّ السحوبات';
+
+  @override
+  String get withdrawalHistoryEmpty => 'لسّا ما طلبتي أي سحب';
+
+  @override
+  String get withdrawalHistoryEmptyBody =>
+      'لمّا تطلبي سحب أرباحكِ رح يظهر هون مع حالته.';
+
+  @override
+  String get payoutStatusPaid => 'انصرف';
+
+  @override
+  String get payoutStatusFailed => 'ما نجح التحويل';
+
+  @override
+  String get payoutStatusCancelled => 'ملغى';
+
+  @override
+  String get withdrawalHowTitle => 'كيف بيصير السحب؟';
+
+  @override
+  String get withdrawalHow1 =>
+      'الأرباح بتصير متاحة بعد توصيل الطلب وانتهاء مهلة الإرجاع.';
+
+  @override
+  String get withdrawalHow2 => 'بتطلبي السحب، والإدارة بتراجعه وبتعتمده.';
+
+  @override
+  String get withdrawalHow3 =>
+      'بينحوّل المبلغ على محفظة شام كاش أو بطاقة الفيزا المحفوظة.';
+
+  @override
+  String get reportsSubtitle => 'أرباحكِ شهر بشهر';
+
+  @override
+  String reportsRangeMonths(Object count) {
+    return '$count شهور';
+  }
+
+  @override
+  String get reportsNet => 'صافي أرباحكِ';
+
+  @override
+  String get reportsGross => 'المبيعات';
+
+  @override
+  String get reportsCommission => 'عمولة المنصة';
+
+  @override
+  String get reportsFees => 'رسوم المنصة';
+
+  @override
+  String get reportsReversed => 'مرتجعات وإلغاءات';
+
+  @override
+  String get reportsPaidOut => 'انحوّل لإلكِ';
+
+  @override
+  String reportsOrders(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count طلب',
+      few: '$count طلبات',
+      two: 'طلبين',
+      one: 'طلب واحد',
+      zero: 'ولا طلب',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportsEmpty => 'ما في مبيعات بهالفترة';
+
+  @override
+  String get reportsEmptyBody =>
+      'لمّا يتسلّم أول طلب بيظهر هون تقرير كل شهر: المبيعات، العمولة، وصافي أرباحكِ.';
+
+  @override
+  String get reportsNetByMonth => 'صافي الأرباح لكل شهر';
+
+  @override
+  String get reportsMonths => 'تفاصيل الأشهر';
+
+  @override
+  String get reportsNoActivity => 'ما في حركة بهالشهر';
+
+  @override
+  String get reportsNote =>
+      'الأرقام من سجلّ العمولات: كل طلب بينحسب بالشهر اللي تسوّى فيه.';
+
+  @override
+  String get reportsRangeYear => 'سنة';
+
+  @override
+  String get payoutCardNumberHint => 'الأرقام الـ16 على وجه البطاقة';
+
+  @override
+  String get storePoliciesSubtitle => 'شروط الإرجاع والتبديل بكلماتكِ';
+
+  @override
+  String storePoliciesGuarantee(Object days) {
+    return 'ضمان المنصة: الزبونة بتقدر ترجع أي قطعة خلال $days أيام من الاستلام إذا كانت بحالتها الأصلية. سياستكِ بتنضاف لهالضمان وما بتنقص منه.';
+  }
+
+  @override
+  String get storePoliciesAcceptsExchanges => 'بقبل التبديل (مقاس أو لون)';
+
+  @override
+  String get storePoliciesExchangeNote => 'شروط التبديل';
+
+  @override
+  String get storePoliciesExchangeHint =>
+      'مثلاً: التبديل خلال ٧ أيام والزبونة بتدفع الشحن';
+
+  @override
+  String get storePoliciesReturnNote => 'ملاحظات الإرجاع';
+
+  @override
+  String get storePoliciesReturnHint =>
+      'مثلاً: لازم ترجع القطعة بكرتونتها مع البطاقة';
+
+  @override
+  String get storePoliciesCareNote => 'العناية بالقطع';
+
+  @override
+  String get storePoliciesCareHint => 'مثلاً: غسيل يدوي بمي باردة';
+
+  @override
+  String get storePoliciesCustomNote => 'الطلبات الخاصة والتفصيل';
+
+  @override
+  String get storePoliciesCustomHint =>
+      'مثلاً: القطع المفصّلة حسب المقاس ما بترجع';
+
+  @override
+  String get storePoliciesSave => 'حفظ السياسات';
+
+  @override
+  String get storePoliciesSaved => 'انحفظت سياسات متجركِ';
+
+  @override
+  String get storePoliciesShownTo => 'بتظهر هالسياسات للزبونات بصفحة متجركِ.';
+
+  @override
+  String storeSettingsUpdatedAt(Object date) {
+    return 'آخر تعديل $date';
+  }
+
+  @override
+  String get shippingSettingsSubtitle => 'منين بتشحني وقدّيش بياخد التجهيز';
+
+  @override
+  String get shippingShipsFrom => 'منين بتشحني';
+
+  @override
+  String get shippingGovernorate => 'المحافظة';
+
+  @override
+  String get shippingArea => 'المنطقة';
+
+  @override
+  String get shippingAreaHint => 'مثلاً: المزة';
+
+  @override
+  String get shippingHandlingTitle => 'مدة تجهيز الطلب';
+
+  @override
+  String shippingHandlingDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count يوم',
+      few: '$count أيام',
+      two: 'يومين',
+      one: 'يوم واحد',
+      zero: 'نفس اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shippingHandlingHint => 'بتنطبق على كل منتج جديد بتضيفيه.';
+
+  @override
+  String get shippingApplyToListings => 'طبّقيها كمان على كل منتجاتي الحالية';
+
+  @override
+  String get shippingPickupTitle => 'استلام من المحل';
+
+  @override
+  String get shippingPickupToggle => 'الزبونة بتقدر تستلم من المحل';
+
+  @override
+  String get shippingPickupAddress => 'عنوان المحل';
+
+  @override
+  String get shippingPickupHours => 'أوقات الاستلام';
+
+  @override
+  String get shippingPickupHoursHint => 'مثلاً: كل يوم من ١٠ الصبح لـ ٨ المسا';
+
+  @override
+  String get shippingPackagingNote => 'ملاحظة عن التغليف';
+
+  @override
+  String get shippingPackagingHint => 'مثلاً: تغليف هدية مجاني';
+
+  @override
+  String get shippingSave => 'حفظ إعدادات الشحن';
+
+  @override
+  String shippingSavedListings(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'انحفظت، وتعدّلت $count منتجات',
+      one: 'انحفظت، وتعدّل منتج واحد',
+      zero: 'انحفظت إعدادات الشحن',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shippingRatesTitle => 'أسعار التوصيل على المنصة';
+
+  @override
+  String get shippingRatesNote =>
+      'التوصيل بتتولّاه المنصة، والزبونة بتدفع رسومه حسب محافظتها.';
+
+  @override
+  String shippingEtaHours(Object max, Object min) {
+    return '$min–$max ساعة';
+  }
+
+  @override
+  String shippingEtaDays(Object max, Object min) {
+    return '$min–$max يوم';
+  }
+
+  @override
+  String get shippingRural => 'مناطق بعيدة';
+
+  @override
+  String get shippingPickupNeedsAddress => 'اكتبي عنوان المحل';
+
+  @override
+  String get teamSubtitle => 'الناس اللي بيشتغلوا معكِ بالمتجر';
+
+  @override
+  String get teamInvite => 'دعوة عضوة';
+
+  @override
+  String get teamInvitePhone => 'رقم موبايلها';
+
+  @override
+  String get teamInvitePhoneHint => 'لازم يكون عندها حساب بالتطبيق';
+
+  @override
+  String get teamInviteRole => 'الصلاحية';
+
+  @override
+  String get teamInviteSend => 'إرسال الدعوة';
+
+  @override
+  String get teamInvited => 'انبعتت الدعوة — رح يوصلها إشعار لتقبل';
+
+  @override
+  String get teamRoleManager => 'مديرة';
+
+  @override
+  String get teamRoleManagerHint => 'الطلبات والمنتجات والمحتوى والتقييمات';
+
+  @override
+  String get teamRoleOrders => 'الطلبات';
+
+  @override
+  String get teamRoleOrdersHint => 'تأكيد الطلبات وتجهيزها والمحادثات';
+
+  @override
+  String get teamRoleCatalog => 'المنتجات';
+
+  @override
+  String get teamRoleCatalogHint => 'إضافة المنتجات وتعديل الأسعار والمخزون';
+
+  @override
+  String get teamMoneyNote =>
+      'الأرباح والسحب وإعدادات الدفع بتضل إلكِ وحدكِ — ولا عضوة بتوصلها.';
+
+  @override
+  String get teamPending => 'ناطرة القبول';
+
+  @override
+  String get teamEmpty => 'لسّا ما في حدا بالفريق';
+
+  @override
+  String get teamEmptyBody =>
+      'ادعي حدا يساعدكِ بالطلبات أو المنتجات — كل عضوة بتشتغل من حسابها وبالصلاحية اللي بتحدديها.';
+
+  @override
+  String get teamChangeRole => 'تغيير الصلاحية';
+
+  @override
+  String get teamRemove => 'إزالة من الفريق';
+
+  @override
+  String teamRemoveConfirm(Object name) {
+    return 'إزالة $name من الفريق؟';
+  }
+
+  @override
+  String get teamRemoveBlurb => 'بيوقف وصولها للمتجر فوراً.';
+
+  @override
+  String get teamRemoved => 'انشالت من الفريق';
+
+  @override
+  String get teamRoleChanged => 'تغيّرت الصلاحية';
+
+  @override
+  String get activitySubtitle => 'شو صار على متجركِ ومين عمله';
+
+  @override
+  String get activityEmpty => 'ما في نشاط لسّا';
+
+  @override
+  String get activityEmptyBody =>
+      'كل تعديل على المتجر وكل تسجيل دخول رح يظهر هون.';
+
+  @override
+  String get activityLoadMore => 'عرض الأقدم';
+
+  @override
+  String get activityByYou => 'إنتِ';
+
+  @override
+  String get activityRefused => 'انرفض';
+
+  @override
+  String get activityDeviceIos => 'آيفون';
+
+  @override
+  String get activityDeviceAndroid => 'أندرويد';
+
+  @override
+  String get activityDeviceApp => 'التطبيق';
+
+  @override
+  String get activityDeviceWeb => 'متصفح';
+
+  @override
+  String get actLogin => 'تسجيل دخول';
+
+  @override
+  String get actOrderConfirm => 'قبول طلب';
+
+  @override
+  String get actOrderReady => 'تجهيز طلب للشحن';
+
+  @override
+  String get actOrderHandOver => 'تسليم طلب للتوصيل';
+
+  @override
+  String get actOrderDeliver => 'تسليم طلب للزبونة';
+
+  @override
+  String get actOrderCancel => 'إلغاء طلب';
+
+  @override
+  String get actProductAdd => 'إضافة منتج';
+
+  @override
+  String get actProductEdit => 'تعديل منتج';
+
+  @override
+  String get actVariant => 'تعديل مقاسات أو ألوان';
+
+  @override
+  String get actOfferAdd => 'عرض منتج للبيع';
+
+  @override
+  String get actOfferEdit => 'تعديل سعر أو تفاصيل البيع';
+
+  @override
+  String get actStock => 'تعديل المخزون';
+
+  @override
+  String get actOfferRemove => 'إيقاف بيع منتج';
+
+  @override
+  String get actPolicies => 'تعديل سياسات المتجر';
+
+  @override
+  String get actShipping => 'تعديل إعدادات الشحن';
+
+  @override
+  String get actTeamInvite => 'دعوة عضوة للفريق';
+
+  @override
+  String get actTeamRole => 'تغيير صلاحية عضوة';
+
+  @override
+  String get actTeamRemove => 'إزالة عضوة من الفريق';
+
+  @override
+  String get actPayoutAccount => 'تعديل طريقة استلام الأرباح';
+
+  @override
+  String get actPayoutRequest => 'طلب سحب أرباح';
+
+  @override
+  String get actPayoutCancel => 'إلغاء طلب سحب';
+
+  @override
+  String get actPost => 'منشور على المتجر';
+
+  @override
+  String get actStory => 'ستوري';
+
+  @override
+  String get actReturn => 'متابعة طلب إرجاع';
+
+  @override
+  String get actReviewReply => 'رد على تقييم';
+
+  @override
+  String get actCoupon => 'كود خصم';
+
+  @override
+  String get actAds => 'إعلانات المتجر';
+
+  @override
+  String get actPhoneChange => 'تغيير رقم الموبايل';
+
+  @override
+  String get actGeneric => 'تعديل على المتجر';
+
+  @override
+  String get myOffersSubtitle => 'خصومات على قطعكِ وأكواد خصم لزبوناتكِ';
+
+  @override
+  String get offersSaleTitle => 'قطع عليها خصم';
+
+  @override
+  String get offersSaleEmpty => 'ما في قطع عليها خصم هلق';
+
+  @override
+  String get offersSaleEmptyBody =>
+      'حطّي خصم على أي قطعة وبيظهر سعرها القديم مشطوب.';
+
+  @override
+  String get offersAddSale => 'خصم على قطعة';
+
+  @override
+  String get offersSalePercent => 'نسبة الخصم';
+
+  @override
+  String offersSaleNewPrice(Object price) {
+    return 'السعر بعد الخصم: $price';
+  }
+
+  @override
+  String get offersSaleApply => 'تطبيق الخصم';
+
+  @override
+  String get offersSaleApplied => 'انطبق الخصم';
+
+  @override
+  String get offersSaleRemove => 'إلغاء الخصم';
+
+  @override
+  String get offersSaleRemoved => 'انلغى الخصم';
+
+  @override
+  String get offersPickPiece => 'اختاري القطعة';
+
+  @override
+  String get offersCodesTitle => 'أكواد الخصم';
+
+  @override
+  String get offersCodesEmpty => 'ما عندكِ أكواد خصم';
+
+  @override
+  String get offersCodesEmptyBody =>
+      'اعملي كود وابعتيه لزبوناتكِ — بينطبق على قطعكِ بس، والخصم من حصتكِ.';
+
+  @override
+  String get offersNewCode => 'كود جديد';
+
+  @override
+  String get offersCodeField => 'الكود';
+
+  @override
+  String get offersCodeHint => 'مثلاً: EID20';
+
+  @override
+  String get offersCodePercent => 'نسبة الخصم ٪';
+
+  @override
+  String get offersCodeMinOrder => 'أقل قيمة للطلب بالليرة (اختياري)';
+
+  @override
+  String get offersCodeMaxUses => 'عدد مرات الاستخدام (اختياري)';
+
+  @override
+  String get offersCodeExpiry => 'مدة الكود';
+
+  @override
+  String offersCodeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count يوم',
+      few: '$count أيام',
+      two: 'يومين',
+      one: 'يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get offersCodeCreate => 'إنشاء الكود';
+
+  @override
+  String get offersCodeCreated => 'انعمل الكود';
+
+  @override
+  String get offersCodeCopied => 'انسخ الكود';
+
+  @override
+  String offersCodeUsage(Object max, Object used) {
+    return '$used من $max استخدام';
+  }
+
+  @override
+  String offersCodeUsed(Object count) {
+    return '$count استخدام';
+  }
+
+  @override
+  String offersCodeExpires(Object date) {
+    return 'بينتهي $date';
+  }
+
+  @override
+  String get offersCodeExpired => 'منتهي';
+
+  @override
+  String get offersCodeStopped => 'موقوف';
+
+  @override
+  String get offersCodeLive => 'شغّال';
+
+  @override
+  String get offersCodeStop => 'إيقاف';
+
+  @override
+  String get offersCodeResume => 'تفعيل';
+
+  @override
+  String get offersCodeInvalid => 'الكود من ٣ لـ٢٠ حرف إنكليزي أو رقم';
+
+  @override
+  String get offersCodePercentInvalid => 'بين ٥ و٩٠';
+
+  @override
+  String get todayOrdersSubtitle => 'الطلبات اللي وصلت اليوم';
+
+  @override
+  String todayOrdersSummary(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count طلب اليوم',
+      few: '$count طلبات اليوم',
+      two: 'طلبين اليوم',
+      one: 'طلب واحد اليوم',
+      zero: 'ولا طلب اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayOrdersNeedAction(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بحاجة لإجراء',
+      one: 'واحد بحاجة لإجراء',
+      zero: 'كلها ماشية',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayOrdersEmpty => 'ما وصل طلبات اليوم لسّا';
+
+  @override
+  String get todayOrdersEmptyBody => 'أول ما يوصل طلب جديد بيظهر هون.';
+
+  @override
+  String get todayOrdersAll => 'كل الطلبات';
+
+  @override
+  String get membershipsTitle => 'متاجر بشتغل فيها';
+
+  @override
+  String get membershipsSubtitle => 'دعوات الفرق والمتاجر اللي إنتِ فيها';
+
+  @override
+  String get membershipsEmpty => 'ما في دعوات';
+
+  @override
+  String get membershipsEmptyBody =>
+      'لمّا متجر يدعيكِ لفريقه بتظهر الدعوة هون.';
+
+  @override
+  String membershipInviteFrom(Object store) {
+    return '$store بدها ياكِ بفريقها';
+  }
+
+  @override
+  String get membershipAccept => 'قبول';
+
+  @override
+  String get membershipDecline => 'رفض';
+
+  @override
+  String get membershipOpen => 'فتح المتجر';
+
+  @override
+  String get membershipLeave => 'مغادرة الفريق';
+
+  @override
+  String membershipLeaveConfirm(Object store) {
+    return 'مغادرة فريق $store؟';
+  }
+
+  @override
+  String get membershipAccepted => 'صرتِ بالفريق';
+
+  @override
+  String get membershipDeclined => 'انرفضت الدعوة';
+
+  @override
+  String get membershipLeft => 'غادرتِ الفريق';
+
+  @override
+  String workspaceActingAs(Object store) {
+    return 'عم تشتغلي باسم $store';
+  }
+
+  @override
+  String get workspaceOrders => 'الطلبات';
+
+  @override
+  String get workspaceProducts => 'المنتجات';
+
+  @override
+  String get storeInfoTitle => 'سياسات المتجر';
+
+  @override
+  String storeInfoReturns(Object days) {
+    return 'إرجاع خلال $days أيام من الاستلام';
+  }
+
+  @override
+  String get storeInfoExchanges => 'بيقبل التبديل';
+
+  @override
+  String get storeInfoNoExchanges => 'ما بيقبل التبديل';
+
+  @override
+  String storeInfoShipsFrom(Object place) {
+    return 'بيشحن من $place';
+  }
+
+  @override
+  String storeInfoHandling(Object days) {
+    return 'بيجهّز الطلب خلال $days';
+  }
+
+  @override
+  String storeInfoPickup(Object address) {
+    return 'استلام من المحل: $address';
+  }
+
+  @override
   String get sellerOrderActionOutForDelivery => 'بالطريق';
 
   @override
@@ -15180,7 +15967,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sellerDriverLinkTitle => 'رابط السائق';
 
   @override
-  String get sellerDriverLinkBody => 'ابعتيه لسائق شركة التوصيل — بيحدّث حالة الطلب منه بدون تطبيق.';
+  String get sellerDriverLinkBody =>
+      'ابعتيه لسائق شركة التوصيل — بيحدّث حالة الطلب منه بدون تطبيق.';
 
   @override
   String get sellerDriverLinkCopy => 'نسخ الرابط';
@@ -15195,7 +15983,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get orderHandoverCodeTitle => 'رمز الاستلام';
 
   @override
-  String get orderHandoverCodeBody => 'أعطي هالرمز للي عم يوصّلك الطلب — بس لما يصير بإيدك.';
+  String get orderHandoverCodeBody =>
+      'أعطي هالرمز للي عم يوصّلك الطلب — بس لما يصير بإيدك.';
 
   @override
   String get deliverySettingsTitle => 'التوصيل';
@@ -15207,16 +15996,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deliverySettingsSelfLabel => 'بوصّل الطلبات بنفسي';
 
   @override
-  String get deliverySettingsSelfBody => 'الطلبات ضمن منطقتكِ بتوصليها إنتِ، وشركة التوصيل بتاخد الباقي.';
+  String get deliverySettingsSelfBody =>
+      'الطلبات ضمن منطقتكِ بتوصليها إنتِ، وشركة التوصيل بتاخد الباقي.';
 
   @override
-  String get deliverySettingsOffBody => 'كل الطلبات بتروح لشركة التوصيل المتعاقدة معنا.';
+  String get deliverySettingsOffBody =>
+      'كل الطلبات بتروح لشركة التوصيل المتعاقدة معنا.';
 
   @override
   String get deliverySettingsGovernorates => 'المحافظات اللي بتوصلي إلها';
 
   @override
-  String get deliverySettingsGovernoratesHint => 'إذا ما اخترتي ولا وحدة، بتوصلي لكل مكان';
+  String get deliverySettingsGovernoratesHint =>
+      'إذا ما اخترتي ولا وحدة، بتوصلي لكل مكان';
 
   @override
   String get deliverySettingsCities => 'بس هالمدن (اختياري)';

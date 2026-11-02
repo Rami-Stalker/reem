@@ -16,7 +16,10 @@ class SellerOrdersRepositoryImpl
     SellerQueueTab? tab,
     int page = 1,
     int limit = 20,
-  }) => guard(() => remote.queue(tab: tab, page: page, limit: limit));
+    bool today = false,
+  }) => guard(
+    () => remote.queue(tab: tab, page: page, limit: limit, today: today),
+  );
 
   /// One entry point for every action.
   ///

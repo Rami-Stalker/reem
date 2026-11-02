@@ -12,6 +12,7 @@ import {
   RoundingPolicy,
   SellerOrderStatus,
   UserRole,
+  PayoutMethod,
 } from '@prisma/client';
 
 import { Money } from '../../common/money';
@@ -25,6 +26,7 @@ import { PurchaseRewardsService } from '../rewards/purchase-rewards.service';
 import { ReferralsService } from '../rewards/referrals.service';
 import { FinancialAuditService } from './financial-audit.service';
 import { LoyaltyService } from './loyalty.service';
+import { SellerPayoutAccountService } from './seller-payout-account.service';
 import { SellerPayoutsService } from './seller-payouts.service';
 
 /**
@@ -91,9 +93,19 @@ function build(tx: Tx): World {
     loyalty,
     rewards,
     commissions: new CommissionsService(db, ledger, loyalty, audit, rewards),
-    payouts: new SellerPayoutsService(db, audit),
+    payouts: new SellerPayoutsService(db, audit, paidToShamCash),
   };
 }
+
+/** A boutique that has said where she is paid — a Sham Cash wallet. */
+const paidToShamCash = {
+  get: async () => ({ method: 'sham_cash', label: 'شام كاش · •••• 4567' }),
+  destinationFor: async () => ({
+    method: PayoutMethod.SHAM_CASH,
+    label: 'شام كاش · •••• 4567',
+    sealed: 'sealed',
+  }),
+} as unknown as SellerPayoutAccountService;
 
 function dbTest(name: string, body: (world: World) => Promise<void>): void {
   test(name, async (t) => {

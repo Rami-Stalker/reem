@@ -11,4 +11,17 @@ abstract interface class SellerEarningsRepository {
   Future<Result<PendingPayout>> cancelPayout(String id);
 
   Future<Result<List<PendingPayout>>> payoutHistory();
+
+  Future<Result<PayoutAccount?>> payoutAccount();
+
+  Future<Result<PayoutAccount>> savePayoutAccount({
+    required PayoutMethod method,
+    required String holderName,
+    String? shamCashNumber,
+    String? cardNumber,
+  });
+
+  Future<Result<void>> removePayoutAccount();
+
+  Future<Result<SellerReport>> report({int months = 12});
 }

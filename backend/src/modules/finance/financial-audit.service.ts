@@ -9,6 +9,8 @@ import { RequestContext } from '../auth/interfaces/request-context.interface';
 export const FinancialAction = {
   /** «صرف أرباح» */
   PayoutStatusChanged: 'payout.status_changed',
+  /** Where a boutique is paid changed — the first thing a takeover touches. */
+  PayoutAccountChanged: 'payout.account_changed',
   /** «إضافة/خصم رصيد من المحافظ» */
   WalletCredited: 'wallet.credited',
   WalletFrozen: 'wallet.frozen',

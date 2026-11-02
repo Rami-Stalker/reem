@@ -1,3 +1,4 @@
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDateString,
@@ -8,6 +9,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Matches,
   Max,
   MaxLength,
   Min,
@@ -277,4 +279,47 @@ export class RedeemCashbackDto {
   @IsNumber()
   @Min(0)
   amount?: number;
+}
+
+/** «عروضي» — a discount code a boutique funds, on her own pieces only. */
+export class CreateSellerCouponDto {
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @Matches(/^[A-Z0-9]{3,20}$/, {
+    message: 'الكود من ٣ لـ٢٠ حرف إنكليزي أو رقم، بدون مسافات',
+  })
+  code!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  title?: string;
+
+  @Type(() => Number)
+  @IsInt({ message: 'نسبة الخصم لازم تكون رقم صحيح' })
+  @Min(5, { message: 'أقل خصم ٥٪' })
+  @Max(90, { message: 'أعلى خصم ٩٠٪' })
+  discount_percent!: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  min_order_amount?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  max_discount_amount?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  max_uses?: number;
+
+  @IsDateString()
+  expires_at!: string;
 }

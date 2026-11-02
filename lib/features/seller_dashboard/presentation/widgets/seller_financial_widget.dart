@@ -113,7 +113,7 @@ class SellerFinancialWidget extends ConsumerWidget {
                       ),
                     ),
                     FilledButton(
-                      onPressed: () => context.push(RoutePaths.sellerEarnings),
+                      onPressed: () => context.push(RoutePaths.sellerWithdrawals),
                       style: FilledButton.styleFrom(
                         backgroundColor: DsColors.onMedia,
                         foregroundColor: palette.primary,

@@ -6,6 +6,7 @@ import 'package:ohara/core/data/cache/cache_policy.dart';
 import 'package:ohara/core/network/http_cache/http_cache_entry.dart';
 import 'package:ohara/core/network/http_cache/http_cache_rules.dart';
 import 'package:ohara/core/network/http_cache/http_cache_store.dart';
+import 'package:ohara/core/network/interceptors/store_context_interceptor.dart';
 import 'package:ohara/core/observability/error_report.dart';
 import 'package:ohara/core/observability/error_reporter.dart';
 
@@ -193,7 +194,12 @@ class CacheInterceptor extends Interceptor {
             .map((e) => '${e.key}=${e.value}')
             .toList()
           ..sort();
-    return '${HttpCacheScope.current}|${options.method.toUpperCase()}'
+    // Working for a shop is a different reader of the same paths.
+    final store = options.headers[StoreContextInterceptor.header];
+    final scope = store == null
+        ? HttpCacheScope.current
+        : '${HttpCacheScope.current}@$store';
+    return '$scope|${options.method.toUpperCase()}'
         '|${options.path}|${query.join('&')}';
   }
 

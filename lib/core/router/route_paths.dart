@@ -288,6 +288,41 @@ abstract final class RoutePaths {
   static const wallet = '/wallet';
   static const sellerEarnings = '/seller/earnings';
 
+  /// «إعدادات الدفع» — where her withdrawals are sent: Sham Cash or Visa.
+  static const sellerPayoutSettings = '/seller/payout-settings';
+
+  /// «مركز السحب» — asking to be paid, and every request she has made.
+  static const sellerWithdrawals = '/seller/withdrawals';
+
+  /// «التقارير المالية» — month by month: sales, commission, net, payouts.
+  static const sellerFinancialReports = '/seller/financial-reports';
+
+  /// «سياسات المتجر» — returns, exchanges, shipping and care, in her words.
+  static const sellerStorePolicies = '/seller/store-policies';
+
+  /// «إعدادات الشحن» — where she ships, how fast, and from which day.
+  static const sellerShippingSettings = '/seller/shipping-settings';
+
+  /// «إدارة الفريق» — the people who work the boutique with her.
+  static const sellerTeam = '/seller/team';
+
+  /// «سجل النشاط» — what was done on the account, and by whom.
+  static const sellerActivityLog = '/seller/activity';
+
+  /// «طلبات اليوم» — the boutique's orders placed today.
+  static const sellerTodayOrders = '/seller/today-orders';
+
+  /// «عروضي» — pieces on sale and the shop's discount codes.
+  static const sellerMyOffers = '/seller/my-offers';
+
+  /// «متاجر بشتغل فيها» — team invitations and the shops she works in.
+  static const storeMemberships = '/store-memberships';
+
+  /// A shop she works for, opened from her own account.
+  static const storeWorkspace = '/store-workspace';
+  static const storeWorkspaceOrders = '/store-workspace/orders';
+  static const storeWorkspaceProducts = '/store-workspace/products';
+
   static const likeSheet = '/like-sheet';
   static const commentSheet = '/comment-sheet';
 

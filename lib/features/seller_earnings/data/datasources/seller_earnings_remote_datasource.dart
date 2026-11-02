@@ -15,4 +15,19 @@ abstract interface class SellerEarningsRemoteDataSource {
 
   /// Her withdrawal history, newest first.
   Future<List<PendingPayout>> payoutHistory();
+
+  /// Where she is paid, or null before she has said.
+  Future<PayoutAccount?> payoutAccount();
+
+  Future<PayoutAccount> savePayoutAccount({
+    required PayoutMethod method,
+    required String holderName,
+    String? shamCashNumber,
+    String? cardNumber,
+  });
+
+  Future<void> removePayoutAccount();
+
+  /// «التقارير المالية» over the last [months] months.
+  Future<SellerReport> report({int months = 12});
 }

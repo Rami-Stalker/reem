@@ -286,6 +286,7 @@ final class _FakeSellerOrders implements SellerOrdersRepository {
     SellerQueueTab? tab,
     int page = 1,
     int limit = 20,
+    bool today = false,
   }) async => Success(
     SellerOrderQueue(
       orders: _rows,
@@ -311,6 +312,7 @@ final class _FakeSellerOrders implements SellerOrdersRepository {
     String? reason,
     String? collected,
     String? carrier,
+    String? handoverCode,
   }) async => Success(_detail);
 
   static SellerOrderDetail get _detail => SellerOrderDetail(

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,7 +10,11 @@ import { Money } from '../../common/money';
 import { ScopedLine, eligibleSubtotal, scopeRefusal } from './coupon-scope';
 import { buildMeta, PaginationDto } from '../../common/dto/pagination.dto';
 import { serializeCoupon } from './rewards.serializer';
-import { CreateCouponDto, UpdateCouponDto } from './dto/rewards.dto';
+import {
+  CreateCouponDto,
+  CreateSellerCouponDto,
+  UpdateCouponDto,
+} from './dto/rewards.dto';
 
 const round = (n: number) => Math.round(n * 100) / 100;
 
@@ -21,6 +26,72 @@ export interface CouponEvaluation {
 @Injectable()
 export class CouponsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // ── A boutique's own codes («عروضي») ─────────────────────────────────────
+
+  async listForSeller(sellerId: string) {
+    const rows = await this.prisma.coupon.findMany({
+      where: { sellerId, fundedBySeller: true },
+      orderBy: [{ isActive: 'desc' }, { createdAt: 'desc' }],
+      take: 100,
+    });
+    return rows.map(serializeCoupon);
+  }
+
+  /**
+   * A code she pays for, spent only on her own pieces — the scoping the
+   * checkout already enforces line by line, so her code can never discount
+   * another boutique's goods.
+   */
+  async createForSeller(sellerId: string, dto: CreateSellerCouponDto) {
+    const expiresAt = new Date(dto.expires_at);
+    const now = Date.now();
+    if (Number.isNaN(expiresAt.getTime()) || expiresAt.getTime() <= now) {
+      throw new BadRequestException('تاريخ الانتهاء لازم يكون بالمستقبل');
+    }
+    if (expiresAt.getTime() - now > 180 * 24 * 3600 * 1000) {
+      throw new BadRequestException('أطول مدة للكود ٦ شهور');
+    }
+    try {
+      const coupon = await this.prisma.coupon.create({
+        data: {
+          code: dto.code,
+          title: dto.title?.trim() || `خصم ${dto.discount_percent}%`,
+          type: CouponType.PERCENTAGE,
+          discountPercent: dto.discount_percent,
+          minOrderAmount: dto.min_order_amount ?? null,
+          maxDiscountAmount: dto.max_discount_amount ?? null,
+          maxUses: dto.max_uses ?? null,
+          perUserLimit: 1,
+          sellerId,
+          fundedBySeller: true,
+          expiresAt,
+          isActive: true,
+        },
+      });
+      return serializeCoupon(coupon);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException('هالكود مستخدم — اختاري كود تاني');
+      }
+      throw error;
+    }
+  }
+
+  async setActiveForSeller(sellerId: string, id: string, active: boolean) {
+    const coupon = await this.prisma.coupon.findUnique({ where: { id } });
+    if (!coupon || coupon.sellerId !== sellerId || !coupon.fundedBySeller) {
+      throw new NotFoundException('الكود غير موجود');
+    }
+    const updated = await this.prisma.coupon.update({
+      where: { id },
+      data: { isActive: active },
+    });
+    return serializeCoupon(updated);
+  }
 
   // ── Admin CRUD ───────────────────────────────────────────────────────────
 

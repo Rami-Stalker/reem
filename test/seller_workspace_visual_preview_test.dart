@@ -291,6 +291,24 @@ final class _FakeEarningsRepository implements SellerEarningsRepository {
       const Success([]);
 
   @override
+  Future<Result<PayoutAccount?>> payoutAccount() async => const Success(null);
+
+  @override
+  Future<Result<PayoutAccount>> savePayoutAccount({
+    required PayoutMethod method,
+    required String holderName,
+    String? shamCashNumber,
+    String? cardNumber,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<Result<void>> removePayoutAccount() => throw UnimplementedError();
+
+  @override
+  Future<Result<SellerReport>> report({int months = 12}) =>
+      throw UnimplementedError();
+
+  @override
   Future<Result<SellerEarnings>> load() async => Success(
     SellerEarnings(
       heldInEscrow: _syp('18400000'),

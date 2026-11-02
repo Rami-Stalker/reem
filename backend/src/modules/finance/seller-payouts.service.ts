@@ -19,6 +19,7 @@ import {
   FinancialAction,
   FinancialAuditService,
 } from './financial-audit.service';
+import { SellerPayoutAccountService } from './seller-payout-account.service';
 import {
   cappedPayout,
   lockSellerPayouts,
@@ -48,6 +49,7 @@ export class SellerPayoutsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: FinancialAuditService,
+    private readonly accounts: SellerPayoutAccountService,
   ) {}
 
   /**
@@ -59,7 +61,7 @@ export class SellerPayoutsService {
   async availability(sellerId: string, currency: Currency = Currency.SYP) {
     await this.assertSeller(sellerId);
 
-    const [open, ledgers, freeze, headroom] = await Promise.all([
+    const [open, ledgers, freeze, headroom, account] = await Promise.all([
       this.prisma.sellerPayout.findFirst({
         where: { sellerId, currency, status: { in: [...OPEN_STATUSES] } },
         orderBy: { createdAt: 'desc' },
@@ -67,6 +69,7 @@ export class SellerPayoutsService {
       this.claimableLedgers(sellerId, currency),
       this.freezeFor(sellerId),
       payableHeadroom(this.prisma, sellerId, currency),
+      this.accounts.get(sellerId),
     ]);
 
     // The same cap `request` applies, so the figure on the button is the
@@ -80,7 +83,11 @@ export class SellerPayoutsService {
       claimable: (offset ? Money.zero(currency) : net).toJSON(),
       orders_included: ledgers.length,
       can_request:
-        freeze === null && open === null && ledgers.length > 0 && !offset,
+        freeze === null &&
+        open === null &&
+        ledgers.length > 0 &&
+        !offset &&
+        account !== null,
       /// Exactly one reason, in the order they actually block her.
       blocked_by: freeze !== null
         ? 'payout_frozen'
@@ -90,10 +97,14 @@ export class SellerPayoutsService {
             ? 'nothing_released'
             : offset
               ? 'offset_by_refunds'
-              : null,
+              : account === null
+                ? 'no_payout_account'
+                : null,
       frozen_until: freeze?.until.toISOString() ?? null,
       freeze_reason: freeze?.reason ?? null,
       open_request: open ? this.serialize(open) : null,
+      /// Where a request made now would be sent: Sham Cash or Visa.
+      payout_account: account,
     };
   }
 
@@ -122,8 +133,19 @@ export class SellerPayoutsService {
         reason: `payout frozen (${freeze.reason ?? 'security'})`,
       });
       throw new ForbiddenException(
-        'Payouts are paused on this account for security. It lifts on its own.',
+        'السحب موقوف مؤقتاً على حسابكِ لحمايته، ويرجع لحاله تلقائياً.',
       );
+    }
+
+    // Sham Cash or Visa, and nothing else: a request with nowhere to go is
+    // refused before it reaches the accountant.
+    const destination = await this.accounts.destinationFor(sellerId);
+    if (!destination) {
+      throw new BadRequestException({
+        code: 'PAYOUT_ACCOUNT_MISSING',
+        message:
+          'حدّدي أولاً وين بدكِ تستلمي أرباحكِ — شام كاش أو فيزا — من «إعدادات الدفع».',
+      });
     }
 
     // Everything from here to the insert runs under the seller's payout lock,
@@ -137,14 +159,14 @@ export class SellerPayoutsService {
         });
         if (open) {
           throw new BadRequestException(
-            'You already have a withdrawal request waiting — it covers everything released so far.',
+            'عندكِ طلب سحب قيد المراجعة، وهو يشمل كل الأرباح المتاحة لهلق.',
           );
         }
 
         const ledgers = await this.claimableLedgers(sellerId, currency, tx);
         if (ledgers.length === 0) {
           throw new BadRequestException(
-            'Nothing is available to withdraw yet. Earnings become available once a parcel is delivered and its return window closes.',
+            'ما في أرباح متاحة للسحب بعد. بتصير متاحة بعد توصيل الطلب وانتهاء مهلة الإرجاع.',
           );
         }
 
@@ -162,7 +184,7 @@ export class SellerPayoutsService {
           throw new BadRequestException({
             code: 'NOTHING_PAYABLE',
             message:
-              'Your released earnings are currently offset by refunds or disputes on your account, so there is nothing to withdraw yet.',
+              'أرباحكِ المتاحة مقابلها حالياً مرتجعات أو نزاعات، لهيك ما في مبلغ للسحب هلق.',
           });
         }
 
@@ -185,6 +207,9 @@ export class SellerPayoutsService {
             platformFees: platformFees.toPrisma(),
             adjustments: capped.adjustment.toPrisma(),
             net: capped.net.toPrisma(),
+            method: destination.method,
+            destinationLabel: destination.label,
+            destinationSealed: destination.sealed,
             ledgers: {
               create: ledgers.map((ledger) => ({ ledgerId: ledger.id })),
             },
@@ -223,11 +248,11 @@ export class SellerPayoutsService {
       where: { id: payoutId },
     });
     if (!payout || payout.sellerId !== sellerId) {
-      throw new NotFoundException('Withdrawal request not found');
+      throw new NotFoundException('طلب السحب غير موجود');
     }
     if (payout.status !== PayoutStatus.PENDING) {
       throw new BadRequestException(
-        'This request has already been approved — ask support to stop it.',
+        'هالطلب انقبل وصار قيد الصرف — تواصلي مع الدعم لإيقافه.',
       );
     }
 
@@ -240,7 +265,7 @@ export class SellerPayoutsService {
       });
       if (claimed.count === 0) {
         throw new BadRequestException(
-          'This request has already been approved — ask support to stop it.',
+          'هالطلب انقبل وصار قيد الصرف — تواصلي مع الدعم لإيقافه.',
         );
       }
       // Releasing the claim is the point of cancelling. A payout that will
@@ -364,6 +389,8 @@ export class SellerPayoutsService {
       created_at: payout.createdAt.toISOString(),
       approved_at: payout.approvedAt?.toISOString() ?? null,
       paid_at: payout.paidAt?.toISOString() ?? null,
+      method: payout.method?.toLowerCase() ?? null,
+      destination: payout.destinationLabel,
     };
   }
 }

@@ -66,6 +66,23 @@ class SellerEarningsModel extends SellerEarnings {
         json['created_at'] as String? ?? '',
       )?.toLocal(),
       paidAt: DateTime.tryParse(json['paid_at'] as String? ?? '')?.toLocal(),
+      method: PayoutMethod.fromWire(json['method'] as String?),
+      destination: json['destination'] as String?,
+    );
+  }
+
+  /// Parses `GET|PUT /finance/seller/payout-account`; null for «not set».
+  static PayoutAccount? accountFromJson(Object? json) {
+    if (json is! Map) return null;
+    final method = PayoutMethod.fromWire(json['method'] as String?);
+    if (method == null) return null;
+    return PayoutAccount(
+      method: method,
+      holderName: json['holder_name'] as String? ?? '',
+      masked: json['masked'] as String? ?? '',
+      updatedAt: DateTime.tryParse(
+        json['updated_at'] as String? ?? '',
+      )?.toLocal(),
     );
   }
 
@@ -84,6 +101,7 @@ class SellerEarningsModel extends SellerEarnings {
       openRequest: open is Map
           ? payoutFromJson(open.cast<String, dynamic>(), currency: currency)
           : null,
+      payoutAccount: accountFromJson(json['payout_account']),
     );
   }
 
@@ -106,5 +124,37 @@ class SellerEarningsModel extends SellerEarnings {
           DateTime.tryParse(json['occurred_at'] as String? ?? '') ??
           DateTime.now(),
     );
+  }
+
+  /// Parses `GET /finance/seller/reports`.
+  static SellerReport reportFromJson(Map<String, dynamic> json) {
+    final currency = Currency.fromWire(json['currency'] as String?);
+    SellerReportMonth month(Map<String, dynamic> row, DateTime fallback) {
+      Money money(String key) => Money.fromJson(row[key], fallback: currency);
+      final id = row['month'] as String?;
+      return SellerReportMonth(
+        month: id == null ? fallback : DateTime.tryParse('$id-01') ?? fallback,
+        orders: (row['orders'] as num?)?.toInt() ?? 0,
+        gross: money('gross'),
+        commission: money('commission'),
+        platformFees: money('platform_fees'),
+        net: money('net'),
+        reversedOrders: (row['reversed_orders'] as num?)?.toInt() ?? 0,
+        reversed: money('reversed'),
+        paidOut: money('paid_out'),
+      );
+    }
+
+    final months = [
+      for (final row in (json['months'] as List? ?? const []).whereType<Map>())
+        month(row.cast<String, dynamic>(), DateTime.now()),
+    ];
+    final totals = json['totals'] is Map
+        ? month(
+            (json['totals'] as Map).cast<String, dynamic>(),
+            months.isEmpty ? DateTime.now() : months.last.month,
+          )
+        : month(const {}, DateTime.now());
+    return SellerReport(months: months, totals: totals);
   }
 }
