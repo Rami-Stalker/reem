@@ -23,6 +23,7 @@ import {
   ApplyReferralCodeDto,
   CreateMembershipTierDto,
   CreateCouponDto,
+  CreateSellerCouponDto,
   CreateReferralCodeDto,
   RedeemCashbackDto,
   RedeemPointsDto,
@@ -103,6 +104,43 @@ export class CouponsController {
   @HttpCode(HttpStatus.OK)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.coupons.remove(id);
+  }
+}
+
+/** «عروضي» — a boutique's own discount codes, on her pieces only. */
+@Roles(UserRole.SELLER)
+@Controller('seller/coupons')
+export class SellerCouponsController {
+  constructor(private readonly coupons: CouponsService) {}
+
+  @Get()
+  list(@CurrentUser('id') sellerId: string) {
+    return this.coupons.listForSeller(sellerId);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  create(
+    @CurrentUser('id') sellerId: string,
+    @Body() dto: CreateSellerCouponDto,
+  ) {
+    return this.coupons.createForSeller(sellerId, dto);
+  }
+
+  @Patch(':id/activate')
+  activate(
+    @CurrentUser('id') sellerId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.coupons.setActiveForSeller(sellerId, id, true);
+  }
+
+  @Patch(':id/deactivate')
+  deactivate(
+    @CurrentUser('id') sellerId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.coupons.setActiveForSeller(sellerId, id, false);
   }
 }
 

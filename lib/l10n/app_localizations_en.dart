@@ -14901,4 +14901,789 @@ class AppLocalizationsEn extends AppLocalizations {
   String closetFinishTooltip(String name) {
     return 'Wardrobe finish: $name';
   }
+
+  @override
+  String get payoutSettingsSubtitle => 'Where your earnings are sent';
+
+  @override
+  String get payoutSettingsIntro =>
+      'Your earnings are paid only to a Sham Cash wallet or a Visa card. Every withdrawal goes to the account saved here.';
+
+  @override
+  String get payoutMethodShamCash => 'Sham Cash';
+
+  @override
+  String get payoutMethodVisa => 'Visa';
+
+  @override
+  String get payoutMethodShamCashHint => 'Sent to your wallet';
+
+  @override
+  String get payoutMethodVisaHint => 'Sent to your card';
+
+  @override
+  String get payoutHolderName => 'Account holder\'s name';
+
+  @override
+  String get payoutHolderNameHint => 'As registered on the wallet or card';
+
+  @override
+  String get payoutShamCashNumber => 'Sham Cash wallet number';
+
+  @override
+  String get payoutShamCashNumberHint => '09xxxxxxxx or account code';
+
+  @override
+  String get payoutCardNumber => 'Visa card number';
+
+  @override
+  String payoutCardNumberKeep(Object masked) {
+    return 'Leave empty to keep card $masked';
+  }
+
+  @override
+  String get payoutSave => 'Save payout method';
+
+  @override
+  String get payoutSaved => 'Payout method saved';
+
+  @override
+  String get payoutChange => 'Change';
+
+  @override
+  String get payoutRemove => 'Remove';
+
+  @override
+  String get payoutRemoveConfirm => 'Remove payout method?';
+
+  @override
+  String get payoutRemoveBlurb =>
+      'You won\'t be able to withdraw until you add a new one. Requests already made still go to the old account.';
+
+  @override
+  String get payoutRemoved => 'Payout method removed';
+
+  @override
+  String get payoutCurrentTitle => 'Your earnings go to';
+
+  @override
+  String get payoutSecureNote =>
+      'The card number is stored encrypted; only the last 4 digits are ever shown.';
+
+  @override
+  String get payoutErrorHolder => 'Enter the full name';
+
+  @override
+  String get payoutErrorShamCash =>
+      'Enter the wallet number 09xxxxxxxx or the account code';
+
+  @override
+  String get payoutErrorVisa =>
+      'Invalid card number — it must be a Visa card (starts with 4)';
+
+  @override
+  String get payoutBlockedNoAccount =>
+      'Choose where to receive your earnings — Sham Cash or Visa — to request a withdrawal.';
+
+  @override
+  String get payoutSetAccountAction => 'Set payout method';
+
+  @override
+  String get payoutBlockedOffset =>
+      'Your released earnings are offset by refunds or disputes, so nothing can be withdrawn yet.';
+
+  @override
+  String payoutSendTo(Object destination) {
+    return 'Will be sent to: $destination';
+  }
+
+  @override
+  String get withdrawalSubtitle => 'Request your earnings and follow transfers';
+
+  @override
+  String get withdrawalHistory => 'Withdrawal history';
+
+  @override
+  String get withdrawalHistoryEmpty => 'No withdrawals yet';
+
+  @override
+  String get withdrawalHistoryEmptyBody =>
+      'When you request a withdrawal it will appear here with its status.';
+
+  @override
+  String get payoutStatusPaid => 'Paid';
+
+  @override
+  String get payoutStatusFailed => 'Transfer failed';
+
+  @override
+  String get payoutStatusCancelled => 'Cancelled';
+
+  @override
+  String get withdrawalHowTitle => 'How withdrawals work';
+
+  @override
+  String get withdrawalHow1 =>
+      'Earnings become available once an order is delivered and its return window closes.';
+
+  @override
+  String get withdrawalHow2 =>
+      'You request a withdrawal, and the team reviews and approves it.';
+
+  @override
+  String get withdrawalHow3 =>
+      'The amount is sent to your saved Sham Cash wallet or Visa card.';
+
+  @override
+  String get reportsSubtitle => 'Your money, month by month';
+
+  @override
+  String reportsRangeMonths(Object count) {
+    return '$count months';
+  }
+
+  @override
+  String get reportsNet => 'Your net earnings';
+
+  @override
+  String get reportsGross => 'Sales';
+
+  @override
+  String get reportsCommission => 'Platform commission';
+
+  @override
+  String get reportsFees => 'Platform fees';
+
+  @override
+  String get reportsReversed => 'Returns and cancellations';
+
+  @override
+  String get reportsPaidOut => 'Paid out to you';
+
+  @override
+  String reportsOrders(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count orders',
+      one: '1 order',
+      zero: 'No orders',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportsEmpty => 'No sales in this period';
+
+  @override
+  String get reportsEmptyBody =>
+      'Once an order is delivered, each month\'s sales, commission and net appear here.';
+
+  @override
+  String get reportsNetByMonth => 'Net earnings by month';
+
+  @override
+  String get reportsMonths => 'Month by month';
+
+  @override
+  String get reportsNoActivity => 'No activity this month';
+
+  @override
+  String get reportsNote =>
+      'Figures come from the commission ledger: each order counts in the month it was settled.';
+
+  @override
+  String get reportsRangeYear => '1 year';
+
+  @override
+  String get payoutCardNumberHint => 'The 16 digits on the front of the card';
+
+  @override
+  String get storePoliciesSubtitle => 'Returns and exchanges, in your words';
+
+  @override
+  String storePoliciesGuarantee(Object days) {
+    return 'Platform guarantee: a shopper can return any piece within $days days of delivery in its original condition. Your policy adds to this, never below it.';
+  }
+
+  @override
+  String get storePoliciesAcceptsExchanges =>
+      'I accept exchanges (size or colour)';
+
+  @override
+  String get storePoliciesExchangeNote => 'Exchange terms';
+
+  @override
+  String get storePoliciesExchangeHint =>
+      'e.g. exchanges within 7 days, shopper pays shipping';
+
+  @override
+  String get storePoliciesReturnNote => 'Return notes';
+
+  @override
+  String get storePoliciesReturnHint =>
+      'e.g. return the piece in its box with the tag';
+
+  @override
+  String get storePoliciesCareNote => 'Care instructions';
+
+  @override
+  String get storePoliciesCareHint => 'e.g. hand wash in cold water';
+
+  @override
+  String get storePoliciesCustomNote => 'Custom orders';
+
+  @override
+  String get storePoliciesCustomHint =>
+      'e.g. made-to-measure pieces can\'t be returned';
+
+  @override
+  String get storePoliciesSave => 'Save policies';
+
+  @override
+  String get storePoliciesSaved => 'Store policies saved';
+
+  @override
+  String get storePoliciesShownTo => 'Shoppers see these on your store page.';
+
+  @override
+  String storeSettingsUpdatedAt(Object date) {
+    return 'Last updated $date';
+  }
+
+  @override
+  String get shippingSettingsSubtitle =>
+      'Where you ship from and how long you take';
+
+  @override
+  String get shippingShipsFrom => 'Ships from';
+
+  @override
+  String get shippingGovernorate => 'Governorate';
+
+  @override
+  String get shippingArea => 'Area';
+
+  @override
+  String get shippingAreaHint => 'e.g. Mezzeh';
+
+  @override
+  String get shippingHandlingTitle => 'Preparation time';
+
+  @override
+  String shippingHandlingDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+      zero: 'Same day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shippingHandlingHint => 'Applies to every new listing you add.';
+
+  @override
+  String get shippingApplyToListings => 'Also apply to all my current listings';
+
+  @override
+  String get shippingPickupTitle => 'In-store pickup';
+
+  @override
+  String get shippingPickupToggle => 'Shoppers can pick up from the store';
+
+  @override
+  String get shippingPickupAddress => 'Store address';
+
+  @override
+  String get shippingPickupHours => 'Pickup hours';
+
+  @override
+  String get shippingPickupHoursHint => 'e.g. daily 10am–8pm';
+
+  @override
+  String get shippingPackagingNote => 'Packaging note';
+
+  @override
+  String get shippingPackagingHint => 'e.g. free gift wrapping';
+
+  @override
+  String get shippingSave => 'Save shipping settings';
+
+  @override
+  String shippingSavedListings(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Saved, $count listings updated',
+      one: 'Saved, 1 listing updated',
+      zero: 'Shipping settings saved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shippingRatesTitle => 'Platform delivery rates';
+
+  @override
+  String get shippingRatesNote =>
+      'Delivery is handled by the platform; the shopper pays by governorate.';
+
+  @override
+  String shippingEtaHours(Object max, Object min) {
+    return '$min–$max hours';
+  }
+
+  @override
+  String shippingEtaDays(Object max, Object min) {
+    return '$min–$max days';
+  }
+
+  @override
+  String get shippingRural => 'Remote areas';
+
+  @override
+  String get shippingPickupNeedsAddress => 'Enter the store address';
+
+  @override
+  String get teamSubtitle => 'The people who work the store with you';
+
+  @override
+  String get teamInvite => 'Invite a member';
+
+  @override
+  String get teamInvitePhone => 'Her mobile number';
+
+  @override
+  String get teamInvitePhoneHint => 'She needs an account in the app';
+
+  @override
+  String get teamInviteRole => 'Access';
+
+  @override
+  String get teamInviteSend => 'Send invitation';
+
+  @override
+  String get teamInvited =>
+      'Invitation sent — she\'ll get a notification to accept';
+
+  @override
+  String get teamRoleManager => 'Manager';
+
+  @override
+  String get teamRoleManagerHint => 'Orders, products, content and reviews';
+
+  @override
+  String get teamRoleOrders => 'Orders';
+
+  @override
+  String get teamRoleOrdersHint => 'Confirming and preparing orders, chats';
+
+  @override
+  String get teamRoleCatalog => 'Products';
+
+  @override
+  String get teamRoleCatalogHint => 'Adding products, prices and stock';
+
+  @override
+  String get teamMoneyNote =>
+      'Earnings, withdrawals and payment settings stay yours alone — no member can reach them.';
+
+  @override
+  String get teamPending => 'Awaiting reply';
+
+  @override
+  String get teamEmpty => 'No one on the team yet';
+
+  @override
+  String get teamEmptyBody =>
+      'Invite someone to help with orders or products — each member works from her own account with the access you choose.';
+
+  @override
+  String get teamChangeRole => 'Change access';
+
+  @override
+  String get teamRemove => 'Remove from team';
+
+  @override
+  String teamRemoveConfirm(Object name) {
+    return 'Remove $name from the team?';
+  }
+
+  @override
+  String get teamRemoveBlurb => 'Her access to the store stops immediately.';
+
+  @override
+  String get teamRemoved => 'Removed from the team';
+
+  @override
+  String get teamRoleChanged => 'Access changed';
+
+  @override
+  String get activitySubtitle => 'What happened on your store, and who did it';
+
+  @override
+  String get activityEmpty => 'No activity yet';
+
+  @override
+  String get activityEmptyBody =>
+      'Every change to the store and every sign-in will appear here.';
+
+  @override
+  String get activityLoadMore => 'Show older';
+
+  @override
+  String get activityByYou => 'You';
+
+  @override
+  String get activityRefused => 'Refused';
+
+  @override
+  String get activityDeviceIos => 'iPhone';
+
+  @override
+  String get activityDeviceAndroid => 'Android';
+
+  @override
+  String get activityDeviceApp => 'App';
+
+  @override
+  String get activityDeviceWeb => 'Browser';
+
+  @override
+  String get actLogin => 'Signed in';
+
+  @override
+  String get actOrderConfirm => 'Accepted an order';
+
+  @override
+  String get actOrderReady => 'Marked an order ready';
+
+  @override
+  String get actOrderHandOver => 'Handed an order to delivery';
+
+  @override
+  String get actOrderDeliver => 'Delivered an order';
+
+  @override
+  String get actOrderCancel => 'Cancelled an order';
+
+  @override
+  String get actProductAdd => 'Added a product';
+
+  @override
+  String get actProductEdit => 'Edited a product';
+
+  @override
+  String get actVariant => 'Edited sizes or colours';
+
+  @override
+  String get actOfferAdd => 'Listed a product';
+
+  @override
+  String get actOfferEdit => 'Edited a price or listing';
+
+  @override
+  String get actStock => 'Adjusted stock';
+
+  @override
+  String get actOfferRemove => 'Removed a listing';
+
+  @override
+  String get actPolicies => 'Edited store policies';
+
+  @override
+  String get actShipping => 'Edited shipping settings';
+
+  @override
+  String get actTeamInvite => 'Invited a team member';
+
+  @override
+  String get actTeamRole => 'Changed a member\'s access';
+
+  @override
+  String get actTeamRemove => 'Removed a team member';
+
+  @override
+  String get actPayoutAccount => 'Changed the payout method';
+
+  @override
+  String get actPayoutRequest => 'Requested a withdrawal';
+
+  @override
+  String get actPayoutCancel => 'Cancelled a withdrawal';
+
+  @override
+  String get actPost => 'Store post';
+
+  @override
+  String get actStory => 'Story';
+
+  @override
+  String get actReturn => 'Handled a return';
+
+  @override
+  String get actReviewReply => 'Replied to a review';
+
+  @override
+  String get actCoupon => 'Discount code';
+
+  @override
+  String get actAds => 'Store ads';
+
+  @override
+  String get actPhoneChange => 'Phone number change';
+
+  @override
+  String get actGeneric => 'Store change';
+
+  @override
+  String get myOffersSubtitle =>
+      'Sales on your pieces and discount codes for your shoppers';
+
+  @override
+  String get offersSaleTitle => 'Pieces on sale';
+
+  @override
+  String get offersSaleEmpty => 'No pieces on sale right now';
+
+  @override
+  String get offersSaleEmptyBody =>
+      'Put any piece on sale and its old price shows crossed out.';
+
+  @override
+  String get offersAddSale => 'Put a piece on sale';
+
+  @override
+  String get offersSalePercent => 'Discount';
+
+  @override
+  String offersSaleNewPrice(Object price) {
+    return 'Price after discount: $price';
+  }
+
+  @override
+  String get offersSaleApply => 'Apply discount';
+
+  @override
+  String get offersSaleApplied => 'Discount applied';
+
+  @override
+  String get offersSaleRemove => 'End sale';
+
+  @override
+  String get offersSaleRemoved => 'Sale ended';
+
+  @override
+  String get offersPickPiece => 'Choose the piece';
+
+  @override
+  String get offersCodesTitle => 'Discount codes';
+
+  @override
+  String get offersCodesEmpty => 'No discount codes';
+
+  @override
+  String get offersCodesEmptyBody =>
+      'Create a code for your shoppers — it applies to your pieces only, funded from your share.';
+
+  @override
+  String get offersNewCode => 'New code';
+
+  @override
+  String get offersCodeField => 'Code';
+
+  @override
+  String get offersCodeHint => 'e.g. EID20';
+
+  @override
+  String get offersCodePercent => 'Discount %';
+
+  @override
+  String get offersCodeMinOrder => 'Minimum order in SYP (optional)';
+
+  @override
+  String get offersCodeMaxUses => 'Number of uses (optional)';
+
+  @override
+  String get offersCodeExpiry => 'Valid for';
+
+  @override
+  String offersCodeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get offersCodeCreate => 'Create code';
+
+  @override
+  String get offersCodeCreated => 'Code created';
+
+  @override
+  String get offersCodeCopied => 'Code copied';
+
+  @override
+  String offersCodeUsage(Object max, Object used) {
+    return '$used of $max uses';
+  }
+
+  @override
+  String offersCodeUsed(Object count) {
+    return '$count uses';
+  }
+
+  @override
+  String offersCodeExpires(Object date) {
+    return 'Ends $date';
+  }
+
+  @override
+  String get offersCodeExpired => 'Expired';
+
+  @override
+  String get offersCodeStopped => 'Paused';
+
+  @override
+  String get offersCodeLive => 'Live';
+
+  @override
+  String get offersCodeStop => 'Pause';
+
+  @override
+  String get offersCodeResume => 'Resume';
+
+  @override
+  String get offersCodeInvalid => '3–20 English letters or digits';
+
+  @override
+  String get offersCodePercentInvalid => 'Between 5 and 90';
+
+  @override
+  String get todayOrdersSubtitle => 'Orders placed today';
+
+  @override
+  String todayOrdersSummary(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count orders today',
+      one: '1 order today',
+      zero: 'No orders today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayOrdersNeedAction(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count need action',
+      one: '1 needs action',
+      zero: 'All on track',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayOrdersEmpty => 'No orders yet today';
+
+  @override
+  String get todayOrdersEmptyBody => 'New orders appear here as they arrive.';
+
+  @override
+  String get todayOrdersAll => 'All orders';
+
+  @override
+  String get membershipsTitle => 'Stores I work in';
+
+  @override
+  String get membershipsSubtitle =>
+      'Team invitations and the stores you\'re in';
+
+  @override
+  String get membershipsEmpty => 'No invitations';
+
+  @override
+  String get membershipsEmptyBody =>
+      'When a store invites you to its team, the invitation appears here.';
+
+  @override
+  String membershipInviteFrom(Object store) {
+    return '$store invited you to its team';
+  }
+
+  @override
+  String get membershipAccept => 'Accept';
+
+  @override
+  String get membershipDecline => 'Decline';
+
+  @override
+  String get membershipOpen => 'Open store';
+
+  @override
+  String get membershipLeave => 'Leave team';
+
+  @override
+  String membershipLeaveConfirm(Object store) {
+    return 'Leave $store\'s team?';
+  }
+
+  @override
+  String get membershipAccepted => 'You joined the team';
+
+  @override
+  String get membershipDeclined => 'Invitation declined';
+
+  @override
+  String get membershipLeft => 'You left the team';
+
+  @override
+  String workspaceActingAs(Object store) {
+    return 'Working as $store';
+  }
+
+  @override
+  String get workspaceOrders => 'Orders';
+
+  @override
+  String get workspaceProducts => 'Products';
+
+  @override
+  String get storeInfoTitle => 'Store policies';
+
+  @override
+  String storeInfoReturns(Object days) {
+    return 'Returns within $days days of delivery';
+  }
+
+  @override
+  String get storeInfoExchanges => 'Accepts exchanges';
+
+  @override
+  String get storeInfoNoExchanges => 'No exchanges';
+
+  @override
+  String storeInfoShipsFrom(Object place) {
+    return 'Ships from $place';
+  }
+
+  @override
+  String storeInfoHandling(Object days) {
+    return 'Prepares orders in $days';
+  }
+
+  @override
+  String storeInfoPickup(Object address) {
+    return 'Store pickup: $address';
+  }
 }

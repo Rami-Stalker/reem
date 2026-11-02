@@ -5,6 +5,7 @@ import 'package:ohara/core/network/interceptors/auth_interceptor.dart';
 import 'package:ohara/core/network/interceptors/cache_interceptor.dart';
 import 'package:ohara/core/network/interceptors/device_proof_interceptor.dart';
 import 'package:ohara/core/network/interceptors/retry_interceptor.dart';
+import 'package:ohara/core/network/interceptors/store_context_interceptor.dart';
 import 'package:ohara/core/network/interceptors/telemetry_interceptor.dart';
 import 'package:ohara/core/security/device_identity_service.dart';
 import 'package:ohara/core/security/device_proof_signer.dart';
@@ -42,6 +43,7 @@ class ApiClient {
       // Order matters: the auth interceptor attaches the bearer token first,
       // because the device proof is bound to it.
       dio.interceptors.add(AuthInterceptor(storage));
+      dio.interceptors.add(const StoreContextInterceptor());
       dio.interceptors.add(
         DeviceProofInterceptor(
           DeviceProofSigner(DeviceIdentityService(storage)),

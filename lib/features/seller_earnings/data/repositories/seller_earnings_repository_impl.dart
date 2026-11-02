@@ -28,4 +28,30 @@ class SellerEarningsRepositoryImpl
   @override
   Future<Result<List<PendingPayout>>> payoutHistory() =>
       guard(remote.payoutHistory);
+
+  @override
+  Future<Result<PayoutAccount?>> payoutAccount() => guard(remote.payoutAccount);
+
+  @override
+  Future<Result<PayoutAccount>> savePayoutAccount({
+    required PayoutMethod method,
+    required String holderName,
+    String? shamCashNumber,
+    String? cardNumber,
+  }) => guard(
+    () => remote.savePayoutAccount(
+      method: method,
+      holderName: holderName,
+      shamCashNumber: shamCashNumber,
+      cardNumber: cardNumber,
+    ),
+  );
+
+  @override
+  Future<Result<void>> removePayoutAccount() =>
+      guard(remote.removePayoutAccount);
+
+  @override
+  Future<Result<SellerReport>> report({int months = 12}) =>
+      guard(() => remote.report(months: months));
 }

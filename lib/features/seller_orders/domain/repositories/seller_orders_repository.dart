@@ -6,6 +6,7 @@ abstract interface class SellerOrdersRepository {
     SellerQueueTab? tab,
     int page,
     int limit,
+    bool today,
   });
 
   Future<Result<SellerOrderDetail>> detail(String id);

@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { FinanceModule } from '../finance/finance.module';
 import {
   CouponsController,
+  SellerCouponsController,
   ReferralsController,
   RewardsController,
 } from './rewards.controller';
@@ -14,7 +15,12 @@ import { ReferralsService } from './referrals.service';
 
 @Module({
   imports: [FinanceModule],
-  controllers: [CouponsController, RewardsController, ReferralsController],
+  controllers: [
+    CouponsController,
+    SellerCouponsController,
+    RewardsController,
+    ReferralsController,
+  ],
   providers: [
     CouponsService,
     PointsService,

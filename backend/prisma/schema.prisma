@@ -979,21 +979,21 @@ enum CommerceContentAnalyticsEventType {
 // ───────────────────────────── Identity ─────────────────────────────
 
 model User {
-  id                         String             @id @default(uuid()) @db.Uuid
-  name                       String
-  username                   String             @unique
-  email                      String?            @unique
-  phone                      String?            @unique
+  id            String    @id @default(uuid()) @db.Uuid
+  name          String
+  username      String    @unique
+  email         String?   @unique
+  phone         String?   @unique
   /// Optional, and off by default (owner decision 1). Null is the normal
   /// state of a Ohara account: the code on her SIM is the credential, and a
   /// password is a convenience she may add for a device we already know.
-  passwordHash               String?            @map("password_hash")
+  passwordHash  String?   @map("password_hash")
   /// When she opted in. Distinguishes "never had one" from "had one, removed
   /// it", which matters when reading a takeover timeline.
-  passwordSetAt              DateTime?          @map("password_set_at")
-  bio                        String?
-  imageUrl                   String?            @map("image_url")
-  location                   String?
+  passwordSetAt DateTime? @map("password_set_at")
+  bio           String?
+  imageUrl      String?   @map("image_url")
+  location      String?
   /// **The public badge, and nothing else.**
   ///
   /// This used to be set to `true` by the OTP exchange — so every account that
@@ -1002,7 +1002,7 @@ model User {
   /// exactly one place: an `AccountVerification` a human reviewed and granted.
   /// «هل أثبتت رقمها» is [phoneVerifiedAt], which is a different question and
   /// has its own column.
-  isVerified                 Boolean            @default(false) @map("is_verified")
+  isVerified    Boolean   @default(false) @map("is_verified")
 
   /// When the badge was granted, so it can be revoked and re-read later.
   verifiedAt                 DateTime?          @map("verified_at")
@@ -1115,71 +1115,75 @@ model User {
   fitProfile FitProfile?
 
   // ── The content platform ──────────────────────────────────────────────
-  authoredContents          CommerceContent[]            @relation("AuthoredCommerceContents")
-  removedContents           CommerceContent[]            @relation("CommerceContentRemovers")
-  contentReactions          CommerceContentReaction[]    @relation("CommerceContentReactions")
-  contentSaves              CommerceContentSave[]        @relation("CommerceContentSaves")
-  contentComments           CommerceContentComment[]     @relation("CommerceContentComments")
+  authoredContents          CommerceContent[]                @relation("AuthoredCommerceContents")
+  removedContents           CommerceContent[]                @relation("CommerceContentRemovers")
+  contentReactions          CommerceContentReaction[]        @relation("CommerceContentReactions")
+  contentSaves              CommerceContentSave[]            @relation("CommerceContentSaves")
+  contentComments           CommerceContentComment[]         @relation("CommerceContentComments")
   contentCommentReactions   CommerceContentCommentReaction[]
-  removedContentComments    CommerceContentComment[]     @relation("CommerceCommentRemovers")
-  contentReshares           CommerceContentReshare[]     @relation("CommerceContentReshares")
-  resharesOfMyContent       CommerceContentReshare[]     @relation("ResharedFromAuthor")
-  contentAttributions       CommerceContentAttribution[] @relation("CommerceContentAttributions")
-  attributedPromotions      CommerceContentAttribution[] @relation("CommerceAttributionActors")
+  removedContentComments    CommerceContentComment[]         @relation("CommerceCommentRemovers")
+  contentReshares           CommerceContentReshare[]         @relation("CommerceContentReshares")
+  resharesOfMyContent       CommerceContentReshare[]         @relation("ResharedFromAuthor")
+  contentAttributions       CommerceContentAttribution[]     @relation("CommerceContentAttributions")
+  attributedPromotions      CommerceContentAttribution[]     @relation("CommerceAttributionActors")
   orders                    Order[]
   codRiskAssessments        CodRiskAssessment[]
   cartItems                 CartItem[]
   searchHistory             SearchHistory[]
   favorites                 Favorite[]
-  sellerFavorites           SellerFavorite[]             @relation("UserSellerFavorites")
-  savedByUsers              SellerFavorite[]             @relation("SavedSellers")
+  sellerFavorites           SellerFavorite[]                 @relation("UserSellerFavorites")
+  savedByUsers              SellerFavorite[]                 @relation("SavedSellers")
   wishlistCollections       WishlistCollection[]
   wishlistShares            WishlistShare[]
   addresses                 Address[]
-  sentMessages              Message[]                    @relation("SentMessages")
+  sentMessages              Message[]                        @relation("SentMessages")
   chatParticipants          ChatParticipant[]
-  buyerChats                Chat[]                       @relation("BuyerChats")
-  sellerChats               Chat[]                       @relation("SellerChats")
+  buyerChats                Chat[]                           @relation("BuyerChats")
+  sellerChats               Chat[]                           @relation("SellerChats")
   messageReceipts           MessageReadReceipt[]
-  blockedUsers              ChatBlock[]                  @relation("ChatBlocker")
-  blockedBy                 ChatBlock[]                  @relation("ChatBlocked")
-  chatReportsFiled          ChatReport[]                 @relation("ChatReporter")
-  chatReportsAgainst        ChatReport[]                 @relation("ChatReportedUser")
+  blockedUsers              ChatBlock[]                      @relation("ChatBlocker")
+  blockedBy                 ChatBlock[]                      @relation("ChatBlocked")
+  chatReportsFiled          ChatReport[]                     @relation("ChatReporter")
+  chatReportsAgainst        ChatReport[]                     @relation("ChatReportedUser")
   presence                  UserPresence?
   analyticsEvents           AnalyticsEvent[]
   analyticsExports          AnalyticsExport[]
-  productReviews            ProductReview[]              @relation("CustomerProductReviews")
-  sellerReviewsWritten      SellerReview[]               @relation("CustomerSellerReviews")
-  sellerReviewsReceived     SellerReview[]               @relation("SellerReviews")
+  productReviews            ProductReview[]                  @relation("CustomerProductReviews")
+  sellerReviewsWritten      SellerReview[]                   @relation("CustomerSellerReviews")
+  sellerReviewsReceived     SellerReview[]                   @relation("SellerReviews")
   reviewModerationLogs      ReviewModerationLog[]
-  sellerBadges              SellerBadge[]                @relation("SellerBadges")
+  sellerBadges              SellerBadge[]                    @relation("SellerBadges")
   sellerReputation          SellerReputation?
   trustedSellerVerification TrustedSellerVerification?
-  wishlistSellerItems       WishlistCollectionItem[]     @relation("WishlistItemSeller")
-  guestSellerSaves          GuestSavedItem[]             @relation("GuestSavedSeller")
+  wishlistSellerItems       WishlistCollectionItem[]         @relation("WishlistItemSeller")
+  guestSellerSaves          GuestSavedItem[]                 @relation("GuestSavedSeller")
   aiInteractions            AiInteraction[]
   aiGenerations             AiGeneration[]
-  commissionLedgers         CommissionLedger[]           @relation("SellerCommissionLedgers")
-  sellerPayouts             SellerPayout[]               @relation("SellerPayouts")
-  ledgerAccounts            LedgerAccount[]              @relation("LedgerAccounts")
-  wallet                    Wallet[]                     @relation("UserWallet")
+  commissionLedgers         CommissionLedger[]               @relation("SellerCommissionLedgers")
+  sellerPayouts             SellerPayout[]                   @relation("SellerPayouts")
+  payoutAccount             SellerPayoutAccount?
+  storeSettings             SellerStoreSettings?
+  storeTeam                 SellerTeamMember[]               @relation("StoreTeam")
+  storeMemberships          SellerTeamMember[]               @relation("StoreMembership")
+  ledgerAccounts            LedgerAccount[]                  @relation("LedgerAccounts")
+  wallet                    Wallet[]                         @relation("UserWallet")
   notifications             Notification[]
   notificationPreference    NotificationPreference?
   paymentMethods            PaymentMethod[]
   pointsTransactions        PointsTransaction[]
   couponRedemptions         CouponRedemption[]
-  coupons                   Coupon[]                     @relation("UserCoupons")
+  coupons                   Coupon[]                         @relation("UserCoupons")
   /// Codes this seller issued, and pays for. See `Coupon.sellerId`.
-  sellerCoupons             Coupon[]                     @relation("SellerCoupons")
-  referralCodes             ReferralCode[]               @relation("ReferralCodeOwner")
-  referralsMade             Referral[]                   @relation("Referrer")
-  referralsReceived         Referral[]                   @relation("ReferredUser")
+  sellerCoupons             Coupon[]                         @relation("SellerCoupons")
+  referralCodes             ReferralCode[]                   @relation("ReferralCodeOwner")
+  referralsMade             Referral[]                       @relation("Referrer")
+  referralsReceived         Referral[]                       @relation("ReferredUser")
   referralRewards           ReferralReward[]
   membership                MembershipAccount?
   cashbackEntries           CashbackLedger[]
   exclusiveOfferClaims      ExclusiveOfferClaim[]
-  following                 Follow[]                     @relation("Follower")
-  followers                 Follow[]                     @relation("Following")
+  following                 Follow[]                         @relation("Follower")
+  followers                 Follow[]                         @relation("Following")
 
   // Ohara AI Stylist — her taste, her conversations, and what they produced.
   stylePreference        UserStylePreference?
@@ -1223,27 +1227,27 @@ model User {
   synonymGroupsCreated SearchSynonymGroup[]      @relation("SynonymGroupsCreated")
   duplicateVerdicts    ProductDuplicateVerdict[] @relation("DuplicateVerdicts")
 
-  trustSignalsResolved TrustSignal[]       @relation("TrustSignalsResolved")
-  reengagementTouches  ReengagementTouch[] @relation("ReengagementTouches")
-  flashSalesRun        FlashSale[]         @relation("FlashSalesRun")
-  flashSalesCreated    FlashSale[]         @relation("FlashSalesCreated")
-  promotionsBought     ProductPromotion[]  @relation("PromotionsBought")
+  trustSignalsResolved TrustSignal[]         @relation("TrustSignalsResolved")
+  reengagementTouches  ReengagementTouch[]   @relation("ReengagementTouches")
+  flashSalesRun        FlashSale[]           @relation("FlashSalesRun")
+  flashSalesCreated    FlashSale[]           @relation("FlashSalesCreated")
+  promotionsBought     ProductPromotion[]    @relation("PromotionsBought")
   /// «باقات الإعلان» she has bought — the tier her boutique carries.
   adSubscriptions      StoreAdSubscription[] @relation("StoreAdSubscriptions")
   /// Plans she asked to pay for by transfer, and their review.
-  adPlanPurchases      AdPlanPurchase[]    @relation("AdPlanPurchases")
+  adPlanPurchases      AdPlanPurchase[]      @relation("AdPlanPurchases")
   /// What the ranked feed has already shown her.
-  feedSeen             FeedSeen[]          @relation("FeedSeen")
+  feedSeen             FeedSeen[]            @relation("FeedSeen")
   /// The sponsored placements she, as a shopper, was shown.
   adExposures          AdExposure[]          @relation("AdExposures")
-  experimentsCreated   Experiment[]        @relation("ExperimentsCreated")
-  customerProfile      CustomerProfile?    @relation("CustomerProfile")
+  experimentsCreated   Experiment[]          @relation("ExperimentsCreated")
+  customerProfile      CustomerProfile?      @relation("CustomerProfile")
   /// How this boutique ranks against other boutiques, 0–100. Zero for anyone
   /// who is not a seller. See `ranking/kernel` for what it weighs and why
   /// reliability comes before volume.
-  sellerRankScore      Float               @default(0) @map("seller_rank_score")
-  sellerRankScoredAt   DateTime?           @map("seller_rank_scored_at")
-  sellerRankBreakdown  Json?               @map("seller_rank_breakdown")
+  sellerRankScore      Float                 @default(0) @map("seller_rank_score")
+  sellerRankScoredAt   DateTime?             @map("seller_rank_scored_at")
+  sellerRankBreakdown  Json?                 @map("seller_rank_breakdown")
 
   // Product social — the post gestures, on the catalogue itself.
   productLikes    ProductLike[]    @relation("ProductLikes")
@@ -1268,8 +1272,8 @@ model User {
   accountVerificationReviews AccountVerificationStatusEvent[] @relation("AccountVerificationReviewer")
 
   // «ملاحظات ونصائح» and «الشكاوى» — what she told the people who run this.
-  feedback         CustomerFeedback[] @relation("CustomerFeedbackAuthor")
-  feedbackHandled  CustomerFeedback[] @relation("CustomerFeedbackHandler")
+  feedback        CustomerFeedback[] @relation("CustomerFeedbackAuthor")
+  feedbackHandled CustomerFeedback[] @relation("CustomerFeedbackHandler")
 
   @@index([role])
   @@index([email])
@@ -3261,9 +3265,9 @@ model CommerceContentComment {
   /// Null for a top-level comment. **One level only** — a reply to a reply is
   /// re-parented to the thread root at write time, because the card renders
   /// two levels and a third would be invisible rather than merely ugly.
-  parentId String?                  @map("parent_id") @db.Uuid
-  parent   CommerceContentComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies  CommerceContentComment[] @relation("CommentReplies")
+  parentId  String?                          @map("parent_id") @db.Uuid
+  parent    CommerceContentComment?          @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   CommerceContentComment[]         @relation("CommentReplies")
   reactions CommerceContentCommentReaction[]
 
   body String
@@ -3562,8 +3566,8 @@ model Order {
   /// be cancelled or left unpaid. Claimed by a conditional update, so the
   /// sweep and the escrow release cannot both grant them.
   rewardsGrantedAt DateTime? @map("rewards_granted_at")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
 
   sellerOrders      SellerOrder[]
   payment           Payment?
@@ -5454,16 +5458,16 @@ model Coupon {
   /// open; every referral coupon sets it.
   maxDiscountAmount Decimal? @map("max_discount_amount") @db.Decimal(18, 4)
 
-  maxUses         Int?       @map("max_uses")
-  usedCount       Int        @default(0) @map("used_count")
-  perUserLimit    Int?       @map("per_user_limit")
+  maxUses        Int?     @map("max_uses")
+  usedCount      Int      @default(0) @map("used_count")
+  perUserLimit   Int?     @map("per_user_limit")
   // Null = global coupon; set = user-specific.
-  userId          String?    @map("user_id") @db.Uuid
-  user            User?      @relation("UserCoupons", fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt       DateTime   @map("expires_at")
-  isActive        Boolean    @default(true) @map("is_active")
+  userId         String?  @map("user_id") @db.Uuid
+  user           User?    @relation("UserCoupons", fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt      DateTime @map("expires_at")
+  isActive       Boolean  @default(true) @map("is_active")
   /// Q49 P2 — who absorbs the discount: whoever created the coupon.
-  fundedBySeller  Boolean    @default(false) @map("funded_by_seller")
+  fundedBySeller Boolean  @default(false) @map("funded_by_seller")
 
   // ── What the code may be spent on ─────────────────────────────────────
   //
@@ -6090,11 +6094,116 @@ model SellerPayout {
   approvedAt   DateTime?    @map("approved_at")
   paidAt       DateTime?    @map("paid_at")
 
+  /// Where the money goes, as it was when she asked: the method, a masked
+  /// label for her, and the full destination sealed for whoever pays it.
+  /// Snapshotted so changing her account later never redirects a payout.
+  method            PayoutMethod? @map("method")
+  destinationLabel  String?       @map("destination_label")
+  destinationSealed String?       @map("destination_sealed")
+
   ledgers SellerPayoutLedger[]
 
   @@index([sellerId, status])
   @@index([periodStart, periodEnd])
   @@map("seller_payouts")
+}
+
+/// The two ways a boutique is paid: a Sham Cash wallet or a Visa card.
+enum PayoutMethod {
+  SHAM_CASH
+  VISA
+}
+
+/// Where a boutique's withdrawals are sent. One per seller.
+///
+/// The card number is never stored in the clear: `cardSealed` holds it under
+/// AES-256-GCM and `cardLast4` is all the seller's own screens ever show.
+model SellerPayoutAccount {
+  id             String       @id @default(uuid()) @db.Uuid
+  sellerId       String       @unique @map("seller_id") @db.Uuid
+  seller         User         @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  method         PayoutMethod
+  holderName     String       @map("holder_name")
+  shamCashNumber String?      @map("sham_cash_number")
+  cardLast4      String?      @map("card_last4")
+  cardSealed     String?      @map("card_sealed")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@map("seller_payout_accounts")
+}
+
+/// A boutique's own settings: her published policies and how she ships.
+///
+/// The platform's return guarantee (7 days, Q56) is the floor and is not
+/// stored here — a boutique adds to it in her own words, never below it.
+model SellerStoreSettings {
+  id       String @id @default(uuid()) @db.Uuid
+  sellerId String @unique @map("seller_id") @db.Uuid
+  seller   User   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  // ── «سياسات المتجر» ──
+  acceptsExchanges  Boolean   @default(true) @map("accepts_exchanges")
+  exchangeNote      String?   @map("exchange_note")
+  returnNote        String?   @map("return_note")
+  careNote          String?   @map("care_note")
+  customOrderNote   String?   @map("custom_order_note")
+  policiesUpdatedAt DateTime? @map("policies_updated_at")
+
+  // ── «إعدادات الشحن» ──
+  shipsFromGovernorate String?   @map("ships_from_governorate")
+  shipsFromArea        String?   @map("ships_from_area")
+  /// Days to prepare a parcel; the default for every new listing.
+  defaultHandlingDays  Int       @default(1) @map("default_handling_days")
+  offersPickup         Boolean   @default(false) @map("offers_pickup")
+  pickupAddress        String?   @map("pickup_address")
+  pickupHours          String?   @map("pickup_hours")
+  packagingNote        String?   @map("packaging_note")
+  shippingUpdatedAt    DateTime? @map("shipping_updated_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("seller_store_settings")
+}
+
+/// What a team member may do for the boutique.
+enum StoreTeamRole {
+  /// Everything a member can do: orders, products, chats.
+  MANAGER
+  /// Orders: confirm, prepare, hand over.
+  ORDERS
+  /// Products and listings.
+  CATALOG
+}
+
+enum StoreTeamStatus {
+  INVITED
+  ACTIVE
+  REMOVED
+}
+
+/// «إدارة الفريق» — a person who works the boutique with its owner.
+///
+/// Invited by phone; the invitation waits for her to accept from her own
+/// account, so nobody is added to a shop without saying yes. Money is never
+/// a member's to touch: payouts and payment settings stay with the owner.
+model SellerTeamMember {
+  id         String          @id @default(uuid()) @db.Uuid
+  storeId    String          @map("store_id") @db.Uuid
+  store      User            @relation("StoreTeam", fields: [storeId], references: [id], onDelete: Cascade)
+  memberId   String          @map("member_id") @db.Uuid
+  member     User            @relation("StoreMembership", fields: [memberId], references: [id], onDelete: Cascade)
+  role       StoreTeamRole   @default(ORDERS)
+  status     StoreTeamStatus @default(INVITED)
+  invitedAt  DateTime        @default(now()) @map("invited_at")
+  acceptedAt DateTime?       @map("accepted_at")
+  removedAt  DateTime?       @map("removed_at")
+  updatedAt  DateTime        @updatedAt @map("updated_at")
+
+  @@unique([storeId, memberId])
+  @@index([memberId, status])
+  @@map("seller_team_members")
 }
 
 model SellerPayoutLedger {

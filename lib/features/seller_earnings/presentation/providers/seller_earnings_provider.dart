@@ -182,3 +182,37 @@ class SellerEarningsNotifier extends StateNotifier<SellerEarningsState> {
     return null;
   }
 }
+
+/// «إعدادات الدفع» — where she is paid; null before she has said.
+final payoutAccountProvider = FutureProvider.autoDispose<PayoutAccount?>((
+  ref,
+) async {
+  final result = await ref.watch(sellerEarningsRepositoryProvider).payoutAccount();
+  return switch (result) {
+    Success(:final data) => data,
+    Error(:final failure) => throw failure.message,
+  };
+});
+
+/// Her withdrawal requests, newest first.
+final payoutHistoryProvider = FutureProvider.autoDispose<List<PendingPayout>>((
+  ref,
+) async {
+  final result = await ref.watch(sellerEarningsRepositoryProvider).payoutHistory();
+  return switch (result) {
+    Success(:final data) => data,
+    Error(:final failure) => throw failure.message,
+  };
+});
+
+/// «التقارير المالية» over the last N months.
+final sellerReportProvider = FutureProvider.autoDispose
+    .family<SellerReport, int>((ref, months) async {
+      final result = await ref
+          .read(sellerEarningsRepositoryProvider)
+          .report(months: months);
+      return switch (result) {
+        Success(:final data) => data,
+        Error(:final failure) => throw failure.message,
+      };
+    });

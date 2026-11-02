@@ -110,6 +110,19 @@ abstract final class RouteNames {
   static const rewards = 'rewards';
   static const wallet = 'wallet';
   static const sellerEarnings = 'seller-earnings';
+  static const sellerPayoutSettings = 'seller-payout-settings';
+  static const sellerWithdrawals = 'seller-withdrawals';
+  static const sellerFinancialReports = 'seller-financial-reports';
+  static const sellerStorePolicies = 'seller-store-policies';
+  static const sellerShippingSettings = 'seller-shipping-settings';
+  static const sellerTeam = 'seller-team';
+  static const sellerActivityLog = 'seller-activity-log';
+  static const sellerTodayOrders = 'seller-today-orders';
+  static const sellerMyOffers = 'seller-my-offers';
+  static const storeMemberships = 'store-memberships';
+  static const storeWorkspace = 'store-workspace';
+  static const storeWorkspaceOrders = 'store-workspace-orders';
+  static const storeWorkspaceProducts = 'store-workspace-products';
 
   static const likeSheet = 'like-sheet';
   static const commentSheet = 'comment-sheet';

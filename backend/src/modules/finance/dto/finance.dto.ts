@@ -11,10 +11,12 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Length,
+  Max,
   MaxLength,
   Min,
 } from 'class-validator';
-import { Currency } from '@prisma/client';
+import { Currency, PayoutMethod } from '@prisma/client';
 
 export class CurrencyQueryDto {
   @IsOptional()
@@ -43,6 +45,41 @@ export class CourierExpectedCashQueryDto extends CurrencyQueryDto {
  * splitting a row that the order, its commission and its escrow release all
  * point at. She asks for what is released, or she waits for the rest.
  */
+export class SellerReportQueryDto extends CurrencyQueryDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(24)
+  months?: number;
+}
+
+/** «إعدادات الدفع» — where her withdrawals are sent. */
+export class SavePayoutAccountDto {
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
+  @IsEnum(PayoutMethod, { message: 'اختاري شام كاش أو فيزا' })
+  method!: PayoutMethod;
+
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @IsString()
+  @Length(3, 80, { message: 'اكتبي اسم صاحبة الحساب كما هو مسجّل' })
+  holder_name!: string;
+
+  /** Her Sham Cash wallet: the phone number or the account code. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  sham_cash_number?: string;
+
+  /** The Visa card's number. Omitted on an edit that keeps the same card. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(30)
+  card_number?: string;
+}
+
 export class RequestPayoutDto {
   @IsOptional()
   @IsEnum(Currency)

@@ -61,6 +61,14 @@ String formatCalendarDate(
   DateFormat(pattern, l10n.localeName).format(moment.toLocal()),
 );
 
+/// «تشرين الثاني 2026» — a month and its year, for reports.
+String formatMonthYear(AppLocalizations l10n, DateTime moment) =>
+    formatCalendarDate(l10n, moment, pattern: 'MMMM y');
+
+/// «تشرين» — a month's short name, for a chart's axis.
+String formatMonthShort(AppLocalizations l10n, DateTime moment) =>
+    formatCalendarDate(l10n, moment, pattern: 'MMM');
+
 /// The divider between days in a conversation: «اليوم», «أمس», a weekday for
 /// this week, a date beyond it.
 ///

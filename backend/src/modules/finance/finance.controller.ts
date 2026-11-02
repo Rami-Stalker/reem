@@ -2,12 +2,14 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { Currency, UserRole } from '@prisma/client';
@@ -32,12 +34,16 @@ import {
   DisputeMessageDto,
   OpenDisputeDto,
   RequestPayoutDto,
+  SavePayoutAccountDto,
+  SellerReportQueryDto,
   SettleCourierCashDto,
 } from './dto/finance.dto';
 import { LoyaltyService } from './loyalty.service';
 import { ReconciliationService } from './reconciliation.service';
 import { SellerEarningsService } from './seller-earnings.service';
+import { SellerPayoutAccountService } from './seller-payout-account.service';
 import { SellerPayoutsService } from './seller-payouts.service';
+import { SellerReportsService } from './seller-reports.service';
 
 /**
  * Finance operations.
@@ -72,6 +78,8 @@ export class FinanceController {
     private readonly reconciliation: ReconciliationService,
     private readonly sellerEarnings: SellerEarningsService,
     private readonly sellerPayouts: SellerPayoutsService,
+    private readonly payoutAccounts: SellerPayoutAccountService,
+    private readonly sellerReports: SellerReportsService,
     private readonly fx: FxRevaluationService,
     private readonly fxSync: ExchangeRateSyncService,
     private readonly adminFinance: AdminFinanceService,
@@ -160,6 +168,44 @@ export class FinanceController {
       sellerId,
       query.currency ?? Currency.SYP,
     );
+  }
+
+  /** «التقارير المالية» — month by month, newest first. */
+  @Get('seller/reports')
+  @Roles(UserRole.SELLER)
+  reports(
+    @CurrentUser('id') sellerId: string,
+    @Query() query: SellerReportQueryDto,
+  ) {
+    return this.sellerReports.monthly(
+      sellerId,
+      query.currency ?? Currency.SYP,
+      query.months ?? 12,
+    );
+  }
+
+  /** «إعدادات الدفع» — where she is paid: Sham Cash or Visa. */
+  @Get('seller/payout-account')
+  @Roles(UserRole.SELLER)
+  async payoutAccount(@CurrentUser('id') sellerId: string) {
+    // Wrapped, so «not set yet» is `{ account: null }` rather than an
+    // empty body a client has to special-case.
+    return { account: await this.payoutAccounts.get(sellerId) };
+  }
+
+  @Put('seller/payout-account')
+  @Roles(UserRole.SELLER)
+  savePayoutAccount(
+    @CurrentUser('id') sellerId: string,
+    @Body() dto: SavePayoutAccountDto,
+  ) {
+    return this.payoutAccounts.save(sellerId, dto);
+  }
+
+  @Delete('seller/payout-account')
+  @Roles(UserRole.SELLER)
+  removePayoutAccount(@CurrentUser('id') sellerId: string) {
+    return this.payoutAccounts.remove(sellerId);
   }
 
   /** Her withdrawal requests, newest first. */

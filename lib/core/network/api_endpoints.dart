@@ -663,6 +663,29 @@ abstract final class ApiEndpoints {
   /// Q69 P1's second half — asking to be paid. Creating a request moves no
   /// money: approving and releasing it stay with the platform (Q62).
   static const sellerPayouts = '/finance/seller/payouts';
+  static const sellerPayoutAccount = '/finance/seller/payout-account';
+  static const sellerReports = '/finance/seller/reports';
+
+  // ── The shop's own settings, team and activity ──
+  static const sellerStorePolicies = '/seller/store-settings/policies';
+  static const sellerShippingSettings = '/seller/store-settings/shipping';
+  static const sellerTeam = '/seller/team';
+  static String sellerTeamMember(String id) => '/seller/team/$id';
+  static const sellerActivity = '/seller/activity';
+  static const storeMemberships = '/store-memberships';
+  static String storeMembershipAccept(String id) =>
+      '/store-memberships/$id/accept';
+  static String storeMembershipDecline(String id) =>
+      '/store-memberships/$id/decline';
+  static String storeMembershipLeave(String id) =>
+      '/store-memberships/$id/leave';
+  static String sellerStoreInfo(String sellerId) =>
+      '/sellers/$sellerId/store-info';
+  static const sellerCoupons = '/seller/coupons';
+  static String sellerCouponActivate(String id) =>
+      '/seller/coupons/$id/activate';
+  static String sellerCouponDeactivate(String id) =>
+      '/seller/coupons/$id/deactivate';
   static const sellerPayoutAvailability =
       '/finance/seller/payouts/availability';
   static String sellerPayoutCancel(String id) =>

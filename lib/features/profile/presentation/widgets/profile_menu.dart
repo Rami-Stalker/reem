@@ -74,6 +74,13 @@ class ProfileMenu extends ConsumerWidget {
               label: context.l10n.notifications,
               onTap: () => context.push(RoutePaths.notifications),
             ),
+            // «إدارة الفريق» from the other side: a boutique's invitations,
+            // and the shops she works in from her own account.
+            _MenuRow(
+              icon: Icons.storefront_outlined,
+              label: context.l10n.membershipsTitle,
+              onTap: () => context.push(RoutePaths.storeMemberships),
+            ),
           ],
         ),
         const SizedBox(height: DsSpacing.md),

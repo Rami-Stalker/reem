@@ -15,6 +15,7 @@ import 'package:ohara/features/discovery/presentation/providers/discovery_provid
 import 'package:ohara/features/highlights/presentation/widgets/highlights_rail.dart';
 import 'package:ohara/features/product_social/presentation/providers/product_social_providers.dart';
 import 'package:ohara/features/product_social/presentation/widgets/product_shelf.dart';
+import 'package:ohara/features/seller_store/presentation/widgets/store_info_strip.dart';
 import 'package:ohara/features/social/domain/entities/content.dart';
 import 'package:ohara/features/social/presentation/open_stories.dart';
 import 'package:ohara/features/social/presentation/providers/social_providers.dart';
@@ -229,6 +230,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ownerId: profile.isMe ? null : profile.user.id,
               ),
             ),
+            // A boutique's terms, read before buying rather than after.
+            if (profile.isSeller)
+              SliverToBoxAdapter(
+                child: StoreInfoStrip(sellerId: profile.user.id),
+              ),
             SliverPersistentHeader(
               pinned: true,
               delegate: _TabsHeader(

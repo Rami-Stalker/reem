@@ -11,12 +11,14 @@ import {
   PrismaClient,
   SellerOrderStatus,
   UserRole,
+  PayoutMethod,
 } from '@prisma/client';
 
 import { Money } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LedgerService } from '../ledger/ledger.service';
 import { FinancialAuditService } from './financial-audit.service';
+import { SellerPayoutAccountService } from './seller-payout-account.service';
 import { SellerPayoutsService } from './seller-payouts.service';
 
 /**
@@ -95,8 +97,21 @@ const audit = {
   recordBalanceChange: async () => {},
 } as unknown as FinancialAuditService;
 
+/** A boutique that has said where she is paid — a Sham Cash wallet. */
+const paidToShamCash = {
+  get: async () => ({ method: 'sham_cash', label: 'شام كاش · •••• 4567' }),
+  destinationFor: async () => ({
+    method: PayoutMethod.SHAM_CASH,
+    label: 'شام كاش · •••• 4567',
+    sealed: 'sealed',
+  }),
+} as unknown as SellerPayoutAccountService;
+
 function build(tx: Tx): World {
-  return { tx, payouts: new SellerPayoutsService(asPrisma(tx), audit) };
+  return {
+    tx,
+    payouts: new SellerPayoutsService(asPrisma(tx), audit, paidToShamCash),
+  };
 }
 
 const syp = (amount: string) => Money.of(amount, Currency.SYP);
@@ -406,4 +421,100 @@ dbTest('her history shows what happened to each request', async (world) => {
   assert.equal(history[1].status, PayoutStatus.CANCELLED);
   // The second gathered both sales, the cancelled one having let its go.
   assert.equal(history[0].net.amount, syp('550000').toJSON().amount);
+});
+
+// ── Sham Cash or Visa, and nothing else ─────────────────────────────────────
+
+function withRealAccounts(world: World) {
+  const accounts = new SellerPayoutAccountService(asPrisma(world.tx), audit);
+  const payouts = new SellerPayoutsService(asPrisma(world.tx), audit, accounts);
+  return { accounts, payouts };
+}
+
+dbTest('with nowhere to send it, a request is refused and says why', async (
+  world,
+) => {
+  const { payouts } = withRealAccounts(world);
+  const seller = await makeSeller(world.tx);
+  await makeSale(world.tx, seller.id, { net: '400000' });
+
+  const availability = await payouts.availability(seller.id);
+  assert.equal(availability.can_request, false);
+  assert.equal(availability.blocked_by, 'no_payout_account');
+
+  await assert.rejects(
+    () => payouts.request(seller.id),
+    (error: { response?: { code?: string } }) =>
+      error.response?.code === 'PAYOUT_ACCOUNT_MISSING',
+  );
+});
+
+dbTest('a Visa card is checked, kept sealed, and shown masked', async (
+  world,
+) => {
+  const { accounts, payouts } = withRealAccounts(world);
+  const seller = await makeSeller(world.tx);
+
+  // Not a Visa number (fails the checksum), and a Mastercard.
+  for (const card_number of ['4111 1111 1111 1112', '5555555555554444']) {
+    await assert.rejects(
+      () =>
+        accounts.save(seller.id, {
+          method: PayoutMethod.VISA,
+          holder_name: 'ريم الأحمد',
+          card_number,
+        }),
+      (error: { response?: { code?: string } }) =>
+        error.response?.code === 'INVALID_VISA',
+    );
+  }
+
+  const saved = await accounts.save(seller.id, {
+    method: PayoutMethod.VISA,
+    holder_name: 'ريم الأحمد',
+    card_number: '4111 1111 1111 1111',
+  });
+  assert.equal(saved.method, 'visa');
+  assert.equal(saved.masked, '•••• 1111');
+  assert.ok(!JSON.stringify(saved).includes('4111111111111111'));
+
+  const row = await world.tx.sellerPayoutAccount.findUniqueOrThrow({
+    where: { sellerId: seller.id },
+  });
+  assert.ok(row.cardSealed && !row.cardSealed.includes('4111111111111111'));
+
+  // Editing the name keeps the card she already gave.
+  const renamed = await accounts.save(seller.id, {
+    method: PayoutMethod.VISA,
+    holder_name: 'ريم أحمد',
+  });
+  assert.equal(renamed.masked, '•••• 1111');
+
+  await makeSale(world.tx, seller.id, { net: '300000' });
+  const payout = await payouts.request(seller.id);
+  assert.equal(payout.method, 'visa');
+  assert.equal(payout.destination, 'فيزا · •••• 1111');
+});
+
+dbTest('a Sham Cash wallet takes the phone in any spelling', async (world) => {
+  const { accounts } = withRealAccounts(world);
+  const seller = await makeSeller(world.tx);
+  const saved = await accounts.save(seller.id, {
+    method: PayoutMethod.SHAM_CASH,
+    holder_name: 'ريم',
+    sham_cash_number: '+963 933 118 204',
+  });
+  assert.equal(saved.label, 'شام كاش · •••• 8204');
+  const row = await world.tx.sellerPayoutAccount.findUniqueOrThrow({
+    where: { sellerId: seller.id },
+  });
+  assert.equal(row.shamCashNumber, '0933118204');
+
+  await assert.rejects(() =>
+    accounts.save(seller.id, {
+      method: PayoutMethod.SHAM_CASH,
+      holder_name: 'ريم',
+      sham_cash_number: '12',
+    }),
+  );
 });

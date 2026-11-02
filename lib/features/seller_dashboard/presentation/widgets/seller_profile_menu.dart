@@ -33,22 +33,22 @@ class SellerProfileMenu extends ConsumerWidget {
         label: l10n.sellerGroupStore,
         rows: [
           _Row(
-            icon: Icons.inventory_2_outlined,
+            icon: Icons.local_offer_outlined,
             label: l10n.myProducts,
             color: tint(0),
-            onTap: () => context.push(RoutePaths.myProducts),
+            onTap: () => context.push(RoutePaths.sellerMyOffers),
           ),
           _Row(
             icon: Icons.local_shipping_outlined,
             label: l10n.sellerShippingSettings,
             color: tint(1),
-            onTap: () => _comingSoon(context, l10n.sellerShippingSettings),
+            onTap: () => context.push(RoutePaths.sellerShippingSettings),
           ),
           _Row(
             icon: Icons.credit_card_outlined,
             label: l10n.sellerPaymentSettings,
             color: tint(2),
-            onTap: () => context.push(RoutePaths.paymentMethods),
+            onTap: () => context.push(RoutePaths.sellerPayoutSettings),
           ),
           _Row(
             icon: Icons.reviews_outlined,
@@ -57,10 +57,10 @@ class SellerProfileMenu extends ConsumerWidget {
             onTap: () => context.push(RoutePaths.sellerReviews),
           ),
           _Row(
-            icon: Icons.route_outlined,
+            icon: Icons.today_outlined,
             label: l10n.courierDay,
             color: tint(9),
-            onTap: () => context.push(RoutePaths.courierDay),
+            onTap: () => context.push(RoutePaths.sellerTodayOrders),
           ),
           _Row(
             icon: Icons.assignment_return_outlined,
@@ -72,7 +72,7 @@ class SellerProfileMenu extends ConsumerWidget {
             icon: Icons.policy_outlined,
             label: l10n.sellerStorePolicies,
             color: tint(5),
-            onTap: () => _comingSoon(context, l10n.sellerStorePolicies),
+            onTap: () => context.push(RoutePaths.sellerStorePolicies),
           ),
         ],
       ),
@@ -89,19 +89,19 @@ class SellerProfileMenu extends ConsumerWidget {
             icon: Icons.receipt_long_outlined,
             label: l10n.sellerFinancialReports,
             color: tint(1),
-            onTap: () => context.push(RoutePaths.sellerEarnings),
+            onTap: () => context.push(RoutePaths.sellerFinancialReports),
           ),
           _Row(
             icon: Icons.account_balance_wallet_outlined,
             label: l10n.sellerWithdrawalCentre,
             color: tint(2),
-            onTap: () => context.push(RoutePaths.sellerEarnings),
+            onTap: () => context.push(RoutePaths.sellerWithdrawals),
           ),
           _Row(
             icon: Icons.group_outlined,
             label: l10n.sellerTeamManagement,
             color: tint(3),
-            onTap: () => _comingSoon(context, l10n.sellerTeamManagement),
+            onTap: () => context.push(RoutePaths.sellerTeam),
           ),
           _Row(
             icon: Icons.campaign_outlined,
@@ -136,7 +136,7 @@ class SellerProfileMenu extends ConsumerWidget {
             icon: Icons.history_rounded,
             label: l10n.sellerActivityLog,
             color: tint(2),
-            onTap: () => _comingSoon(context, l10n.sellerActivityLog),
+            onTap: () => context.push(RoutePaths.sellerActivityLog),
           ),
           _Row(
             icon: Icons.language_rounded,
@@ -193,25 +193,6 @@ class SellerProfileMenu extends ConsumerWidget {
         ],
         _LogoutCard(onLogout: () => _confirmLogout(context, ref)),
       ],
-    );
-  }
-
-  void _comingSoon(BuildContext context, String title) {
-    final l10n = context.l10n;
-    DsBottomSheet.showTitled(
-      context,
-      title: title,
-      subtitle: l10n.comingSoon,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: DsSpacing.lg),
-        child: Row(
-          children: [
-            Icon(Icons.auto_awesome_rounded, color: context.dsColors.primary),
-            const SizedBox(width: DsSpacing.sm),
-            Expanded(child: Text(l10n.comingSoonBlurb)),
-          ],
-        ),
-      ),
     );
   }
 

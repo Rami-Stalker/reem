@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import {
+  IsBoolean,
   IsIn,
   IsNumberString,
   IsOptional,
@@ -26,6 +27,16 @@ export class SellerQueueQueryDto extends PaginationDto {
   @IsOptional()
   @IsIn(SELLER_QUEUE_TABS)
   tab?: QueueTab;
+
+  /** «طلبات اليوم» — only parcels placed today, on a Damascus clock. */
+  @IsOptional()
+  // Read off the raw query, before implicit conversion turns «false» true.
+  @Transform(({ obj, key }) => {
+    const raw = (obj as Record<string, unknown>)[key];
+    return raw === true || raw === 'true' || raw === '1';
+  })
+  @IsBoolean()
+  today?: boolean;
 }
 
 export class HandOverDto {

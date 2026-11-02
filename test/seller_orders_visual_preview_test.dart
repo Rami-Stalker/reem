@@ -286,6 +286,7 @@ final class _FakeSellerOrders implements SellerOrdersRepository {
     SellerQueueTab? tab,
     int page = 1,
     int limit = 20,
+    bool today = false,
   }) async => Success(
     SellerOrderQueue(
       orders: _rows,
