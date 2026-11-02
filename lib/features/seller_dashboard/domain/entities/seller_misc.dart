@@ -86,6 +86,9 @@ class SellerConversionMetrics extends Equatable {
 
 enum AiInsightKind { revenue, product, inventory, customer, warning }
 
+/// Where an insight's button leads, when the insight names it.
+enum AiInsightTarget { analytics, products }
+
 class SellerAiInsight extends Equatable {
   const SellerAiInsight({
     required this.id,
@@ -100,6 +103,18 @@ class SellerAiInsight extends Equatable {
   final String title;
   final String body;
   final String action;
+
+  /// The screen its move is made on, read off the insight's own id: the
+  /// monthly trend is an analytics question whether the month is up or down.
+  AiInsightTarget? get target => switch (id) {
+        'monthly-performance' => AiInsightTarget.analytics,
+        'top-product-momentum' ||
+        'low-stock-risk' ||
+        'draft-products' ||
+        'conversion-opportunity' =>
+          AiInsightTarget.products,
+        _ => null,
+      };
 
   DsTone get kindTone => switch (kind) {
         AiInsightKind.revenue => DsTone.positive,

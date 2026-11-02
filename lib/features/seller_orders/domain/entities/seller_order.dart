@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:ohara/core/shared/value_objects/money.dart';
-import 'package:ohara/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
+import 'package:ohara/features/checkout/domain/entities/order.dart'
+    show OrderGift, SellerOrderStatus;
 
 export 'package:ohara/features/checkout/domain/entities/order.dart' show SellerOrderStatus;
 
@@ -298,6 +299,7 @@ class SellerOrderSummary extends Equatable {
     this.paymentStatus,
     this.trackingCode,
     this.codRisk,
+    this.gift,
   });
 
   final String id;
@@ -318,6 +320,10 @@ class SellerOrderSummary extends Equatable {
   final String? paymentStatus;
   final String? trackingCode;
   final SellerOrderCodRisk? codRisk;
+
+  /// Set when the buyer is sending it as a gift: wrap it, include the card,
+  /// leave the prices out.
+  final OrderGift? gift;
 
   bool get isCashOnDelivery {
     // Compared case-insensitively on purpose: these two arrive as raw strings

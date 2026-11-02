@@ -26,6 +26,7 @@ abstract interface class CheckoutRepository {
     String? deliveryInstructions,
     String? notes,
     bool privacyMask = false,
+    OrderGift? gift,
   });
   Future<Result<OrderPayment>> verifyPayment(String paymentId);
 

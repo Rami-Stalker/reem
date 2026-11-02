@@ -15830,4 +15830,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deliverySettingsSaved => 'Saved';
+
+  @override
+  String get chatAboutOrder => 'About this order';
+
+  @override
+  String get chatForwardOrderNow => 'Send';
+
+  @override
+  String get giftSendAsGift => 'Send as a gift';
+
+  @override
+  String get giftSendAsGiftHint =>
+      'Delivered to someone else, wrapped, with your card';
+
+  @override
+  String get giftRecipientAddress => 'Recipient\'s address';
+
+  @override
+  String get giftRecipientAddressHint =>
+      'Enter the name, phone and address of the person receiving the gift — the courier will contact them.';
+
+  @override
+  String get giftNoCashOnDelivery =>
+      'Gifts are paid in the app — cash on delivery isn\'t available because it goes to someone else.';
+
+  @override
+  String get giftMessage => 'Card message';
+
+  @override
+  String get giftMessageHint => 'e.g. Happy birthday to my dearest friend 💐';
+
+  @override
+  String get giftFrom => 'From';
+
+  @override
+  String get giftFromHint => 'Your name as it should appear on the card';
+
+  @override
+  String get giftAnonymous => 'No name — an anonymous gift';
+
+  @override
+  String get giftWrap => 'Gift wrapping';
+
+  @override
+  String get giftHidePrices => 'No invoice or price inside the parcel';
+
+  @override
+  String get giftBadge => 'Gift';
+
+  @override
+  String get giftOrderTitle => 'Gift 🎁';
+
+  @override
+  String giftSentTo(Object name) {
+    return 'Going to $name';
+  }
+
+  @override
+  String giftCardFrom(Object name) {
+    return 'From: $name';
+  }
+
+  @override
+  String get giftCardAnonymous => 'From: anonymous';
+
+  @override
+  String get giftSellerTitle => 'This order is a gift';
+
+  @override
+  String get giftSellerWrap => 'Wrap it as a gift';
+
+  @override
+  String get giftSellerNoWrap => 'No special wrapping';
+
+  @override
+  String get giftSellerHidePrices =>
+      'Don\'t put an invoice or price inside the parcel';
+
+  @override
+  String get giftSellerCard => 'Include a card that reads:';
+
+  @override
+  String get giftSellerPaid =>
+      'Prepaid — the courier collects nothing from the recipient';
 }

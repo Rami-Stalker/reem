@@ -79,6 +79,29 @@ class SellerOrderCard extends StatelessWidget {
             ),
           ],
         ),
+        // A gift is packed differently — wrapped, with a card, no prices —
+        // so it says so on the ticket, before she opens it.
+        if (order.gift case final gift?) ...[
+          DsGaps.vXs,
+          Row(
+            children: [
+              Icon(
+                Icons.card_giftcard_rounded,
+                size: DsSizes.iconXxs,
+                color: atelier.gold,
+              ),
+              DsGaps.hXxs,
+              Flexible(
+                child: Text(
+                  gift.wrap
+                      ? '${l10n.giftBadge} · ${l10n.giftSellerWrap}'
+                      : l10n.giftBadge,
+                  style: context.dsText.caption.bold.tint(atelier.gold),
+                ),
+              ),
+            ],
+          ),
+        ],
         if (order.isCashOnDelivery && !order.isPaid) ...[
           DsGaps.vXs,
           Row(

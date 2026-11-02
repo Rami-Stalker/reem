@@ -66,7 +66,40 @@ export class ShippingDetailsDto {
   longitude?: number | null;
 }
 
+/** «إرسال كهدية» — the card, the wrapping, and how it is signed. */
+export class GiftDetailsDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(300, { message: 'رسالة البطاقة طويلة — خليها أقل من ٣٠٠ حرف' })
+  message?: string;
+
+  /// How the card is signed. Ignored when [anonymous].
+  @IsOptional()
+  @IsString()
+  @MaxLength(60)
+  from_name?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  anonymous?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  wrap?: boolean;
+
+  /// No invoice or price in the parcel. On unless she turns it off.
+  @IsOptional()
+  @IsBoolean()
+  hide_prices?: boolean;
+}
+
 export class CreateOrderDto {
+  /// Sent to someone else; see [GiftDetailsDto].
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => GiftDetailsDto)
+  gift?: GiftDetailsDto;
+
   /**
    * One of her saved addresses, instead of typing it again.
    *

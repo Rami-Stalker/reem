@@ -74,6 +74,10 @@ class PaymentMethodOption extends Equatable {
 
   bool get isWallet => method == 'platform_wallet';
 
+  /// Cash handed over at the door — never a way to pay for a gift, which
+  /// goes to someone who did not agree to pay for it.
+  bool get isCashAtDoor => method == 'cod' || method == 'courier_collect';
+
   /// Her balance in [currency], zero when she holds none.
   Money walletBalanceIn(Currency currency) =>
       walletBalances.where((m) => m.currency == currency).firstOrNull ??

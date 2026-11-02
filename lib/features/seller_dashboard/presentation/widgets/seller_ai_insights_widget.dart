@@ -160,7 +160,7 @@ class _InsightCardState extends State<_InsightCard> {
                 // the button to make it, with an empty callback. The insight
                 // carries no target of its own, so the kind decides: each one
                 // opens the screen where that move is actually made.
-                onPressed: () => context.push(_destinationFor(insight.kind)),
+                onPressed: () => context.push(_destinationOf(insight)),
                 icon: const Icon(Icons.arrow_forward_rounded, size: 14),
                 label: Text(insight.action),
                 style: TextButton.styleFrom(
@@ -179,6 +179,15 @@ class _InsightCardState extends State<_InsightCard> {
 }
 
 /// Where an insight of this kind is acted on.
+/// Where an insight's button leads. Named insights go where their move is
+/// made — the monthly trend is an analytics question whether it is up or
+/// down; its «warning» tone used to send a falling month to the orders list.
+String _destinationOf(SellerAiInsight insight) => switch (insight.target) {
+  AiInsightTarget.analytics => RoutePaths.sellerAnalytics,
+  AiInsightTarget.products => RoutePaths.myProducts,
+  null => _destinationFor(insight.kind),
+};
+
 String _destinationFor(AiInsightKind kind) => switch (kind) {
   AiInsightKind.revenue => RoutePaths.sellerAnalytics,
   AiInsightKind.product => RoutePaths.myProducts,

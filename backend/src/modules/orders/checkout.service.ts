@@ -138,6 +138,17 @@ export class CheckoutService {
       dto.payment_method = PaymentMethodType.COD;
     }
 
+    // «إرسال كهدية»: the parcel goes to somebody who never agreed to pay for
+    // it, so cash at the door is not a way to pay for a gift. Refused here,
+    // before anything is held, with the reason in her words.
+    if (dto.gift && CodTrustService.isCashRail(dto.payment_method)) {
+      throw new BadRequestException({
+        code: 'GIFT_NEEDS_PREPAYMENT',
+        message:
+          'الهدية بتوصل لشخص تاني، لهيك لازم تندفع من التطبيق — ما فيها دفع عند الاستلام.',
+      });
+    }
+
     // Before anything is priced or held: a rail she could not finish paying
     // on would only produce an order that expires.
     this.payments.assertAvailable(dto.payment_method);
@@ -321,6 +332,7 @@ export class CheckoutService {
           landmark: shipping.landmark ?? null,
           ...pinOf(shipping),
           privacyMaskEnabled: dto.privacy_mask ?? false,
+          ...giftColumns(dto),
           deliveryInstructions: dto.delivery_instructions ?? null,
           notes: dto.notes ?? null,
           placedAt,
@@ -1170,3 +1182,18 @@ export class CheckoutService {
 export const ESCROW_WINDOW_DAYS = RETURN_WINDOW_DAYS;
 
 export type CheckoutTransaction = Prisma.TransactionClient;
+
+/** The gift columns of an order: all off unless she is sending a gift. */
+function giftColumns(dto: CreateOrderDto) {
+  const gift = dto.gift;
+  if (!gift) return { isGift: false };
+  const message = gift.message?.trim();
+  const from = gift.anonymous ? null : gift.from_name?.trim();
+  return {
+    isGift: true,
+    giftMessage: message ? message : null,
+    giftFrom: from ? from : null,
+    giftWrap: gift.wrap ?? true,
+    giftHidePrices: gift.hide_prices ?? true,
+  };
+}

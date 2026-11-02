@@ -5,6 +5,7 @@ import 'package:ohara/core/result/result.dart';
 
 import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
 import 'package:ohara/features/checkout/domain/usecases/checkout_usecases.dart';
 
 class CheckoutState {
@@ -131,6 +132,7 @@ class CheckoutController extends StateNotifier<CheckoutState> {
     String? deliveryInstructions,
     String? notes,
     bool privacyMask = false,
+    OrderGift? gift,
   }) async {
     state = state.copyWith(isPlacing: true, clearError: true);
 
@@ -158,6 +160,7 @@ class CheckoutController extends StateNotifier<CheckoutState> {
       deliveryInstructions: deliveryInstructions,
       notes: notes,
       privacyMask: privacyMask,
+      gift: gift,
     );
 
     if (result case Error(:final failure)) {

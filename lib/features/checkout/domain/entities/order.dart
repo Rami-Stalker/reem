@@ -52,6 +52,14 @@ enum SellerOrderStatus {
         _ => SellerOrderStatus.newOrder,
       };
 
+  /// The status as the server spells it: `new`, `ready_to_ship`, …
+  String get wire => this == SellerOrderStatus.newOrder
+      ? 'new'
+      : name.replaceAllMapped(
+          RegExp('[A-Z]'),
+          (m) => '_${m[0]!.toLowerCase()}',
+        );
+
   /// Q38 — the customer may cancel until the parcel is handed over.
   bool get isCancellableByCustomer => const {
         SellerOrderStatus.newOrder,
@@ -450,11 +458,58 @@ class OrderSummary extends Equatable {
   List<Object?> get props => [id, number, status, grandTotal, sellersCount];
 }
 
+/// «إرسال كهدية» — an order sent to somebody else: the card that goes in
+/// the box, how it is signed, the wrapping, and whether prices stay out.
+class OrderGift extends Equatable {
+  const OrderGift({
+    this.message,
+    this.fromName,
+    this.wrap = true,
+    this.hidePrices = true,
+  });
+
+  final String? message;
+
+  /// How the card is signed; null when it goes anonymously.
+  final String? fromName;
+  final bool wrap;
+  final bool hidePrices;
+
+  bool get isAnonymous => fromName == null || fromName!.trim().isEmpty;
+
+  static OrderGift? fromJson(Object? json) {
+    if (json is! Map) return null;
+    String? text(Object? value) =>
+        value is String && value.trim().isNotEmpty ? value : null;
+    return OrderGift(
+      message: text(json['message']),
+      fromName: json['anonymous'] == true ? null : text(json['from_name']),
+      wrap: json['wrap'] as bool? ?? true,
+      hidePrices: json['hide_prices'] as bool? ?? true,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    if (message != null && message!.trim().isNotEmpty) 'message': message,
+    if (!isAnonymous) 'from_name': fromName,
+    'anonymous': isAnonymous,
+    'wrap': wrap,
+    'hide_prices': hidePrices,
+  };
+
+  @override
+  List<Object?> get props => [message, fromName, wrap, hidePrices];
+}
+
 class OrderDetail extends OrderSummary {
   final String? couponCode;
   final String? notes;
   final String? deliveryInstructions;
   final bool privacyMaskEnabled;
+
+  /// Set when the order was sent as a gift; [shipping] is then the
+  /// recipient's address.
+  final OrderGift? gift;
   final OrderShipping shipping;
   final List<SellerOrder> sellerOrders;
   final OrderPayment? payment;
@@ -486,6 +541,7 @@ class OrderDetail extends OrderSummary {
     this.notes,
     this.deliveryInstructions,
     this.privacyMaskEnabled = false,
+    this.gift,
     this.sellerOrders = const [],
     this.payment,
     this.timeline = const [],

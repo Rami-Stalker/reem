@@ -16021,4 +16021,86 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deliverySettingsSaved => 'انحفظ';
+
+  @override
+  String get chatAboutOrder => 'بخصوص الطلب';
+
+  @override
+  String get chatForwardOrderNow => 'أرسليه';
+
+  @override
+  String get giftSendAsGift => 'إرسال كهدية';
+
+  @override
+  String get giftSendAsGiftHint => 'بتوصل لشخص تاني، مغلّفة ومع بطاقة منكِ';
+
+  @override
+  String get giftRecipientAddress => 'عنوان المهدى إليه';
+
+  @override
+  String get giftRecipientAddressHint =>
+      'اكتبي اسم ورقم وعنوان الشخص اللي رح توصله الهدية — المندوب رح يتواصل معه هو.';
+
+  @override
+  String get giftNoCashOnDelivery =>
+      'الهدية لازم تندفع من التطبيق — الدفع عند الاستلام مش متاح لأنها رايحة لشخص تاني.';
+
+  @override
+  String get giftMessage => 'رسالة البطاقة';
+
+  @override
+  String get giftMessageHint => 'مثلاً: كل عام وإنتِ بخير يا أحلى صديقة 💐';
+
+  @override
+  String get giftFrom => 'من';
+
+  @override
+  String get giftFromHint => 'اسمكِ متل ما بدك يبين على البطاقة';
+
+  @override
+  String get giftAnonymous => 'بدون اسم — هدية من مجهول';
+
+  @override
+  String get giftWrap => 'تغليف هدية';
+
+  @override
+  String get giftHidePrices => 'بدون فاتورة أو سعر جوّا الطرد';
+
+  @override
+  String get giftBadge => 'هدية';
+
+  @override
+  String get giftOrderTitle => 'هدية 🎁';
+
+  @override
+  String giftSentTo(Object name) {
+    return 'رايحة لـ $name';
+  }
+
+  @override
+  String giftCardFrom(Object name) {
+    return 'من: $name';
+  }
+
+  @override
+  String get giftCardAnonymous => 'من: مجهول';
+
+  @override
+  String get giftSellerTitle => 'هالطلب هدية';
+
+  @override
+  String get giftSellerWrap => 'غلّفيه كهدية';
+
+  @override
+  String get giftSellerNoWrap => 'بدون تغليف خاص';
+
+  @override
+  String get giftSellerHidePrices => 'لا تحطي فاتورة ولا سعر جوّا الطرد';
+
+  @override
+  String get giftSellerCard => 'حطّي بطاقة مكتوب عليها:';
+
+  @override
+  String get giftSellerPaid =>
+      'مدفوع مسبقاً — المندوب ما بياخد أي مبلغ من المستلم';
 }

@@ -1276,6 +1276,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return ChatDetailsScreen(
             chatId: chatId,
             about: about is ChatProductRef ? about : null,
+            aboutOrder: about is ChatOrderRef ? about : null,
           );
         },
       ),

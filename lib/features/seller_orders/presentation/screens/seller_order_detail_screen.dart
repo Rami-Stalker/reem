@@ -7,8 +7,10 @@ import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:ohara/core/utils/arabic_numerals.dart';
 import 'package:ohara/core/utils/relative_time.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
+import 'package:ohara/features/checkout/presentation/widgets/gift_details_card.dart';
 import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
 import 'package:ohara/features/seller_orders/presentation/providers/seller_orders_provider.dart';
 import 'package:ohara/features/seller_orders/presentation/seller_order_labels.dart';
@@ -98,6 +100,10 @@ class SellerOrderDetailScreen extends ConsumerWidget {
                 _Header(order: order),
                 DsGaps.vLg,
 
+                if (order.summary.gift case final gift?) ...[
+                  GiftDetailsCard(gift: gift, forSeller: true),
+                  DsGaps.vSm,
+                ],
                 SellerCustomerPanel(
                   customer: order.summary.customer,
                   mode: order.summary.fulfilmentMode,
@@ -113,6 +119,15 @@ class SellerOrderDetailScreen extends ConsumerWidget {
                   variant: DsButtonVariant.tonal,
                   size: DsButtonSize.sm,
                   request: ChatStartRequest.order(sellerOrderId: order.summary.id),
+                  aboutOrder: ChatOrderRef(
+                    id: order.summary.id,
+                    sellerOrderId: order.summary.id,
+                    number: order.summary.number,
+                    status: order.summary.status.wire,
+                    itemsCount: order.summary.itemsCount,
+                    title: order.items.firstOrNull?.title,
+                    imageUrl: order.items.firstOrNull?.image,
+                  ),
                 ),
                 DsGaps.vLg,
 

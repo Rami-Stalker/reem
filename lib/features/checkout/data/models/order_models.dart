@@ -285,6 +285,7 @@ class OrderDetailModel extends OrderDetail {
     super.notes,
     super.deliveryInstructions,
     super.privacyMaskEnabled,
+    super.gift,
     super.sellerOrders,
     super.payment,
     super.timeline,
@@ -311,6 +312,7 @@ class OrderDetailModel extends OrderDetail {
       notes: json['notes'] as String?,
       deliveryInstructions: json['delivery_instructions'] as String?,
       privacyMaskEnabled: json['privacy_mask_enabled'] as bool? ?? false,
+      gift: OrderGift.fromJson(json['gift']),
       awaitingCodConfirmation:
           json['awaiting_cod_confirmation'] as bool? ?? false,
       shipping: OrderShippingModel.fromJson(

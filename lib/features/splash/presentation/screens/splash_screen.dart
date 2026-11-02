@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:ohara/core/config/brand_assets.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/router/route_paths.dart';
@@ -69,18 +70,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                         gradient: DsGradients.storyRing,
                         boxShadow: context.luxuryShadow,
                       ),
-                      child: Center(
-                        child: Container(
-                          width: 118,
-                          height: 118,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: context.primaryGradient,
-                          ),
-                          child: Icon(
-                            Icons.favorite_rounded,
-                            size: 56,
-                            color: colors.onPrimary,
+                      // The app's own icon, as the phone's splash just showed
+                      // it, so the hand-over from the system screen is
+                      // seamless rather than a different heart.
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: ClipOval(
+                          child: Image.asset(
+                            BrandAssets.appIcon,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.medium,
+                            semanticLabel: l10n.appTitle,
                           ),
                         ),
                       ),

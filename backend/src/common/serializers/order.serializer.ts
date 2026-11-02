@@ -287,6 +287,7 @@ export function serializeOrderDetail(order: OrderDetailRecord) {
     notes: order.notes,
     delivery_instructions: order.deliveryInstructions,
     privacy_mask_enabled: order.privacyMaskEnabled,
+    gift: serializeGift(order),
     shipping: {
       recipient_name: order.recipientName,
       recipient_phone: order.recipientPhone,
@@ -309,5 +310,27 @@ export function serializeOrderDetail(order: OrderDetailRecord) {
     awaiting_cod_confirmation:
       order.codRiskAssessment?.state === CodAssuranceState.PENDING,
     timeline: order.events.map(serializeOrderEvent),
+  };
+}
+
+/**
+ * «إرسال كهدية» on the wire, for the buyer and for the boutique alike: the
+ * card, how it is signed, whether to wrap it and whether to leave prices
+ * out. Null for an ordinary order.
+ */
+export function serializeGift(order: {
+  isGift: boolean;
+  giftMessage: string | null;
+  giftFrom: string | null;
+  giftWrap: boolean;
+  giftHidePrices: boolean;
+}) {
+  if (!order.isGift) return null;
+  return {
+    message: order.giftMessage,
+    from_name: order.giftFrom,
+    anonymous: order.giftFrom === null,
+    wrap: order.giftWrap,
+    hide_prices: order.giftHidePrices,
   };
 }
