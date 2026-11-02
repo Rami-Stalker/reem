@@ -48,7 +48,17 @@ export interface BriefExtractionInput {
 }
 
 export interface ReplyCompositionInput {
+  /**
+   * What the reply is about. `advice` is an opinion question with no cards
+   * under it — the one mode where the model writes styling knowledge rather
+   * than presenting a selection, and still may not name a product.
+   */
+  mode: 'products' | 'outfit' | 'advice';
   message: string;
+  /** The last few turns, oldest first, so the reply follows the thread. */
+  history: Array<{ role: 'user' | 'assistant'; content: string }>;
+  /** The deterministic styling answer, offered as a starting point. */
+  advice: string | null;
   brief: StyleBrief;
   /**
    * The real rows, already selected and already priced. The prompt states that

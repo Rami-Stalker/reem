@@ -165,6 +165,7 @@ class SellerOrdersNotifier extends StateNotifier<SellerOrdersState> {
     String? reason,
     String? collected,
     String? carrier,
+    String? handoverCode,
   }) async {
     state = state.copyWith(busyOrderId: order.id, clearServerError: true);
 
@@ -174,6 +175,7 @@ class SellerOrdersNotifier extends StateNotifier<SellerOrdersState> {
       reason: reason,
       collected: collected,
       carrier: carrier,
+      handoverCode: handoverCode,
     );
 
     switch (result) {
@@ -270,6 +272,7 @@ class SellerOrderDetailNotifier extends StateNotifier<SellerOrderDetailState> {
     String? reason,
     String? collected,
     String? carrier,
+    String? handoverCode,
   }) async {
     state = state.copyWith(isBusy: true, clearServerError: true);
 
@@ -279,6 +282,7 @@ class SellerOrderDetailNotifier extends StateNotifier<SellerOrderDetailState> {
       reason: reason,
       collected: collected,
       carrier: carrier,
+      handoverCode: handoverCode,
     );
 
     switch (result) {

@@ -192,7 +192,7 @@ test('only rails a customer can finish paying on are offered', async () => {
   const offered = (
     await catalogueWith({ sandboxConfirmation: false }).methods()
   ).map((method) => method.method);
-  assert.deepEqual(offered, ['cod', 'courier_collect', 'platform_wallet']);
+  assert.deepEqual(offered, ['cod', 'platform_wallet']);
 });
 
 test('a transfer rail is offered once finance says who to pay, with those words', async () => {
@@ -245,5 +245,5 @@ test('a guest is not offered the wallet she does not have', async () => {
   const offered = (
     await catalogueWith({ sandboxConfirmation: false }).methods({ signedIn: false })
   ).map((method) => method.method);
-  assert.deepEqual(offered, ['cod', 'courier_collect']);
+  assert.deepEqual(offered, ['cod']);
 });

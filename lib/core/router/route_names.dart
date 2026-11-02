@@ -57,6 +57,7 @@ abstract final class RouteNames {
   static const sellerStore = 'seller-store';
   static const sellerOrders = 'seller-orders';
   static const sellerOrderDetail = 'seller-order-detail';
+  static const sellerDeliverySettings = 'seller-delivery-settings';
   static const storyViewer = 'story-viewer';
   static const cart = 'cart';
   static const checkout = 'checkout';

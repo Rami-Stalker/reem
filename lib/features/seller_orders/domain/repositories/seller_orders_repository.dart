@@ -17,5 +17,6 @@ abstract interface class SellerOrdersRepository {
     String? reason,
     String? collected,
     String? carrier,
+    String? handoverCode,
   });
 }

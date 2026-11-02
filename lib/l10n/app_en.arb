@@ -12060,6 +12060,42 @@
   "@stylistTryAsking": {
     "description": ""
   },
+  "stylistOnlineStatus": "Online · your personal stylist",
+  "@stylistOnlineStatus": {
+    "description": ""
+  },
+  "stylistThinking": "Ohara is styling for you…",
+  "@stylistThinking": {
+    "description": ""
+  },
+  "stylistUnderstood": "Got it:",
+  "@stylistUnderstood": {
+    "description": ""
+  },
+  "stylistWelcomeGreeting": "Hi, I’m Ohara",
+  "@stylistWelcomeGreeting": {
+    "description": ""
+  },
+  "stylistCapAdviceTitle": "Styling advice",
+  "@stylistCapAdviceTitle": {
+    "description": ""
+  },
+  "stylistCapAdviceBody": "Ask what goes with what, and what suits each occasion",
+  "@stylistCapAdviceBody": {
+    "description": ""
+  },
+  "stylistTasteHeroTitle": "Your taste, through Ohara’s eyes",
+  "@stylistTasteHeroTitle": {
+    "description": ""
+  },
+  "stylistTasteHeroBody": "The more you choose and tell me, the better I know you — and the sharper my picks.",
+  "@stylistTasteHeroBody": {
+    "description": ""
+  },
+  "stylistLookPieces": "The pieces",
+  "@stylistLookPieces": {
+    "description": ""
+  },
   "stylistCapLookTitle": "A complete look",
   "@stylistCapLookTitle": {
     "description": ""
@@ -17305,5 +17341,77 @@
   "storeInfoNoExchanges": "No exchanges",
   "storeInfoShipsFrom": "Ships from {place}",
   "storeInfoHandling": "Prepares orders in {days}",
-  "storeInfoPickup": "Store pickup: {address}"
+  "storeInfoPickup": "Store pickup: {address}",
+  "sellerOrderActionOutForDelivery": "On the way",
+  "@sellerOrderActionOutForDelivery": {"description": "Seller action: the parcel is on its way to the customer."},
+  "sellerOrderActionFail": "Couldn't deliver",
+  "@sellerOrderActionFail": {"description": "Seller action: a failed delivery attempt."},
+  "sellerOrderActionCarrierPickedUp": "Company picked it up",
+  "@sellerOrderActionCarrierPickedUp": {"description": "Seller action: the delivery company collected the parcel."},
+  "sellerOrderOutForDelivery": "Marked as on the way",
+  "@sellerOrderOutForDelivery": {"description": "Toast after marking on the way."},
+  "sellerOrderFailed": "Failed attempt recorded",
+  "@sellerOrderFailed": {"description": "Toast after a failed attempt."},
+  "sellerOrderCarrierPickedUp": "Pick-up recorded",
+  "@sellerOrderCarrierPickedUp": {"description": "Toast after the company picked up."},
+  "sellerDeliverCodeLabel": "Customer's handover code",
+  "@sellerDeliverCodeLabel": {"description": "Label of the handover code field."},
+  "sellerDeliverCodeHint": "4 digits she sees in her order",
+  "@sellerDeliverCodeHint": {"description": "Hint of the handover code field."},
+  "sellerDeliverCodeRequired": "This order is prepaid, so the code is required",
+  "@sellerDeliverCodeRequired": {"description": "Shown when the code is mandatory."},
+  "sellerDeliverCodeInvalid": "The code is 4 digits",
+  "@sellerDeliverCodeInvalid": {"description": "Validation error for the handover code."},
+  "sellerFailTitle": "Why didn't it arrive?",
+  "@sellerFailTitle": {"description": "Title of the failed-delivery sheet."},
+  "sellerFailReasonNoAnswer": "She didn't answer",
+  "@sellerFailReasonNoAnswer": {"description": "Failure reason."},
+  "sellerFailReasonWrongAddress": "Wrong address",
+  "@sellerFailReasonWrongAddress": {"description": "Failure reason."},
+  "sellerFailReasonRefused": "She refused it",
+  "@sellerFailReasonRefused": {"description": "Failure reason."},
+  "sellerFailReasonPostponed": "She asked to postpone",
+  "@sellerFailReasonPostponed": {"description": "Failure reason."},
+  "sellerFailReasonUnreachable": "Area can't be reached",
+  "@sellerFailReasonUnreachable": {"description": "Failure reason."},
+  "sellerFailReasonOther": "Another reason",
+  "@sellerFailReasonOther": {"description": "Failure reason."},
+  "sellerFailConfirm": "Record the attempt",
+  "@sellerFailConfirm": {"description": "Confirm button of the failed-delivery sheet."},
+  "sellerDriverLinkTitle": "Driver link",
+  "@sellerDriverLinkTitle": {"description": "Card title for the delivery company's driver link."},
+  "sellerDriverLinkBody": "Send it to the delivery company's driver — he updates the order from it, no app needed.",
+  "@sellerDriverLinkBody": {"description": "Explains the driver link."},
+  "sellerDriverLinkCopy": "Copy link",
+  "@sellerDriverLinkCopy": {"description": "Copy button."},
+  "sellerDriverLinkShare": "Send",
+  "@sellerDriverLinkShare": {"description": "Share button."},
+  "sellerDriverLinkCopied": "Link copied",
+  "@sellerDriverLinkCopied": {"description": "Toast after copying."},
+  "orderHandoverCodeTitle": "Handover code",
+  "@orderHandoverCodeTitle": {"description": "Title of the customer's handover code card."},
+  "orderHandoverCodeBody": "Give this code to whoever delivers your order — only once it is in your hands.",
+  "@orderHandoverCodeBody": {"description": "Explains the handover code to the customer."},
+  "deliverySettingsTitle": "Delivery",
+  "@deliverySettingsTitle": {"description": "Title of the seller delivery settings screen."},
+  "deliverySettingsEntry": "Delivery settings",
+  "@deliverySettingsEntry": {"description": "Entry point to the delivery settings."},
+  "deliverySettingsSelfLabel": "I deliver orders myself",
+  "@deliverySettingsSelfLabel": {"description": "Self-delivery switch."},
+  "deliverySettingsSelfBody": "Orders inside your area are yours to deliver; the delivery company takes the rest.",
+  "@deliverySettingsSelfBody": {"description": "Explains self-delivery."},
+  "deliverySettingsOffBody": "Every order goes to the delivery company we contract with.",
+  "@deliverySettingsOffBody": {"description": "Shown when self-delivery is off."},
+  "deliverySettingsGovernorates": "Governorates you deliver to",
+  "@deliverySettingsGovernorates": {"description": "Governorate picker label."},
+  "deliverySettingsGovernoratesHint": "Choose none to deliver everywhere",
+  "@deliverySettingsGovernoratesHint": {"description": "Governorate picker hint."},
+  "deliverySettingsCities": "Only these cities (optional)",
+  "@deliverySettingsCities": {"description": "Cities field label."},
+  "deliverySettingsCitiesHint": "Separate with commas, e.g. Mezzeh, Jaramana",
+  "@deliverySettingsCitiesHint": {"description": "Cities field hint."},
+  "deliverySettingsSave": "Save",
+  "@deliverySettingsSave": {"description": "Save button."},
+  "deliverySettingsSaved": "Saved",
+  "@deliverySettingsSaved": {"description": "Toast after saving."}
 }

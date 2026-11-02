@@ -3,7 +3,8 @@ import { BuiltOutfit } from '../outfit/outfit-builder.service';
 import { Relaxation } from '../retrieval/product-retrieval.service';
 import { ScoredProduct } from '../retrieval/stylist-ranker';
 import { StyleBrief, formatSyp, missingSlotQuestion } from '../understanding/style-brief';
-import { colourLabel, occasionEntry, slotLabel } from '../understanding/stylist-lexicon';
+import { colourLabel, occasionEntry, searchable, slotLabel } from '../understanding/stylist-lexicon';
+import { smartFollowUps, stylingTip } from './style-advice';
 
 export interface ComposedReply {
   text: string;
@@ -25,6 +26,8 @@ export function composeProductReply(input: {
   brief: StyleBrief;
   results: ScoredProduct[];
   relaxations: Relaxation[];
+  /** A styling answer to lead with, when she asked an opinion too. */
+  advice?: string | null;
 }): ComposedReply {
   const { brief, results, relaxations } = input;
 
@@ -45,12 +48,16 @@ export function composeProductReply(input: {
   const priceLine = priceRangeLine(results);
   const relaxationLine = summariseRelaxations(relaxations);
   const question = missingSlotQuestion(brief);
+  // An opinion question gets its answer first; otherwise one styling line, so
+  // the reply reads like a stylist and not like a result count.
+  const advice = brief.intent === 'ADVICE' ? (input.advice ?? null) : null;
+  const tip = advice ? null : question ? null : stylingTip(brief);
 
-  const text = [opening, priceLine, relaxationLine, question]
+  const text = [advice, opening, priceLine, relaxationLine, tip, question]
     .filter((part): part is string => Boolean(part && part.trim()))
     .join(' ');
 
-  return { text, followUps: followUpsFor(brief) };
+  return { text, followUps: smartFollowUps(brief, followUpsFor(brief)) };
 }
 
 export function composeOutfitReply(input: {
@@ -95,6 +102,9 @@ export function composeOutfitReply(input: {
   const relaxed = summariseRelaxations(outfit.relaxations);
   if (relaxed) parts.push(relaxed);
 
+  const tip = stylingTip(brief);
+  if (tip) parts.push(tip);
+
   return {
     text: parts.join(' '),
     followUps: [
@@ -111,7 +121,15 @@ export function composeOutfitReply(input: {
 export function composeConversationalReply(input: {
   brief: StyleBrief;
   greeting: boolean;
+  message?: string;
+  advice?: string | null;
 }): ComposedReply {
+  if (input.greeting && isThanks(input.message ?? '')) {
+    return {
+      text: 'العفو، يسعدني دائماً أن أساعدكِ! هل نكمل بشيء آخر — قطعة تكمّل الإطلالة، أو هدية لشخص تحبينه؟',
+      followUps: ['نسّقيلي إطلالة كاملة', 'بدي هدية', 'شو الجديد؟'],
+    };
+  }
   if (input.greeting) {
     return {
       text: 'أهلاً بكِ! أنا أوهارا، مساعدتكِ الشخصية في التسوّق. أخبريني عن المناسبة أو القطعة التي تبحثين عنها، وميزانيتكِ، وأرتّب لكِ خيارات متوفرة فعلاً.',
@@ -124,12 +142,27 @@ export function composeConversationalReply(input: {
   }
 
   const question = missingSlotQuestion(input.brief);
+  if (input.advice) {
+    return {
+      text: question ? `${input.advice} ${question}` : input.advice,
+      followUps: smartFollowUps(input.brief, [
+        'وريني خيارات متوفرة',
+        'رتّبيلي إطلالة كاملة',
+      ]),
+    };
+  }
   return {
     text: question
       ? `حسناً. ${question}`
       : 'أخبريني بتفاصيل أكثر — نوع القطعة واللون والميزانية — وأعود إليكِ بخيارات متوفرة.',
     followUps: followUpsFor(input.brief),
   };
+}
+
+function isThanks(message: string): boolean {
+  return /(?:^| )(?:شكرا|مشكوره|يسلمو|يعطيك العافيه|thanks|thank you)(?: |$)/i.test(
+    searchable(message),
+  );
 }
 
 // ── Clauses ─────────────────────────────────────────────────────────────

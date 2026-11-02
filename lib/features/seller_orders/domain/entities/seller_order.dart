@@ -53,7 +53,16 @@ enum SellerOrderAction {
   confirm,
   ready,
   handOver,
+
+  /// The phone-worked delivery company told her it collected the parcel.
+  carrierPickedUp,
+
+  /// «بالطريق» — on her own parcel, or relayed for a phone-worked company.
+  outForDelivery,
   deliver,
+
+  /// A missed or refused attempt, with the reason.
+  fail,
   cancel;
 
   static SellerOrderAction? fromWire(String? value) =>
@@ -61,16 +70,25 @@ enum SellerOrderAction {
         'confirm' => SellerOrderAction.confirm,
         'ready' => SellerOrderAction.ready,
         'hand_over' => SellerOrderAction.handOver,
+        'carrier_picked_up' => SellerOrderAction.carrierPickedUp,
+        'out_for_delivery' => SellerOrderAction.outForDelivery,
         'deliver' => SellerOrderAction.deliver,
+        'fail' => SellerOrderAction.fail,
         'cancel' => SellerOrderAction.cancel,
         _ => null,
       };
 
   /// Whether pressing it needs something from her first.
   bool get needsInput =>
-      this == SellerOrderAction.cancel || this == SellerOrderAction.deliver;
+      this == SellerOrderAction.cancel ||
+      this == SellerOrderAction.deliver ||
+      this == SellerOrderAction.fail;
 
   bool get isDestructive => this == SellerOrderAction.cancel;
+
+  /// Never the one button a card puts forward.
+  bool get isSecondary =>
+      this == SellerOrderAction.cancel || this == SellerOrderAction.fail;
 }
 
 /// What the seller is shown of the customer.
@@ -180,6 +198,9 @@ class SellerParcelShipment extends Equatable {
     this.carrierName,
     this.carrierTrackingNumber,
     this.carrierError,
+    this.reportsByLink = false,
+    this.driverLinkPath,
+    this.handoverVerified = false,
   });
 
   final String trackingCode;
@@ -202,6 +223,16 @@ class SellerParcelShipment extends Equatable {
 
   bool get isWaitingForCarrier => carrierError != null;
 
+  /// A delivery company with no integration: its driver reports from a link
+  /// she forwards, and she can relay what the company tells her.
+  final bool reportsByLink;
+
+  /// Server-relative path of that link (`/carrier/<secret>`).
+  final String? driverLinkPath;
+
+  /// Delivered with the customer's own handover code.
+  final bool handoverVerified;
+
   @override
   List<Object?> get props => [
     trackingCode,
@@ -210,6 +241,9 @@ class SellerParcelShipment extends Equatable {
     carrierName,
     carrierTrackingNumber,
     carrierError,
+    reportsByLink,
+    driverLinkPath,
+    handoverVerified,
   ];
 }
 
@@ -297,9 +331,8 @@ class SellerOrderSummary extends Equatable {
 
   /// The one action a card puts forward. Everything else lives behind the
   /// overflow, so the queue reads as a single column of next steps.
-  SellerOrderAction? get primaryAction => actions
-      .where((action) => action != SellerOrderAction.cancel)
-      .firstOrNull;
+  SellerOrderAction? get primaryAction =>
+      actions.where((action) => !action.isSecondary).firstOrNull;
 
   @override
   List<Object?> get props => [id, number, status, actions];

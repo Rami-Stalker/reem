@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_aura.dart';
 import 'package:ohara/l10n/app_localizations.dart';
 
 /// The empty state, which is really the onboarding.
 ///
 /// Nobody opens a chat box knowing what an AI stylist can do, so the screen
-/// answers that before she asks: three worked examples in her own words, each
-/// tappable. They are the same sentences the feature was specified against,
+/// answers that before she asks: a greeting from Ohara herself, worked
+/// examples in her own words, each tappable, and what the assistant is good
+/// at. The prompts are the same sentences the feature was specified against,
 /// which means the demo is also the regression test.
 class StylistWelcome extends StatelessWidget {
   const StylistWelcome({
@@ -19,103 +21,167 @@ class StylistWelcome extends StatelessWidget {
   final List<String> prompts;
   final ValueChanged<String> onPromptSelected;
 
+  static const _promptIcons = [
+    Icons.celebration_outlined,
+    Icons.card_giftcard_rounded,
+    Icons.checkroom_rounded,
+    Icons.history_rounded,
+    Icons.wb_sunny_outlined,
+  ];
+
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
 
     return ListView(
-      padding: const EdgeInsets.all(DsSpacing.lg),
+      padding: const EdgeInsets.fromLTRB(
+        DsSpacing.lg,
+        DsSpacing.lg,
+        DsSpacing.lg,
+        DsSpacing.xxl,
+      ),
       children: [
-        const SizedBox(height: DsSpacing.xl),
-        Center(
-          child: Container(
-            width: 76,
-            height: 76,
-            decoration: BoxDecoration(
-              gradient: context.ds.primaryGradient,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.auto_awesome_rounded,
-              color: colors.onPrimary,
-              size: 34,
-            ),
-          ),
-        ),
-        const SizedBox(height: DsSpacing.md),
-        Text(
-          context.l10n.stylistWelcomeTitle,
-          textAlign: TextAlign.center,
-          style: context.dsText.screenTitle.bold.tint(colors.onSurface),
-        ),
-        const SizedBox(height: DsSpacing.xs),
-        Text(
-          context.l10n.stylistWelcomeBody,
-          textAlign: TextAlign.center,
-          style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.7),
-        ),
-        const SizedBox(height: DsSpacing.xl),
+        const StylistAppear(child: _Hero()),
+        DsGaps.vXl,
         if (prompts.isNotEmpty) ...[
-          Text(
-            context.l10n.stylistTryAsking,
-            style: context.dsText.labelMedium.semibold.tint(
-              colors.onSurfaceVariant,
+          StylistAppear(
+            index: 1,
+            child: Row(
+              children: [
+                Icon(Icons.auto_awesome_rounded, size: 14, color: colors.primary),
+                DsGaps.hXxs,
+                Text(
+                  context.l10n.stylistTryAsking,
+                  style: context.dsText.labelLarge.semibold.tint(colors.onSurface),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: DsSpacing.xs),
-          for (final prompt in prompts) ...[
-            _PromptCard(prompt: prompt, onTap: () => onPromptSelected(prompt)),
-            const SizedBox(height: DsSpacing.xs),
+          DsGaps.vSm,
+          for (var i = 0; i < prompts.length; i++) ...[
+            StylistAppear(
+              index: i + 2,
+              child: _PromptCard(
+                prompt: prompts[i],
+                icon: _promptIcons[i % _promptIcons.length],
+                onTap: () => onPromptSelected(prompts[i]),
+              ),
+            ),
+            DsGaps.vXs,
           ],
         ],
-        const SizedBox(height: DsSpacing.lg),
-        const _Capabilities(),
+        DsGaps.vLg,
+        StylistAppear(index: prompts.length + 2, child: const _Capabilities()),
+      ],
+    );
+  }
+}
+
+class _Hero extends StatelessWidget {
+  const _Hero();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+
+    return Column(
+      children: [
+        DsGaps.vMd,
+        const OharaOrb(size: 92),
+        DsGaps.vLg,
+        StylistGradientText(
+          context.l10n.stylistWelcomeGreeting,
+          textAlign: TextAlign.center,
+          style: context.dsText.pageTitle.bold,
+        ),
+        DsGaps.vXs,
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: DsSpacing.sm,
+            vertical: DsSpacing.xxs,
+          ),
+          decoration: BoxDecoration(
+            color: colors.surfaceElevated.withValues(alpha: 0.85),
+            borderRadius: BorderRadius.circular(DsRadius.pill),
+            border: Border.all(color: colors.border.withValues(alpha: 0.7)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(color: colors.success, shape: BoxShape.circle),
+              ),
+              DsGaps.hXs,
+              Text(
+                context.l10n.stylistOnlineStatus,
+                style: context.dsText.caption.medium.tint(colors.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+        DsGaps.vSm,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DsSpacing.sm),
+          child: Text(
+            context.l10n.stylistWelcomeBody,
+            textAlign: TextAlign.center,
+            style: context.dsText.body.tint(colors.onSurfaceVariant).copyWith(height: 1.75),
+          ),
+        ),
       ],
     );
   }
 }
 
 class _PromptCard extends StatelessWidget {
-  const _PromptCard({required this.prompt, required this.onTap});
+  const _PromptCard({required this.prompt, required this.icon, required this.onTap});
 
   final String prompt;
+  final IconData icon;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
 
-    return Material(
-      color: colors.surfaceElevated,
-      borderRadius: BorderRadius.circular(DsRadius.lg),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(DsRadius.lg),
+    return DsScaleAnimations.tapScale(
+      onTap: onTap,
+      pressedScale: 0.98,
+      child: StylistPanel(
+        radius: DsRadius.xl,
+        padding: const EdgeInsets.symmetric(
+          horizontal: DsSpacing.sm,
+          vertical: DsSpacing.sm,
+        ),
         // Sends straight away rather than filling the composer: she picked a
         // complete sentence, and making her press send again adds nothing.
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(DsSpacing.sm),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(DsRadius.lg),
-            border: Border.all(color: colors.border),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.chat_bubble_outline_rounded,
-                size: 16,
-                color: colors.primary,
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: colors.primaryContainer.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(DsRadius.md),
               ),
-              const SizedBox(width: DsSpacing.xs),
-              Expanded(
-                child: Text(
-                  prompt,
-                  style: context.dsText.body.tint(colors.onSurface).copyWith(height: 1.5),
-                ),
+              child: Icon(icon, size: 18, color: colors.primary),
+            ),
+            DsGaps.hSm,
+            Expanded(
+              child: Text(
+                prompt,
+                style: context.dsText.body.tint(colors.onSurface).copyWith(height: 1.5),
               ),
-            ],
-          ),
+            ),
+            DsGaps.hXs,
+            Icon(
+              Icons.north_west_rounded,
+              size: 16,
+              color: colors.onSurfaceVariant.withValues(alpha: 0.7),
+            ),
+          ],
         ),
       ),
     );
@@ -126,63 +192,72 @@ class _Capabilities extends StatelessWidget {
   const _Capabilities();
 
   static List<(IconData, String, String)> _items(AppLocalizations l10n) => [
-    (
-      Icons.checkroom_rounded,
-      l10n.stylistCapLookTitle,
-      l10n.stylistCapLookBody,
-    ),
-    (
-      Icons.card_giftcard_rounded,
-      l10n.stylistCapGiftsTitle,
-      l10n.stylistCapGiftsBody,
-    ),
-    (
-      Icons.verified_outlined,
-      l10n.stylistCapInStockTitle,
-      l10n.stylistCapInStockBody,
-    ),
+    (Icons.checkroom_rounded, l10n.stylistCapLookTitle, l10n.stylistCapLookBody),
+    (Icons.palette_outlined, l10n.stylistCapAdviceTitle, l10n.stylistCapAdviceBody),
+    (Icons.card_giftcard_rounded, l10n.stylistCapGiftsTitle, l10n.stylistCapGiftsBody),
+    (Icons.verified_outlined, l10n.stylistCapInStockTitle, l10n.stylistCapInStockBody),
   ];
+
+  @override
+  Widget build(BuildContext context) {
+    final items = _items(context.l10n);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final tileWidth = (constraints.maxWidth - DsSpacing.xs) / 2;
+        return Wrap(
+          spacing: DsSpacing.xs,
+          runSpacing: DsSpacing.xs,
+          children: [
+            for (final (icon, title, body) in items)
+              SizedBox(
+                width: tileWidth,
+                child: _CapabilityTile(icon: icon, title: title, body: body),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _CapabilityTile extends StatelessWidget {
+  const _CapabilityTile({required this.icon, required this.title, required this.body});
+
+  final IconData icon;
+  final String title;
+  final String body;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.dsColors;
 
-    return Column(
-      children: [
-        for (final (icon, title, subtitle) in _items(context.l10n))
-          Padding(
-            padding: const EdgeInsets.only(bottom: DsSpacing.sm),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(DsSpacing.xs),
-                  decoration: BoxDecoration(
-                    color: colors.primaryContainer.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(DsRadius.md),
-                  ),
-                  child: Icon(icon, size: 16, color: colors.primary),
-                ),
-                const SizedBox(width: DsSpacing.sm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: context.dsText.labelLarge.tint(colors.onSurface),
-                      ),
-                      Text(
-                        subtitle,
-                        style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    return StylistPanel(
+      radius: DsRadius.xl,
+      padding: const EdgeInsets.all(DsSpacing.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              gradient: context.boutique.signatureGradient,
+              borderRadius: BorderRadius.circular(DsRadius.md),
             ),
+            child: Icon(icon, size: 17, color: DsColors.onMedia),
           ),
-      ],
+          DsGaps.vXs,
+          Text(title, style: context.dsText.labelLarge.semibold.tint(colors.onSurface)),
+          DsGaps.vXxxs,
+          Text(
+            body,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: context.dsText.caption.tint(colors.onSurfaceVariant).copyWith(height: 1.5),
+          ),
+        ],
+      ),
     );
   }
 }

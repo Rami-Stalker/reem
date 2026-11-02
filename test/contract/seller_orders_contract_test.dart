@@ -271,4 +271,50 @@ void main() {
       );
     });
   });
+
+  group('delivery steps', () {
+    test('the road steps parse, and a failed attempt is never the lead', () {
+      final json = _fixture('seller_order_queue.json');
+      final row = Map<String, dynamic>.from(
+        (json['data'] as List<dynamic>)[1] as Map<String, dynamic>,
+      );
+      row['available_actions'] = [
+        'fail',
+        'out_for_delivery',
+        'deliver',
+        'carrier_picked_up',
+      ];
+      final order = SellerOrderMapper.summaryFromJson(row);
+      expect(order.actions, [
+        SellerOrderAction.fail,
+        SellerOrderAction.outForDelivery,
+        SellerOrderAction.deliver,
+        SellerOrderAction.carrierPickedUp,
+      ]);
+      expect(order.primaryAction, SellerOrderAction.outForDelivery);
+      expect(SellerOrderAction.fail.needsInput, isTrue);
+    });
+
+    test('a phone-worked carrier brings its driver link', () {
+      final json = _fixture('seller_order_detail.json');
+      json['shipment'] = {
+        'tracking_code': 'REM-TEST',
+        'status': 'assigned',
+        'assigned': true,
+        'handover_verified': false,
+        'carrier': {
+          'name': 'شركة الشام',
+          'status': 'assigned',
+          'tracking_number': 'REM-TEST',
+          'last_error': null,
+          'reports_by_link': true,
+          'driver_link_path': '/carrier/secret-token-value',
+        },
+      };
+      final shipment = SellerOrderMapper.detailFromJson(json).shipment!;
+      expect(shipment.reportsByLink, isTrue);
+      expect(shipment.driverLinkPath, '/carrier/secret-token-value');
+      expect(shipment.handoverVerified, isFalse);
+    });
+  });
 }

@@ -79,7 +79,12 @@ export function serializeOrderItem(item: OrderItem) {
 
 export function serializeShipment(
   shipment: Shipment & { dispatch?: DeliveryDispatchRecord | null },
+  options: { forCustomer?: boolean } = {},
 ) {
+  const open =
+    shipment.status !== 'DELIVERED' &&
+    shipment.status !== 'RETURNED' &&
+    shipment.status !== 'CANCELLED';
   return {
     id: shipment.id,
     tracking_code: shipment.trackingCode,
@@ -110,10 +115,18 @@ export function serializeShipment(
           delivered_at: shipment.dispatch.deliveredAt?.toISOString() ?? null,
         }
       : null,
+    // Proof of delivery: she reads it out to whoever is at the door. Only
+    // ever on her own view — a seller or courier who could read it could
+    // confirm a delivery that never happened.
+    handover_code: options.forCustomer && open ? shipment.handoverCode : null,
+    handover_verified: shipment.handoverVerifiedAt != null,
   };
 }
 
-export function serializeSellerOrder(sellerOrder: SellerOrderRecord) {
+export function serializeSellerOrder(
+  sellerOrder: SellerOrderRecord,
+  options: { forCustomer?: boolean } = {},
+) {
   return {
     id: sellerOrder.id,
     number: sellerOrder.number,
@@ -139,7 +152,7 @@ export function serializeSellerOrder(sellerOrder: SellerOrderRecord) {
     cancellation_reason: sellerOrder.cancellationReason,
     items: sellerOrder.items.map(serializeOrderItem),
     shipment: sellerOrder.shipment
-      ? serializeShipment(sellerOrder.shipment)
+      ? serializeShipment(sellerOrder.shipment, options)
       : null,
     ...(sellerOrder.events
       ? { timeline: sellerOrder.events.map(serializeOrderEvent) }
@@ -285,7 +298,9 @@ export function serializeOrderDetail(order: OrderDetailRecord) {
       latitude: order.latitude,
       longitude: order.longitude,
     },
-    seller_orders: order.sellerOrders.map(serializeSellerOrder),
+    seller_orders: order.sellerOrders.map((sellerOrder) =>
+      serializeSellerOrder(sellerOrder, { forCustomer: true }),
+    ),
     payment: order.payment ? serializePayment(order.payment) : null,
     // One boolean, and only when it is true. The customer's order does not
     // carry a risk score, a tier or a reason: the single thing she can act on

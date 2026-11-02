@@ -1,10 +1,13 @@
+import { DeliveryFailureReason } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
+  IsEnum,
   IsIn,
   IsNumberString,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -56,6 +59,23 @@ export class SellerDeliverDto {
   @Transform(({ value }) => String(value))
   @IsNumberString()
   collected?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  note?: string;
+
+  /** The four digits the customer reads out at the door. */
+  @IsOptional()
+  @IsString()
+  @Matches(/^\s*\d{4}\s*$/, { message: 'رمز الاستلام أربعة أرقام' })
+  handover_code?: string;
+}
+
+/** «فشل التسليم» on a parcel she carries or relays. */
+export class SellerFailDeliveryDto {
+  @IsEnum(DeliveryFailureReason)
+  reason!: DeliveryFailureReason;
 
   @IsOptional()
   @IsString()

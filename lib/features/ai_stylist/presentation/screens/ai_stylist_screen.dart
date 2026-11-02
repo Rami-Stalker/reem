@@ -9,6 +9,7 @@ import 'package:ohara/features/ai_stylist/domain/entities/stylist_recommendation
 import 'package:ohara/features/ai_stylist/presentation/providers/ai_stylist_providers.dart';
 import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_notifier.dart';
 import 'package:ohara/features/ai_stylist/presentation/providers/stylist_chat_state.dart';
+import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_aura.dart';
 import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_brief_bar.dart';
 import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_composer.dart';
 import 'package:ohara/features/ai_stylist/presentation/widgets/stylist_message_bubble.dart';
@@ -101,25 +102,34 @@ class _AiStylistScreenState extends ConsumerState<AiStylistScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          StylistBriefBar(
-            brief: state.brief,
-            onEdit: () => context.push(RoutePaths.stylistPreferences),
-          ),
-          Expanded(
-            child: _Body(
-              state: state,
-              notifier: notifier,
-              controller: _scrollController,
+      body: StylistBackdrop(
+        child: Column(
+          children: [
+            StylistBriefBar(
+              brief: state.brief,
+              onEdit: () => context.push(RoutePaths.stylistPreferences),
             ),
-          ),
-          StylistComposer(
-            enabled: state.canSend,
-            suggestions: state.activeSuggestions,
-            onSend: notifier.send,
-          ),
-        ],
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: DsDurations.moderate,
+                switchInCurve: DsCurves.emphasized,
+                child: KeyedSubtree(
+                  key: ValueKey(state.isLoading ? 'loading' : state.isEmpty ? 'welcome' : 'chat'),
+                  child: _Body(
+                    state: state,
+                    notifier: notifier,
+                    controller: _scrollController,
+                  ),
+                ),
+              ),
+            ),
+            StylistComposer(
+              enabled: state.canSend,
+              suggestions: state.activeSuggestions,
+              onSend: notifier.send,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -145,7 +155,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.isLoading) {
-      return const Center(child: DsLoadingIndicator());
+      return const Center(child: OharaOrb(size: 64, thinking: true));
     }
 
     if (state.isEmpty) {
@@ -165,7 +175,7 @@ class _Body extends StatelessWidget {
       ),
       // One extra row for the typing indicator while a turn is in flight.
       itemCount: state.messages.length + (state.isSending ? 1 : 0),
-      separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.md),
+      separatorBuilder: (_, _) => DsGaps.vLg,
       itemBuilder: (context, index) {
         if (index >= state.messages.length) {
           return const StylistTypingIndicator();

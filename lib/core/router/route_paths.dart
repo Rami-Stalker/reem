@@ -125,6 +125,9 @@ abstract final class RoutePaths {
   static const sellerOrderDetail = '/seller/orders/:id';
   static String sellerOrderDetailFor(String id) => '/seller/orders/$id';
 
+  /// Q57 — whether her boutique delivers its own parcels, and where.
+  static const sellerDeliverySettings = '/seller/delivery-settings';
+
   static const storyViewer = '/story-viewer';
 
   // Commerce

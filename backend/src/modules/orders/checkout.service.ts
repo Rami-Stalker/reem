@@ -28,6 +28,7 @@ import { CartService } from '../cart/cart.service';
 import { PurchasableLine, unitPriceOf } from '../cart/cart.serializer';
 import { DropsService } from '../market/drops/drops.service';
 import { DeliveryService } from '../delivery/delivery.service';
+import { fulfilmentModeFor } from '../delivery/fulfilment-routing';
 import { ShipmentsService } from '../delivery/shipments.service';
 import { PaymentsService } from '../payments/payments.service';
 import { CouponsService } from '../rewards/coupons.service';
@@ -130,6 +131,13 @@ export class CheckoutService {
     if (items.length === 0) {
       throw new BadRequestException('There is nothing to buy');
     }
+    // «الدفع لمندوب الشحن» was the same cash at the same door as «الدفع عند
+    // الاستلام» under a second name. It is no longer offered; an older app
+    // that still sends it gets cash on delivery, which is what it meant.
+    if (dto.payment_method === PaymentMethodType.COURIER_COLLECT) {
+      dto.payment_method = PaymentMethodType.COD;
+    }
+
     // Before anything is priced or held: a rail she could not finish paying
     // on would only produce an order that expires.
     this.payments.assertAvailable(dto.payment_method);
@@ -336,6 +344,15 @@ export class CheckoutService {
         },
       });
 
+      // Who carries each parcel: a boutique that delivers in its own area
+      // carries the ones addressed there, the contracted carriers the rest.
+      const deliverySettings = await tx.sellerDeliverySettings.findMany({
+        where: { sellerId: { in: groups.map((group) => group.sellerId) } },
+      });
+      const settingsBySeller = new Map(
+        deliverySettings.map((row) => [row.sellerId, row]),
+      );
+
       for (const [index, group] of groups.entries()) {
         const discountShare = discountShares[index];
         const shippingShare = shippingShares[index];
@@ -364,7 +381,10 @@ export class CheckoutService {
             orderId: created.id,
             sellerId: group.sellerId,
             status: SellerOrderStatus.NEW,
-            fulfilmentMode: FulfilmentMode.PLATFORM_COURIER,
+            fulfilmentMode: fulfilmentModeFor(
+              settingsBySeller.get(group.sellerId),
+              { governorate: shipping.governorate, city: shipping.city },
+            ),
             currency: orderCurrency,
             itemsSubtotal: group.itemsSubtotal.toPrisma(),
             discountTotal: discountShare.toPrisma(),
@@ -709,17 +729,20 @@ export class CheckoutService {
    * (Q64 «تتبع الشحنة للزبونة») — the parcel simply sits in CREATED until
    * someone picks it up.
    *
-   * Only modes the platform actually moves get one. A seller shipping it
-   * herself (Q57) or a customer collecting from a pickup point is not carrying
-   * our cash, and inventing a shipment for either would put a courier's name
-   * on a journey nobody made.
+   * A seller delivering it herself (Q57) gets one too, with no courier on it:
+   * the customer still deserves a tracking page and a handover code, and the
+   * seller's own steps move it. Only a pickup-point collection has none.
    */
   private async openShipments(tx: Prisma.TransactionClient, orderId: string) {
     const carried = await tx.sellerOrder.findMany({
       where: {
         orderId,
         fulfilmentMode: {
-          in: [FulfilmentMode.PLATFORM_COURIER, FulfilmentMode.THIRD_PARTY_CARRIER],
+          in: [
+            FulfilmentMode.PLATFORM_COURIER,
+            FulfilmentMode.THIRD_PARTY_CARRIER,
+            FulfilmentMode.SELLER_SHIPS,
+          ],
         },
         shipment: null,
       },

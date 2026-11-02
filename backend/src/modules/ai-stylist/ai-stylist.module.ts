@@ -63,10 +63,11 @@ import { BriefExtractorService } from './understanding/brief-extractor.service';
         return new AnthropicStylistLlm({
           apiKey,
           baseUrl: config.get<string>('stylist.baseUrl') ?? 'https://api.anthropic.com',
-          model: config.get<string>('stylist.model') ?? 'claude-sonnet-5',
-          timeoutMs: config.get<number>('stylist.timeoutMs') ?? 8000,
-          maxOutputTokens: config.get<number>('stylist.maxOutputTokens') ?? 1024,
+          model: config.get<string>('stylist.model') ?? 'claude-opus-5-5',
+          timeoutMs: config.get<number>('stylist.timeoutMs') ?? 15000,
+          maxOutputTokens: config.get<number>('stylist.maxOutputTokens') ?? 2048,
           composeReplies: config.get<boolean>('stylist.composeReplies') ?? true,
+          effort: stylistEffort(config.get<string>('stylist.effort')),
         });
       },
     },
@@ -89,3 +90,7 @@ import { BriefExtractorService } from './understanding/brief-extractor.service';
   ],
 })
 export class AiStylistModule {}
+
+function stylistEffort(value: string | undefined): 'low' | 'medium' | 'high' {
+  return value === 'medium' || value === 'high' ? value : 'low';
+}

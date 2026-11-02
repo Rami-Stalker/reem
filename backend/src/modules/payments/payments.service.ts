@@ -214,6 +214,9 @@ export class PaymentsService {
 
   /** Whether an order may be placed on this rail right now. */
   isAvailable(method: PaymentMethodType): boolean {
+    // Retired: the same cash at the door as COD. Checkout maps it to COD;
+    // orders already placed on it keep working everywhere else.
+    if (method === PaymentMethodType.COURIER_COLLECT) return false;
     switch (railOf(method)) {
       case PaymentRail.MANUAL:
         return this.instructionsFor(method) !== null;

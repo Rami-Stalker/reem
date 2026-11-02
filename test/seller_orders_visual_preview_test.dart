@@ -312,6 +312,7 @@ final class _FakeSellerOrders implements SellerOrdersRepository {
     String? reason,
     String? collected,
     String? carrier,
+    String? handoverCode,
   }) async => Success(_detail);
 
   static SellerOrderDetail get _detail => SellerOrderDetail(

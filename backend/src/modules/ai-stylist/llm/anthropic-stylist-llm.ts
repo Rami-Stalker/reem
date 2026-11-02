@@ -14,6 +14,8 @@ export interface AnthropicStylistConfig {
   timeoutMs: number;
   maxOutputTokens: number;
   composeReplies: boolean;
+  /** `low` | `medium` | `high` — how much the model thinks before answering. */
+  effort: 'low' | 'medium' | 'high';
 }
 
 /**
@@ -59,7 +61,7 @@ export class AnthropicStylistLlm implements StylistLlm {
 
     const payload = await this.send({
       system: EXTRACTION_SYSTEM_PROMPT,
-      maxTokens: 700,
+      maxTokens: this.config.maxOutputTokens,
       messages: [
         {
           role: 'user',
@@ -83,8 +85,14 @@ export class AnthropicStylistLlm implements StylistLlm {
   async composeReply(input: ReplyCompositionInput): Promise<string | null> {
     if (!this.enabled || !this.config.composeReplies) return null;
     // Nothing to phrase. The templates already say "لم أجد" better than a
-    // model asked to be sorry about it.
-    if (!input.products.length) return null;
+    // model asked to be sorry about it — except for an opinion question,
+    // which never had cards to begin with.
+    if (!input.products.length && input.mode !== 'advice') return null;
+
+    const history = input.history
+      .slice(-6)
+      .map((turn) => `${turn.role === 'user' ? 'العميلة' : 'أوهارا'}: ${turn.content}`)
+      .join('\n');
 
     const catalogue = input.products
       .map(
@@ -95,15 +103,19 @@ export class AnthropicStylistLlm implements StylistLlm {
       .join('\n');
 
     const payload = await this.send({
-      system: COMPOSITION_SYSTEM_PROMPT,
-      maxTokens: Math.min(this.config.maxOutputTokens, 400),
+      system:
+        input.mode === 'advice' ? ADVICE_SYSTEM_PROMPT : COMPOSITION_SYSTEM_PROMPT,
+      maxTokens: this.config.maxOutputTokens,
       messages: [
         {
           role: 'user',
           content: [
+            history ? `<محادثة_سابقة>\n${history}\n</محادثة_سابقة>` : '',
+            `<ما_تم_فهمه>\n${JSON.stringify(compactBrief(input.brief))}\n</ما_تم_فهمه>`,
             `<رسالة_العميلة>\n${input.message}\n</رسالة_العميلة>`,
+            input.advice ? `<معرفة_تنسيق>\n${input.advice}\n</معرفة_تنسيق>` : '',
             input.outfitTitle ? `<اسم_الاطلالة>${input.outfitTitle}</اسم_الاطلالة>` : '',
-            `<المنتجات_المتاحة>\n${catalogue}\n</المنتجات_المتاحة>`,
+            catalogue ? `<المنتجات_المتاحة>\n${catalogue}\n</المنتجات_المتاحة>` : '',
             input.relaxations.length
               ? `<تنازلات>\n${input.relaxations.join('\n')}\n</تنازلات>`
               : '',
@@ -149,7 +161,9 @@ export class AnthropicStylistLlm implements StylistLlm {
           body: JSON.stringify({
             model: this.config.model,
             max_tokens: request.maxTokens,
-            temperature: 0.2,
+            // A chat bubble is waiting: the model should read and answer, not
+            // deliberate. Low effort keeps a turn inside the timeout.
+            output_config: { effort: this.config.effort },
             system: request.system,
             messages: request.messages,
           }),
@@ -164,8 +178,14 @@ export class AnthropicStylistLlm implements StylistLlm {
       }
 
       const body = (await response.json()) as {
+        stop_reason?: string;
         content?: Array<{ type?: string; text?: string }>;
       };
+      // A reply cut off mid-sentence, or one the model declined to write, is
+      // worse than the template it would replace.
+      if (body.stop_reason === 'max_tokens' || body.stop_reason === 'refusal') {
+        return null;
+      }
       const text = (body.content ?? [])
         .filter((block) => block.type === 'text' && typeof block.text === 'string')
         .map((block) => block.text as string)
@@ -273,6 +293,23 @@ const EXTRACTION_SYSTEM_PROMPT = [
   '- أعيدي JSON فقط، بلا شرح.',
 ].join('\n');
 
+const ADVICE_SYSTEM_PROMPT = [
+  'أنتِ «أوهارا»، منسّقة أزياء شخصية خبيرة وودودة داخل تطبيق تسوّق نسائي. تكتبين بعربية سهلة',
+  'ودافئة وتخاطبين المستخدمة بصيغة المؤنث دائماً.',
+  '',
+  'سألتكِ العميلة سؤال رأي أو نصيحة في التنسيق (ألوان، مناسبة، قصّات، مقاسات، أقمشة). أجيبي',
+  'إجابة محدّدة ومفيدة عن سؤالها هي، بثلاث إلى خمس جمل، مستفيدةً من «معرفة_تنسيق» إن وُجدت',
+  'ومن سياق «محادثة_سابقة». أعطي سبباً قصيراً لكل نصيحة حتى تفهم المنطق.',
+  '',
+  'ممنوع منعًا باتًا:',
+  '- ذكر أي منتج محدّد أو سعر أو بائعة أو ماركة أو خصم؛ أنتِ تنصحين ولا تعرضين.',
+  '- الادعاء بأن شيئاً متوفر أو غير متوفر في المتجر.',
+  '- الأحكام على جسد العميلة أو وزنها؛ تحدّثي عن القصّات والألوان فقط.',
+  '',
+  'اختمي بسؤال قصير واحد يساعدكِ على عرض قطع متوفرة لها (المناسبة، القطعة، أو الميزانية).',
+  'لا تستخدمي عناوين ولا نقاطًا؛ اكتبي فقرة واحدة.',
+].join('\n');
+
 const COMPOSITION_SYSTEM_PROMPT = [
   'أنتِ «أوهارا»، مساعدة تسوّق شخصية ودودة ومختصرة، تكتبين بعربية فصحى سهلة ودافئة وتخاطبين المستخدمة بصيغة المؤنث دائماً («أهلاً بكِ»، «اختاري»).',
   '',
@@ -285,6 +322,9 @@ const COMPOSITION_SYSTEM_PROMPT = [
   '- اختراع خصومات أو مواعيد توصيل أو أسماء بائعات.',
   '- إعادة كتابة القائمة كاملة؛ البطاقات ستُعرض تحت كلامك.',
   '',
+  'اربطي ردّك بما قالته في «محادثة_سابقة» عند الحاجة (مثلاً: «هذه أرخص من السابقة»)، لكن',
+  'لا تقارني أسعاراً لم تُذكر لكِ.',
+  'إذا وُجدت «معرفة_تنسيق» فأضيفي منها لمسة نصيحة قصيرة واحدة تخصّ طلبها.',
   'إذا وُجدت «تنازلات» فاذكريها بصدق وبلطف. إذا وُجد «سؤال_المتابعة» فاختمي به.',
   'لا تستخدمي عناوين ولا نقاطًا؛ اكتبي فقرة واحدة قصيرة.',
 ].join('\n');

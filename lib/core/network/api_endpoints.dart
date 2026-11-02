@@ -309,6 +309,12 @@ abstract final class ApiEndpoints {
   static String sellerOrderReady(String id) => '/seller/orders/$id/ready';
   static String sellerOrderHandOver(String id) => '/seller/orders/$id/hand-over';
   static String sellerOrderDeliver(String id) => '/seller/orders/$id/deliver';
+  static String sellerOrderOutForDelivery(String id) =>
+      '/seller/orders/$id/out-for-delivery';
+  static String sellerOrderCarrierPickedUp(String id) =>
+      '/seller/orders/$id/carrier-picked-up';
+  static String sellerOrderFail(String id) => '/seller/orders/$id/fail';
+  static const sellerDeliverySettings = '/seller/delivery-settings';
   static String sellerOrderCancel(String id) => '/seller/orders/$id/cancel';
 
   // Search

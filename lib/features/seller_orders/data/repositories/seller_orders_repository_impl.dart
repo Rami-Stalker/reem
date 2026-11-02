@@ -33,12 +33,21 @@ class SellerOrdersRepositoryImpl
     String? reason,
     String? collected,
     String? carrier,
+    String? handoverCode,
   }) => guard(
     () => switch (action) {
       SellerOrderAction.confirm => remote.confirm(id),
       SellerOrderAction.ready => remote.ready(id),
       SellerOrderAction.handOver => remote.handOver(id, carrier: carrier),
-      SellerOrderAction.deliver => remote.deliver(id, collected: collected),
+      SellerOrderAction.carrierPickedUp => remote.carrierPickedUp(id),
+      SellerOrderAction.outForDelivery => remote.outForDelivery(id),
+      SellerOrderAction.deliver => remote.deliver(
+        id,
+        collected: collected,
+        handoverCode: handoverCode,
+      ),
+      // The failure reason travels in [reason], like a cancellation's.
+      SellerOrderAction.fail => remote.fail(id, reason: reason ?? 'other'),
       SellerOrderAction.cancel => remote.cancel(id, reason: reason ?? ''),
     },
   );

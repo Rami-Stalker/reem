@@ -10507,6 +10507,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stylistTryAsking => 'Try asking me:';
 
   @override
+  String get stylistOnlineStatus => 'Online · your personal stylist';
+
+  @override
+  String get stylistThinking => 'Ohara is styling for you…';
+
+  @override
+  String get stylistUnderstood => 'Got it:';
+
+  @override
+  String get stylistWelcomeGreeting => 'Hi, I’m Ohara';
+
+  @override
+  String get stylistCapAdviceTitle => 'Styling advice';
+
+  @override
+  String get stylistCapAdviceBody =>
+      'Ask what goes with what, and what suits each occasion';
+
+  @override
+  String get stylistTasteHeroTitle => 'Your taste, through Ohara’s eyes';
+
+  @override
+  String get stylistTasteHeroBody =>
+      'The more you choose and tell me, the better I know you — and the sharper my picks.';
+
+  @override
+  String get stylistLookPieces => 'The pieces';
+
+  @override
   String get stylistCapLookTitle => 'A complete look';
 
   @override
@@ -15686,4 +15715,119 @@ class AppLocalizationsEn extends AppLocalizations {
   String storeInfoPickup(Object address) {
     return 'Store pickup: $address';
   }
+
+  @override
+  String get sellerOrderActionOutForDelivery => 'On the way';
+
+  @override
+  String get sellerOrderActionFail => 'Couldn\'t deliver';
+
+  @override
+  String get sellerOrderActionCarrierPickedUp => 'Company picked it up';
+
+  @override
+  String get sellerOrderOutForDelivery => 'Marked as on the way';
+
+  @override
+  String get sellerOrderFailed => 'Failed attempt recorded';
+
+  @override
+  String get sellerOrderCarrierPickedUp => 'Pick-up recorded';
+
+  @override
+  String get sellerDeliverCodeLabel => 'Customer\'s handover code';
+
+  @override
+  String get sellerDeliverCodeHint => '4 digits she sees in her order';
+
+  @override
+  String get sellerDeliverCodeRequired =>
+      'This order is prepaid, so the code is required';
+
+  @override
+  String get sellerDeliverCodeInvalid => 'The code is 4 digits';
+
+  @override
+  String get sellerFailTitle => 'Why didn\'t it arrive?';
+
+  @override
+  String get sellerFailReasonNoAnswer => 'She didn\'t answer';
+
+  @override
+  String get sellerFailReasonWrongAddress => 'Wrong address';
+
+  @override
+  String get sellerFailReasonRefused => 'She refused it';
+
+  @override
+  String get sellerFailReasonPostponed => 'She asked to postpone';
+
+  @override
+  String get sellerFailReasonUnreachable => 'Area can\'t be reached';
+
+  @override
+  String get sellerFailReasonOther => 'Another reason';
+
+  @override
+  String get sellerFailConfirm => 'Record the attempt';
+
+  @override
+  String get sellerDriverLinkTitle => 'Driver link';
+
+  @override
+  String get sellerDriverLinkBody =>
+      'Send it to the delivery company\'s driver — he updates the order from it, no app needed.';
+
+  @override
+  String get sellerDriverLinkCopy => 'Copy link';
+
+  @override
+  String get sellerDriverLinkShare => 'Send';
+
+  @override
+  String get sellerDriverLinkCopied => 'Link copied';
+
+  @override
+  String get orderHandoverCodeTitle => 'Handover code';
+
+  @override
+  String get orderHandoverCodeBody =>
+      'Give this code to whoever delivers your order — only once it is in your hands.';
+
+  @override
+  String get deliverySettingsTitle => 'Delivery';
+
+  @override
+  String get deliverySettingsEntry => 'Delivery settings';
+
+  @override
+  String get deliverySettingsSelfLabel => 'I deliver orders myself';
+
+  @override
+  String get deliverySettingsSelfBody =>
+      'Orders inside your area are yours to deliver; the delivery company takes the rest.';
+
+  @override
+  String get deliverySettingsOffBody =>
+      'Every order goes to the delivery company we contract with.';
+
+  @override
+  String get deliverySettingsGovernorates => 'Governorates you deliver to';
+
+  @override
+  String get deliverySettingsGovernoratesHint =>
+      'Choose none to deliver everywhere';
+
+  @override
+  String get deliverySettingsCities => 'Only these cities (optional)';
+
+  @override
+  String get deliverySettingsCitiesHint =>
+      'Separate with commas, e.g. Mezzeh, Jaramana';
+
+  @override
+  String get deliverySettingsSave => 'Save';
+
+  @override
+  String get deliverySettingsSaved => 'Saved';
 }

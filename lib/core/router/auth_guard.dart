@@ -117,6 +117,7 @@ const _sellerToolRoutes = <String>{
   RoutePaths.storeWorkspaceOrders,
   RoutePaths.storeWorkspaceProducts,
   RoutePaths.sellerOrders,
+  RoutePaths.sellerDeliverySettings,
   RoutePaths.sellerReturns,
   RoutePaths.sellerReviews,
   RoutePaths.sellerAds,

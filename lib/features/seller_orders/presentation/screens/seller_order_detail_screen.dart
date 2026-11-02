@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:ohara/core/config/app_env.dart';
 import 'package:ohara/core/design_system/design_system.dart';
 import 'package:ohara/core/localization/l10n_extension.dart';
 import 'package:ohara/core/shared/value_objects/money.dart';
@@ -14,6 +15,7 @@ import 'package:ohara/features/seller_orders/presentation/seller_order_labels.da
 import 'package:ohara/features/seller_orders/presentation/widgets/seller_customer_panel.dart';
 import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_action_prompt.dart';
 import 'package:ohara/features/seller_orders/presentation/widgets/seller_order_status_chip.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// One parcel, everything about it, and the next thing to do with it.
 ///
@@ -155,6 +157,7 @@ class SellerOrderDetailScreen extends ConsumerWidget {
           reason: input.reason,
           collected: input.collected,
           carrier: input.carrier,
+          handoverCode: input.handoverCode,
         );
 
     if (ok && context.mounted) {
@@ -272,7 +275,77 @@ class _Header extends StatelessWidget {
                   style: context.dsText.caption.tint(atelier.cautionInk),
                 ),
               ),
+            if (order.shipment!.reportsByLink &&
+                order.shipment!.driverLinkPath != null &&
+                order.status.isOpenForSeller) ...[
+              DsGaps.vSm,
+              _DriverLink(path: order.shipment!.driverLinkPath!),
+            ],
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// The link a phone-worked delivery company's driver reports from. She sends
+/// it once; he marks picked up, on the way, delivered — no account, no app.
+class _DriverLink extends StatelessWidget {
+  const _DriverLink({required this.path});
+
+  final String path;
+
+  String get _url {
+    final base = AppEnv.baseUrl.replaceAll(RegExp(r'/+$'), '');
+    return '$base$path';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final atelier = context.atelier;
+    final l10n = context.l10n;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(DsSpacing.sm),
+      decoration: BoxDecoration(
+        color: atelier.primarySoft,
+        borderRadius: BorderRadius.circular(DsRadius.md),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.sellerDriverLinkTitle,
+            style: context.dsText.body.semibold.tint(atelier.ink),
+          ),
+          const SizedBox(height: DsSpacing.xxs),
+          Text(
+            l10n.sellerDriverLinkBody,
+            style: context.dsText.bodySmall.tint(atelier.muted),
+          ),
+          const SizedBox(height: DsSpacing.xs),
+          Wrap(
+            spacing: DsSpacing.xs,
+            children: [
+              OutlinedButton.icon(
+                icon: const Icon(Icons.copy_rounded, size: 16),
+                label: Text(l10n.sellerDriverLinkCopy),
+                onPressed: () async {
+                  await Clipboard.setData(ClipboardData(text: _url));
+                  if (context.mounted) {
+                    DsSnackbar.success(context, l10n.sellerDriverLinkCopied);
+                  }
+                },
+              ),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.send_rounded, size: 16),
+                label: Text(l10n.sellerDriverLinkShare),
+                onPressed: () => SharePlus.instance.share(
+                  ShareParams(text: '${l10n.sellerDriverLinkTitle}: $_url'),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -638,8 +711,15 @@ class _ActionBar extends StatelessWidget {
     final l10n = context.l10n;
     final primary = order.summary.primaryAction;
     final canCancel = order.actions.contains(SellerOrderAction.cancel);
+    // A parcel on the road has more than one honest next step — on the way,
+    // delivered, or a failed attempt. The rest sit under the main button.
+    final others = order.actions
+        .where((action) => action != primary && action != SellerOrderAction.cancel)
+        .toList();
 
-    if (primary == null && !canCancel) return const SizedBox.shrink();
+    if (primary == null && !canCancel && others.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Container(
       padding: const EdgeInsets.fromLTRB(
@@ -654,7 +734,33 @@ class _ActionBar extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (others.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: DsSpacing.xs),
+                child: Wrap(
+                  spacing: DsSpacing.xs,
+                  runSpacing: DsSpacing.xs,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    for (final action in others)
+                      OutlinedButton(
+                        onPressed: isBusy ? null : () => onAction(action),
+                        child: Text(
+                          l10n.parcelAction(action),
+                          style: context.dsText.body.tint(
+                            action == SellerOrderAction.fail
+                                ? atelier.criticalInk
+                                : atelier.ink,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            Row(
           children: [
             if (primary != null)
               Expanded(
@@ -676,6 +782,8 @@ class _ActionBar extends StatelessWidget {
                   style: context.dsText.body.tint(atelier.criticalInk),
                 ),
               ),
+          ],
+            ),
           ],
         ),
       ),

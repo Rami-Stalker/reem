@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { SellerDeliverySettingsController } from './seller-delivery-settings.controller';
 
 import { PrismaModule } from '../../prisma/prisma.module';
 import { CommissionsModule } from '../commissions/commissions.module';
@@ -31,6 +32,7 @@ import { SellerRetentionController } from './seller-retention.controller';
     SellerOrdersController,
     SellerCrmController,
     SellerRetentionController,
+    SellerDeliverySettingsController,
   ],
   providers: [SellerCommerceService, SellerOrdersService, SellerCrmService],
   exports: [SellerOrdersService, SellerCrmService],
