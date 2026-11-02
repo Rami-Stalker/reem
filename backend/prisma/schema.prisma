@@ -3544,6 +3544,19 @@ model Order {
   /// sub-order according to its fulfilment mode (Q57 P2).
   privacyMaskEnabled Boolean @default(false) @map("privacy_mask_enabled")
 
+  // ── «إرسال كهدية» ─────────────────────────────────────────────────────
+  /// Sent to someone else: the address above is the recipient's, the order
+  /// is paid before it leaves (never cash at a stranger's door), and the
+  /// boutique wraps it and leaves the prices out.
+  isGift         Boolean @default(false) @map("is_gift")
+  /// The card that goes in the box.
+  giftMessage    String? @map("gift_message")
+  /// How the card is signed; null when it is sent anonymously.
+  giftFrom       String? @map("gift_from")
+  giftWrap       Boolean @default(false) @map("gift_wrap")
+  /// No invoice and no price inside the parcel.
+  giftHidePrices Boolean @default(true) @map("gift_hide_prices")
+
   deliveryInstructions String?   @map("delivery_instructions")
   notes                String?
   placedAt             DateTime? @map("placed_at")
@@ -11380,12 +11393,12 @@ model SellerDeliverySettings {
   sellerId String @id @map("seller_id") @db.Uuid
   seller   User   @relation("SellerDeliverySettings", fields: [sellerId], references: [id], onDelete: Cascade)
 
-  selfDeliveryEnabled Boolean @default(false) @map("self_delivery_enabled")
+  selfDeliveryEnabled      Boolean  @default(false) @map("self_delivery_enabled")
   /// Governorates she delivers to herself. Empty with self-delivery on means
   /// she delivers everything herself.
   selfDeliveryGovernorates String[] @map("self_delivery_governorates")
   /// Narrows the above to these cities when set.
-  selfDeliveryCities String[] @map("self_delivery_cities")
+  selfDeliveryCities       String[] @map("self_delivery_cities")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

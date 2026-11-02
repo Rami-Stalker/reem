@@ -41,6 +41,7 @@ class CheckoutRepositoryImpl
     String? deliveryInstructions,
     String? notes,
     bool privacyMask = false,
+    OrderGift? gift,
   }) =>
       // `addressId` and `saveAddress` are forwarded, not swallowed. They used
       // to stop here: the parameters were accepted and then simply left out of
@@ -58,6 +59,7 @@ class CheckoutRepositoryImpl
             deliveryInstructions: deliveryInstructions,
             notes: notes,
             privacyMask: privacyMask,
+            gift: gift,
           ));
 
   @override

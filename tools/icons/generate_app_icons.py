@@ -16,6 +16,9 @@ What it writes:
   windows/runner/resources/app_icon.ico
   web/icons/*.png, web/favicon.png
   docs/brand/app-icon-1024.png, docs/brand/play-store-512.png
+  android/app/src/main/res/mipmap-*/splash_icon.png             Android 12+ splash
+  ios/Runner/Assets.xcassets/LaunchImage.imageset/*.png         iOS launch
+  assets/brand/app_icon.png                                     in-app splash
 
 iOS PNGs are written without an alpha channel: App Store validation rejects
 an icon that carries one.
@@ -69,6 +72,37 @@ def rounded(img: Image.Image, radius_fraction: float) -> Image.Image:
     return out
 
 
+# The splash shows the icon through a circle two thirds of its canvas wide.
+# The art is cut to a circle that stays inside the drawn tile (so neither its
+# frame nor the edge padding of the launcher layer can show), drawn a little
+# larger than that window, on the tile's own blush.
+SPLASH_DP = 240
+SPLASH_ART_RADIUS = 0.44  # of the art, from its centre
+SPLASH_GROUND = (248, 214, 220)
+
+
+def circle_art(art: Image.Image, size: int) -> Image.Image:
+    """The middle of the art as a soft-edged disc, `size` px across."""
+    side = art.width
+    r = side * SPLASH_ART_RADIUS
+    box = (round(side / 2 - r), round(side / 2 - r), round(side / 2 + r), round(side / 2 + r))
+    disc = art.crop(box).resize((size, size), Image.LANCZOS).convert("RGBA")
+    mask = Image.new("L", (size * 4, size * 4), 0)
+    ImageDraw.Draw(mask).ellipse((0, 0, size * 4 - 1, size * 4 - 1), fill=255)
+    disc.putalpha(mask.resize((size, size), Image.LANCZOS))
+    return disc
+
+
+def splash_icon(art: Image.Image, canvas: int, ground) -> Image.Image:
+    out = Image.new("RGBA", (canvas, canvas), ground + (255,))
+    # The window is 2/3 of the canvas; the disc overfills it by a few percent.
+    disc_size = round(canvas * 0.72)
+    disc = circle_art(art, disc_size)
+    offset = (canvas - disc_size) // 2
+    out.alpha_composite(disc, (offset, offset))
+    return out.convert("RGB")
+
+
 def save(img: Image.Image, rel: str) -> None:
     path = ROOT / rel
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -89,6 +123,22 @@ def main() -> None:
             f"{res}/ic_launcher_foreground.png",
         )
         save(Image.new("RGB", (canvas, canvas), ground), f"{res}/ic_launcher_background.png")
+
+    # Android 12+ splash: its own layer, never the adaptive foreground, whose
+    # padded edges and tile frame showed around the splash circle.
+    for name, scale in DENSITIES.items():
+        save(
+            splash_icon(art, round(SPLASH_DP * scale), SPLASH_GROUND),
+            f"android/app/src/main/res/mipmap-{name}/splash_icon.png",
+        )
+
+    # iOS launch screen and the in-app splash: the art as a clean disc.
+    for scale, suffix in ((1, ""), (2, "@2x"), (3, "@3x")):
+        save(
+            circle_art(art, 120 * scale),
+            f"ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage{suffix}.png",
+        )
+    save(circle_art(art, 384), "assets/brand/app_icon.png")
 
     # iOS — one PNG per slot named in the asset catalogue, no alpha.
     catalogue = "ios/Runner/Assets.xcassets/AppIcon.appiconset"

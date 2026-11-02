@@ -10,6 +10,7 @@ import 'package:ohara/core/media/authorized_media_image.dart';
 import 'package:ohara/core/media/media_variants.dart';
 import 'package:ohara/core/router/route_paths.dart';
 import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:ohara/features/chat/domain/entities/chat_start_request.dart';
 import 'package:ohara/features/chat/presentation/widgets/message_seller_button.dart';
 import 'package:ohara/features/checkout/domain/entities/checkout.dart';
@@ -18,6 +19,7 @@ import 'package:ohara/features/checkout/presentation/order_labels.dart';
 import 'package:ohara/features/checkout/presentation/providers/checkout_providers.dart';
 import 'package:ohara/features/checkout/presentation/providers/order_detail_notifier.dart';
 import 'package:ohara/features/checkout/presentation/widgets/cod_confirmation_sheet.dart';
+import 'package:ohara/features/checkout/presentation/widgets/gift_details_card.dart';
 import 'package:ohara/features/checkout/presentation/widgets/order_status_chip.dart';
 import 'package:ohara/features/checkout/presentation/widgets/payment_action_card.dart';
 import 'package:ohara/features/policies/presentation/widgets/policy_link.dart';
@@ -264,7 +266,19 @@ class _Body extends StatelessWidget {
           ],
           const SizedBox(height: DsSpacing.lg),
 
-          _section(context, context.l10n.checkoutDeliveryAddress),
+          if (order.gift case final gift?) ...[
+            GiftDetailsCard(
+              gift: gift,
+              recipientName: order.shipping.recipientName,
+            ),
+            const SizedBox(height: DsSpacing.lg),
+          ],
+          _section(
+            context,
+            order.gift != null
+                ? context.l10n.giftRecipientAddress
+                : context.l10n.checkoutDeliveryAddress,
+          ),
           SurfaceCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -751,6 +765,17 @@ class _ParcelCard extends StatelessWidget {
             variant: DsButtonVariant.tonal,
             size: DsButtonSize.sm,
             request: ChatStartRequest.order(sellerOrderId: parcel.id),
+            // The parcel rides along as a forwarded card, so the boutique
+            // knows which order she means before reading a word.
+            aboutOrder: ChatOrderRef(
+              id: parcel.id,
+              sellerOrderId: parcel.id,
+              number: parcel.number,
+              status: parcel.status.wire,
+              itemsCount: parcel.items.length,
+              title: parcel.items.firstOrNull?.title,
+              imageUrl: parcel.items.firstOrNull?.image,
+            ),
           ),
           // Q56 P1 — the way into a return, which the seller's desk has been
           // waiting for since the module shipped. Offered once the parcel is

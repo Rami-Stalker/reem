@@ -22,6 +22,7 @@ abstract interface class CheckoutRemoteDataSource {
     String? deliveryInstructions,
     String? notes,
     bool privacyMask = false,
+    OrderGift? gift,
   });
   Future<OrderPaymentModel> verifyPayment(String paymentId);
 

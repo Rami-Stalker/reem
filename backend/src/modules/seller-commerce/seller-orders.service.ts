@@ -1,3 +1,4 @@
+import { serializeGift } from '../../common/serializers/order.serializer';
 import {
   BadRequestException,
   ForbiddenException,
@@ -546,6 +547,11 @@ export class SellerOrdersService {
           latitude: true,
           longitude: true,
           deliveryInstructions: true,
+          isGift: true,
+          giftMessage: true,
+          giftFrom: true,
+          giftWrap: true,
+          giftHidePrices: true,
           payment: { select: { method: true, status: true } },
           codRiskAssessment: {
             select: { tier: true, assurance: true, state: true },
@@ -669,6 +675,8 @@ export class SellerOrdersService {
       payment_status: parcel.order.payment?.status.toLowerCase() ?? null,
       tracking_code: parcel.shipment?.trackingCode ?? null,
       customer: this.maskedCustomer(parcel),
+      // A gift: wrap it, put the card in, leave the prices out.
+      gift: serializeGift(parcel.order),
       cod_risk: this.codRisk(parcel),
       // What she can do next, straight from the lifecycle table — a button the
       // backend would refuse is worse than no button.

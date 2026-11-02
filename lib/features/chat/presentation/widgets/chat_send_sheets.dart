@@ -334,3 +334,94 @@ class ChatOrderCard extends StatelessWidget {
     );
   }
 }
+
+/// The order she is writing about, pinned above the composer like a quoted
+/// message. Her next message carries it as a card; «أرسليه» forwards it on
+/// its own straight away.
+class ChatAboutOrderBar extends StatelessWidget {
+  const ChatAboutOrderBar({
+    super.key,
+    required this.order,
+    required this.onClear,
+    required this.onSendNow,
+  });
+
+  final ChatOrderRef order;
+  final VoidCallback onClear;
+  final VoidCallback onSendNow;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final l10n = context.l10n;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.surface.withValues(alpha: 0.96),
+        border: Border(
+          top: BorderSide(color: colors.border.withValues(alpha: 0.6)),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          DsSpacing.md,
+          DsSpacing.xs,
+          DsSpacing.xxs,
+          DsSpacing.xs,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: DsSpacing.xxs,
+              height: DsSizes.avatarMd,
+              decoration: BoxDecoration(
+                color: colors.primary,
+                borderRadius: DsRadius.borderXs,
+              ),
+            ),
+            DsGaps.hXs,
+            _Thumb(url: order.imageUrl),
+            DsGaps.hSm,
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.chatAboutOrder,
+                    style: context.dsText.caption.tint(colors.primary),
+                  ),
+                  Text(
+                    '\u2066${order.number}\u2069',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.dsText.bodySmall.semibold,
+                  ),
+                  Text(
+                    [
+                      l10n.customerParcelStatus(
+                        SellerOrderStatus.fromWire(order.status),
+                      ),
+                      ?order.title,
+                    ].join(' · '),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: onSendNow,
+              child: Text(l10n.chatForwardOrderNow),
+            ),
+            IconButton(
+              tooltip: l10n.cancel,
+              icon: const Icon(Icons.close_rounded, size: 18),
+              onPressed: onClear,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

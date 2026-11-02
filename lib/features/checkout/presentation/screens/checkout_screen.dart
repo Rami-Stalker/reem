@@ -12,6 +12,7 @@ import 'package:ohara/core/shared/value_objects/money.dart';
 import 'package:ohara/features/auth/presentation/providers/auth_provider.dart';
 import 'package:ohara/features/cart/presentation/providers/cart_providers.dart';
 import 'package:ohara/features/checkout/domain/entities/checkout.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart';
 import 'package:ohara/features/checkout/presentation/order_labels.dart';
 import 'package:ohara/features/checkout/presentation/providers/applied_coupon_provider.dart';
 import 'package:ohara/features/checkout/presentation/providers/checkout_controller.dart';
@@ -53,6 +54,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   /// Q44 — whether the boutique sees her full name.
   bool _privacyMask = false;
+
+  /// «إرسال كهدية»: the address becomes the recipient's, cash at the door is
+  /// off, and the boutique is told to wrap it and leave prices out.
+  bool _isGift = false;
+  final _giftMessage = TextEditingController();
+  final _giftFrom = TextEditingController();
+  bool _giftAnonymous = false;
+  bool _giftWrap = true;
+  bool _giftHidePrices = true;
 
   /// Null means "a new address" — the form. Anything else is a saved one.
   String? _selectedAddressId;
@@ -123,6 +133,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       _phone,
       _city,
       _address,
+      _giftMessage,
+      _giftFrom,
       _landmark,
       _instructions,
       _coupon,
@@ -266,6 +278,14 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final chosen = state.paymentMethods
         .where((m) => m.method == _paymentMethod)
         .firstOrNull;
+    if (_isGift && (chosen?.isCashAtDoor ?? false)) {
+      DsSnackbar.show(
+        context,
+        message: l10n.giftNoCashOnDelivery,
+        type: DsSnackbarType.error,
+      );
+      return;
+    }
     final total = _payableTotal(
       ref.read(cartNotifierProvider).cart.summary.subtotal,
       state,
@@ -302,6 +322,14 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           saveAddress: _selectedAddressId == null && _saveAddress,
           paymentMethod: _paymentMethod!,
           privacyMask: _privacyMask,
+          gift: _isGift
+              ? OrderGift(
+                  message: _giftMessage.text.trim(),
+                  fromName: _giftAnonymous ? null : _giftFrom.text.trim(),
+                  wrap: _giftWrap,
+                  hidePrices: _giftHidePrices,
+                )
+              : null,
           couponCode: _coupon.text.trim().isEmpty ? null : _coupon.text.trim(),
           deliveryInstructions: _instructions.text.trim().isEmpty
               ? null
@@ -423,13 +451,44 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    _GiftCard(
+                      enabled: _isGift,
+                      message: _giftMessage,
+                      fromName: _giftFrom,
+                      anonymous: _giftAnonymous,
+                      wrap: _giftWrap,
+                      hidePrices: _giftHidePrices,
+                      onEnabled: (value) => setState(() {
+                        _isGift = value;
+                        // Cash at a stranger's door is not a way to pay for
+                        // a gift; a cash choice made before is let go.
+                        final chosen = state.paymentMethods
+                            .where((m) => m.method == _paymentMethod)
+                            .firstOrNull;
+                        if (value && (chosen?.isCashAtDoor ?? false)) {
+                          _paymentMethod = null;
+                        }
+                      }),
+                      onAnonymous: (value) =>
+                          setState(() => _giftAnonymous = value),
+                      onWrap: (value) => setState(() => _giftWrap = value),
+                      onHidePrices: (value) =>
+                          setState(() => _giftHidePrices = value),
+                    ),
+                    DsGaps.vLg,
                     JourneyStep(
                       number: 1,
-                      title: l10n.checkoutDeliveryAddress,
+                      title: _isGift
+                          ? l10n.giftRecipientAddress
+                          : l10n.checkoutDeliveryAddress,
                       complete: addressDone,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          if (_isGift) ...[
+                            _GiftNote(text: l10n.giftRecipientAddressHint),
+                            DsGaps.vSm,
+                          ],
                           if (addresses.isNotEmpty) ...[
                             for (final address in addresses)
                               _AddressOption(
@@ -480,7 +539,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                       complete: _paymentMethod != null,
                       child: Column(
                         children: [
-                          for (final method in state.paymentMethods)
+                          if (_isGift) ...[
+                            _GiftNote(text: l10n.giftNoCashOnDelivery),
+                            DsGaps.vSm,
+                          ],
+                          for (final method in state.paymentMethods.where(
+                            (m) => !(_isGift && m.isCashAtDoor),
+                          ))
                             _PaymentTile(
                               option: method,
                               selected: _paymentMethod == method.method,
@@ -1339,4 +1404,216 @@ String _etaLabel(BuildContext context, DeliveryQuote quote) {
   if (quote.etaHoursMax <= 12) return context.l10n.checkoutEtaToday;
   final days = (quote.etaHoursMax / 24).ceil();
   return context.l10n.checkoutEtaDays(days < 1 ? 1 : days);
+}
+
+/// «إرسال كهدية» — the switch, then the card, its signature, the wrapping
+/// and whether prices stay out of the box.
+class _GiftCard extends StatelessWidget {
+  const _GiftCard({
+    required this.enabled,
+    required this.message,
+    required this.fromName,
+    required this.anonymous,
+    required this.wrap,
+    required this.hidePrices,
+    required this.onEnabled,
+    required this.onAnonymous,
+    required this.onWrap,
+    required this.onHidePrices,
+  });
+
+  final bool enabled;
+  final TextEditingController message;
+  final TextEditingController fromName;
+  final bool anonymous;
+  final bool wrap;
+  final bool hidePrices;
+  final ValueChanged<bool> onEnabled;
+  final ValueChanged<bool> onAnonymous;
+  final ValueChanged<bool> onWrap;
+  final ValueChanged<bool> onHidePrices;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    final l10n = context.l10n;
+    return AnimatedContainer(
+      duration: DsMotion.moderate,
+      curve: DsMotion.standard,
+      padding: const EdgeInsets.all(DsSpacing.md),
+      decoration: BoxDecoration(
+        borderRadius: DsRadius.borderXl,
+        gradient: enabled ? context.primaryGradient : null,
+        color: enabled ? null : colors.surface.withValues(alpha: 0.85),
+        border: Border.all(color: enabled ? colors.primary : colors.border),
+        boxShadow: enabled
+            ? context.glowShadow(colors.primary, blur: 18, alpha: 0.25)
+            : null,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          MergeSemantics(
+            child: Row(
+              children: [
+                Icon(
+                  Icons.card_giftcard_rounded,
+                  color: enabled ? colors.onPrimary : colors.primary,
+                ),
+                DsGaps.hSm,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.giftSendAsGift,
+                        style: context.dsText.body.semibold.tint(
+                          enabled ? colors.onPrimary : colors.onSurface,
+                        ),
+                      ),
+                      Text(
+                        l10n.giftSendAsGiftHint,
+                        style: context.dsText.caption.tint(
+                          enabled
+                              ? colors.onPrimary.withValues(alpha: 0.9)
+                              : colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: enabled,
+                  onChanged: onEnabled,
+                  activeThumbColor: colors.onPrimary,
+                ),
+              ],
+            ),
+          ),
+          AnimatedSize(
+            duration: DsMotion.moderate,
+            curve: DsMotion.standard,
+            alignment: Alignment.topCenter,
+            child: !enabled
+                ? const SizedBox(width: double.infinity)
+                : Container(
+                    margin: const EdgeInsets.only(top: DsSpacing.md),
+                    padding: const EdgeInsets.all(DsSpacing.md),
+                    decoration: BoxDecoration(
+                      color: colors.surface,
+                      borderRadius: DsRadius.borderLg,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        DsInputField(
+                          controller: message,
+                          label: l10n.giftMessage,
+                          hint: l10n.giftMessageHint,
+                          maxLines: 4,
+                          minLines: 2,
+                          maxLength: 300,
+                          textCapitalization: TextCapitalization.sentences,
+                        ),
+                        DsGaps.vSm,
+                        AnimatedOpacity(
+                          duration: DsMotion.fast,
+                          opacity: anonymous ? 0.45 : 1,
+                          child: DsInputField(
+                            controller: fromName,
+                            label: l10n.giftFrom,
+                            hint: l10n.giftFromHint,
+                            enabled: !anonymous,
+                            maxLength: 60,
+                          ),
+                        ),
+                        _GiftSwitch(
+                          icon: Icons.visibility_off_outlined,
+                          label: l10n.giftAnonymous,
+                          value: anonymous,
+                          onChanged: onAnonymous,
+                        ),
+                        _GiftSwitch(
+                          icon: Icons.redeem_rounded,
+                          label: l10n.giftWrap,
+                          value: wrap,
+                          onChanged: onWrap,
+                        ),
+                        _GiftSwitch(
+                          icon: Icons.money_off_rounded,
+                          label: l10n.giftHidePrices,
+                          value: hidePrices,
+                          onChanged: onHidePrices,
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GiftSwitch extends StatelessWidget {
+  const _GiftSwitch({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return MergeSemantics(
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: colors.onSurfaceVariant),
+          DsGaps.hSm,
+          Expanded(
+            child: Text(label, style: context.dsText.bodySmall),
+          ),
+          Switch(value: value, onChanged: onChanged),
+        ],
+      ),
+    );
+  }
+}
+
+/// A short line of guidance while she is sending a gift.
+class _GiftNote extends StatelessWidget {
+  const _GiftNote({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Container(
+      padding: const EdgeInsets.all(DsSpacing.sm),
+      decoration: BoxDecoration(
+        color: colors.primaryContainer.withValues(alpha: 0.5),
+        borderRadius: DsRadius.borderMd,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.card_giftcard_rounded, size: 16, color: colors.primary),
+          DsGaps.hXs,
+          Expanded(
+            child: Text(
+              text,
+              style: context.dsText.caption.tint(colors.onSurface),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

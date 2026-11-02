@@ -27036,6 +27036,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved'**
   String get deliverySettingsSaved;
+
+  /// No description provided for @chatAboutOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'About this order'**
+  String get chatAboutOrder;
+
+  /// No description provided for @chatForwardOrderNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get chatForwardOrderNow;
+
+  /// No description provided for @giftSendAsGift.
+  ///
+  /// In en, this message translates to:
+  /// **'Send as a gift'**
+  String get giftSendAsGift;
+
+  /// No description provided for @giftSendAsGiftHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered to someone else, wrapped, with your card'**
+  String get giftSendAsGiftHint;
+
+  /// No description provided for @giftRecipientAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient\'s address'**
+  String get giftRecipientAddress;
+
+  /// No description provided for @giftRecipientAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the name, phone and address of the person receiving the gift — the courier will contact them.'**
+  String get giftRecipientAddressHint;
+
+  /// No description provided for @giftNoCashOnDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts are paid in the app — cash on delivery isn\'t available because it goes to someone else.'**
+  String get giftNoCashOnDelivery;
+
+  /// No description provided for @giftMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Card message'**
+  String get giftMessage;
+
+  /// No description provided for @giftMessageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Happy birthday to my dearest friend 💐'**
+  String get giftMessageHint;
+
+  /// No description provided for @giftFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get giftFrom;
+
+  /// No description provided for @giftFromHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name as it should appear on the card'**
+  String get giftFromHint;
+
+  /// No description provided for @giftAnonymous.
+  ///
+  /// In en, this message translates to:
+  /// **'No name — an anonymous gift'**
+  String get giftAnonymous;
+
+  /// No description provided for @giftWrap.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift wrapping'**
+  String get giftWrap;
+
+  /// No description provided for @giftHidePrices.
+  ///
+  /// In en, this message translates to:
+  /// **'No invoice or price inside the parcel'**
+  String get giftHidePrices;
+
+  /// No description provided for @giftBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get giftBadge;
+
+  /// No description provided for @giftOrderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift 🎁'**
+  String get giftOrderTitle;
+
+  /// No description provided for @giftSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Going to {name}'**
+  String giftSentTo(Object name);
+
+  /// No description provided for @giftCardFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From: {name}'**
+  String giftCardFrom(Object name);
+
+  /// No description provided for @giftCardAnonymous.
+  ///
+  /// In en, this message translates to:
+  /// **'From: anonymous'**
+  String get giftCardAnonymous;
+
+  /// No description provided for @giftSellerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This order is a gift'**
+  String get giftSellerTitle;
+
+  /// No description provided for @giftSellerWrap.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrap it as a gift'**
+  String get giftSellerWrap;
+
+  /// No description provided for @giftSellerNoWrap.
+  ///
+  /// In en, this message translates to:
+  /// **'No special wrapping'**
+  String get giftSellerNoWrap;
+
+  /// No description provided for @giftSellerHidePrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t put an invoice or price inside the parcel'**
+  String get giftSellerHidePrices;
+
+  /// No description provided for @giftSellerCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Include a card that reads:'**
+  String get giftSellerCard;
+
+  /// No description provided for @giftSellerPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepaid — the courier collects nothing from the recipient'**
+  String get giftSellerPaid;
 }
 
 class _AppLocalizationsDelegate

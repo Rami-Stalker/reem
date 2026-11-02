@@ -46,6 +46,7 @@ class PlaceOrderUseCase {
     String? deliveryInstructions,
     String? notes,
     bool privacyMask = false,
+    OrderGift? gift,
   }) =>
       _repo.placeOrder(
         idempotencyKey: idempotencyKey,
@@ -57,6 +58,7 @@ class PlaceOrderUseCase {
         deliveryInstructions: deliveryInstructions,
         notes: notes,
         privacyMask: privacyMask,
+        gift: gift,
       );
 }
 

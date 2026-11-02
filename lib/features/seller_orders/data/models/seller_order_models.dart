@@ -1,4 +1,6 @@
 import 'package:ohara/core/shared/value_objects/money.dart';
+import 'package:ohara/features/checkout/domain/entities/order.dart'
+    show OrderGift;
 import 'package:ohara/features/seller_orders/domain/entities/seller_order.dart';
 
 /// Wire → domain for the seller's queue.
@@ -59,6 +61,7 @@ final class SellerOrderMapper {
       paymentStatus: json['payment_status'] as String?,
       trackingCode: json['tracking_code'] as String?,
       codRisk: codRiskFromJson(json['cod_risk']),
+      gift: OrderGift.fromJson(json['gift']),
     );
   }
 

@@ -37,13 +37,22 @@ import 'package:ohara/features/chat/presentation/widgets/voice_message_bubble.da
 import 'package:ohara/features/chat/presentation/widgets/voice_recorder_bar.dart';
 
 class ChatDetailsScreen extends ConsumerStatefulWidget {
-  const ChatDetailsScreen({super.key, required this.chatId, this.about});
+  const ChatDetailsScreen({
+    super.key,
+    required this.chatId,
+    this.about,
+    this.aboutOrder,
+  });
 
   final String chatId;
 
   /// Opened from a product page: the piece she is asking about, pinned above
   /// the composer until her first message carries it.
   final ChatProductRef? about;
+
+  /// Opened from an order: the order, pinned above the composer, goes out
+  /// with her first message — a forwarded order, read at a glance.
+  final ChatOrderRef? aboutOrder;
 
   @override
   ConsumerState<ChatDetailsScreen> createState() => _ChatDetailsScreenState();
@@ -77,6 +86,9 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   /// The piece her next text message is about. One message carries it, as
   /// in a WhatsApp reply; after that the conversation simply continues.
   late ChatProductRef? _about = widget.about;
+
+  /// The order her next text message is about.
+  late ChatOrderRef? _aboutOrder = widget.aboutOrder;
 
   ChatMessagesNotifier get _messages =>
       ref.read(chatMessagesNotifierProvider(widget.chatId).notifier);
@@ -167,8 +179,18 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
   Future<void> _sendText(String text) async {
     _jumpToNewest();
     final about = _about;
-    if (about != null) setState(() => _about = null);
-    final sent = await _messages.sendMessage(text, about: about);
+    final order = _aboutOrder;
+    if (about != null || order != null) {
+      setState(() {
+        _about = null;
+        _aboutOrder = null;
+      });
+    }
+    final sent = await _messages.send(
+      content: text,
+      about: about,
+      order: order,
+    );
     if (!sent && mounted) _warn(context.l10n.chatSendFailed);
   }
 
@@ -187,6 +209,17 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
     final sent = await _messages.sendMessage(
       product.title,
       about: ChatProductRef.of(product),
+    );
+    if (!sent && mounted) _warn(context.l10n.chatSendFailed);
+  }
+
+  /// The pinned order sent on its own, without waiting for her words.
+  Future<void> _forwardOrder(ChatOrderRef order) async {
+    setState(() => _aboutOrder = null);
+    _jumpToNewest();
+    final sent = await _messages.send(
+      content: context.l10n.chatOrderMessage(order.number),
+      order: order,
     );
     if (!sent && mounted) _warn(context.l10n.chatSendFailed);
   }
@@ -352,7 +385,13 @@ class _ChatDetailsScreenState extends ConsumerState<ChatDetailsScreen>
                   onCancelled: () => setState(() => _recording = false),
                 )
               else ...[
-                if (_about case final about?)
+                if (_aboutOrder case final order?)
+                  ChatAboutOrderBar(
+                    order: order,
+                    onClear: () => setState(() => _aboutOrder = null),
+                    onSendNow: () => unawaited(_forwardOrder(order)),
+                  )
+                else if (_about case final about?)
                   ChatAboutProductBar(
                     product: about,
                     onClear: () => setState(() => _about = null),

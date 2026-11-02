@@ -20,11 +20,14 @@ import 'package:ohara/features/chat/presentation/providers/chat_provider.dart';
 ///
 /// [about] opens the conversation with that piece pinned above the composer,
 /// so the first message goes out carrying its card — see [ChatProductRef].
+/// [aboutOrder] does the same with an order: her first message arrives as the
+/// order itself, forwarded, so the other side knows at once what it is about.
 Future<bool> openConversation(
   BuildContext context,
   WidgetRef ref,
   ChatStartRequest request, {
   ChatProductRef? about,
+  ChatOrderRef? aboutOrder,
 }) async {
   final l10n = context.l10n;
 
@@ -51,7 +54,7 @@ Future<bool> openConversation(
 
   await context.push(
     '${RoutePaths.chatDetails}?id=${thread.id}',
-    extra: about,
+    extra: aboutOrder ?? about,
   );
   return true;
 }
@@ -71,12 +74,16 @@ class MessageSellerButton extends ConsumerStatefulWidget {
     this.size = DsButtonSize.md,
     this.isExpanded = true,
     this.about,
+    this.aboutOrder,
   });
 
   final ChatStartRequest request;
 
   /// The piece to pin in the conversation; see [openConversation].
   final ChatProductRef? about;
+
+  /// The order to pin in the conversation; see [openConversation].
+  final ChatOrderRef? aboutOrder;
 
   /// Defaults to «راسلي المتجر»; an order parcel names itself instead.
   final String? label;
@@ -102,6 +109,7 @@ class _MessageSellerButtonState extends ConsumerState<MessageSellerButton> {
         ref,
         widget.request,
         about: widget.about,
+        aboutOrder: widget.aboutOrder,
       );
     } finally {
       if (mounted) setState(() => _busy = false);

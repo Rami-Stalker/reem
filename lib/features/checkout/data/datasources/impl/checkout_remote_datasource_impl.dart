@@ -65,6 +65,7 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
     String? deliveryInstructions,
     String? notes,
     bool privacyMask = false,
+    OrderGift? gift,
   }) async {
     final json = await postJson(
       ApiEndpoints.ordersCheckout,
@@ -99,6 +100,8 @@ final class CheckoutRemoteDataSourceImpl extends BaseRemoteDataSource
         // checkout was written and the app never sent it, so the privacy
         // promise was unreachable from the phone.
         if (privacyMask) 'privacy_mask': true,
+        // «إرسال كهدية»: the card, the wrapping, the signature.
+        if (gift != null) 'gift': gift.toJson(),
         if (notes != null && notes.isNotEmpty) 'notes': notes,
       },
     );
