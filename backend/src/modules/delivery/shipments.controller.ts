@@ -115,6 +115,7 @@ export class ShipmentsController {
       recipientNote: dto.recipient_note,
       latitude: dto.latitude,
       longitude: dto.longitude,
+      handoverCode: dto.handover_code,
     });
   }
 

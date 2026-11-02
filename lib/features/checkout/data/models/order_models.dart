@@ -55,6 +55,7 @@ class OrderShipmentModel extends OrderShipment {
     super.attemptCount,
     super.codAmount,
     super.carrier,
+    super.handoverCode,
   });
 
   factory OrderShipmentModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +69,7 @@ class OrderShipmentModel extends OrderShipment {
       failureReason: json['failure_reason'] as String?,
       attemptCount: json['attempt_count'] as int? ?? 0,
       codAmount: Money.tryFromJson(json['cod_amount']),
+      handoverCode: json['handover_code'] as String?,
       carrier: json['carrier'] is Map<String, dynamic>
           ? OrderCarrier(
               name: (json['carrier'] as Map<String, dynamic>)['name'] as String? ?? '',

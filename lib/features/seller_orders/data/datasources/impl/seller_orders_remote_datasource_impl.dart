@@ -57,6 +57,7 @@ final class SellerOrdersRemoteDataSourceImpl extends BaseRemoteDataSource
     String id, {
     String? collected,
     String? note,
+    String? handoverCode,
   }) async => SellerOrderMapper.detailFromJson(
     await postJson(
       ApiEndpoints.sellerOrderDeliver(id),
@@ -64,6 +65,36 @@ final class SellerOrdersRemoteDataSourceImpl extends BaseRemoteDataSource
         // Sent as the decimal string it came in as. Money never becomes a
         // double on the way out any more than on the way in.
         if (collected != null && collected.isNotEmpty) 'collected': collected,
+        if (note != null && note.isNotEmpty) 'note': note,
+        if (handoverCode != null && handoverCode.isNotEmpty)
+          'handover_code': handoverCode,
+      },
+    ),
+  );
+
+  @override
+  Future<SellerOrderDetail> outForDelivery(String id) async =>
+      SellerOrderMapper.detailFromJson(
+        await postJson(ApiEndpoints.sellerOrderOutForDelivery(id)),
+      );
+
+  @override
+  Future<SellerOrderDetail> carrierPickedUp(String id) async =>
+      SellerOrderMapper.detailFromJson(
+        await postJson(ApiEndpoints.sellerOrderCarrierPickedUp(id)),
+      );
+
+  @override
+  Future<SellerOrderDetail> fail(
+    String id, {
+    required String reason,
+    String? note,
+  }) async => SellerOrderMapper.detailFromJson(
+    await postJson(
+      ApiEndpoints.sellerOrderFail(id),
+      body: {
+        // The server's enum is upper case; the wire elsewhere is lower.
+        'reason': reason.toUpperCase(),
         if (note != null && note.isNotEmpty) 'note': note,
       },
     ),

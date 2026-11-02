@@ -160,6 +160,11 @@ class OrderShipment extends Equatable {
   /// number for her box.
   final OrderCarrier? carrier;
 
+  /// Proof of delivery: four digits she reads out to whoever is at her door,
+  /// once the parcel is in her hands. Only ever sent to her, and only while
+  /// the parcel is still on its way.
+  final String? handoverCode;
+
   const OrderShipment({
     required this.id,
     required this.trackingCode,
@@ -171,10 +176,12 @@ class OrderShipment extends Equatable {
     this.attemptCount = 0,
     this.codAmount,
     this.carrier,
+    this.handoverCode,
   });
 
   @override
-  List<Object?> get props => [id, trackingCode, status, deliveredAt, carrier];
+  List<Object?> get props =>
+      [id, trackingCode, status, deliveredAt, carrier, handoverCode];
 }
 
 /// What the app is told about a delivery company.

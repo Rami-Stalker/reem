@@ -25488,6 +25488,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wardrobe finish: {name}'**
   String closetFinishTooltip(String name);
+  /// Seller action: the parcel is on its way to the customer.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get sellerOrderActionOutForDelivery;
+
+  /// Seller action: a failed delivery attempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t deliver'**
+  String get sellerOrderActionFail;
+
+  /// Seller action: the delivery company collected the parcel.
+  ///
+  /// In en, this message translates to:
+  /// **'Company picked it up'**
+  String get sellerOrderActionCarrierPickedUp;
+
+  /// Toast after marking on the way.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as on the way'**
+  String get sellerOrderOutForDelivery;
+
+  /// Toast after a failed attempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed attempt recorded'**
+  String get sellerOrderFailed;
+
+  /// Toast after the company picked up.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick-up recorded'**
+  String get sellerOrderCarrierPickedUp;
+
+  /// Label of the handover code field.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer\'s handover code'**
+  String get sellerDeliverCodeLabel;
+
+  /// Hint of the handover code field.
+  ///
+  /// In en, this message translates to:
+  /// **'4 digits she sees in her order'**
+  String get sellerDeliverCodeHint;
+
+  /// Shown when the code is mandatory.
+  ///
+  /// In en, this message translates to:
+  /// **'This order is prepaid, so the code is required'**
+  String get sellerDeliverCodeRequired;
+
+  /// Validation error for the handover code.
+  ///
+  /// In en, this message translates to:
+  /// **'The code is 4 digits'**
+  String get sellerDeliverCodeInvalid;
+
+  /// Title of the failed-delivery sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Why didn\'t it arrive?'**
+  String get sellerFailTitle;
+
+  /// Failure reason.
+  ///
+  /// In en, this message translates to:
+  /// **'She didn\'t answer'**
+  String get sellerFailReasonNoAnswer;
+
+  /// Failure reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong address'**
+  String get sellerFailReasonWrongAddress;
+
+  /// Failure reason.
+  ///
+  /// In en, this message translates to:
+  /// **'She refused it'**
+  String get sellerFailReasonRefused;
+
+  /// Failure reason.
+  ///
+  /// In en, this message translates to:
+  /// **'She asked to postpone'**
+  String get sellerFailReasonPostponed;
+
+  /// Failure reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Area can\'t be reached'**
+  String get sellerFailReasonUnreachable;
+
+  /// Failure reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Another reason'**
+  String get sellerFailReasonOther;
+
+  /// Confirm button of the failed-delivery sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Record the attempt'**
+  String get sellerFailConfirm;
+
+  /// Card title for the delivery company's driver link.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver link'**
+  String get sellerDriverLinkTitle;
+
+  /// Explains the driver link.
+  ///
+  /// In en, this message translates to:
+  /// **'Send it to the delivery company\'s driver — he updates the order from it, no app needed.'**
+  String get sellerDriverLinkBody;
+
+  /// Copy button.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get sellerDriverLinkCopy;
+
+  /// Share button.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get sellerDriverLinkShare;
+
+  /// Toast after copying.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get sellerDriverLinkCopied;
+
+  /// Title of the customer's handover code card.
+  ///
+  /// In en, this message translates to:
+  /// **'Handover code'**
+  String get orderHandoverCodeTitle;
+
+  /// Explains the handover code to the customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Give this code to whoever delivers your order — only once it is in your hands.'**
+  String get orderHandoverCodeBody;
+
+  /// Title of the seller delivery settings screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get deliverySettingsTitle;
+
+  /// Entry point to the delivery settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery settings'**
+  String get deliverySettingsEntry;
+
+  /// Self-delivery switch.
+  ///
+  /// In en, this message translates to:
+  /// **'I deliver orders myself'**
+  String get deliverySettingsSelfLabel;
+
+  /// Explains self-delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders inside your area are yours to deliver; the delivery company takes the rest.'**
+  String get deliverySettingsSelfBody;
+
+  /// Shown when self-delivery is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Every order goes to the delivery company we contract with.'**
+  String get deliverySettingsOffBody;
+
+  /// Governorate picker label.
+  ///
+  /// In en, this message translates to:
+  /// **'Governorates you deliver to'**
+  String get deliverySettingsGovernorates;
+
+  /// Governorate picker hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose none to deliver everywhere'**
+  String get deliverySettingsGovernoratesHint;
+
+  /// Cities field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Only these cities (optional)'**
+  String get deliverySettingsCities;
+
+  /// Cities field hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Separate with commas, e.g. Mezzeh, Jaramana'**
+  String get deliverySettingsCitiesHint;
+
+  /// Save button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get deliverySettingsSave;
+
+  /// Toast after saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get deliverySettingsSaved;
+
 }
 
 class _AppLocalizationsDelegate

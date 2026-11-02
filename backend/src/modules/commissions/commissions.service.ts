@@ -14,6 +14,7 @@ import {
   Currency,
   DisputeStatus,
   FinancialLedgerType,
+  FulfilmentMode,
   JournalEntryType,
   LedgerAccountCode,
   LedgerDirection,
@@ -290,13 +291,30 @@ export class CommissionsService {
 
     // The delivery fee is revenue for a journey the platform actually makes.
     // It was previously collected from the customer and booked nowhere at all.
+    //
+    // Unless she carried it herself (Q57): then the journey was hers and so is
+    // the fee, owed to her at once rather than held — it is not something a
+    // return gives back to the customer through escrow.
+    const selfDelivered = sellerOrder.fulfilmentMode === FulfilmentMode.SELLER_SHIPS;
     if (!shipping.isZero()) {
-      lines.push({
-        account: { code: LedgerAccountCode.SHIPPING_REVENUE },
-        direction: LedgerDirection.CREDIT,
-        amount: shipping,
-        memo: 'Delivery fee',
-      });
+      lines.push(
+        selfDelivered
+          ? {
+              account: {
+                code: LedgerAccountCode.SELLER_PAYABLE,
+                ownerId: sellerOrder.sellerId,
+              },
+              direction: LedgerDirection.CREDIT,
+              amount: shipping,
+              memo: 'Delivery fee — the seller delivered it herself',
+            }
+          : {
+              account: { code: LedgerAccountCode.SHIPPING_REVENUE },
+              direction: LedgerDirection.CREDIT,
+              amount: shipping,
+              memo: 'Delivery fee',
+            },
+      );
     }
 
     await this.ledger.post({
@@ -622,6 +640,8 @@ export class CommissionsService {
    * already ours, and the wallet spend has credited it back out.
    */
   private collectionAccount(sellerOrder: {
+    sellerId: string;
+    fulfilmentMode: FulfilmentMode;
     shipment: { courierId: string | null } | null;
     order: { payment: { method: PaymentMethodType } | null };
   }): { code: LedgerAccountCode; ownerId?: string | null } {
@@ -631,6 +651,16 @@ export class CommissionsService {
       method === PaymentMethodType.COD ||
       method === PaymentMethodType.COURIER_COLLECT
     ) {
+      // She delivered it and the cash is in her hand. Debiting what we owe her
+      // is the honest record: her escrowed net comes back to her through the
+      // usual release, and what is left on her account is the commission she
+      // now owes — netted off her next payout rather than chased in cash.
+      if (sellerOrder.fulfilmentMode === FulfilmentMode.SELLER_SHIPS) {
+        return {
+          code: LedgerAccountCode.SELLER_PAYABLE,
+          ownerId: sellerOrder.sellerId,
+        };
+      }
       const courierId = sellerOrder.shipment?.courierId;
       // Without a courier there is nobody to hold the cash against, so it is
       // treated as already collected rather than attributed to no one.

@@ -115,6 +115,7 @@ import 'package:ohara/features/seller_earnings/presentation/screens/seller_earni
 import 'package:ohara/features/seller_intelligence/presentation/screens/demand_radar_screen.dart';
 import 'package:ohara/features/seller_intelligence/presentation/screens/product_intelligence_screen.dart';
 import 'package:ohara/features/seller_intelligence/presentation/screens/seller_health_screen.dart';
+import 'package:ohara/features/seller_orders/presentation/screens/seller_delivery_settings_screen.dart';
 import 'package:ohara/features/seller_orders/presentation/screens/seller_order_detail_screen.dart';
 import 'package:ohara/features/seller_orders/presentation/screens/seller_orders_screen.dart';
 import 'package:ohara/features/seller_products/domain/entities/managed_product.dart';
@@ -913,6 +914,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ? state.extra! as AdSuggestion
               : null,
         ),
+      ),
+      GoRoute(
+        path: RoutePaths.sellerDeliverySettings,
+        name: RouteNames.sellerDeliverySettings,
+        builder: (context, state) => const SellerDeliverySettingsScreen(),
       ),
       GoRoute(
         path: RoutePaths.sellerReturns,

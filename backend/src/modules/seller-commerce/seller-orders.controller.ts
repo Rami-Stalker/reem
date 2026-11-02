@@ -21,6 +21,7 @@ import {
   HandOverDto,
   SellerCancelOrderDto,
   SellerDeliverDto,
+  SellerFailDeliveryDto,
   SellerQueueQueryDto,
 } from './dto/seller-order.dto';
 import { SellerOrdersService } from './seller-orders.service';
@@ -131,7 +132,57 @@ export class SellerOrdersController {
     return this.orders.deliver(user, id, {
       collected: dto.collected,
       note: dto.note,
+      handoverCode: dto.handover_code,
     });
+  }
+
+  /** «في الطريق» — her own parcel, or a phone-worked company's. */
+  @Post(':id/out-for-delivery')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'manage',
+    resource: 'order',
+    roles: [UserRole.SELLER],
+    ownership: { resource: 'sellerOrder', param: 'id' },
+  })
+  outForDelivery(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.orders.outForDelivery(user, id);
+  }
+
+  /** The phone-worked company collected it from her. */
+  @Post(':id/carrier-picked-up')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'manage',
+    resource: 'order',
+    roles: [UserRole.SELLER],
+    ownership: { resource: 'sellerOrder', param: 'id' },
+  })
+  carrierPickedUp(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.orders.carrierPickedUp(user, id);
+  }
+
+  /** «فشل التسليم» with a reason. */
+  @Post(':id/fail')
+  @HttpCode(HttpStatus.OK)
+  @Authorize({
+    action: 'manage',
+    resource: 'order',
+    roles: [UserRole.SELLER],
+    ownership: { resource: 'sellerOrder', param: 'id' },
+  })
+  fail(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: SellerFailDeliveryDto,
+  ) {
+    return this.orders.failDelivery(user, id, dto.reason, dto.note);
   }
 
   @Post(':id/cancel')

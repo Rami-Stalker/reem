@@ -9,6 +9,7 @@ import {
   IsString,
   IsUUID,
   IsUrl,
+  Matches,
   MaxLength,
 } from 'class-validator';
 import { DeliveryFailureReason } from '@prisma/client';
@@ -49,6 +50,12 @@ export class DeliverShipmentDto extends CourierPositionDto {
   @IsString()
   @MaxLength(500)
   recipient_note?: string;
+
+  /** The four digits the customer reads out at the door. */
+  @IsOptional()
+  @IsString()
+  @Matches(/^\s*\d{4}\s*$/, { message: 'رمز الاستلام أربعة أرقام' })
+  handover_code?: string;
 }
 
 /** Q55 — «يسجّل سبب فشل التسليم». */

@@ -690,6 +690,10 @@ class _ParcelCard extends StatelessWidget {
                 ),
               ),
             ),
+            if (parcel.shipment!.handoverCode != null) ...[
+              const SizedBox(height: DsSpacing.xs),
+              _HandoverCode(code: parcel.shipment!.handoverCode!),
+            ],
             // Who is actually carrying it. Ohara hands a packed parcel to a
             // delivery company, and once it has left the boutique the two
             // things she needs are that company's name and its own number for
@@ -807,6 +811,60 @@ class _InvoicesAction extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The four digits she gives the person at her door — the proof that the
+/// parcel reached her, so nobody can mark it delivered when it did not.
+class _HandoverCode extends StatelessWidget {
+  const _HandoverCode({required this.code});
+
+  final String code;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.dsColors;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(DsSpacing.sm),
+      decoration: BoxDecoration(
+        color: colors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(DsRadius.md),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.verified_user_outlined, size: 20, color: colors.primary),
+          const SizedBox(width: DsSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.orderHandoverCodeTitle,
+                  style: context.dsText.bodySmall.semibold.tint(colors.onSurface),
+                ),
+                Text(
+                  context.l10n.orderHandoverCodeBody,
+                  style: context.dsText.caption.tint(colors.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: DsSpacing.sm),
+          // Left-to-right whatever the page direction, so the digits read in
+          // the order she says them.
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(
+              code,
+              style: context.dsText.sectionTitle.semibold
+                  .tint(colors.primary)
+                  .copyWith(letterSpacing: 4),
+            ),
+          ),
+        ],
       ),
     );
   }

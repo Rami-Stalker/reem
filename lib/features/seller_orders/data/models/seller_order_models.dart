@@ -119,6 +119,16 @@ final class SellerOrderMapper {
                   ? (shipment['carrier'] as Map<String, dynamic>)['last_error']
                         as String?
                   : null,
+              reportsByLink: shipment['carrier'] is Map<String, dynamic> &&
+                  (shipment['carrier']
+                          as Map<String, dynamic>)['reports_by_link'] ==
+                      true,
+              driverLinkPath: shipment['carrier'] is Map<String, dynamic>
+                  ? (shipment['carrier']
+                            as Map<String, dynamic>)['driver_link_path']
+                        as String?
+                  : null,
+              handoverVerified: shipment['handover_verified'] == true,
             )
           : null,
     );

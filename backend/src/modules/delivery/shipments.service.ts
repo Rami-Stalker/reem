@@ -18,7 +18,7 @@ import {
   Shipment,
   ShipmentStatus,
 } from '@prisma/client';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
 
 import { Money } from '../../common/money';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -94,7 +94,15 @@ export interface DeliverInput {
   readonly recipientNote?: string;
   readonly latitude?: number;
   readonly longitude?: number;
+  /** The code the customer read out at the door. */
+  readonly handoverCode?: string;
 }
+
+/** Wrong codes allowed before the parcel stops accepting them. */
+export const MAX_HANDOVER_ATTEMPTS = 5;
+
+/** What someone delivering a parcel themselves may report. */
+export type SelfDeliveryStep = 'hand_over' | 'out_for_delivery' | 'deliver' | 'fail';
 
 /**
  * The shipment lifecycle, and the courier-facing actions Q55 lists.
@@ -179,6 +187,7 @@ export class ShipmentsService {
     return db.shipment.create({
       data: {
         trackingCode: this.trackingCode(),
+        handoverCode: this.handoverCode(),
         sellerOrderId,
         zoneId: options.zoneId ?? null,
         currency: sellerOrder.currency,
@@ -224,6 +233,8 @@ export class ShipmentsService {
     at?: Date | null;
     failureReason?: DeliveryFailureReason | null;
     collectedAmount?: string | null;
+    /** Set by the driver link, which checks the customer's code itself. */
+    handoverVerified?: boolean;
   }): Promise<Shipment | null> {
     const { shipmentId, status } = input;
     const note = input.note ?? undefined;
@@ -235,6 +246,7 @@ export class ShipmentsService {
           collected: input.collectedAmount ?? undefined,
           recipientNote: note,
           at: input.at ?? undefined,
+          handoverVerified: input.handoverVerified,
         });
 
       case ShipmentStatus.FAILED:
@@ -509,7 +521,217 @@ export class ShipmentsService {
    */
   async deliver(input: DeliverInput): Promise<Shipment> {
     const courier = await this.requireCourier(input.courierUserId);
-    return this.deliverCore({ ...input, courier });
+    const parcel = await this.prisma.$transaction((tx) =>
+      this.loadForCourier(tx, input.shipmentId, courier),
+    );
+    const handoverVerified = await this.checkHandover(parcel, input.handoverCode);
+    return this.deliverCore({ ...input, courier, handoverVerified });
+  }
+
+  // ── Proof of delivery ─────────────────────────────────────────────────
+
+  /**
+   * Checks the code the customer read out at the door.
+   *
+   * Required on a prepaid parcel: there a false «تم التسليم» releases money,
+   * so it is the one place a fake delivery pays. On a cash parcel nobody gains
+   * from one — whoever claims it owes the cash — so the code is checked when
+   * given and the delivery is simply marked unverified when not.
+   *
+   * Runs outside any transaction so a wrong attempt is counted even though the
+   * delivery itself is refused.
+   */
+  async checkHandover(
+    shipment: Pick<Shipment, 'id' | 'handoverCode' | 'handoverAttempts' | 'codAmount'>,
+    code: string | undefined,
+    options: { required?: boolean } = {},
+  ): Promise<boolean> {
+    const expected = shipment.handoverCode;
+    // A parcel opened before codes existed has none to check.
+    if (!expected) return false;
+
+    const given = (code ?? '').replace(/\D/g, '');
+    const required = options.required ?? shipment.codAmount == null;
+    if (!given) {
+      if (required) {
+        throw new BadRequestException({
+          code: 'HANDOVER_CODE_REQUIRED',
+          message: 'اطلب رمز الاستلام من الزبونة — يظهر لها في صفحة الطلب',
+        });
+      }
+      return false;
+    }
+
+    if (shipment.handoverAttempts >= MAX_HANDOVER_ATTEMPTS) {
+      throw new ForbiddenException({
+        code: 'HANDOVER_CODE_LOCKED',
+        message: 'أُدخل رمز خاطئ عدة مرات — تواصل مع الدعم لإكمال التسليم',
+      });
+    }
+
+    const matches =
+      given.length === expected.length &&
+      timingSafeEqual(Buffer.from(given), Buffer.from(expected));
+    if (!matches) {
+      const updated = await this.prisma.shipment.update({
+        where: { id: shipment.id },
+        data: { handoverAttempts: { increment: 1 } },
+        select: { handoverAttempts: true },
+      });
+      const left = Math.max(0, MAX_HANDOVER_ATTEMPTS - updated.handoverAttempts);
+      throw new BadRequestException({
+        code: 'HANDOVER_CODE_WRONG',
+        message: `رمز الاستلام غير صحيح — بقي ${left} محاولات`,
+        attempts_left: left,
+      });
+    }
+    return true;
+  }
+
+  // ── Delivered by the seller herself (Q57) ─────────────────────────────
+
+  /**
+   * A step on a parcel the seller carries herself.
+   *
+   * The shipment walks with the sub-order so the customer's tracking page and
+   * the seller's queue tell the same story. Intermediate shipment steps the
+   * seller has no button for (assigned, picked up) are walked for her — she
+   * did make them, by carrying it.
+   */
+  async selfDeliveryStep(input: {
+    sellerOrderId: string;
+    sellerUserId: string;
+    step: SelfDeliveryStep;
+    collected?: string;
+    handoverCode?: string;
+    note?: string;
+    failureReason?: DeliveryFailureReason;
+  }): Promise<Shipment | null> {
+    const shipment = await this.prisma.shipment.findUnique({
+      where: { sellerOrderId: input.sellerOrderId },
+    });
+    if (!shipment) return null;
+
+    const actor = this.courierActor(input.sellerUserId);
+
+    switch (input.step) {
+      case 'hand_over':
+        return this.prisma.$transaction(async (tx) => {
+          await this.syncParcel(tx, shipment.sellerOrderId, actor, {
+            to: SellerOrderStatus.HANDED_TO_COURIER,
+            title: OrderEventCopy.onItsWay,
+            description: input.note ?? 'The seller is delivering it herself',
+            require: [SellerOrderStatus.READY_TO_SHIP],
+          });
+          return this.walk(tx, shipment, [ShipmentStatus.ASSIGNED, ShipmentStatus.PICKED_UP], input.sellerUserId, {
+            pickedUpAt: new Date(),
+          });
+        });
+
+      case 'out_for_delivery':
+        return this.prisma.$transaction(async (tx) => {
+          await this.syncParcel(tx, shipment.sellerOrderId, actor, {
+            to: SellerOrderStatus.IN_TRANSIT,
+            title: OrderEventCopy.outForDelivery,
+            description: OrderEventCopy.onTheWayToCustomer,
+          });
+          return this.walk(tx, shipment, this.pathToDoor(shipment.status), input.sellerUserId);
+        });
+
+      case 'deliver': {
+        const handoverVerified = await this.checkHandover(shipment, input.handoverCode);
+        await this.prisma.$transaction(async (tx) => {
+          const current = await tx.sellerOrder.findUniqueOrThrow({
+            where: { id: shipment.sellerOrderId },
+            select: { status: true },
+          });
+          if (
+            current.status === SellerOrderStatus.HANDED_TO_COURIER ||
+            current.status === SellerOrderStatus.DELIVERY_FAILED
+          ) {
+            await this.syncParcel(tx, shipment.sellerOrderId, actor, {
+              to: SellerOrderStatus.IN_TRANSIT,
+              title: OrderEventCopy.outForDelivery,
+              description: OrderEventCopy.onTheWayToCustomer,
+            });
+          }
+          await this.walk(tx, shipment, this.pathToDoor(shipment.status), input.sellerUserId);
+        });
+        return this.deliverCore({
+          shipmentId: shipment.id,
+          courierUserId: input.sellerUserId,
+          collected: input.collected,
+          recipientNote: input.note ?? 'Delivered by the seller',
+          handoverVerified,
+        });
+      }
+
+      case 'fail': {
+        await this.prisma.$transaction(async (tx) => {
+          const current = await tx.sellerOrder.findUniqueOrThrow({
+            where: { id: shipment.sellerOrderId },
+            select: { status: true },
+          });
+          if (current.status === SellerOrderStatus.HANDED_TO_COURIER) {
+            await this.syncParcel(tx, shipment.sellerOrderId, actor, {
+              to: SellerOrderStatus.IN_TRANSIT,
+              title: OrderEventCopy.outForDelivery,
+              description: OrderEventCopy.onTheWayToCustomer,
+            });
+          }
+          await this.walk(tx, shipment, this.pathToDoor(shipment.status), input.sellerUserId);
+        });
+        return this.failCore({
+          shipmentId: shipment.id,
+          courierUserId: input.sellerUserId,
+          reason: input.failureReason ?? DeliveryFailureReason.OTHER,
+          note: input.note,
+        });
+      }
+    }
+  }
+
+  /** The shipment steps between where a parcel is and the doorstep. */
+  private pathToDoor(from: ShipmentStatus): ShipmentStatus[] {
+    switch (from) {
+      case ShipmentStatus.CREATED:
+        return [ShipmentStatus.ASSIGNED, ShipmentStatus.PICKED_UP, ShipmentStatus.OUT_FOR_DELIVERY];
+      case ShipmentStatus.ASSIGNED:
+        return [ShipmentStatus.PICKED_UP, ShipmentStatus.OUT_FOR_DELIVERY];
+      case ShipmentStatus.PICKED_UP:
+      case ShipmentStatus.IN_TRANSIT:
+      case ShipmentStatus.FAILED:
+        return [ShipmentStatus.OUT_FOR_DELIVERY];
+      default:
+        return [];
+    }
+  }
+
+  /**
+   * Moves a shipment through several statuses in order, each one checked
+   * against the transition table and recorded on the trail. Statuses the
+   * shipment has already passed are skipped, so a retried tap is harmless.
+   */
+  private async walk(
+    tx: Tx,
+    shipment: Shipment,
+    path: readonly ShipmentStatus[],
+    actorId: string,
+    data: Prisma.ShipmentUpdateInput = {},
+  ): Promise<Shipment> {
+    let current = await tx.shipment.findUniqueOrThrow({ where: { id: shipment.id } });
+    for (const to of path) {
+      if (current.status === to) continue;
+      this.assertTransition(current.status, to);
+      current = await tx.shipment.update({
+        where: { id: shipment.id },
+        data: { status: to, ...(to === ShipmentStatus.PICKED_UP ? data : {}) },
+      });
+      await tx.shipmentEvent.create({
+        data: { shipmentId: shipment.id, status: to, actorId },
+      });
+    }
+    return current;
   }
 
   /**
@@ -527,6 +749,8 @@ export class ShipmentsService {
       courierUserId?: string;
       courier?: Courier;
       at?: Date;
+      /** True when the customer's handover code was checked and matched. */
+      handoverVerified?: boolean;
     },
   ): Promise<Shipment> {
     const courier = input.courier;
@@ -567,6 +791,7 @@ export class ShipmentsService {
           collectedAmount: collected.toPrisma(),
           proofImageUrl: input.proofImageUrl ?? parcel.proofImageUrl,
           recipientNote: input.recipientNote ?? parcel.recipientNote,
+          handoverVerifiedAt: input.handoverVerified ? now : null,
           failureReason: null,
           failureNote: null,
         },
@@ -1012,6 +1237,11 @@ export class ShipmentsService {
    * `REM-7F3K9QX2` — short enough to read down a phone line, random enough
    * that a customer cannot guess someone else's parcel from her own.
    */
+  /** Four digits — easy to read out on a doorstep, capped attempts make it safe. */
+  private handoverCode(): string {
+    return randomInt(0, 10_000).toString().padStart(4, '0');
+  }
+
   private trackingCode(): string {
     const alphabet = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // no I/O to misread
     const bytes = randomBytes(8);

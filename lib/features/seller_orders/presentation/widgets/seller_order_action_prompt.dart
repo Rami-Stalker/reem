@@ -8,11 +8,20 @@ import 'package:ohara/features/seller_orders/presentation/seller_order_labels.da
 
 /// What an action needs from her before it can run.
 class SellerActionInput {
-  const SellerActionInput({this.reason, this.collected, this.carrier});
+  const SellerActionInput({
+    this.reason,
+    this.collected,
+    this.carrier,
+    this.handoverCode,
+  });
 
+  /// A cancellation's reason, or a failed attempt's wire reason.
   final String? reason;
   final String? collected;
   final String? carrier;
+
+  /// The four digits the customer reads out at the door.
+  final String? handoverCode;
 }
 
 /// Asks for the one thing an action cannot invent.
@@ -32,6 +41,7 @@ abstract final class SellerOrderActionPrompt {
     return switch (action) {
       SellerOrderAction.cancel => _askCancel(context, order),
       SellerOrderAction.deliver => _askDelivery(context, order),
+      SellerOrderAction.fail => _askFailure(context),
       _ => Future.value(const SellerActionInput()),
     };
   }
@@ -59,6 +69,14 @@ abstract final class SellerOrderActionPrompt {
           ? context.l10n.sellerDeliverSubtitleCash
           : context.l10n.sellerDeliverSubtitlePrepaid,
       child: _DeliveryForm(collectsCash: order.isCashOnDelivery),
+    );
+  }
+
+  static Future<SellerActionInput?> _askFailure(BuildContext context) {
+    return DsBottomSheet.showTitled<SellerActionInput>(
+      context,
+      title: context.l10n.sellerFailTitle,
+      child: const _FailureForm(),
     );
   }
 }
@@ -168,10 +186,13 @@ class _DeliveryForm extends StatefulWidget {
 
 class _DeliveryFormState extends State<_DeliveryForm> {
   final _controller = TextEditingController();
+  final _code = TextEditingController();
+  String? _codeError;
 
   @override
   void dispose() {
     _controller.dispose();
+    _code.dispose();
     super.dispose();
   }
 
@@ -181,6 +202,24 @@ class _DeliveryFormState extends State<_DeliveryForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Proof of delivery. On a prepaid parcel it is the only proof, so the
+        // server insists on it; on a cash parcel it is still worth asking.
+        DsInputField(
+          controller: _code,
+          label: context.l10n.sellerDeliverCodeLabel,
+          hint: widget.collectsCash
+              ? context.l10n.sellerDeliverCodeHint
+              : context.l10n.sellerDeliverCodeRequired,
+          errorText: _codeError,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(4),
+          ],
+          onChanged: (_) => setState(() => _codeError = null),
+        ),
+        const SizedBox(height: DsSpacing.md),
+
         if (widget.collectsCash) ...[
           DsInputField(
             controller: _controller,
@@ -200,12 +239,76 @@ class _DeliveryFormState extends State<_DeliveryForm> {
           label: context.l10n.parcelAction(SellerOrderAction.deliver),
           onPressed: () {
             final collected = _controller.text.trim();
+            final code = _code.text.trim();
+            if (code.isNotEmpty && code.length != 4) {
+              setState(() => _codeError = context.l10n.sellerDeliverCodeInvalid);
+              return;
+            }
+            if (!widget.collectsCash && code.isEmpty) {
+              setState(
+                () => _codeError = context.l10n.sellerDeliverCodeRequired,
+              );
+              return;
+            }
             Navigator.of(context).pop(
               SellerActionInput(
                 collected: collected.isEmpty ? null : collected,
+                handoverCode: code.isEmpty ? null : code,
               ),
             );
           },
+        ),
+      ],
+    );
+  }
+}
+
+/// Why the parcel did not reach her. The reason decides what happens next: a
+/// refusal brings the parcel back and her money back, anything else is tried
+/// again.
+class _FailureForm extends StatefulWidget {
+  const _FailureForm();
+
+  @override
+  State<_FailureForm> createState() => _FailureFormState();
+}
+
+class _FailureFormState extends State<_FailureForm> {
+  String _reason = 'no_answer';
+
+  static List<(String, String)> _reasonsFor(BuildContext context) => [
+    ('no_answer', context.l10n.sellerFailReasonNoAnswer),
+    ('wrong_address', context.l10n.sellerFailReasonWrongAddress),
+    ('customer_refused', context.l10n.sellerFailReasonRefused),
+    ('postponed', context.l10n.sellerFailReasonPostponed),
+    ('unreachable_area', context.l10n.sellerFailReasonUnreachable),
+    ('other', context.l10n.sellerFailReasonOther),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Wrap(
+          spacing: DsSpacing.xs,
+          runSpacing: DsSpacing.xs,
+          children: [
+            for (final (wire, label) in _reasonsFor(context))
+              DsChip(
+                label: label,
+                selected: _reason == wire,
+                onTap: () => setState(() => _reason = wire),
+              ),
+          ],
+        ),
+        const SizedBox(height: DsSpacing.lg),
+        DsButton(
+          label: context.l10n.sellerFailConfirm,
+          variant: DsButtonVariant.danger,
+          onPressed: () =>
+              Navigator.of(context).pop(SellerActionInput(reason: _reason)),
         ),
       ],
     );

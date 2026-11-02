@@ -10,6 +10,7 @@ import {
   OrderStatus,
   PaymentMethodType,
   PaymentStatus,
+  DeliveryProviderKind,
   PrismaClient,
   ReturnReason,
   SellerOrderStatus,
@@ -26,7 +27,10 @@ import { CustomerRefundsService } from '../finance/customer-refunds.service';
 import { FinancialAuditService } from '../finance/financial-audit.service';
 import { LoyaltyService } from '../finance/loyalty.service';
 import { ShipmentsService } from '../delivery/shipments.service';
+import { CarrierLinkService } from '../delivery/dispatch/carrier-link.service';
 import { DeliveryDispatchService } from '../delivery/dispatch/delivery-dispatch.service';
+import { DeliveryProviderRegistry } from '../delivery/providers/delivery-provider.registry';
+import { ManualCarrierProvider } from '../delivery/providers/manual-carrier.provider';
 import { CodTrustService } from '../cod-trust/cod-trust.service';
 import { CodFactsService } from '../cod-trust/cod-facts.service';
 import { LedgerService } from '../ledger/ledger.service';
@@ -106,6 +110,9 @@ function asPrisma(tx: Tx): PrismaService {
 
 interface World {
   tx: Tx;
+  db: PrismaService;
+  /** Seller orders wired to a real dispatch with the phone-worked adapter. */
+  withManualCarrier: () => { sellerOrders: SellerOrdersService; links: CarrierLinkService };
   ledger: LedgerService;
   wallets: WalletService;
   sellerOrders: SellerOrdersService;
@@ -162,6 +169,8 @@ function build(tx: Tx): World {
     commissions,
     customerRefunds,
     dispatches,
+    shipments,
+    new CarrierLinkService(db, dispatches, shipments),
   );
   const refunds = new ReturnRefundsService(
     db,
@@ -177,8 +186,30 @@ function build(tx: Tx): World {
   // Q56 default rather than wired to a real profile.
   const valueBenefits = { configFor: async () => null } as never;
   const returns = new ReturnsService(db, refunds, disputes, workflow, valueBenefits);
+  const withManualCarrier = () => {
+    const realDispatch = new DeliveryDispatchService(
+      db,
+      new DeliveryProviderRegistry([new ManualCarrierProvider(db)]),
+      shipments,
+    );
+    const links = new CarrierLinkService(db, realDispatch, shipments);
+    return {
+      links,
+      sellerOrders: new SellerOrdersService(
+        db,
+        workflow,
+        commissions,
+        customerRefunds,
+        realDispatch,
+        shipments,
+        links,
+      ),
+    };
+  };
   return {
     tx,
+    db,
+    withManualCarrier,
     ledger,
     wallets,
     sellerOrders,
@@ -956,4 +987,211 @@ dbTest('a missed attempt refunds nothing — the parcel is still coming', async 
 
   const wallet = await world.wallets.balanceOf(sale.customerId);
   assert.equal(wallet.isZero(), true, 'a retry is not a refund');
+});
+
+
+// ── Delivery modes, proof of delivery, carriers worked by phone ─────────
+
+/** A shipment opened the way checkout opens one — with a handover code. */
+async function openShipment(world: World, sellerOrderId: string) {
+  await world.shipments.createForSellerOrder(sellerOrderId, {}, world.tx);
+  return world.tx.shipment.findUniqueOrThrow({ where: { sellerOrderId } });
+}
+
+const actions = (detail: unknown) =>
+  (detail as { available_actions: string[] }).available_actions;
+
+dbTest('a self-delivered cash parcel walks the road and leaves her owing only the commission', async (world) => {
+  const sale = await makeSale(world.tx, {
+    fulfilmentMode: FulfilmentMode.SELLER_SHIPS,
+    withShipment: false,
+  });
+  const shipment = await openShipment(world, sale.sellerOrder.id);
+  assert.match(shipment.handoverCode ?? '', /^\d{4}$/);
+
+  await world.sellerOrders.confirm(sale.seller, sale.sellerOrder.id);
+  await world.sellerOrders.ready(sale.seller, sale.sellerOrder.id);
+  const handed = await world.sellerOrders.handOver(sale.seller, sale.sellerOrder.id);
+  assert.deepEqual(actions(handed), ['out_for_delivery', 'deliver', 'fail']);
+
+  await world.sellerOrders.outForDelivery(sale.seller, sale.sellerOrder.id);
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.IN_TRANSIT);
+
+  // Platform-wide accounts are shared with every other suite, so they are
+  // compared before and after rather than against zero.
+  const balance = (code: LedgerAccountCode, ownerId?: string) =>
+    world.ledger.balanceOf({ code, ownerId }, Currency.SYP, world.tx);
+  const cashBefore = await balance(LedgerAccountCode.PLATFORM_CASH);
+  const shippingBefore = await balance(LedgerAccountCode.SHIPPING_REVENUE);
+
+  await world.sellerOrders.deliver(sale.seller, sale.sellerOrder.id, {
+    handoverCode: shipment.handoverCode!,
+  });
+
+  const after = await world.tx.shipment.findUniqueOrThrow({ where: { id: shipment.id } });
+  assert.equal(after.status, ShipmentStatus.DELIVERED);
+  assert.notEqual(after.handoverVerifiedAt, null);
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.DELIVERED);
+
+  // The cash is in her hand: nothing is booked to a courier or to platform
+  // cash, and the delivery fee is hers rather than platform revenue.
+  assert.equal((await balance(LedgerAccountCode.PLATFORM_CASH)).toString(), cashBefore.toString());
+  assert.equal(
+    (await balance(LedgerAccountCode.SHIPPING_REVENUE)).toString(),
+    shippingBefore.toString(),
+  );
+  const escrow = await balance(LedgerAccountCode.SELLER_ESCROW, sale.sellerId);
+  const payable = await balance(LedgerAccountCode.SELLER_PAYABLE, sale.sellerId);
+  assert.equal(escrow.toString(), sale.net.toString());
+  // Once escrow releases, what is left on her account is exactly the commission.
+  const commission = sale.subtotal.minus(sale.net);
+  assert.equal(Math.abs(Number(escrow.plus(payable).toString())), Number(commission.toString()));
+});
+
+dbTest('a prepaid parcel cannot be marked delivered without the customer’s code', async (world) => {
+  const sale = await makeSale(world.tx, {
+    fulfilmentMode: FulfilmentMode.SELLER_SHIPS,
+    method: PaymentMethodType.SHAM_CASH,
+    paymentStatus: PaymentStatus.PAID,
+    withShipment: false,
+  });
+  const shipment = await openShipment(world, sale.sellerOrder.id);
+  assert.equal(shipment.codAmount, null);
+
+  await world.sellerOrders.confirm(sale.seller, sale.sellerOrder.id);
+  await world.sellerOrders.ready(sale.seller, sale.sellerOrder.id);
+  await world.sellerOrders.handOver(sale.seller, sale.sellerOrder.id);
+
+  await assert.rejects(
+    () => world.sellerOrders.deliver(sale.seller, sale.sellerOrder.id),
+    (error: { response?: { code?: string } }) => error.response?.code === 'HANDOVER_CODE_REQUIRED',
+  );
+  const wrong = shipment.handoverCode === '0000' ? '1111' : '0000';
+  await assert.rejects(
+    () => world.sellerOrders.deliver(sale.seller, sale.sellerOrder.id, { handoverCode: wrong }),
+    (error: { response?: { code?: string } }) => error.response?.code === 'HANDOVER_CODE_WRONG',
+  );
+  const counted = await world.tx.shipment.findUniqueOrThrow({ where: { id: shipment.id } });
+  assert.equal(counted.handoverAttempts, 1);
+  assert.notEqual(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.DELIVERED);
+
+  await world.sellerOrders.deliver(sale.seller, sale.sellerOrder.id, {
+    handoverCode: shipment.handoverCode!,
+  });
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.DELIVERED);
+});
+
+dbTest('a seller can report a missed attempt and try again', async (world) => {
+  const sale = await makeSale(world.tx, {
+    fulfilmentMode: FulfilmentMode.SELLER_SHIPS,
+    withShipment: false,
+  });
+  const shipment = await openShipment(world, sale.sellerOrder.id);
+  await world.sellerOrders.confirm(sale.seller, sale.sellerOrder.id);
+  await world.sellerOrders.ready(sale.seller, sale.sellerOrder.id);
+  await world.sellerOrders.handOver(sale.seller, sale.sellerOrder.id);
+
+  const failed = await world.sellerOrders.failDelivery(
+    sale.seller,
+    sale.sellerOrder.id,
+    DeliveryFailureReason.NO_ANSWER,
+  );
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.DELIVERY_FAILED);
+  assert.ok(actions(failed).includes('out_for_delivery'));
+
+  await world.sellerOrders.deliver(sale.seller, sale.sellerOrder.id, {
+    handoverCode: shipment.handoverCode!,
+  });
+  const after = await world.tx.shipment.findUniqueOrThrow({ where: { id: shipment.id } });
+  assert.equal(after.status, ShipmentStatus.DELIVERED);
+  assert.equal(after.attemptCount, 1);
+});
+
+dbTest('a company worked by phone reports through its driver link', async (world) => {
+  const { sellerOrders, links } = world.withManualCarrier();
+  await world.tx.deliveryProviderAccount.updateMany({ data: { isEnabled: false } });
+  await world.tx.deliveryProviderAccount.create({
+    data: {
+      code: `manual-${uniq('m')}`,
+      adapter: 'manual',
+      displayName: 'شركة الشام للتوصيل',
+      kind: DeliveryProviderKind.MANUAL,
+      isEnabled: true,
+      priority: 0,
+      governorates: [],
+      webhookAuth: 'NONE',
+    },
+  });
+
+  const sale = await makeSale(world.tx, { withShipment: false });
+  const shipment = await openShipment(world, sale.sellerOrder.id);
+
+  await sellerOrders.confirm(sale.seller, sale.sellerOrder.id);
+  const ready = await sellerOrders.ready(sale.seller, sale.sellerOrder.id);
+  assert.ok(actions(ready).includes('carrier_picked_up'));
+  const link = (ready as { shipment: { carrier: { driver_link_path: string | null; reports_by_link: boolean } } })
+    .shipment.carrier;
+  assert.equal(link.reports_by_link, true);
+  const token = link.driver_link_path!.replace('/carrier/', '');
+
+  const view = await links.view(token);
+  assert.equal(view.recipient?.phone, '+963900111222');
+  assert.deepEqual(view.available_steps, ['pick_up']);
+
+  await links.actByToken(token, 'pick_up', {});
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.HANDED_TO_COURIER);
+
+  await assert.rejects(() => links.actByToken(token, 'deliver', { handoverCode: '99999'.slice(0, 4) === shipment.handoverCode ? '0000' : '9999' }));
+  const done = await links.actByToken(token, 'deliver', { handoverCode: shipment.handoverCode! });
+  assert.equal(done.status, 'delivered');
+  assert.equal(done.recipient, null, 'a closed link stops showing her address');
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.DELIVERED);
+
+  // The company is a courier row, and the cash it took is held against it.
+  const carried = await world.tx.shipment.findUniqueOrThrow({ where: { id: shipment.id } });
+  assert.notEqual(carried.courierId, null);
+  const held = await world.ledger.balanceOf(
+    { code: LedgerAccountCode.COURIER_CASH_IN_TRANSIT, ownerId: carried.courierId! },
+    Currency.SYP,
+    world.tx,
+  );
+  assert.equal(held.isZero(), false);
+});
+
+dbTest('the seller can relay what the phone-worked company told her', async (world) => {
+  const { sellerOrders } = world.withManualCarrier();
+  await world.tx.deliveryProviderAccount.updateMany({ data: { isEnabled: false } });
+  await world.tx.deliveryProviderAccount.create({
+    data: {
+      code: `manual-${uniq('m')}`,
+      adapter: 'manual',
+      displayName: 'شركة التوصيل',
+      kind: DeliveryProviderKind.MANUAL,
+      isEnabled: true,
+      priority: 0,
+      governorates: [],
+      webhookAuth: 'NONE',
+    },
+  });
+  const sale = await makeSale(world.tx, { withShipment: false });
+  const shipment = await openShipment(world, sale.sellerOrder.id);
+  await sellerOrders.confirm(sale.seller, sale.sellerOrder.id);
+  await sellerOrders.ready(sale.seller, sale.sellerOrder.id);
+
+  await sellerOrders.carrierPickedUp(sale.seller, sale.sellerOrder.id);
+  const onRoad = await sellerOrders.outForDelivery(sale.seller, sale.sellerOrder.id);
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.IN_TRANSIT);
+  assert.deepEqual(actions(onRoad), ['deliver', 'fail']);
+
+  await sellerOrders.deliver(sale.seller, sale.sellerOrder.id, {
+    handoverCode: shipment.handoverCode!,
+  });
+  assert.equal(await statusOf(world.tx, sale.sellerOrder.id), SellerOrderStatus.DELIVERED);
+});
+
+dbTest('a platform-courier parcel still cannot be moved by the seller', async (world) => {
+  const sale = await makeSale(world.tx);
+  await world.sellerOrders.confirm(sale.seller, sale.sellerOrder.id);
+  await world.sellerOrders.ready(sale.seller, sale.sellerOrder.id);
+  await assert.rejects(() => world.sellerOrders.outForDelivery(sale.seller, sale.sellerOrder.id));
 });
